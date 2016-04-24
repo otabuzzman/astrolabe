@@ -58,7 +58,7 @@
 				</circleDial>
 				<circleAnnotation>
 					<aText>
-						<tRegular>Ekliptik @{epochYear}@ mittlere @{epochJulianDay}@ Julianischer @{}@ Tag</tRegular>
+						<tRegular>Ekliptik @{epochYear}@ mittlere @{epochJulianDay}@ Julianischer Tag</tRegular>
 					</aText>
 					<aPurpose>circledescription</aPurpose>
 					<aAnchor>topleft</aAnchor>

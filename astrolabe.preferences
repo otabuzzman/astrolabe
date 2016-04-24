@@ -10,7 +10,8 @@
 				<node name="Postscript">
 					<map>
 						<entry key="linewidth" value=".01"/>
-						<entry key="display" value="c:/programme/gs/gs7.04/bin/gswin32c -"/>
+						<!-- 72 (dpi) / 25.4 (mm) * x (mm) -->
+						<entry key="display" value="c:/programme/gs/gs7.04/bin/gswin32c -dDEVICEWIDTHPOINTS=1418 -dDEVICEHEIGHTPOINTS=1418 -"/>
 					</map>
 					<node name="unicode">
 						<map>
@@ -100,7 +101,8 @@
 				</node>
 				<node name="Annotation">
 					<map>
-						<entry key="rise" value="4.2"/>
+						<!-- Dial.Ten.space+Dial.Ten.linelength -->
+						<entry key="rise" value="4.6"/>
 					</map>
 				</node>
 			</node>
@@ -120,7 +122,7 @@
 						<entry key="dialdescription" value="2.4"/>
 						<entry key="dialnumber" value="3.8"/>
 						<entry key="dialsubnumber" value="2.6"/>
-						<entry key="guidance" value="2.2"/>
+						<entry key="guidance" value="1.8"/>
 					</map>
 				</node>
 			</node>

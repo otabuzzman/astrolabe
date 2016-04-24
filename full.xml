@@ -1,0 +1,3332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelAstrolabe version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="astrolabe.xsd">
+	<astrolabeEpoch>
+		<dCivic>
+			<dcYear>2006</dcYear>
+			<dcMonth>1</dcMonth>
+			<dcDay>1.0</dcDay>
+		</dCivic>
+	</astrolabeEpoch>
+	<astrolabeChart>
+		<chartHemisphere>north</chartHemisphere>
+		<chartView>up</chartView>
+		<chartProjection>
+			<projectionType>stereographic</projectionType>
+			<projectionScale>100</projectionScale>
+		</chartProjection>
+		<chartUnit>mm</chartUnit>
+		<!--equatorial-->
+		<chartHorizon>
+			<horizonType>
+				<typeEquatorial>true</typeEquatorial>
+			</horizonType>
+			<horizonPracticality>always</horizonPracticality>
+			<!--eqp-25, has dial-->
+			<horizonCircle name="eqp-25">
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-25</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleDial>
+					<dBaseline>rail</dBaseline>
+					<dUnit>hour-minute</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>30</dguInterval>
+							<dguSubdivision>3</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>30</tRegular>
+									<tSuperscript>
+										<tRegular>m</tRegular>
+									</tSuperscript>
+								</aText>
+								<aPurpose>dialsubnumber</aPurpose>
+								<aAnchor>middleleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+						<dgFive>
+							<dgfInterval>2</dgfInterval>
+							<dgfAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@</tRegular>
+									<tSuperscript>
+										<tRegular>h</tRegular>
+									</tSuperscript>
+								</aText>
+								<aPurpose>dialnumber</aPurpose>
+								<aAnchor>middleleft</aAnchor>
+							</dgfAnnotation>
+						</dgFive>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Rektaszension (&#x0394;&#x03b1; 10</tRegular>
+							<tSuperscript>
+								<tRegular>m</tRegular>
+							</tSuperscript>
+						</aText>
+						<aText>
+							<tRegular>)</tRegular>
+						</aText>
+						<aPurpose>dialdescription</aPurpose>
+						<aAnchor>bottommiddle</aAnchor>
+						<aDistance>2.08</aDistance>
+					</dAnnotation>
+				</circleDial>
+				<circleAnnotation>
+					<aText>
+						<tRegular>&#x03b4; @{circle}@&#x00b0;</tRegular>
+					</aText>
+					<aPurpose>guidance</aPurpose>
+					<aAnchor>bottomright</aAnchor>
+					<aDistance>12.5</aDistance>
+					<aReverse>true</aReverse>
+				</circleAnnotation><circleAnnotation>
+					<aText>
+						<tRegular>&#x03b4; @{circle}@&#x00b0;</tRegular>
+					</aText>
+					<aPurpose>guidance</aPurpose>
+					<aAnchor>bottomright</aAnchor>
+					<aDistance>50</aDistance>
+					<aReverse>true</aReverse>
+				</circleAnnotation><circleAnnotation>
+					<aText>
+						<tRegular>&#x03b4; @{circle}@&#x00b0;</tRegular>
+					</aText>
+					<aPurpose>guidance</aPurpose>
+					<aAnchor>bottomright</aAnchor>
+					<aDistance>87.5</aDistance>
+					<aReverse>true</aReverse>
+				</circleAnnotation>
+			</horizonCircle>
+			<!--southern tropic-->
+			<horizonCircle>
+				<circleType>
+					<typeSouthernTropic>true</typeSouthernTropic>
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>S&#x00fc;dlicher Sonnenwendekreis</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>bottommiddle</aAnchor>
+					<aDistance>75</aDistance>
+					<aReverse>true</aReverse>
+				</circleAnnotation>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-20</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-10</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<!--equator-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>0</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>&#x00c4;quator</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>bottommiddle</aAnchor>
+					<aDistance>75</aDistance>
+					<aReverse>true</aReverse>
+				</circleAnnotation>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>10</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>20</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<!--northern tropic-->
+			<horizonCircle>
+				<circleType>
+					<typeNorthernTropic>true</typeNorthernTropic>
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>N&#x00f6;rdlicher Sonnenwendekreis</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>bottommiddle</aAnchor>
+					<aDistance>75</aDistance>
+				</circleAnnotation>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>30</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>40</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>50</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>60</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>70</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>80</aDecimal>
+						</parallelAltitude>
+					</typeParallel>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<!--meridians-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>0.0</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>15</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>30</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>45</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>60</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>20</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>bottomleft</aAnchor>
+								<aReverse>true</aReverse>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Deklination (&#x0394;&#x03b4; 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topleft</aAnchor>
+						<aDistance>10</aDistance>
+					</dAnnotation>
+				</circleDial>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>75</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>90</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>105</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>120</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>135</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>150</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>165</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>180</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>20</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>topright</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Deklination (&#x0394;&#x03b4; 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topleft</aAnchor>
+						<aDistance>10</aDistance>
+					</dAnnotation>
+				</circleDial>
+				
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>195</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>210</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>225</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>240</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>255</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>270</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>285</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>300</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>20</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>bottomleft</aAnchor>
+								<aReverse>true</aReverse>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Deklination (&#x0394;&#x03b4; 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topleft</aAnchor>
+						<aDistance>10</aDistance>
+					</dAnnotation>
+				</circleDial>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>315</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>330</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lExplicit>
+								<aDecimal>-25</aDecimal>
+							</lExplicit>
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>345</aDecimal>
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+		</chartHorizon><!--local-->
+		<chartHorizon>
+			<horizonType>
+				<typeLocal>
+					<localLatitude>
+						<aDiscrete>
+							<adDegree>51</adDegree>
+							<adMinute>30</adMinute>
+							<adSecond>58</adSecond>
+						</aDiscrete>
+						
+						
+					</localLatitude>
+					<localHA>
+						<tValue>
+							<tvDiscrete>
+								<tvdHour>12</tvdHour>
+								<tvdMinute>34</tvdMinute>
+								<tvdSecond>56.78</tvdSecond>
+							</tvDiscrete>
+						</tValue>
+					</localHA>
+				</typeLocal>
+			</horizonType>
+			<horizonPracticality>always</horizonPracticality><!--astronomical twilight-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-18</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleAnnotation>
+					<aText>
+						<tRegular>Astronomische D&#x00e4;mmerung @{circleInteger}@&#x00b0; Altitude (h)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topright</aAnchor>
+					<aDistance>23.5</aDistance>
+				</circleAnnotation>
+			</horizonCircle><!--nautical twilight-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-12</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleAnnotation>
+					<aText>
+						<tRegular>Nautische D&#x00e4;mmerung @{circleInteger}@&#x00b0; Altitude (h)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topright</aAnchor>
+					<aDistance>22.5</aDistance>
+				</circleAnnotation>
+			</horizonCircle><!--civil twilight-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-6</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>B&#x00fc;rgerliche D&#x00e4;mmerung @{circleInteger}@&#x00b0; Altitude (h)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topright</aAnchor>
+					<aDistance>22</aDistance>
+				</circleAnnotation>
+			</horizonCircle><!--sunset, sunrise-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-0.883</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>Sonnenaufgang -0.883&#x00b0; Altitude (h)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topright</aAnchor>
+					<aDistance>22</aDistance>
+				</circleAnnotation>
+				<circleAnnotation>
+					<aText>
+						<tRegular>Sonnenuntergang -0.883&#x00b0; Altitude (h)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topleft</aAnchor>
+					<aDistance>78</aDistance>
+				</circleAnnotation>
+			</horizonCircle><!--horizon-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>0</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>Horizont @{horizonLatitudeInteger}@&#x00b0;@{horizonLatitudeMinutes}@'@{horizonLatitudeSecondsDiscrete}@.@{horizonLatitudeSecondsFraction}@'' geografische Breite (&#x03c6;)</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>bottomleft</aAnchor>
+					<aDistance>10</aDistance>
+				</circleAnnotation>
+			</horizonCircle><horizonCircle>
+				
+				<circleImportance>canonical</circleImportance>
+			<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>10</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType></horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>20</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>30</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleDial>
+					<dBaseline>rail</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>10</dguInterval>
+							<dguSubdivision>4</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>dialsubnumber</aPurpose>
+								<aAnchor>middleleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Azimuth (&#x0394;A 2.5&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>dialdescription</aPurpose>
+						<aAnchor>bottomleft</aAnchor>
+						<aDistance>0.4</aDistance>
+					</dAnnotation>
+				</circleDial>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>40</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>50</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>60</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>70</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>80</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--meridians--><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>350</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>340</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>330</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>320</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>310</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>300</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>10</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>topleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Altitude (&#x0394;h 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topmiddle</aAnchor>
+						<aDistance>22</aDistance>
+					</dAnnotation>
+				</circleDial>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>290</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>280</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>270</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>260</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>250</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>240</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>230</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>220</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>210</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>200</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>190</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>180</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>170</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>160</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>150</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>140</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>130</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>120</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>110</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>100</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>90</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>80</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>70</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>60</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>10</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>topleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Altitude (&#x0394;h 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topmiddle</aAnchor>
+						<aDistance>22</aDistance>
+					</dAnnotation>
+				</circleDial>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>50</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>40</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>30</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>20</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>10</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>0.0</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle>
+		</chartHorizon><!--ecliptical-->
+		<chartHorizon>
+			<horizonType>
+				<typeEcliptical>true</typeEcliptical>
+				
+			</horizonType>
+			<horizonPracticality>sometimes</horizonPracticality><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-40</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-20</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--ecliptic-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>0.0</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleAnnotation>
+					<aText>
+						<tRegular>Ekliptik &#x03b5;</tRegular>
+						<tSubscript>
+							<tRegular>@{epochYearDiscrete}@</tRegular>
+						</tSubscript>
+					</aText>
+					<aText>
+						<tRegular>&#x0020;@{eclipticMeanObliquityInteger}@&#x00b0;@{eclipticMeanObliquityMinutes}@'@{eclipticMeanObliquitySecondsDiscrete}@.@{eclipticMeanObliquitySecondsFraction}@''</tRegular>
+					</aText>
+					<aPurpose>circledescription</aPurpose>
+					<aAnchor>topmiddle</aAnchor>
+					<aDistance>87.5</aDistance>
+				</circleAnnotation>
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>20</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance><circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>10</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>dialsubnumber</aPurpose>
+								<aAnchor>middleleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>dialdescription</aPurpose>
+						<aAnchor>bottomleft</aAnchor>
+						<aDistance>0.2</aDistance>
+					</dAnnotation>
+</circleDial>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>40</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>60</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>80</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--meridians--><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>0.0</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle>
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>20</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				
+			</horizonCircle><!--has dial-->
+			<horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>40</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+				<circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>20</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>guidance</aPurpose>
+								<aAnchor>topleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topmiddle</aAnchor>
+						<aDistance>14</aDistance>
+					</dAnnotation>
+				</circleDial>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>60</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>80</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>100</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>120</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>140</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>160</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>180</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>200</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>220</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>240</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>260</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>280</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>300</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>320</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+				<circleType>
+					<typeMeridian>
+						<meridianBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+						</meridianBegin>
+						<meridianEnd>
+							<lExplicit>
+								<aDecimal>85</aDecimal>
+								
+							</lExplicit>
+						</meridianEnd>
+						<meridianAzimuth>
+							<aDecimal>340</aDecimal>
+							
+						</meridianAzimuth>
+					</typeMeridian>
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+</horizonCircle>
+		</chartHorizon><!--galactic--><chartHorizon>
+			<horizonType>
+				<typeGalactic>true</typeGalactic>
+				
+			</horizonType>
+			<horizonPracticality>seldom</horizonPracticality><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-80</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-60</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-40</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>-20</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--has dial-->
+	<horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>0.0</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>cardinal</circleImportance>
+				<circleDial>
+					<dBaseline>none</dBaseline>
+					<dUnit>degree</dUnit>
+					<dGraduation>
+						<dgUnit>
+							<dguInterval>10</dguInterval>
+							<dguSubdivision>1</dguSubdivision>
+							<dguAnnotation>
+								<aText>
+									<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+								</aText>
+								<aPurpose>dialsubnumber</aPurpose>
+								<aAnchor>middleleft</aAnchor>
+							</dguAnnotation>
+						</dgUnit>
+					</dGraduation>
+					<dAnnotation>
+						<aText>
+							<tRegular>Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)</tRegular>
+						</aText>
+						<aPurpose>dialdescription</aPurpose>
+						<aAnchor>bottomleft</aAnchor>
+						<aDistance>20</aDistance>
+					</dAnnotation>
+				</circleDial>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lImplicit>eqp-25</lImplicit>
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>20</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>40</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>60</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><horizonCircle>
+				<circleType>
+					<typeParallel>
+						<parallelBegin>
+							<lExplicit>
+								<aDecimal>0.0</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelBegin>
+						<parallelEnd>
+							<lExplicit>
+								<aDecimal>360</aDecimal>
+								
+							</lExplicit>
+							
+							
+							
+							
+						</parallelEnd>
+						<parallelAltitude>
+							<aDecimal>60</aDecimal>
+							
+						</parallelAltitude>
+					</typeParallel>
+					
+				</circleType>
+				<circleImportance>canonical</circleImportance>
+			</horizonCircle><!--meridians--><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>0.0</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>20</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>40</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>60</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>80</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>100</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>120</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>140</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>160</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><!--has dial-->
+	<horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>180</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+		<circleDial>
+			<dBaseline>none</dBaseline>
+			<dUnit>degree</dUnit>
+			<dGraduation>
+				<dgUnit>
+					<dguInterval>20</dguInterval>
+					<dguSubdivision>1</dguSubdivision>
+					<dguAnnotation>
+						<aText>
+							<tRegular>@{dialCurrentInteger}@&#x00b0;</tRegular>
+						</aText>
+						<aPurpose>guidance</aPurpose>
+						<aAnchor>topleft</aAnchor>
+					</dguAnnotation>
+				</dgUnit>
+			</dGraduation>
+			<dAnnotation>
+				<aText>
+					<tRegular>Galaktische Breite (&#x0394;b 20&#x00b0;)</tRegular>
+				</aText>
+				<aPurpose>guidance</aPurpose>
+				<aAnchor>topleft</aAnchor>
+				<aDistance>10</aDistance>
+			</dAnnotation>
+		</circleDial>
+	</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>200</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>220</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>240</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>260</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>280</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>300</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>320</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle><horizonCircle>
+		<circleType>
+			<typeMeridian>
+				<meridianBegin>
+					<lImplicit>eqp-25</lImplicit>
+					
+				</meridianBegin>
+				<meridianEnd>
+					<lExplicit>
+						<aDecimal>85</aDecimal>
+						
+					</lExplicit>
+				</meridianEnd>
+				<meridianAzimuth>
+					<aDecimal>340</aDecimal>
+					
+				</meridianAzimuth>
+			</typeMeridian>
+		</circleType>
+		<circleImportance>canonical</circleImportance>
+</horizonCircle>
+</chartHorizon>
+	</astrolabeChart>
+</modelAstrolabe>
