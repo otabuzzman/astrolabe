@@ -3,6 +3,11 @@ package astrolabe;
 
 public class Vector {
 
+	private final static int Q1 = 1 ;
+	private final static int Q2 = 2 ;
+	private final static int Q3 = 3 ;
+	private final static int Q4 = 4 ;
+
 	private double x = 0 ;
 	private double y = 0 ;
 
@@ -41,6 +46,10 @@ public class Vector {
 
 	public double getY() {
 		return y ;
+	}
+
+	public int q() {
+		return y>=0?( x>=0?Q1:Q2 ):( x>=0?Q4:Q3 ) ;
 	}
 
 	public Vector add( Vector cartesian ) {

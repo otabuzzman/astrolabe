@@ -114,14 +114,18 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		v = circle.list( getReflect()?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
 		ps.operator.mark() ;
-		for ( int c=v.size() ; c>0 ; c-- ) {
-			xy = (double[]) v.get( c-1 ) ;
+		for ( int n=v.size() ; n>0 ; n-- ) {
+			xy = (double[]) v.get( n-1 ) ;
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 		} catch ( ParameterNotValidException e ) {} // ployline is considered well-defined
+
+		try {
+			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+		} catch ( ParameterNotValidException e ) {} // optional
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -174,8 +178,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			double[] xy ;
 
 			ps.operator.mark() ;
-			for ( int c=v.size() ; c>0 ; c-- ) {
-				xy = (double[]) v.get( c-1 ) ;
+			for ( int n=v.size() ; n>0 ; n-- ) {
+				xy = (double[]) v.get( n-1 ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
@@ -212,8 +216,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					double[] xy ;
 
 					ps.operator.mark() ;
-					for ( int c=vDFw.size() ; c>0 ; c-- ) {
-						xy = (double[]) vDFw.get( c-1 ) ;
+					for ( int n=vDFw.size() ; n>0 ; n-- ) {
+						xy = (double[]) vDFw.get( n-1 ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
@@ -228,16 +232,16 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					rv = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ;
 
 					ps.operator.mark() ;
-					for ( int c=fw.size() ; c>0 ; c-- ) {
-						xy = (double[]) fw.get( c-1 ) ;
+					for ( int n=fw.size() ; n>0 ; n-- ) {
+						xy = (double[]) fw.get( n-1 ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
 					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 					ps.operator.stroke() ;
 					ps.operator.mark() ;
-					for ( int c=rv.size() ; c>0 ; c-- ) {
-						xy = (double[]) rv.get( c-1 ) ;
+					for ( int n=rv.size() ; n>0 ; n-- ) {
+						xy = (double[]) rv.get( n-1 ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}

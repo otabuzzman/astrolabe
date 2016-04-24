@@ -151,8 +151,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 
 		v = list() ;
 		ps.operator.mark() ;
-		for ( int c=v.size() ; c>0 ; c-- ) {
-			xy = (double[]) v.get( c-1 ) ;
+		for ( int n=v.size() ; n>0 ; n-- ) {
+			xy = (double[]) v.get( n-1 ) ;
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}

@@ -122,9 +122,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 						dial.emitPS( ps ) ;
 						dial.tailPS( ps ) ;
 
-						// Dial annotation processing.
-						ApplicationHelper.emitPS( ps, dial.getAnnotation() ) ;
-
 						ps.operator.grestore() ;
 					} catch ( ParameterNotValidException e ) {} // optional
 
@@ -135,7 +132,18 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 				// Body processing
 				try {
-					ApplicationHelper.emitPS( ps, horizon.getBodyStellar(), horizon ) ;
+					for ( int bd=0 ; bd<horizon.getBodyCount() ; bd++ ) {
+						Body body ;
+
+						ps.operator.gsave() ;
+
+						body = AstrolabeFactory.createBody( horizon.getBody( bd ), horizon ) ;
+						body.headPS( ps ) ;
+						body.emitPS( ps ) ;
+						body.tailPS( ps ) ;
+
+						ps.operator.grestore() ;
+					}
 				} catch ( ParameterNotValidException e ) {} // optional
 
 				horizon.tailPS( ps ) ;

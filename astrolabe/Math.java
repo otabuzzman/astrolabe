@@ -3,6 +3,12 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+
 public final class Math {
 
 	public static final double lim0 = .000000000001 ;
@@ -298,5 +304,28 @@ public final class Math {
 
 	public static boolean isNaN( double v ) {
 		return Double.doubleToLongBits( v )==Double.doubleToLongBits( Double.NaN )?true:false ;
+	}
+
+	public static boolean isPointInsidePolygon( java.util.Vector<double[]> polygon, double[] p ) {
+		double[] xy ;
+		Coordinate[] cl ;
+		LinearRing gl ;
+		Polygon gpn ;
+		Point gpt ;
+
+		// convert polygon into geometry
+		cl = new Coordinate[polygon.size()+1] ;
+		for ( int n=polygon.size() ; n>0 ; n-- ) {
+			xy = polygon.get( n-1 ) ;
+			cl[n-1] = new Coordinate( xy[0], xy[1] ) ;
+		}
+		cl[polygon.size()] = cl[0] ;
+		gl = new GeometryFactory().createLinearRing( cl ) ;
+		gpn = new GeometryFactory().createPolygon( gl, null ) ;
+
+		// convert point into geometry
+		gpt = new GeometryFactory().createPoint( new Coordinate( p[0], p[1] ) ) ;
+
+		return gpn.covers( gpt ) ;
 	}
 }

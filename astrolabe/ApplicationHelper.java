@@ -512,32 +512,6 @@ public final class ApplicationHelper {
 		}
 	}
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.BodyStellar[] bs, Projector projector ) throws ParameterNotValidException {
-		if ( bs == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		for ( int b=0 ; b<bs.length ; b++ ) {
-			BodyStellar bodystellar ;
-
-			if ( bs[b]== null ) {
-				continue ;
-			}
-
-			ps.operator.gsave() ;
-
-			bodystellar = new BodyStellar( bs[b], projector ) ;
-			bodystellar.headPS( ps ) ;
-			bodystellar.emitPS( ps ) ;
-			bodystellar.tailPS( ps ) ;
-
-			// Body annotation processing.
-			emitPS( ps, bs[b].getGlyph().getAnnotation() ) ;
-
-			ps.operator.grestore() ;
-		}
-	}
-
 	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
 		if ( an == null ) {
 			throw new ParameterNotValidException() ;

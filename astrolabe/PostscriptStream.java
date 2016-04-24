@@ -423,6 +423,20 @@ public class PostscriptStream extends PrintStream {
 			print( "setgray\n" ) ;
 		} 
 
+		public void setdash( double dash ) {
+			array( true ) ;
+			if ( dash>0 ) {
+				push( dash ) ;
+			}
+			array( false ) ;
+			push( 0 ) ;
+			setdash() ;
+		} 
+
+		public void setdash() {        
+			print( "setdash\n" ) ;
+		} 
+
 		public void gsave() {        
 			print( "gsave\n" ) ;
 		} 
@@ -545,33 +559,37 @@ public class PostscriptStream extends PrintStream {
 			print( "moveto\n" ) ;
 		} 
 
-		public void div( double num ) {        
-			push( num ) ;
-			div() ;
-		} 
-
-		public void mul( double num ) {        
-			push( num ) ;
-			mul() ;
-		} 
-
-		public void sub( double num ) {        
-			push( num ) ;
-			sub() ;
-		} 
-
 		public void add( double num ) {        
 			push( num ) ;
 			add() ;
 		} 
 
+		public void add() {        
+			print( "add\n" ) ;
+		}
+
+		public void sub( double num ) {        
+			push( num ) ;
+			sub() ;
+		}
+
 		public void sub() {        
 			print( "sub\n" ) ;
 		} 
 
+		public void mul( double num ) {        
+			push( num ) ;
+			mul() ;
+		}
+
 		public void mul() {        
 			print( "mul\n" ) ;
 		} 
+
+		public void div( double num ) {        
+			push( num ) ;
+			div() ;
+		}
 
 		public void div() {        
 			print( "div\n" ) ;
@@ -579,10 +597,6 @@ public class PostscriptStream extends PrintStream {
 
 		public void arc() {        
 			print( "arc\n" ) ;
-		} 
-
-		public void add() {        
-			print( "add\n" ) ;
 		} 
 	}
 

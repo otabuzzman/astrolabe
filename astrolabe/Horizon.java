@@ -7,5 +7,6 @@ public interface Horizon extends Projector {
 	// inherited methods from model 
 	public int getCircleCount() ;
 	public astrolabe.model.Circle getCircle( int circle ) ;
-	public astrolabe.model.BodyStellar[] getBodyStellar() ;
+	public int getBodyCount() ;
+	public astrolabe.model.Body getBody( int body ) ;
 }

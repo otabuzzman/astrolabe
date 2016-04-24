@@ -71,7 +71,7 @@
 			<xs:element ref="Longitude" minOccurs="0"/>
 			<xs:element ref="Date" minOccurs="0"/>
 			<xs:element ref="Circle" maxOccurs="unbounded"/>
-			<xs:element ref="BodyStellar" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Body" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="practicality" use="required">
@@ -294,7 +294,7 @@
 		<xs:attribute name="purpose" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="obscure|bodydescription|circledescription|dialdescription|dialnumber|dialsubnumber|guidance"/>
+					<xs:pattern value="bodydescription|circledescription|constellationdescription|dialdescription|dialnumber|dialsubnumber|guidance|obscure"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -343,12 +343,22 @@
 	<xs:element name="Text" type="TextType"/>
 	<xs:element name="Subscript" type="TextType"/>
 	<xs:element name="Superscript" type="TextType"/>
-	<xs:complexType name="GlyphType">
+	<xs:element name="Body">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="BodyStellar"/>
+				<xs:element ref="BodyOrbital"/>
+				<xs:element ref="BodyAreal"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
+			<xs:element ref="Position"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="value" use="required">
+		<xs:attribute name="glyph" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="."/>
@@ -372,20 +382,41 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Glyph" type="GlyphType"/>
-	<xs:complexType name="BodyStellarType">
-		<xs:sequence>
-			<xs:element ref="Position"/>
-			<xs:element ref="Glyph"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-	</xs:complexType>
 	<xs:element name="BodyStellar" type="BodyStellarType"/>
+	<xs:element name="Position" type="SphericalType"/>
 	<xs:complexType name="BodyOrbitalType">
-		<xs:sequence/>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="asteroid|comet|planet|satelite|spacecraft"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyOrbital" type="BodyOrbitalType"/>
+	<xs:complexType name="BodyArealType">
+		<xs:sequence>
+			<xs:element ref="Position" maxOccurs="unbounded"/>
+			<xs:element ref="AnnotationCurved" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="constellation"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="annotation" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="none|(each|curved|hooked)(inside|beyond)"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="BodyAreal" type="BodyArealType"/>
 	<!--Basistypen und -elemente-->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" type="xs:double" use="required"/>
@@ -538,5 +569,4 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Spherical" type="SphericalType"/>
-	<xs:element name="Position" type="SphericalType"/>
 </xs:schema>

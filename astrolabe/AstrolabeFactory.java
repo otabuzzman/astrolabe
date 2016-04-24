@@ -98,6 +98,26 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
+	public static Body createBody( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
+		astrolabe.model.BodyStellar bdS ;
+		astrolabe.model.BodyOrbital bdO ;
+		Body body ;
+
+		if ( bd == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( bdS = bd.getBodyStellar() ) != null ) {
+			body = new BodyStellar( bdS, p ) ;
+		} else if ( ( bdO = bd.getBodyOrbital() ) != null ) {
+			body = new BodyOrbital( bdO, p ) ;
+		} else { // bd.getBodyAreal() != null
+			body = new BodyAreal( bd.getBodyAreal(), p ) ;
+		}
+
+		return body ;
+	}
+
 	public static Dial createDial( astrolabe.model.Dial dl, double epoch, Circle circle ) throws ParameterNotValidException {
 		astrolabe.model.DialDegree dlD ;
 		astrolabe.model.DialHour dlH ;
