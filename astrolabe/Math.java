@@ -33,7 +33,7 @@ public final class Math {
 
 		// sin(a):sin(b) = sin(al):sin(be)
 		// sin(b) = sin(be)*sin(a):sin(al) 
-		r = LawOfSine( al, be, a ) ;
+		r = LawOfSine(al, be, a) ;
 
 		return r ;
 	}

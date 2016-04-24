@@ -3,17 +3,10 @@
 <xs:schema xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.cartacelestis.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
-			<xs:element ref="Epoch"/>
+			<xs:element ref="Date"/>
 			<xs:element ref="Chart" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="locale" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="([a-z][a-z])|([a-z][a-z]_[A-Z][A-Z])"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Astrolabe" type="AstrolabeType"/>
 	<xs:complexType name="ChartType">
@@ -25,13 +18,6 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="a[0-6]|[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="scale" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:double">
-					<xs:minExclusive value="0"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -54,13 +40,7 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ChartStereographic">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ChartType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="ChartStereographic" type="ChartType"/>
 	<xs:element name="ChartOrthographic" type="ChartType"/>
 	<xs:element name="ChartEquidistant" type="ChartType"/>
 	<xs:element name="ChartGnomonic" type="ChartType"/>
@@ -93,7 +73,13 @@
 	</xs:element>
 	<xs:element name="HorizonLocal" type="HorizonType"/>
 	<xs:element name="HorizonEquatorial" type="HorizonType"/>
-	<xs:element name="HorizonEcliptical" type="HorizonType"/>
+	<xs:element name="HorizonEcliptical" type="HorizonType">
+		<xs:annotation>
+			<xs:documentation>
+				Priorität von Date vor Astrolabe/Date
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="HorizonGalactic" type="HorizonType"/>
 	<xs:complexType name="CircleType">
 		<xs:sequence>
@@ -124,14 +110,22 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="MarkType">
-		<xs:choice>
-			<xs:element ref="Immediate"/>
-			<xs:element ref="Reference"/>
-		</xs:choice>
-	</xs:complexType>
-	<xs:element name="Begin" type="MarkType"/>
-	<xs:element name="End" type="MarkType"/>
+	<xs:element name="Begin">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="Immediate"/>
+				<xs:element ref="Reference"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="End">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="Immediate"/>
+				<xs:element ref="Reference"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="ReferenceType">
 		<xs:attribute name="circle" type="xs:string" use="required"/>
 		<xs:attribute name="node" use="required">
@@ -176,52 +170,35 @@
 	<xs:element name="Dial">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="DialDegree"/>
-				<xs:element ref="DialHour"/>
-				<xs:element ref="DialDay"/>
+				<xs:element ref="DialAngle"/>
+				<xs:element ref="DialTime"/>
+				<xs:element ref="DialDate"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="DialDegree">
+	<xs:element name="DialAngle">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="DialType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="DialHour" type="DialType"/>
-	<xs:element name="DialDay">
+	<xs:element name="DialTime" type="DialType"/>
+	<xs:element name="DialDate">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="DialType">
-					<xs:sequence>
-						<xs:element ref="Sun"/>
-					</xs:sequence>
+					<xs:attribute name="sun" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="apparent|mean|true"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="SunType">
-		<xs:attribute name="ecliptic" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="mean|true"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Sun">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="SunApparent"/>
-				<xs:element ref="SunMean"/>
-				<xs:element ref="SunTrue"/>
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="SunApparent" type="SunType"/>
-	<xs:element name="SunMean" type="SunType"/>
-	<xs:element name="SunTrue" type="SunType"/>
 	<xs:complexType name="GraduationType">
 		<xs:sequence>
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
@@ -313,13 +290,7 @@
 	</xs:element>
 	<xs:element name="r" type="RationalType"/>
 	<xs:complexType name="StringType">
-		<xs:attribute name="value" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="appearant|mean|true"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="DMSType">
 		<xs:attribute name="deg" type="xs:integer" use="required"/>
@@ -389,19 +360,20 @@
 	</xs:complexType>
 	<xs:element name="Angle" type="AngleType">
 		<xs:annotation>
-			<xs:documentation>Azimut bei CircleMeridian, Höhe bei CircleParallel.</xs:documentation>
+			<xs:documentation>
+				Azimuth bei CircleMeridian, Altitude bei CircleParallel.
+				Polar und Tropic ignorieren.
+			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="Latitude" type="AngleType">
 		<xs:annotation>
-			<xs:documentation>Nur bei HorizonLocal relevant.</xs:documentation>
+			<xs:documentation>
+				Nur bei HorizonLocal, ignoriert bei übrigen.
+			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="Longitude" type="AngleType">
-		<xs:annotation>
-			<xs:documentation>Nur bei HorizonLocal relevant.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="Longitude" type="AngleType"/>
 	<xs:element name="HA" type="TimeType">
 		<xs:annotation>
 			<xs:documentation>Stundenwinkel.</xs:documentation>
@@ -415,26 +387,29 @@
 			<xs:element ref="Rational"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:element name="Time" type="TimeType">
-		<xs:annotation>
-			<xs:documentation>UTC</xs:documentation>
-		</xs:annotation>
+	<xs:element name="Time">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="TimeUT"/>
+			</xs:choice>
+		</xs:complexType>
 	</xs:element>
+	<xs:element name="TimeUT" type="TimeType"/>
 	<xs:complexType name="DateType">
-		<xs:choice>
-			<xs:element ref="Calendar"/>
-			<xs:element ref="JD"/>
-		</xs:choice>
-	</xs:complexType>
-	<xs:element name="Date" type="DateType"/>
-	<xs:element name="Epoch" type="DateType"/>
-	<xs:complexType name="CalendarType">
 		<xs:sequence>
 			<xs:element ref="YMD"/>
 			<xs:element ref="Time" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="Calendar" type="CalendarType"/>
+	<xs:element name="Date">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="DateOccidental"/>
+				<xs:element ref="JD"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DateOccidental" type="DateType"/>
 	<xs:complexType name="CartesianType">
 		<xs:attribute name="x" type="xs:double" use="required"/>
 		<xs:attribute name="y" type="xs:double" use="required"/>

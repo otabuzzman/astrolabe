@@ -5,36 +5,33 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class CircleMeridian implements Circle {
+public class CircleMeridian extends Model implements Circle {
 
 	private Chart chart ;
-	private Horizon horizon ;
+	protected Horizon horizon ;
 
 	private double segment ;
 	private double linewidth ;
 
-	private double az ;
+	protected double az ;
 
 	private double begin ;
 	private double end ;
 
 	public CircleMeridian( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
-		String key ;
-
 		segment = caa.CAACoordinateTransformation.DegreesToRadians(
-				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
-		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
+				getClassNode( clT.getName(), null ).getDouble( "division", 1 ) ) ;
+		linewidth = getClassNode( clT.getName(), "importance" ).getDouble( clT.getImportance(), .1 ) ;
 
 		this.chart = chart ;
 		this.horizon = horizon ;
 
 		try {
-			az = AstrolabeFactory.valueOf( clT.getAngle() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-			ApplicationHelper.registerDMS( key, az, 2 ) ;
+			az = Model.condense( clT.getAngle() ) ;
+			ReplacementHelper.registerDMS( "circle", az, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 		try {
-			begin = AstrolabeFactory.valueOf( clT.getBegin().getImmediate() ) ;
+			begin = Model.condense( clT.getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
@@ -43,14 +40,14 @@ public class CircleMeridian implements Circle {
 			registry = new Registry() ;
 			circle = (Circle) registry.retrieve( clT.getBegin().getReference().getCircle() ) ;
 
-			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = clT.getBegin().getReference().getNode().equals( "leading" ) ;
 
 			begin = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
 						intersect( (CircleMeridian) circle, leading ) ;
 		}
 		try {
-			end = AstrolabeFactory.valueOf( clT.getEnd().getImmediate() ) ;
+			end = Model.condense( clT.getEnd().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
@@ -59,7 +56,7 @@ public class CircleMeridian implements Circle {
 			registry = new Registry() ;
 			circle = (Circle) registry.retrieve( clT.getEnd().getReference().getCircle() ) ;
 
-			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = clT.getBegin().getReference().getNode().equals( "leading" ) ;
 
 			end = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
@@ -170,8 +167,8 @@ public class CircleMeridian implements Circle {
 	public boolean isClosed() {
 		double b, e ;
 
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
+		b = CAAHelper.MapTo0To360Range( begin ) ;
+		e = CAAHelper.MapTo0To360Range( end ) ;
 
 		return e==b||e>b ;
 	}
@@ -180,9 +177,9 @@ public class CircleMeridian implements Circle {
 		double b, e ;
 		double v ;
 
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
-		v = ApplicationHelper.MapTo0To360Range( al ) ;
+		b = CAAHelper.MapTo0To360Range( begin ) ;
+		e = CAAHelper.MapTo0To360Range( end ) ;
+		v = CAAHelper.MapTo0To360Range( al ) ;
 
 		return b>e?v>=b||v<=e:v>=b&&v<=e ;
 	}
@@ -203,7 +200,7 @@ public class CircleMeridian implements Circle {
 
 		// convert actual gn into local
 		gneq = horizon.convert( this.az, 0 ) ;
-		gnho = ApplicationHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
+		gnho = CAAHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
 		gnaz = gnho[0] ;
 		if ( gnaz==0 ) {	// prevent infinity from tan
 			gnaz = Math.e0 ;
@@ -211,7 +208,7 @@ public class CircleMeridian implements Circle {
 
 
 		if ( java.lang.Math.tan( gnaz )>0 ) {	// QI, QIII
-			vlAl = ApplicationHelper.MapTo0To90Range( gnaz ) ;
+			vlAl = CAAHelper.MapTo0To90Range( gnaz ) ;
 
 			// Rule of Napier : cos(90-a) = sin(al)*sin(c)
 			vlA = java.lang.Math.acos( java.lang.Math.sin( vlAl )*java.lang.Math.sin( blB ) ) ;
@@ -220,7 +217,7 @@ public class CircleMeridian implements Circle {
 
 			r[1] = horizon.getST()-rad180+vlDe ;
 		} else {							// QII, QIV
-			vlAl = rad90-ApplicationHelper.MapTo0To90Range( gnaz ) ;
+			vlAl = rad90-CAAHelper.MapTo0To90Range( gnaz ) ;
 
 			vlA = java.lang.Math.acos( java.lang.Math.sin( vlAl )*java.lang.Math.sin( blB ) ) ;
 			vlDe = java.lang.Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
@@ -258,7 +255,7 @@ public class CircleMeridian implements Circle {
 
 		// convert actual gn into local
 		gneq = horizon.convert( this.az, 0 ) ;
-		gnho = ApplicationHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
+		gnho = CAAHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
 		gnaz = gnho[0] ;
 		if ( gnaz==0 ) {	// prevent infinity from tan
 			gnaz = Math.e0 ;
@@ -283,10 +280,10 @@ public class CircleMeridian implements Circle {
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		gnB = rad90-gn.getAl() ;
+		gnB = rad90-gn.al ;
 		blA = rad90-transformParallelLa() ;
-		blB = rad90-gn.getHo().getLa() ;
-		blGa = gn.getHo().getST()-transformParallelST() ;
+		blB = rad90-gn.horizon.getLa() ;
+		blGa = gn.horizon.getST()-transformParallelST() ;
 
 		inaz = CircleParallel.intersection( rad90, gnB, blA, blB, blGa ) ;
 
@@ -295,13 +292,13 @@ public class CircleMeridian implements Circle {
 		inaz[1] = transformMeridianAl( inaz[1] ) ;
 
 		// unconvert local gn into actual
-		gneqA = ApplicationHelper.Horizontal2Equatorial( inaz[2], gn.getAl(), gn.getHo().getLa() ) ;
-		gneqA[0] = getHo().getST()-gneqA[0] ;
-		gnhoA = getHo().unconvert( gneqA ) ;
+		gneqA = CAAHelper.Horizontal2Equatorial( inaz[2], gn.al, gn.horizon.getLa() ) ;
+		gneqA[0] = horizon.getST()-gneqA[0] ;
+		gnhoA = horizon.unconvert( gneqA ) ;
 
-		gneqO = ApplicationHelper.Horizontal2Equatorial( inaz[3], gn.getAl(), gn.getHo().getLa() ) ;
-		gneqO[0] = getHo().getST()-gneqO[0] ;
-		gnhoO = getHo().unconvert( gneqO ) ;
+		gneqO = CAAHelper.Horizontal2Equatorial( inaz[3], gn.al, gn.horizon.getLa() ) ;
+		gneqO[0] = horizon.getST()-gneqO[0] ;
+		gnhoO = horizon.unconvert( gneqO ) ;
 
 		// sort associated values
 		if ( inaz[0]>inaz[1] ) {
@@ -319,7 +316,24 @@ public class CircleMeridian implements Circle {
 		gnaz = leading?gnhoO[0]:gnhoA[0] ;
 
 		if ( ! gn.examine( gnaz ) ) {
-			throw new ParameterNotValidException() ;
+			String hoac, hoin, cac, cin ;
+			double hoacla, hoacst, hoinla, hoinst, cacan, cinan ;
+
+			hoac = horizon.getClass().getName() ;
+			hoin = gn.horizon.getClass().getName() ;
+
+			cac = getClass().getName() ;
+			cin = gn.getClass().getName() ;
+
+			hoacla = CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ;
+			hoacst = CAACoordinateTransformation.RadiansToDegrees( horizon.getST() ) ;
+			hoinla = CAACoordinateTransformation.RadiansToDegrees( gn.horizon.getLa() ) ;
+			hoinst = CAACoordinateTransformation.RadiansToDegrees( gn.horizon.getST() ) ;
+
+			cacan = CAACoordinateTransformation.RadiansToDegrees( az ) ;
+			cinan = CAACoordinateTransformation.RadiansToDegrees( gn.al ) ;
+
+			throw new ParameterNotValidException( cac+" "+cacan+", "+hoac+" "+hoacla+"/"+hoacst+"intesects"+cin+" "+cinan+", "+hoin+" "+hoinla+"/"+hoinst ) ;
 		}
 
 		return leading?inaz[1]:inaz[0] ;
@@ -360,7 +374,24 @@ public class CircleMeridian implements Circle {
 		gnal = leading?inaz[3]:inaz[2] ;
 
 		if ( ! gn.examine( gnal ) ) {
-			throw new ParameterNotValidException() ;
+			String hoac, hoin, cac, cin ;
+			double hoacla, hoacst, hoinla, hoinst, cacan, cinan ;
+
+			hoac = horizon.getClass().getName() ;
+			hoin = gn.horizon.getClass().getName() ;
+
+			cac = getClass().getName() ;
+			cin = gn.getClass().getName() ;
+
+			hoacla = CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ;
+			hoacst = CAACoordinateTransformation.RadiansToDegrees( horizon.getST() ) ;
+			hoinla = CAACoordinateTransformation.RadiansToDegrees( gn.horizon.getLa() ) ;
+			hoinst = CAACoordinateTransformation.RadiansToDegrees( gn.horizon.getST() ) ;
+
+			cacan = CAACoordinateTransformation.RadiansToDegrees( az ) ;
+			cinan = CAACoordinateTransformation.RadiansToDegrees( gn.az ) ;
+
+			throw new ParameterNotValidException( cac+" "+cacan+", "+hoac+" "+hoacla+"/"+hoacst+"intesects"+cin+" "+cinan+", "+hoin+" "+hoinla+"/"+hoinst ) ;
 		}
 
 		return leading?inaz[1]:inaz[0] ;
@@ -389,17 +420,5 @@ public class CircleMeridian implements Circle {
 		}
 
 		return r ;
-	}
-
-	public Horizon getHo() {
-		return horizon ;
-	}
-
-	public double getAz() {
-		return az ;
-	}
-
-	public void setAz( double az ) {
-		this.az = az ;
 	}
 }

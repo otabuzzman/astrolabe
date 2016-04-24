@@ -3,14 +3,11 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
-public class QuantityHour extends QuantityDegree {
+public class QuantityTime extends QuantityAngle {
 
-	public QuantityHour( Circle circle ) {
+	public QuantityTime( Circle circle ) {
 		super( circle ) ;
 
-		double unit ;
-
 		unit = CAACoordinateTransformation.DegreesToRadians( 15 ) ;
-		setUnit( unit ) ;
 	}
 }

@@ -3,19 +3,18 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 import caa.CAANutation;
+import caa.CAADate;
 
 public class CircleSouthernTropic extends CircleParallel {
 
-	public CircleSouthernTropic( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
+	public CircleSouthernTropic( astrolabe.model.CircleType clT, Chart chart, Horizon horizon, CAADate epoch )
+	throws ParameterNotValidException {
 		super( clT, chart, horizon ) ;
-
-		double al ;
 
 		if ( ! horizon.isEquatorial() ) {
 			throw new ParameterNotValidException() ;
 		}
 
-		al = -CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( Astrolabe.getEpoch().Julian() ) ) ;
-		setAl( al ) ;
+		al = -CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( epoch.Julian() ) ) ;
 	}
 }

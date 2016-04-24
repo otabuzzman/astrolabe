@@ -3,33 +3,29 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
-public class QuantityDegree implements Quantity {
+public class QuantityAngle implements Quantity {
 
 	private Circle circle ;
 
 	private double span ;
-	private double unit ;
+	protected double unit ;
 
-	public QuantityDegree( Circle circle ) {
+	public QuantityAngle( Circle circle ) {
 		this.circle = circle ;
 
 		unit = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
 	}
 
-	public void register( int n ) {
+	public void register( String key, int n ) {
 		double d, rad12h ;
-		String key ;
 
 		try {
 			d = circle.spanNDistance( span, n ) ;
 			rad12h = CAACoordinateTransformation.HoursToRadians( 12 ) ;
 
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
-			ApplicationHelper.registerDMS( key, d, 2 ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
-			ApplicationHelper.registerTime( key, d, 2 ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-			ApplicationHelper.registerTime( key, d+rad12h, 2 ) ;
+			ReplacementHelper.registerAngle( key, d, 2 ) ;
+			ReplacementHelper.registerTime( key, d, 2 ) ;
+			ReplacementHelper.registerTime( key+"lt", d+rad12h, 2 ) ;
 		} catch ( ParameterNotValidException  e ) {}
 	}
 
@@ -55,9 +51,5 @@ public class QuantityDegree implements Quantity {
 		}
 
 		return r ;
-	}
-
-	public void setUnit( double unit ) {
-		this.unit = unit ;
 	}
 }

@@ -5,36 +5,34 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class CircleParallel implements Circle {
+public class CircleParallel extends Model implements Circle {
 
 	private Chart chart ;
-	private Horizon horizon ;
+	protected Horizon horizon ;
 
 	private double segment ;
 	private double linewidth ;
 
-	private double al ;
+	protected double al ;
 
 	private double begin ;
 	private double end ;
 
 	public CircleParallel( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
-		String key ;
 
 		segment = caa.CAACoordinateTransformation.DegreesToRadians(
-				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
-		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
+				getClassNode( clT.getName(), null ).getDouble( "segment", 1 ) ) ;
+		linewidth = getClassNode( clT.getName(), "importance" ).getDouble( clT.getImportance(), .1 ) ;
 
 		this.chart = chart ;
 		this.horizon = horizon ;
 
 		try {
-			al = AstrolabeFactory.valueOf( clT.getAngle() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-			ApplicationHelper.registerDMS( key, al, 2 ) ;
+			al = Model.condense( clT.getAngle() ) ;
+			ReplacementHelper.registerDMS( "circle", al, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 		try {
-			begin = AstrolabeFactory.valueOf( clT.getBegin().getImmediate() ) ;
+			begin = Model.condense( clT.getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
@@ -43,14 +41,14 @@ public class CircleParallel implements Circle {
 			registry = new Registry() ;
 			circle = (Circle) registry.retrieve( clT.getBegin().getReference().getCircle() ) ;
 
-			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = clT.getBegin().getReference().getNode().equals( "leading" ) ;
 
 			begin = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
 						intersect( (CircleMeridian) circle, leading ) ;
 		}
 		try {
-			end = AstrolabeFactory.valueOf( clT.getEnd().getImmediate() ) ;
+			end = Model.condense( clT.getEnd().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
@@ -59,7 +57,7 @@ public class CircleParallel implements Circle {
 			registry = new Registry() ;
 			circle = (Circle) registry.retrieve( clT.getEnd().getReference().getCircle() ) ;
 
-			leading = clT.getEnd().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = clT.getEnd().getReference().getNode().equals( "leading" ) ;
 
 			end = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
@@ -173,8 +171,8 @@ public class CircleParallel implements Circle {
 	public boolean isClosed() {
 		double b, e ;
 
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
+		b = CAAHelper.MapTo0To360Range( begin ) ;
+		e = CAAHelper.MapTo0To360Range( end ) ;
 
 		return e==b||e>b ;
 	}
@@ -183,14 +181,14 @@ public class CircleParallel implements Circle {
 		double b, e ;
 		double v ;
 
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
-		v = ApplicationHelper.MapTo0To360Range( az ) ;
+		b = CAAHelper.MapTo0To360Range( begin ) ;
+		e = CAAHelper.MapTo0To360Range( end ) ;
+		v = CAAHelper.MapTo0To360Range( az ) ;
 
 		return b>e?v>=b||v<=e:v>=b&&v<=e ;
 	}
 
-	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) throws ParameterNotValidException {
+	protected static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) throws ParameterNotValidException {
 		double blC, blAl, blBe ;
 		double rdGa[], rdDe ;
 		double gnGa[], gnDe ;
@@ -233,8 +231,8 @@ public class CircleParallel implements Circle {
 
 			rdaz[0] = rad180+rdGa[0] ;
 			rdaz[1] = rad180+rdGa[1] ;
-			gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-			gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+			gnaz[0] = CAAHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
+			gnaz[1] = CAAHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
 		} else if ( blB==0 ) {	// gnLa==90
 			blC = blA ;
 
@@ -253,8 +251,8 @@ public class CircleParallel implements Circle {
 
 			rdaz[0] = rad180+rdGa[0] ;
 			rdaz[1] = rad180+rdGa[1] ;
-			gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-			gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+			gnaz[0] = CAAHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
+			gnaz[1] = CAAHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
 		} else if ( java.lang.Math.sin( blGa )==0 ) {	/* rdST==gnST,
 															rdST==gnST+180 */
 			blC = java.lang.Math.abs( blA-blB*java.lang.Math.cos( blGa ) ) ;
@@ -311,8 +309,8 @@ public class CircleParallel implements Circle {
 
 					rdaz[0] = rad180-rdGa[0] ;
 					rdaz[1] = rad180-rdGa[1] ;
-					gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180-gnGa[0] ) ;
-					gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180-gnGa[1] ) ;
+					gnaz[0] = CAAHelper.MapTo0To360Range( rad180-gnGa[0] ) ;
+					gnaz[1] = CAAHelper.MapTo0To360Range( rad180-gnGa[1] ) ;
 				} else {
 					rdGa[0] = blBe-rdDe ;
 					rdGa[1] = blBe+rdDe ;
@@ -321,8 +319,8 @@ public class CircleParallel implements Circle {
 
 					rdaz[0] = rad180+rdGa[0] ;
 					rdaz[1] = rad180+rdGa[1] ;
-					gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-					gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+					gnaz[0] = CAAHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
+					gnaz[1] = CAAHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
 				}
 			} else {						// per
 				rdDe = rad180-rdDe ;
@@ -376,11 +374,11 @@ public class CircleParallel implements Circle {
 		inaz = CircleParallel.intersection( rdB, gnB, blA, blB, blGa ) ;
 
 		// unconvert local rd into actual
-		rdeqA = ApplicationHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
+		rdeqA = CAAHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
 		rdeqA[0] = horizon.getST()-rdeqA[0] ;
 		rdhoA = horizon.unconvert( rdeqA ) ;
 
-		rdeqO = ApplicationHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
+		rdeqO = CAAHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
 		rdeqO[0] = horizon.getST()-rdeqO[0] ;
 		rdhoO = horizon.unconvert( rdeqO ) ;
 
@@ -398,7 +396,7 @@ public class CircleParallel implements Circle {
 		}
 
 		// unconvert local gn into actual
-		gneq = ApplicationHelper.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gn.al, gn.horizon.getLa() ) ;
+		gneq = CAAHelper.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gn.al, gn.horizon.getLa() ) ;
 		gneq[0] = gn.horizon.getST()-gneq[0] ;
 		gnho = gn.horizon.unconvert( gneq ) ;
 
@@ -425,11 +423,11 @@ public class CircleParallel implements Circle {
 		inaz = CircleParallel.intersection( rdB, rad90, blA, blB, blGa ) ;
 
 		// unconvert local rd into actual
-		rdeqA = ApplicationHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
+		rdeqA = CAAHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
 		rdeqA[0] = horizon.getST()-rdeqA[0] ;
 		rdhoA = horizon.unconvert( rdeqA ) ;
 
-		rdeqO = ApplicationHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
+		rdeqO = CAAHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
 		rdeqO[0] = horizon.getST()-rdeqO[0] ;
 		rdhoO = horizon.unconvert( rdeqO ) ;
 
@@ -478,17 +476,5 @@ public class CircleParallel implements Circle {
 		}
 
 		return r ;
-	}
-
-	public Horizon getHo() {
-		return horizon ;
-	}
-
-	public double getAl() {
-		return al ;
-	}
-
-	public void setAl( double al ) {
-		this.al = al ;
 	}
 }

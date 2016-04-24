@@ -5,22 +5,22 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class GraduationSpan implements Graduation {
+public class GraduationSpan extends Model implements Graduation {
 
-	private double space ;
-	private double linelength ;
-	private double linewidth ;
+	protected double space ;
+	protected double linelength ;
+	protected double linewidth ;
 
 	private astrolabe.Vector tangent ;
 	private astrolabe.Vector origin ;
 
-	public GraduationSpan( astrolabe.Vector origin, astrolabe.Vector tangent ) {
+	public GraduationSpan( astrolabe.Vector origin, astrolabe.Vector tangent ) throws ParameterNotValidException {
 		this.origin = origin ;
 		this.tangent = tangent ;
 
-		space = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_SPACE, .4 ) ;
-		linelength = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINELENGTH, 2.8 ) ;
-		linewidth = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINEWIDTH, .01 ) ;
+		space = getClassNode( null, null ).getDouble( "space", .4 ) ;
+		linelength = getClassNode( null, null ).getDouble( "linelength", 2.8 ) ;
+		linewidth = getClassNode( null, null ).getDouble( "linewidth", .01 ) ;
 	}
 
 	private Vector<astrolabe.Vector> cartesianList() {
@@ -54,7 +54,7 @@ public class GraduationSpan implements Graduation {
 		initPS( ps ) ;
 
 		v = cartesianList() ;
-		d = ApplicationHelper.convertCartesianVectorToDouble( v ) ;
+		d = CircleHelper.convertCartesianVectorToDouble( v ) ;
 
 		ps.polyline( d ) ;
 		ps.operator.stroke() ;
@@ -63,17 +63,5 @@ public class GraduationSpan implements Graduation {
 		degA = CAACoordinateTransformation.RadiansToDegrees( radA )-90 ;
 
 		ps.operator.rotate( degA ) ;
-	}
-
-	public void setSpace( double space ) {
-		this.space = space ;
-	}
-
-	public void setLinelength( double linelength ) {
-		this.linelength = linelength ;
-	}
-
-	public void setLinewidth( double linewidth ) {
-		this.linewidth = linewidth ;
 	}
 }

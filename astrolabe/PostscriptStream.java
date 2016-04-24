@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.prefs.BackingStoreException;
-
 public class PostscriptStream extends PrintStream {
 
 	public final PostscriptStream.Operator operator = new Operator();
@@ -11,10 +9,10 @@ public class PostscriptStream extends PrintStream {
 	private PostscriptStream.UcBlock ucBlock[] = null ;
 	private java.util.Hashtable<String, String> ucEncodingVectors = null ;
 
-	private final int precision = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, 6 ) ;
-	private final int scanline = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, 254 ) ;
+	private final int precision = getClassNode( null, null ).getInt( "precision", 6 ) ;
+	private final int scanline = getClassNode( null, null ).getInt( "scanline", 254 ) ;
 
-	public PostscriptStream( java.io.PrintStream ps ) throws ParameterNotValidException {
+	public PostscriptStream( PrintStream ps ) throws java.util.prefs.BackingStoreException, ParameterNotValidException {
 		super( ps ) ;
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
@@ -166,23 +164,19 @@ public class PostscriptStream extends PrintStream {
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
 		ucEncodingVectors = new java.util.Hashtable<String, String>() ;
-		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
+		String vector = getClassNode( null, "unicode" ).get( "default", null ) ;
 		if ( vector == null ) {
 			vector = "/Times-Roman:" ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
 				vector = vector+"/question"+( cs!=255?" ":"" ) ;
 			}
 		}
-		try {
-			ucEncodingVectors.put( "default", vector ) ;
-			String[] encoding = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
-			for ( int e=0 ; e<encoding.length ; e++ ) {
-				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
-					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
-				}
+		ucEncodingVectors.put( "default", vector ) ;
+		String[] encoding = getClassNode( null, "unicode" ).keys() ;
+		for ( int e=0 ; e<encoding.length ; e++ ) {
+			if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
+				ucEncodingVectors.put( encoding[e], getClassNode( null, "unicode" ).get( encoding[e], null ) ) ;
 			}
-		} catch ( BackingStoreException e ) {
-			throw new ParameterNotValidException() ;
 		}
 	} 
 
@@ -683,6 +677,21 @@ public class PostscriptStream extends PrintStream {
 		} 
 	}
 
+	public java.util.prefs.Preferences getClassNode( String instance, String qualifier ) {        
+		String i = instance != null ? "/"+instance : "" ;
+		String q = qualifier != null ? "/"+qualifier : "" ;
+		String d = "/"+this.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
+		String n = d+i+q ;
+
+		try {
+			if ( ! java.util.prefs.Preferences.systemRoot().nodeExists( n ) ) {
+				n = d+q ;
+			}
+		} catch ( java.util.prefs.BackingStoreException e ) {}
+
+		return java.util.prefs.Preferences.systemRoot().node( n ) ;
+	}
+
 	public void emitDSCHeader() {
 		print( "%!PS-Adobe-3.0\n" ) ;
 		dsc.creator( getClass().getName() ) ;
@@ -695,10 +704,10 @@ public class PostscriptStream extends PrintStream {
 
 		try {
 			dsc.beginProlog() ;
-			prolog = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).keys() ;
+			prolog = getClassNode( null, "prolog" ).keys() ;
 			for ( int p=0 ; p<prolog.length ; p++ ) {
 				push( prolog[p] ) ;
-				String[] token = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).get( prolog[p], null ).split( " " ) ;
+				String[] token = getClassNode( null, "prolog" ).get( prolog[p], null ).split( " " ) ;
 				for ( int t=0 ; t<token.length ; t++ ) {
 					print( token[t]+"\n" ) ;
 				}
