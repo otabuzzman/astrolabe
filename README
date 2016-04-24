@@ -1,0 +1,4 @@
+1. Run make in .
+2. Run make in caa-1.17
+3. Use Poseidon to enerate Java code from astrolabe.zuml
+4. Start Eclipse and run/debug project astrolabe
