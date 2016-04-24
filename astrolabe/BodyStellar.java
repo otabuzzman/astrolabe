@@ -28,7 +28,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body, Ca
 		this.projector = projector ;
 
 		size = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_BODY_SIZE, DEFAULT_SIZE ) ;
+				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_SIZE, DEFAULT_SIZE ) ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
@@ -94,7 +94,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body, Ca
 			ps.operator.copy( 4 ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_VSUB ) ;
 			ps.push( .5 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_VSCALE ) ;	// p, text, p, ll, ur, d/2
+			ps.custom( ApplicationConstant.PS_PROLOG_VMUL ) ;	// p, text, p, ll, ur, d/2
 
 			// preserve length of d/2*goldensection
 			ps.operator.copy( 2 ) ;

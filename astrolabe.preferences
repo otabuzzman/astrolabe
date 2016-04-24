@@ -372,9 +372,12 @@
 				</node>
 			</node>
 			<node name="BodyStellar">
-				<map>
-					<entry key="size" value="2.2"/>
-				</map>
+				<map/>
+				<node name="zenit">
+					<map>
+						<entry key="size" value="4.2"/>
+					</map>
+				</node>
 			</node>
 			<node name="BodyAreal">
 				<map/>
@@ -382,6 +385,75 @@
 					<map>
 						<entry key="linewidth" value=".36"/>
 						<entry key="linedash" value="2.4"/>
+					</map>
+				</node>
+			</node>
+			<node name="BodyPlanet">
+				<map/>
+				<node name="mercury">
+					<map>
+						<entry key="segment" value=".2"/>
+						<entry key="stretch" value=".034"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="venus">
+					<map>
+						<entry key="segment" value=".6"/>
+						<entry key="stretch" value=".034"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="mars">
+					<map>
+						<entry key="segment" value="2"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="jupiter">
+					<map>
+						<entry key="segment" value="11"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="saturn">
+					<map>
+						<entry key="segment" value="28"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="uranus">
+					<map>
+						<entry key="segment" value="72"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="neptune">
+					<map>
+						<entry key="segment" value="180"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+			</node>
+			<node name="BodySun">
+				<map/>
+				<node name="mean">
+					<map>
+						<entry key="segment" value="1"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
+					</map>
+				</node>
+				<node name="true">
+					<map>
+						<entry key="segment" value="1"/>
+						<entry key="stretch" value="0"/>
+						<entry key="linewidth" value=".72"/>
 					</map>
 				</node>
 			</node>

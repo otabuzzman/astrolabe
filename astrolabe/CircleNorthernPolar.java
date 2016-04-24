@@ -24,6 +24,6 @@ public class CircleNorthernPolar extends CircleParallel {
 			( (astrolabe.model.CircleNorthernPolar) peer ).getAngle().getRational().setValue( degal ) ;
 		}
 
-		setup( peer, projector ) ;
+		setup( peer, epoch, projector ) ;
 	}
 }

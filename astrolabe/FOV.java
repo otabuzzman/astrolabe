@@ -24,7 +24,7 @@ public class FOV {
 		ol = new java.util.Vector<double[]>() ;
 
 		for ( int e=0 ; e<fe.size() ; e++ ) {
-			ed = ( (Circle) Registry.retrieve( fe.get( e ) ) ).list() ;
+			ed = ( (Baseline) Registry.retrieve( fe.get( e ) ) ).list() ;
 
 			s = 0 ;
 
@@ -51,7 +51,7 @@ public class FOV {
 			he = new GeometryFactory().createLinearRing( hole.geometry().getCoordinates() ) ;
 
 			fe = new GeometryFactory().createLinearRing( fov.getExteriorRing().getCoordinates() ) ;
-			
+
 			ni = fov.getNumInteriorRing() ;
 			fi = new LinearRing[ni+1] ;
 

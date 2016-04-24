@@ -16,6 +16,13 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Astrolabe" type="AstrolabeType"/>
+	<xs:element name="Epoch">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="DateType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="ChartType">
 		<xs:sequence>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
@@ -154,7 +161,13 @@
 	<xs:element name="Begin" type="MarkType"/>
 	<xs:element name="End" type="MarkType"/>
 	<xs:complexType name="ReferenceType">
-		<xs:attribute name="circle" type="xs:string" use="required"/>
+		<xs:attribute name="circle" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="node" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -223,7 +236,6 @@
 			<xs:choice>
 				<xs:element ref="DialDegree"/>
 				<xs:element ref="DialHour"/>
-				<xs:element ref="DialDay"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -236,20 +248,9 @@
 	</xs:element>
 	<xs:element name="DialHour" type="DialType"/>
 	<xs:element name="DialDay">
-		<xs:annotation>
-			<xs:documentation>Nur bei CircleParallel und HorizonEquatorial erlaubt.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="DialType">
-					<xs:attribute name="sun" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="apparent|mean|true"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
+				<xs:extension base="DialType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -357,6 +358,13 @@
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="zenit"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="glyph" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -386,6 +394,10 @@
 			<xs:choice>
 				<xs:element ref="BodyStellar"/>
 				<xs:element ref="BodyAreal"/>
+				<xs:element ref="BodyPlanet"/>
+				<xs:element ref="BodySun"/>
+				<xs:element ref="BodyElliptical"/>
+				<xs:element ref="BodyParabolic"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -406,6 +418,83 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyAreal" type="BodyArealType"/>
+	<xs:complexType name="BodyOrbitalType">
+		<xs:sequence>
+			<xs:element ref="DialDay" minOccurs="0"/>
+			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="BodyPlanet">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyOrbitalType">
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="mercury|venus|mars|jupiter|saturn|uranus|neptune"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BodySun">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyOrbitalType">
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="mean|true"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="circle" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[^,]+"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BodyElliptical">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyOrbitalType">
+					<xs:attribute name="a" type="xs:double" use="required"/>
+					<xs:attribute name="e" type="xs:double" use="required"/>
+					<xs:attribute name="i" type="xs:double" use="required"/>
+					<xs:attribute name="o" type="xs:double" use="required"/>
+					<xs:attribute name="w" type="xs:double" use="required"/>
+					<xs:attribute name="T" type="xs:double" use="required"/>
+					<xs:attribute name="equinox" type="xs:double" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BodyParabolic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyOrbitalType">
+					<xs:attribute name="q" type="xs:double" use="required"/>
+					<xs:attribute name="i" type="xs:double" use="required"/>
+					<xs:attribute name="o" type="xs:double" use="required"/>
+					<xs:attribute name="w" type="xs:double" use="required"/>
+					<xs:attribute name="T" type="xs:double" use="required"/>
+					<xs:attribute name="equinox" type="xs:double" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="CatalogType">
 		<xs:sequence>
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
@@ -567,13 +656,6 @@
 		</xs:choice>
 	</xs:complexType>
 	<xs:element name="Date" type="DateType"/>
-	<xs:element name="Epoch">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="DateType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
 	<xs:complexType name="CalendarType">
 		<xs:sequence>
 			<xs:element ref="YMD"/>

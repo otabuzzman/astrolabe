@@ -9,6 +9,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 	private final static double DEFAULT_SEGMENT = 1 ;
 	private final static double DEFAULT_IMPORTANCE = .1 ;
 
+	private double epoch ;
 	private Projector projector ;
 
 	private double segment ;
@@ -22,15 +23,16 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 	public CircleMeridian() {
 	}
 
-	public CircleMeridian( Object peer, Projector projector ) throws ParameterNotValidException {
-		setup( peer, projector ) ;
+	public CircleMeridian( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
+		setup( peer, epoch, projector ) ;
 	}
 
-	public void setup( Object peer, Projector projector ) throws ParameterNotValidException {
+	public void setup( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
+		this.epoch = epoch ;
 		this.projector = projector ;
 
 		segment = CAACoordinateTransformation.DegreesToRadians(
@@ -98,6 +100,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		return new double[] { v.x, v.y } ;
 	}
 
+	public double[] convert( double angle ) {
+		return projector.convert( az, angle ) ;
+	}
+
+	public double unconvert( double[] eq ) {
+		return projector.unconvert( eq )[1] ;
+	}
+
 	public double[] tangent( double al ) {
 		Vector a, b ;
 		double d, xy[] ;
@@ -128,7 +138,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 		r.add( project( begin, shift ) ) ;
 
-		g = mapIndexToAngleOfRange( begin, end ) ;
+		g = mapIndexToRange( begin, end ) ;
 		for ( double al=begin+g ; al<end ; al=al+segment ) {
 			r.add( project( al, shift ) ) ;
 		}
@@ -157,6 +167,20 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
 		ps.operator.stroke() ;
+
+		// Dial processing.
+		try {
+			Dial dial ;
+
+			ps.operator.gsave() ;
+
+			dial = AstrolabeFactory.companionOf( getDial(), epoch, this ) ;
+			dial.headPS( ps ) ;
+			dial.emitPS( ps ) ;
+			dial.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		} catch ( ParameterNotValidException e ) {} // optional
 
 		try {
 			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
@@ -352,15 +376,15 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		return CircleParallel.probe( al, begin, end ) ;
 	}
 
-	public double mapIndexToAngleOfScale( int index ) {
+	public double mapIndexToScale( int index ) {
 		return CircleParallel.mapIndexToAngleOfScale( index, segment, begin, end ) ;
 	}
 
-	public double mapIndexToAngleOfScale( double span ) {
+	public double mapIndexToScale( double span ) {
 		return CircleParallel.mapIndexToAngleOfScale( 0, span, begin, end ) ;
 	}
 
-	public double mapIndexToAngleOfScale( int index, double span ) {
+	public double mapIndexToScale( int index, double span ) {
 		return CircleParallel.mapIndexToAngleOfScale( index, span, begin, end ) ;
 	}
 
@@ -376,15 +400,15 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		return true ;
 	}
 
-	public double mapIndexToAngleOfRange() {
+	public double mapIndexToRange() {
 		return CircleParallel.gap( 0, segment, begin , end ) ;
 	}
 
-	public double mapIndexToAngleOfRange( double begin, double end ) {
+	public double mapIndexToRange( double begin, double end ) {
 		return CircleParallel.gap( 0, segment, begin , end ) ;
 	}
 
-	public double mapIndexToAngleOfRange( int index, double begin, double end ) {
+	public double mapIndexToRange( int index, double begin, double end ) {
 		return CircleParallel.gap( index, segment, begin , end ) ;
 	}
 

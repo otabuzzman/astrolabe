@@ -95,18 +95,9 @@ public final class ApplicationConstant {
 	// model values (AV_), patterns (AP_)
 	public static final String AV_CHART_NORTHERN = "northern" ;
 	public static final String AV_CHART_SOUTHERN = "southern" ;
-	public static final String AP_CHART_PAGESIZE = "[0-9]+(\\.[0-9]+)?x[0-9]+(\\.[0-9]+)?" ;
 
 	public static final String AV_CIRCLE_CHASING = "chasing" ;
 	public static final String AV_CIRCLE_LEADING = "leading" ;
-
-	public static final String AV_DIAL_NONE = "none" ;
-	public static final String AV_DIAL_LINE = "line" ;
-	public static final String AV_DIAL_RAIL = "rail" ;
-
-	public static final String AV_DIAL_APPARENT	= "apparent" ;
-	public static final String AV_DIAL_MEAN		= "mean" ;
-	public static final String AV_DIAL_TRUE		= "true" ;
 
 	public static final String AV_ANNOTATION_TOPLEFT		= "topleft" ;
 	public static final String AV_ANNOTATION_TOPMIDDLE		= "topmiddle" ;
@@ -130,7 +121,7 @@ public final class ApplicationConstant {
 	public static final String PN_CIRCLE_IMPORTANCE	= "importance" ;
 
 	public static final String PN_DIAL_ANNOTATION	= "annotation" ;
-	public static final String PK_DIAL_RISE			= "segment" ;
+	public static final String PK_DIAL_RISE			= "rise" ;
 	public static final String PN_DIAL_BASELINE		= "baseline" ;
 	public static final String PK_DIAL_SPACE		= "space" ;
 	public static final String PK_DIAL_THICKNESS	= "thickness" ;
@@ -149,6 +140,8 @@ public final class ApplicationConstant {
 	public static final String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
 	public static final String PK_BODY_SIZE			= "size" ;
+	public static final String PK_BODY_SEGMENT		= "segment" ;
+	public static final String PK_BODY_STRETCH		= "stretch" ;
 	public static final String PK_BODY_LINEWIDTH	= "linewidth" ;
 	public static final String PK_BODY_LINEDASH		= "linedash" ;
 
@@ -160,7 +153,7 @@ public final class ApplicationConstant {
 
 	public static final String PK_PRINTSTREAM_VIEWER	= "viewer" ;
 
-	// psotscript prolog definitions
+	// postscript prolog definitions
 	public static final String PS_PROLOG_ACOS			= "acos" ;
 	public static final String PS_PROLOG_ASIN			= "asin" ;
 	public static final String PS_PROLOG_LINE			= "line" ;

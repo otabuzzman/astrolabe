@@ -82,9 +82,9 @@ public final class AstrolabeFactory {
 		}
 
 		if ( ( clP = cl.getCircleParallel() ) != null ) {
-			circle = new CircleParallel( clP, p ) ;
+			circle = new CircleParallel( clP, epoch, p ) ;
 		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
-			circle = new CircleMeridian( clM, p ) ;
+			circle = new CircleMeridian( clM, epoch, p ) ;
 		} else if ( ( clSP = cl.getCircleSouthernPolar() ) != null ) {
 			circle = new CircleSouthernPolar( clSP, epoch, p ) ;
 		} else if ( ( clNP = cl.getCircleNorthernPolar() ) != null ) {
@@ -98,9 +98,8 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
-	public static Dial companionOf( astrolabe.model.Dial dl, double epoch, Circle circle ) throws ParameterNotValidException {
+	public static Dial companionOf( astrolabe.model.Dial dl, double epoch, Baseline baseline ) throws ParameterNotValidException {
 		astrolabe.model.DialDegree dlD ;
-		astrolabe.model.DialHour dlH ;
 		Dial dial ;
 
 		if ( dl == null ) {
@@ -108,11 +107,9 @@ public final class AstrolabeFactory {
 		}
 
 		if ( ( dlD = dl.getDialDegree() ) != null ) {
-			dial = new DialDegree( dlD, circle ) ;
-		} else if ( ( dlH = dl.getDialHour() ) != null ) {
-			dial = new DialHour( dlH, circle ) ;
-		} else { // dl.getDialDay() != null
-			dial = new DialDay( dl.getDialDay(), epoch, circle ) ;
+			dial = new DialDegree( dlD, baseline ) ;
+		} else { // dl.getDialHour() != null
+			dial = new DialHour( dl.getDialHour(), baseline ) ;
 		}
 
 		return dial ;
@@ -135,8 +132,12 @@ public final class AstrolabeFactory {
 		return annotation ;
 	}
 
-	public static Body companionOf( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
+	public static Body companionOf( astrolabe.model.Body bd, Projector p, double epoch ) throws ParameterNotValidException {
 		astrolabe.model.BodyStellar bdS ;
+		astrolabe.model.BodyAreal bdA ;
+		astrolabe.model.BodyPlanet bdP ;
+		astrolabe.model.BodySun bdH ;
+		astrolabe.model.BodyElliptical bdE ;
 		Body body ;
 
 		if ( bd == null ) {
@@ -145,8 +146,16 @@ public final class AstrolabeFactory {
 
 		if ( ( bdS = bd.getBodyStellar() ) != null ) {
 			body = new BodyStellar( bdS, p ) ;
-		} else { // bd.getBodyAreal() != null
-			body = new BodyAreal( bd.getBodyAreal(), p ) ;
+		} else if ( ( bdA = bd.getBodyAreal() ) != null ) {
+			body = new BodyAreal( bdA, p ) ;
+		} else if ( ( bdP = bd.getBodyPlanet() ) != null ) {
+			body = new BodyPlanet( bdP, epoch, p ) ;
+		} else if ( ( bdH = bd.getBodySun() ) != null ) {
+			body = new BodySun( bdH, epoch, p ) ;
+		} else if ( ( bdE = bd.getBodyElliptical() ) != null ) {
+			body = new BodyElliptical( bdE, p ) ;
+		} else { // bd.getBodyParabolic() != null
+			body = new BodyParabolic( bd.getBodyParabolic(), p ) ;
 		}
 
 		return body ;

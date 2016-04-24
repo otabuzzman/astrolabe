@@ -386,7 +386,7 @@ astrolabe.xsd">
 						</CircleMeridian>
 					</Circle>
 					<Body>
-						<BodyStellar glyph="N" turn="0.0" spin="-3.0">
+						<BodyStellar type="zenit" glyph="N" turn="0.0" spin="-3.0">
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -413,6 +413,48 @@ astrolabe.xsd">
 						</BodyStellar>
 					</Body>
 				</HorizonGalactic>
+			</Horizon>
+			<!--sun dials-->
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<Latitude>
+						<DMS min="0" sec="0.0" deg="0"/>
+					</Latitude>
+					<Circle>
+						<CircleParallel importance="canonical" name="suntrue">
+							<Angle>
+								<Rational value="-20"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<DMS min="0" sec="0.0" deg="0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical" name="sunmean">
+							<Angle>
+								<Rational value="-19.9"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<DMS min="0" sec="0.0" deg="0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
 			</Horizon>
 			<!--ecliptical-->
 			<Horizon>
@@ -463,7 +505,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="true" distance="88.5">
+								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="true" distance="71.5">
 									<Text value="Ekliptik">
 										<Subscript value="J@{epochej}@"/>
 									</Text>
@@ -929,6 +971,172 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
+					<!--planets-->
+					<Body>
+						<BodyPlanet type="mars">
+							<DialDay reflect="true" baseline="none">
+								<GraduationSpan span="10" division="1">
+									<AnnotationStraight purpose="guidance" reverse="false" anchor="middleleft" radiant="false">
+										<Text value="@{wertt}@. @{monatkurz}@"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+							<Annotation>
+								<AnnotationCurved purpose="dialdescription" reverse="true" anchor="bottommiddle" distance="97.8">
+									<Text value="Mars"/>
+								</AnnotationCurved>
+							</Annotation>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="jupiter">
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan span="90" division="1">
+									<AnnotationStraight purpose="guidance" reverse="false" anchor="middleleft" radiant="true">
+										<Text value="@{wertt}@. @{monatkurz}@"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+							<Annotation>
+								<AnnotationCurved purpose="dialdescription" reverse="false" anchor="bottommiddle" distance="12.5">
+									<Text value="Jupiter"/>
+								</AnnotationCurved>
+							</Annotation>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="saturn">
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan span="90" division="1">
+									<AnnotationStraight purpose="guidance" reverse="false" anchor="middleleft" radiant="true">
+										<Text value="@{wertt}@. @{monatkurz}@"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+							<Annotation>
+								<AnnotationCurved purpose="dialdescription" reverse="false" anchor="bottommiddle" distance="12.5">
+									<Text value="Saturn"/>
+								</AnnotationCurved>
+							</Annotation>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="uranus">
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan span="90" division="1">
+									<AnnotationStraight purpose="guidance" reverse="false" anchor="middleleft" radiant="true">
+										<Text value="@{wertt}@. @{monatkurz}@"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+							<Annotation>
+								<AnnotationCurved purpose="guidance" reverse="false" anchor="topmiddle" distance="50">
+									<Text value="Uranus"/>
+								</AnnotationCurved>
+							</Annotation>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="neptune">
+							<DialDay reflect="true" baseline="none">
+								<GraduationSpan span="180" division="1">
+									<AnnotationStraight purpose="guidance" reverse="false" anchor="middleleft" radiant="true">
+										<Text value="@{wertt}@. @{monatkurz}@"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+							<Annotation>
+								<AnnotationCurved purpose="guidance" reverse="false" anchor="topmiddle" distance="25">
+									<Text value="Neptun"/>
+								</AnnotationCurved>
+							</Annotation>
+						</BodyPlanet>
+					</Body>
+					<!--true sun-->
+					<Body>
+						<BodySun type="true" circle="suntrue">
+							<DialDay reflect="false" baseline="rail">
+								<GraduationSpan span="1" division="4">
+									<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
+										<Text value="@{wochentagkurz}@"/>
+									</AnnotationStraight>
+									<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
+										<Text value="@{zeitgleichungmin}@">
+											<Superscript value="m"/>
+										</Text>
+										<Text value="@{zeitgleichungsek}@">
+											<Superscript value="s"/>
+										</Text>
+									</AnnotationStraight>
+								</GraduationSpan>
+								<GraduationHalf span="7">
+									<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="true" reverse="false">
+										<Text value="@{julianischertag}@"/>
+									</AnnotationStraight>
+									<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
+										<Text value="@{wertt}@."/>
+									</AnnotationStraight>
+									<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
+										<Text value="@{zeitgleichungmin}@">
+											<Superscript value="m"/>
+										</Text>
+										<Text value="@{zeitgleichungsek}@">
+											<Superscript value="s"/>
+										</Text>
+									</AnnotationStraight>
+								</GraduationHalf>
+								<GraduationFull span="30">
+									<AnnotationStraight purpose="dialnumber" anchor="bottommiddle" radiant="false" reverse="false">
+										<Text value="@{monat}@"/>
+									</AnnotationStraight>
+									<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
+										<Text value="@{wertt}@."/>
+									</AnnotationStraight>
+									<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
+										<Text value="@{zeitgleichungmin}@">
+											<Superscript value="m"/>
+										</Text>
+										<Text value="@{zeitgleichungsek}@">
+											<Superscript value="s"/>
+										</Text>
+									</AnnotationStraight>
+								</GraduationFull>
+								<Annotation>
+									<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="99.06">
+										<Text value="Wahre Sonne (&#x0394;T 6">
+											<Superscript value="h"/>
+										</Text>
+										<Text value="), Zeitgleichung"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDay>
+						</BodySun>
+					</Body>
+					<!--mean sun-->
+					<Body>
+						<BodySun type="mean" circle="sunmean">
+							<DialDay reflect="true" baseline="rail">
+								<GraduationSpan span="1" division="4">
+									<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
+										<Text value="@{wertt}@."/>
+									</AnnotationStraight>
+								</GraduationSpan>
+								<GraduationHalf span="7">
+									<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
+										<Text value="@{wochentagkurz}@"/>
+									</AnnotationStraight>
+								</GraduationHalf>
+								<Annotation>
+									<AnnotationCurved purpose="dialdescription" anchor="topmiddle" reverse="false" distance="99.06">
+										<Text value="Mittlere Sonne @{epochej}@ (&#x0394;T 6">
+											<Superscript value="h"/>
+										</Text>
+										<Text value=")"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDay>
+						</BodySun>
+					</Body>
 				</HorizonEcliptical>
 			</Horizon>
 			<!--51d30m58s-->
@@ -1591,7 +1799,7 @@ astrolabe.xsd">
 						</CircleMeridian>
 					</Circle>
 					<Body>
-						<BodyStellar glyph="Z" turn="0.0" spin="0.0">
+						<BodyStellar type="zenit" glyph="Z" turn="0.0" spin="0.0">
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -1833,119 +2041,6 @@ astrolabe.xsd">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Angle>
-								<Rational value="-20"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialDay baseline="rail" reflect="false" sun="true">
-									<GraduationSpan span="1" division="4">
-										<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
-											<Text value="@{wochentagkurz}@"/>
-										</AnnotationStraight>
-										<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
-											<Text value="@{zeitgleichungmin}@">
-												<Superscript value="m"/>
-											</Text>
-											<Text value="@{zeitgleichungsek}@">
-												<Superscript value="s"/>
-											</Text>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf span="7">
-										<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="true" reverse="false">
-											<Text value="@{julianischertag}@"/>
-										</AnnotationStraight>
-										<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
-											<Text value="@{wertt}@."/>
-										</AnnotationStraight>
-										<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
-											<Text value="@{zeitgleichungmin}@">
-												<Superscript value="m"/>
-											</Text>
-											<Text value="@{zeitgleichungsek}@">
-												<Superscript value="s"/>
-											</Text>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<GraduationFull span="30">
-										<AnnotationStraight purpose="dialnumber" anchor="bottommiddle" radiant="false" reverse="false">
-											<Text value="@{monat}@"/>
-										</AnnotationStraight>
-										<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
-											<Text value="@{wertt}@."/>
-										</AnnotationStraight>
-										<AnnotationStraight purpose="guidance" anchor="topleft" radiant="false" reverse="false">
-											<Text value="@{zeitgleichungmin}@">
-												<Superscript value="m"/>
-											</Text>
-											<Text value="@{zeitgleichungsek}@">
-												<Superscript value="s"/>
-											</Text>
-										</AnnotationStraight>
-									</GraduationFull>
-									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="80.1">
-											<Text value="Wahre Sonne (&#x0394;T 6">
-												<Superscript value="h"/>
-											</Text>
-											<Text value="), Zeitgleichung"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDay>
-							</Dial>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-19.9"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialDay baseline="rail" reflect="true" sun="mean">
-									<GraduationSpan span="1" division="4">
-										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
-											<Text value="@{wertt}@."/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf span="7">
-										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
-											<Text value="@{wochentagkurz}@"/>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="topmiddle" reverse="false" distance="80">
-											<Text value="Mittlere Sonne @{epochej}@ (&#x0394;T 6">
-												<Superscript value="h"/>
-											</Text>
-											<Text value=")"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDay>
-							</Dial>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
 								<Rational value="-10"/>
 							</Angle>
 							<Begin>
@@ -2123,11 +2218,7 @@ astrolabe.xsd">
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
 							<Angle>
-								<Rational value="0.0" />
-								
-								
-								
-								
+								<Rational value="0.0"/>
 							</Angle>
 							<Begin>
 								<Immediate>
@@ -2150,11 +2241,7 @@ astrolabe.xsd">
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
 							<Angle>
-								<Rational value="0.0" />
-								
-								
-								
-								
+								<Rational value="0.0"/>
 							</Angle>
 							<Begin>
 								<Immediate>

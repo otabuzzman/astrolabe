@@ -32,7 +32,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 	private final static double DEFAULT_RISE = 3.2 ;
 
-	private Circle circle ;
+	private Baseline baseline ;
 
 	private Method headPSBaseline ;
 	private Method emitPSBaseline ;
@@ -46,14 +46,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 	private double unit ;
 
-	public DialDegree( Object peer, Circle circle ) {
-		this( peer, circle, CAACoordinateTransformation.DegreesToRadians( 1 ) ) ;
+	public DialDegree( Object peer, Baseline baseline ) {
+		this( peer, baseline, CAACoordinateTransformation.DegreesToRadians( 1 ) ) ;
 	}
 
-	public DialDegree( Object peer, Circle circle, double unit ) {
+	public DialDegree( Object peer, Baseline baseline, double unit ) {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		this.circle = circle ;	
+		this.baseline = baseline ;	
 		this.unit = unit ;
 
 		try {
@@ -83,11 +83,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
 		} catch ( ClassNotFoundException e ) {
 		} catch ( NoSuchMethodException e ) {
-			e.printStackTrace() ;
 		} catch ( NoSuchFieldException e ) {
-			e.printStackTrace() ;
 		} catch ( IllegalAccessException e ) {
-			e.printStackTrace() ;
 		}
 
 		rise = ApplicationHelper.getClassNode( this, getName(),
@@ -114,7 +111,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		emitPSGraduation( ps ) ;
 
-		v = circle.list( getReflect()?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
+		v = baseline.list( getReflect()?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
 		ps.operator.mark() ;
 		for ( int n=v.size() ; n>0 ; n-- ) {
 			xy = (double[]) v.get( n-1 ) ;
@@ -166,15 +163,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		try { // baseline
 			for ( ns=0 ; ; ns++ ) {
-				b = mapIndexToAngleOfScale( ns, getGraduationSpan().getSpan() ) ;
-				e = mapIndexToAngleOfScale( ns+1, getGraduationSpan().getSpan() ) ;
+				b = mapIndexToScale( ns, getGraduationSpan().getSpan() ) ;
+				e = mapIndexToScale( ns+1, getGraduationSpan().getSpan() ) ;
 
-				// in case that quantity handles dates this happens on turn of the year
-				if ( e<b ) {
-					continue ;
-				}
-
-				v.addAll( circle.list( b, e, getReflect()?-space:space ) ) ;
+				v.addAll( baseline.list( b, e, getReflect()?-space:space ) ) ;
 			}
 		} catch ( ParameterNotValidException ePNV ) {
 			double[] xy ;
@@ -200,16 +192,16 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		try { // baseline
 			for ( ; ; nss++ ) {
-				b = mapIndexToAngleOfScale( nss, span ) ;
-				e = mapIndexToAngleOfScale( nss+1, span ) ;
+				b = mapIndexToScale( nss, span ) ;
+				e = mapIndexToScale( nss+1, span ) ;
 
 				s = nss%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
-				vDFw = circle.list( b, e, s ) ;
+				vDFw = baseline.list( b, e, s ) ;
 
 				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
-				vDRv = circle.list( b, e, s ) ;
+				vDRv = baseline.list( b, e, s ) ;
 
 				vDRv = ApplicationHelper.reverseVector( vDRv ) ;
 				vDFw.addAll( vDRv ) ;
@@ -291,15 +283,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		// prepare circle closed check
 		s = getGraduationSpan().getSpan() ;
-		xy = circle.project( circle.mapIndexToAngleOfScale( 0, s*unit ) ) ;
+		xy = baseline.project( baseline.mapIndexToScale( 0 ) ) ;
 		bc = new Vector( xy[0], xy[1] ) ;
-		xy = circle.project( circle.mapIndexToAngleOfScale( -1, s*unit ) ) ;
+		xy = baseline.project( baseline.mapIndexToScale( -1 ) ) ;
 		ec = new Vector( xy[0], xy[1] ) ;
 		ec.sub( bc ) ;
 
 		// prepare dial start aligned with circle begin check
 		try {
-			xy = circle.project( mapIndexToAngleOfScale( 0, s ) ) ;
+			xy = baseline.project( mapIndexToScale( 0, s ) ) ;
 			bd = new Vector( xy[0], xy[1] ) ;
 			bc.sub( bd ) ;
 		} catch ( ParameterNotValidException e ) {} // cannot happen with index 0
@@ -312,15 +304,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		for ( ; ; ns++ ) {
 			try {
-				a = mapIndexToAngleOfScale( ns, s ) ;
+				a = mapIndexToScale( ns, s ) ;
 			} catch ( ParameterNotValidException e ) {
 				break ;
 			}
 
 			register( ns ) ;
 
-			o = circle.project( a, getReflect()?-( space+thickness ):space+thickness ) ;
-			t = circle.tangent( a ) ;
+			o = baseline.project( a, getReflect()?-( space+thickness ):space+thickness ) ;
+			t = baseline.tangent( a ) ;
 			if ( getReflect() ) {
 				t[0] = -t[0] ;
 				t[1] = -t[1] ;
@@ -348,11 +340,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		}
 	}
 
-	public double mapIndexToAngleOfScale( int index, double span ) throws ParameterNotValidException {
+	public double mapIndexToScale( int index, double span ) throws ParameterNotValidException {
 		double r ;
 
-		r = circle.mapIndexToAngleOfScale( index, span*unit ) ;
-		if ( ! circle.probe( r ) || r>Math.rad360 ) {
+		r = baseline.mapIndexToScale( index, span*unit ) ;
+		if ( ! baseline.probe( r ) || r>Math.rad360 ) {
 			throw new ParameterNotValidException() ;
 		}
 
@@ -362,7 +354,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 	public boolean isIndexAligned( int index, double span ) {
 		double a, b ;
 
-		a = circle.mapIndexToAngleOfScale( index, getGraduationSpan().getSpan()*unit ) ;
+		a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
 		b = span*unit ;
 
 		return Math.isLim0( a-(int) ( a/b )*b ) ;
@@ -373,7 +365,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		String key ;
 
 		try {
-			a = circle.mapIndexToAngleOfScale( index, getGraduationSpan().getSpan()*unit ) ;
+			a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
 
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
 			ApplicationHelper.registerDMS( key, a, 2 ) ;
