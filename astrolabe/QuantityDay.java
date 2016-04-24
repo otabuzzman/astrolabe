@@ -13,7 +13,8 @@ public class QuantityDay implements Quantity {
 	private double span ;
 	private double unit ;
 
-	private double jd0y ;
+	private double jdAy ;
+	private double jdOy ;
 	private double jd0 ;
 	private double jd0ra ;
 	private boolean jd0ready ;
@@ -31,10 +32,9 @@ public class QuantityDay implements Quantity {
 
 	public QuantityDay( Circle circle, Sun sun ) throws ParameterNotValidException {
 		long y ;
-		boolean g ;
+		CAADate cdA, cdO ;
 
-		if ( ! ( circle.isParallel() &&
-				( (CircleParallel) circle).getHo().isEquatorial() ) ) {
+		if ( ! circle.getHo().isEquatorial() || ! circle.isParallel() ) {
 			throw new ParameterNotValidException() ;
 		}
 
@@ -42,8 +42,13 @@ public class QuantityDay implements Quantity {
 		this.sun = sun ;
 
 		y = Astrolabe.getEpoch().Year() ;
-		g = ApplicationHelper.isDateGregorian( y, 1, 1 ) ;
-		jd0y = new CAADate( y, 1, 1, g ).Julian() ;
+		cdA = new CAADate( y, 1, 1, true ) ;
+		jdAy = cdA.Julian() ;
+		cdO = new CAADate( y+1, 1, 1, true ) ;
+		jdOy = cdO.Julian() ;
+
+		cdA.delete() ;
+		cdO.delete() ;
 
 		unit = 1 ;
 	}
@@ -52,12 +57,10 @@ public class QuantityDay implements Quantity {
 		boolean r ;
 		double jd ;
 		CAADate d ;
-		boolean g ;
 
-		jd = spanN2JD( n ) ;
+		jd = convertN2JD( n ) ;
 
-		g = ApplicationHelper.isDateGregorian( jd ) ;
-		d = new CAADate( jd, g ) ;
+		d = new CAADate( jd, true ) ;
 
 		if ( span == 7 ) {
 			r = d.DayOfWeek()==1 ;
@@ -67,20 +70,20 @@ public class QuantityDay implements Quantity {
 			r = Math.remainder( jd-jd0, span*unit )==0 ;
 		}
 
+		d.delete() ;
+
 		return r ;
 	}
 
 	public void register( int n ) {
 		CAADate d ;
-		boolean g ;
 		String dn, dns, mn, mns, key ;
 		double jd, eot ;
 
 		try {
-			jd = spanN2JD( n ) ;
+			jd = convertN2JD( n ) ;
 
-			g = ApplicationHelper.isDateGregorian( jd ) ;
-			d = new CAADate( jd, g ) ;
+			d = new CAADate( jd, true ) ;
 
 			dn = Astrolabe.getLocalizedString( ApplicationConstant.LN_CALENDAR_LONG+llday[ d.DayOfWeek() ] ) ;
 			dns = Astrolabe.getLocalizedString( ApplicationConstant.LN_CALENDAR_SHORT+llday[ d.DayOfWeek() ] ) ;
@@ -111,6 +114,8 @@ public class QuantityDay implements Quantity {
 
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
 			ApplicationHelper.registerMS( key, eot, 2, true ) ;
+
+			d.delete() ;
 		} catch ( ParameterNotValidException e ) {}
 	}
 
@@ -127,7 +132,7 @@ public class QuantityDay implements Quantity {
 			sun.setJD( jd0 ) ;
 			ra = sun.positionEq()[0] ;
 		} else {
-			jd = jd0y ;
+			jd = jdAy ;
 
 			try {
 				sun.setJD( jd ) ;
@@ -187,7 +192,7 @@ public class QuantityDay implements Quantity {
 		double eq[] ;
 
 		if ( jd0ready ) {
-			sun.setJD( spanN2JD( n ) ) ;
+			sun.setJD( convertN2JD( n ) ) ;
 			eq = sun.positionEq() ;
 
 			circle.cartesian( eq[0], 0 ) ;
@@ -204,15 +209,11 @@ public class QuantityDay implements Quantity {
 		return ra ;
 	}
 
-	private double spanN2JD( int n ) {
-		CAADate d ;
-		boolean g ;
+	private double convertN2JD( int n ) {
 		double jd ;
 
 		jd = jd0+n*span ;
-		g = ApplicationHelper.isDateGregorian( jd ) ;
-		d = new CAADate( jd, g ) ;
 
-		return d.Year()>Astrolabe.getEpoch().Year()?d.DayOfYear()+jd0y:jd ;
+		return jd>=jdOy?jdAy+( jd-jdOy ):jd ;
 	}
 }

@@ -2,10 +2,6 @@
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
 <xs:schema xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.cartacelestis.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
-		<xs:sequence>
-			<xs:element ref="Epoch"/>
-			<xs:element ref="Chart" maxOccurs="unbounded"/>
-		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="locale" use="optional">
 			<xs:simpleType>
@@ -15,7 +11,18 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Astrolabe" type="AstrolabeType"/>
+	<xs:element name="Astrolabe">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AstrolabeType">
+					<xs:sequence>
+						<xs:element ref="Epoch"/>
+						<xs:element ref="Chart" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="ChartType">
 		<xs:sequence>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
@@ -228,9 +235,6 @@
 	</xs:element>
 	<xs:element name="DialHour" type="DialType"/>
 	<xs:element name="DialDay">
-		<xs:annotation>
-			<xs:documentation>Nur bei CircleParallel und HorizonEquatorial erlaubt.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="DialType">

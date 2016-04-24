@@ -4,8 +4,10 @@ package astrolabe;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAANutation;
+import caa.CAASun;
 
 public final class ApplicationHelper {
 
@@ -36,7 +38,7 @@ public final class ApplicationHelper {
 		double h ;
 		String ind ;
 
-		h = caa.CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
+		h = CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
 
 		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
 		registerNumber( key+ind, (long) h ) ;
@@ -48,7 +50,7 @@ public final class ApplicationHelper {
 		double d ;
 		String ind ;
 
-		d = caa.CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
+		d = CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
 
 		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
 		registerNumber( key+ind, (long) d ) ;
@@ -62,9 +64,9 @@ public final class ApplicationHelper {
 		String ind ;
 
 		if ( h ) {
-			v = caa.CAACoordinateTransformation.RadiansToHours( value ) ;
+			v = CAACoordinateTransformation.RadiansToHours( value ) ;
 		} else {
-			v = caa.CAACoordinateTransformation.RadiansToDegrees( value ) ;
+			v = CAACoordinateTransformation.RadiansToDegrees( value ) ;
 		}
 
 		p = java.lang.Math.pow( 10, precision ) ;
@@ -168,36 +170,10 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static boolean isDateGregorian( double jd ) {
-		return jd>new caa.CAADate( 1582, 10, 4, false ).Julian() ;
-	}
-
-	public static boolean isDateGregorian( long[] date ) {
-		return isDateGregorian( date[0], date[1], date[2] ) ;
-	}
-
-	public static boolean isDateGregorian( long y, long m, long d ) {
-		boolean r = false ;
-
-		if ( y > 1582 ) {
-			r = true ;
-		} else if ( y == 1582 ) {
-			if ( m > 10 ) {
-				r = true ;
-			} else if ( m == 10 ) {
-				if ( d >= 15 ) {
-					r = true ;
-				}
-			}
-		}
-
-		return r ;
-	}
-
 	public static double MapTo0To24Range( double h ) {
-		return caa.CAACoordinateTransformation.HoursToRadians(
-				caa.CAACoordinateTransformation.MapTo0To24Range(
-						caa.CAACoordinateTransformation.RadiansToHours( h ) ) ) ;
+		return CAACoordinateTransformation.HoursToRadians(
+				CAACoordinateTransformation.MapTo0To24Range(
+						CAACoordinateTransformation.RadiansToHours( h ) ) ) ;
 	}
 
 	public static double MapTo0To90Range( double d ) {
@@ -216,33 +192,129 @@ public final class ApplicationHelper {
 	}
 
 	public static double MapTo0To360Range( double d ) {
-		return caa.CAACoordinateTransformation.DegreesToRadians(
-				caa.CAACoordinateTransformation.MapTo0To360Range(
-						caa.CAACoordinateTransformation.RadiansToDegrees( d ) ) ) ;
+		return CAACoordinateTransformation.DegreesToRadians(
+				CAACoordinateTransformation.MapTo0To360Range(
+						CAACoordinateTransformation.RadiansToDegrees( d ) ) ) ;
 	}
 
 	public static double[] Horizontal2Equatorial( double az, double al, double la ) {
+		CAA2DCoordinate c ;
 		double[] r ;
 
-		r = caa.CAACoordinateTransformation.Horizontal2Equatorial(
-				caa.CAACoordinateTransformation.RadiansToDegrees( az  ),
-				caa.CAACoordinateTransformation.RadiansToDegrees( al ),
-				caa.CAACoordinateTransformation.RadiansToDegrees( la ) ) ;
-		r[0] = caa.CAACoordinateTransformation.HoursToRadians( r[0] ) ;
-		r[1] = caa.CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Horizontal2Equatorial(
+				CAACoordinateTransformation.RadiansToDegrees( az  ),
+				CAACoordinateTransformation.RadiansToDegrees( al ),
+				CAACoordinateTransformation.RadiansToDegrees( la ) ) ;
+		r[0] = CAACoordinateTransformation.HoursToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
 
 		return r ;
 	}
 
 	public static double[] Equatorial2Horizontal( double HA, double de, double la ) {
+		CAA2DCoordinate c ;
 		double[] r ;
 
-		r = caa.CAACoordinateTransformation.Equatorial2Horizontal(
-				caa.CAACoordinateTransformation.RadiansToHours( HA  ),
-				caa.CAACoordinateTransformation.RadiansToDegrees( de ),
-				caa.CAACoordinateTransformation.RadiansToDegrees( la ) ) ;
-		r[0] = caa.CAACoordinateTransformation.DegreesToRadians( r[0] ) ;
-		r[1] = caa.CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.RadiansToHours( HA  ),
+				CAACoordinateTransformation.RadiansToDegrees( de ),
+				CAACoordinateTransformation.RadiansToDegrees( la ) ) ;
+		r[0] = CAACoordinateTransformation.DegreesToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
+
+		return r ;
+	}
+
+	public static double ApparentEclipticLongtitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAASun.ApparentEclipticLongtitude( JD ) ) ;
+	}
+
+	public static double ApparentEclipticLatitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAASun.ApparentEclipticLatitude( JD ) ) ;
+	}
+
+	public static double GeometricEclipticLongitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLongitude( JD ) ) ;
+	}
+
+	public static double GeometricEclipticLatitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLatitude( JD ) ) ;
+	}
+
+	public static double[] Ecliptic2Equatorial( double La, double Be, double e ) {
+		CAA2DCoordinate c ;
+		double[] r ;
+
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Ecliptic2Equatorial(
+				CAACoordinateTransformation.RadiansToDegrees( La  ),
+				CAACoordinateTransformation.RadiansToDegrees( Be ),
+				CAACoordinateTransformation.RadiansToDegrees( e ) ) ;
+		r[0] = CAACoordinateTransformation.HoursToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
+
+		return r ;
+	}
+
+	public static double[] Equatorial2Ecliptic( double Al, double De, double e ) {
+		CAA2DCoordinate c ;
+		double[] r ;
+
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Equatorial2Ecliptic(
+				CAACoordinateTransformation.RadiansToHours( Al  ),
+				CAACoordinateTransformation.RadiansToDegrees( De ),
+				CAACoordinateTransformation.RadiansToDegrees( e ) ) ;
+		r[0] = CAACoordinateTransformation.DegreesToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
+
+		return r ;
+	}
+
+	public static double[] Galactic2Equatorial( double l, double b ) {
+		CAA2DCoordinate c ;
+		double[] r ;
+
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Galactic2Equatorial(
+				CAACoordinateTransformation.RadiansToDegrees( l  ),
+				CAACoordinateTransformation.RadiansToDegrees( b ) ) ;
+		r[0] = CAACoordinateTransformation.HoursToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
+
+		return r ;
+	}
+
+	public static double[] Equatorial2Galactic( double Al, double De ) {
+		CAA2DCoordinate c ;
+		double[] r ;
+
+		r = new double[2] ;
+
+		c = CAACoordinateTransformation.Equatorial2Galactic(
+				CAACoordinateTransformation.RadiansToHours( Al  ),
+				CAACoordinateTransformation.RadiansToDegrees( De ) ) ;
+		r[0] = CAACoordinateTransformation.DegreesToRadians( c.X() ) ;
+		r[1] = CAACoordinateTransformation.DegreesToRadians( c.Y() ) ;
+
+		c.delete() ;
 
 		return r ;
 	}
@@ -260,7 +332,7 @@ public final class ApplicationHelper {
 		r = caa.CAACoordinateTransformation.MapTo0To360Range(
 				280.4664567+360007.6982779*rho+0.03032028*rho2+rho3/49931-rho4/15300-rho5/2000000 ) ;
 
-		return r ;
+		return CAACoordinateTransformation.DegreesToRadians( r ) ;
 	}
 
 	public static double MeanEclipticLatitude( double JD ) {

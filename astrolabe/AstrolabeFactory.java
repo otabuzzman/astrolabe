@@ -222,7 +222,7 @@ public final class AstrolabeFactory {
 	}
 
 	public static CAADate valueOf( DateType date ) throws ParameterNotValidException {
-		CAADate r = null ;
+		CAADate r ;
 
 		if ( date == null ) {
 			throw new ParameterNotValidException() ;
@@ -235,14 +235,14 @@ public final class AstrolabeFactory {
 
 			jd = AstrolabeFactory.valueOf( date.getJD() ) ;
 
-			r = new CAADate( jd, ApplicationHelper.isDateGregorian( jd ) ) ;
+			r = new CAADate( jd, true ) ;
 		}
 
 		return r ;
 	}
 
 	public static CAADate valueOf( CalendarType calendar ) throws ParameterNotValidException {
-		CAADate r = null ;
+		CAADate r ;
 		Calendar c ;
 		double t ;
 

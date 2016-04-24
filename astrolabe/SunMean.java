@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-
 public class SunMean implements Sun {
 
 	private double JD ;
@@ -24,9 +22,7 @@ public class SunMean implements Sun {
 		la = ApplicationHelper.MeanEclipticLatitude( JD ) ;
 		e = ApplicationHelper.getObliquityOfEcliptic( mean, Astrolabe.getEpoch().Julian() ) ;
 
-		r = CAACoordinateTransformation.Ecliptic2Equatorial( lo, la, e ) ;
-		r[0] = CAACoordinateTransformation.HoursToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Ecliptic2Equatorial( lo, la, e ) ;
 
 		return r ;
 	}

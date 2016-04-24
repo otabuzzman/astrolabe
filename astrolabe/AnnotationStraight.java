@@ -42,7 +42,7 @@ public class AnnotationStraight implements Annotation {
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
 
-		if ( anT.getRadiant() ) {
+		if ( ( (astrolabe.model.AnnotationStraight) anT ).getRadiant() ) {
 			ps.operator.rotate( 90 ) ;
 		}
 

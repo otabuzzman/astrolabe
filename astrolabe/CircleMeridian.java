@@ -232,7 +232,7 @@ public class CircleMeridian implements Circle {
 
 		// Rule of Napier : cos(c) = sin(90-a)*sin(90-b)
 		// sin(90-b) = cos(c):sin(90-a)
-		vlD = rad90-java.lang.Math.asin( java.lang.Math.cos( blB )/java.lang.Math.sin( vlA ) ) ;
+		vlD = rad90-java.lang.Math.asin( Math.truncate( java.lang.Math.cos( blB )/java.lang.Math.sin( vlA ) ) ) ;
 
 		r[2] = vlD ;
 

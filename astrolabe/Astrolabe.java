@@ -29,6 +29,8 @@ public class Astrolabe {
 		String key ;
 		java.io.FileInputStream pr ;
 
+		System.loadLibrary( "cygcaa-1.17" ) ;
+
 		this.alT = alT ;
 
 		try {
@@ -149,19 +151,7 @@ public class Astrolabe {
 				} // Circle processing.
 
 				// Body processing
-				for ( int bd=0 ; bd<hoT.getBodyCount() ; bd++ ) {
-					Body body ;
-
-					ps.operator.gsave() ;
-
-					body = new Body( hoT.getBody( bd ), chart, horizon ) ;
-					body.emitPS( ps ) ;
-
-					// Body annotation processing.
-					emitPS( ps, hoT.getBody( bd ).getAnnotation() ) ;
-
-					ps.operator.grestore() ;
-				}
+				emitPS( ps, hoT.getBody(), chart, horizon ) ;
 
 				ps.operator.grestore() ;
 			} // Horizon processing.
@@ -175,6 +165,22 @@ public class Astrolabe {
 		ps.emitDSCTrailer() ; // DSCTrailer.ps
 
 		ps.close();
+	}
+
+	private static void emitPS( PostscriptStream ps, astrolabe.model.Body[] bd, Chart chart, Horizon horizon ) throws ParameterNotValidException {
+		for ( int b=0 ; b<bd.length ; b++ ) {
+			Body body ;
+
+			ps.operator.gsave() ;
+
+			body = new Body( bd[b], chart, horizon ) ;
+			body.emitPS( ps ) ;
+
+			// Body annotation processing.
+			emitPS( ps, bd[b].getAnnotation() ) ;
+
+			ps.operator.grestore() ;
+		}
 	}
 
 	private static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
@@ -212,5 +218,9 @@ public class Astrolabe {
 
 	public static boolean isEclipticTrue() {
 		return ! mean ;
+	}
+
+	public void finalize() {
+		epoch.delete() ;
 	}
 }

@@ -3,6 +3,7 @@ astrolabe/model/
 caa-1.17/*
 !caa-1.17/Makefile
 !caa-1.17/README
+!caa-1.17/jdep.sh
 castor-0.9.6/
 commons-cli-1.0/
 commons-logging-1.0.5/

@@ -99,19 +99,27 @@ public class DialDegree implements Dial {
 	}
 
 	private void emitPSBaseLine( PostscriptStream ps ) throws ParameterNotValidException {
+		double b, e ;
+		int ns = 0 ;
 		java.util.Vector<astrolabe.Vector> vV ;
 		java.util.Vector<double[]> vD ;
-		int ns = 0 ;
 
 		vV = new java.util.Vector<astrolabe.Vector>() ;
 		quantity.setSpan( span ) ;
 
 		try { // baseline
 			for ( ; ; ns++ ) {
-				vV.addAll( circle.cartesianList( quantity.spanNDistance( ns ),
-						quantity.spanNDistance( ns+1 ), reflect?-space:space ) ) ;
+				b = quantity.spanNDistance( ns ) ;
+				e = quantity.spanNDistance( ns+1 ) ;
+
+				// in case that quantity handles dates this happens on turn of the year
+				if ( e<b ) {
+					continue ;
+				}
+
+				vV.addAll( circle.cartesianList( b, e, reflect?-space:space ) ) ;
 			}
-		} catch ( ParameterNotValidException e ) {
+		} catch ( ParameterNotValidException ePNV ) {
 			double[] xy ;
 
 			vD = ApplicationHelper.convertCartesianVectorToDouble( vV ) ;
@@ -140,6 +148,11 @@ public class DialDegree implements Dial {
 			for ( ; ; nss++ ) {
 				b = quantity.spanNDistance( nss ) ;
 				e = quantity.spanNDistance( nss+1 ) ;
+
+				// in case that quantity handles dates this happens on turn of the year
+				if ( e<b ) {
+					continue ;
+				}
 
 				s = nss%2==0?space:space+linewidth/2 ;
 				s = reflect?-s:s ;			
@@ -227,7 +240,8 @@ public class DialDegree implements Dial {
 
 		quantity.setSpan( span ) ;
 
-		ns = circle.isClosed()&&isAligned()?1:0 ;
+		// Closed circle and dial starting at 0
+		ns = circle.isClosed()&&Math.isE0( quantity.span0Distance() )?1:0 ;
 
 		for ( ; ; ns++ ) {
 			try {
@@ -279,20 +293,6 @@ public class DialDegree implements Dial {
 
 			ps.operator.grestore() ;
 		}
-	}
-
-	private boolean isAligned() {
-		Vector dA, d0 ;
-
-		dA = null ;
-		d0 = null ;
-
-		try {
-			dA = circle.cartesianA( 0 ) ;
-			d0 = circle.cartesian( quantity.span0Distance(), 0 ) ;
-		} catch ( ParameterNotValidException e ) {}
-
-		return Math.isE0( dA.getX()-d0.getX() )&&Math.isE0( dA.getY()-d0.getY() ) ;
 	}
 
 	public void setQuantity( Quantity quantity ) {

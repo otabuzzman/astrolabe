@@ -111,7 +111,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" radiant="false" reverse="false" distance="18.5">
+										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" reverse="false" distance="18.5">
 											<Text value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -301,7 +301,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middleleft" radiant="false" reverse="false" distance="12">
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="12">
 											<Text value="Galaktische Breite (&#x0394;b 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -384,7 +384,7 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
-					<Body value="N" turn="0.0">
+					<Body value="N" turn="0.0" spin="-3.0">
 						<Position>
 							<phi>
 								<Rational value="0.0"/>
@@ -404,8 +404,8 @@ astrolabe.xsd">
 							</AnnotationStraight>
 						</Annotation>
 						<Annotation>
-							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" radiant="false" reverse="false" distance="50">
-								<Text value="Galaktischer Nordpol"/>
+							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
+								<Text value="Galaktischer NP"/>
 							</AnnotationCurved>
 						</Annotation>
 					</Body>
@@ -460,7 +460,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" radiant="false" reverse="true" distance="88.5">
+								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="true" distance="88.5">
 									<Text value="Ekliptik">
 										<Subscript value="J@{epochej}@"/>
 									</Text>
@@ -492,7 +492,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" radiant="false" reverse="false" distance=".4">
+										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" reverse="false" distance=".4">
 											<Text value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -603,7 +603,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middle" radiant="false" reverse="false" distance="20">
+										<AnnotationCurved purpose="guidance" anchor="middle" reverse="false" distance="20">
 											<Text value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -632,7 +632,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middle" radiant="false" reverse="false" distance="20">
+										<AnnotationCurved purpose="guidance" anchor="middle" reverse="false" distance="20">
 											<Text value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -969,7 +969,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" radiant="false" reverse="false" distance="23.5">
+								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="23.5">
 									<Text value="Astronomische D&#x00e4;mmerung -18&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -988,7 +988,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" radiant="false" reverse="false" distance="22.5">
+								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22.5">
 									<Text value="Nautische D&#x00e4;mmerung -12&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1007,7 +1007,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" radiant="false" reverse="false" distance="22">
+								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22">
 									<Text value="B&#x00fc;rgerliche D&#x00e4;mmerung -6&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1026,12 +1026,12 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" radiant="false" reverse="false" distance="22">
+								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22">
 									<Text value="Sonnenaufgang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topleft" radiant="false" reverse="false" distance="78">
+								<AnnotationCurved purpose="circledescription" anchor="topleft" reverse="false" distance="78">
 									<Text value="Sonnenuntergang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1050,7 +1050,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="bottomleft" radiant="false" reverse="false" distance="10">
+								<AnnotationCurved purpose="circledescription" anchor="bottomleft" reverse="false" distance="10">
 									<Text value="Horizont @{breitegrd}@&#x00b0;@{breitegmin}@'@{breitegsek}@.@{breitegfrk}@'' geografische Breite (&#x03c6;)"/>
 									<Text value=", Sternzeit @{sternzeitstd}@">
 										<Superscript value="h"/>
@@ -1119,7 +1119,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="middleleft" radiant="false" reverse="false" distance=".45">
+										<AnnotationCurved purpose="dialdescription" anchor="middleleft" reverse="false" distance=".45">
 											<Text value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -1294,7 +1294,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middle" radiant="false" reverse="false" distance="22">
+										<AnnotationCurved purpose="guidance" anchor="middle" reverse="false" distance="22">
 											<Text value="Altitude (&#x0394;h 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -1548,7 +1548,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middle" radiant="false" reverse="false" distance="22">
+										<AnnotationCurved purpose="guidance" anchor="middle" reverse="false" distance="22">
 											<Text value="Altitude (&#x0394;h 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -1601,7 +1601,7 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
-					<Body value="Z" turn="0.0">
+					<Body value="Z" turn="0.0" spin="0.0">
 						<Position>
 							<phi>
 								<Rational value="0.0"/>
@@ -1610,8 +1610,8 @@ astrolabe.xsd">
 								<Rational value="90"/>
 							</theta>
 						</Position>
-					<Annotation>
-							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" radiant="false" reverse="false" distance="50">
+						<Annotation>
+							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
 								<Text value="Zenit"/>
 							</AnnotationCurved>
 						</Annotation>
@@ -1640,7 +1640,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" radiant="false" reverse="false" anchor="topmiddle" distance="52">
+								<AnnotationCurved purpose="circledescription" reverse="false" anchor="topmiddle" distance="52">
 									<Text value="Zirkumpolarkreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1694,7 +1694,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="middle" radiant="false" reverse="true" distance="1.04">
+										<AnnotationCurved purpose="dialdescription" anchor="middle" reverse="true" distance="1.04">
 											<Text value="Lokalzeit (&#x0394;t 7.5">
 												<Superscript value="m"/>
 											</Text>
@@ -1745,7 +1745,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" radiant="false" reverse="false" distance="1.04">
+										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="1.04">
 											<Text value="Rektaszension (&#x0394;&#x03b1; 10">
 												<Superscript value="m"/>
 											</Text>
@@ -1755,17 +1755,17 @@ astrolabe.xsd">
 								</DialHour>
 							</Dial>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" radiant="false" reverse="false" distance="12.5">
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="12.5">
 									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" radiant="false" reverse="false" distance="50">
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="50">
 									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" radiant="false" reverse="false" distance="87.5">
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="87.5">
 									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1834,7 +1834,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationFull>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" radiant="false" reverse="false" distance="80.1">
+										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="80.1">
 											<Text value="Wahre Sonne (&#x0394;T 6">
 												<Superscript value="h"/>
 											</Text>
@@ -1876,7 +1876,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="topmiddle" radiant="false" reverse="false" distance="80">
+										<AnnotationCurved purpose="dialdescription" anchor="topmiddle" reverse="false" distance="80">
 											<Text value="Mittlere Sonne @{epochej}@ (&#x0394;T 6">
 												<Superscript value="h"/>
 											</Text>
@@ -1924,7 +1924,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" radiant="false" reverse="false" distance="26">
+								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="26">
 									<Text value="&#x00c4;quator"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2083,7 +2083,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" radiant="false" reverse="false" distance="26.5">
+								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="26.5">
 									<Text value="S&#x00fc;dlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2106,7 +2106,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" radiant="false" reverse="false" distance="27">
+								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="27">
 									<Text value="N&#x00f6;rdlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2222,7 +2222,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" radiant="false" reverse="false" anchor="middleleft" distance="10">
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
 											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -2372,7 +2372,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" radiant="false" reverse="false" anchor="middleleft" distance="10">
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
 											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -2522,7 +2522,7 @@ astrolabe.xsd">
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" radiant="false" reverse="false" anchor="middleleft" distance="10">
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
 											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>

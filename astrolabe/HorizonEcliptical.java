@@ -11,18 +11,18 @@ public class HorizonEcliptical implements Horizon {
 
 	public HorizonEcliptical( astrolabe.model.HorizonType hoT ) {
 		double[] eq ;
-		double e ;
-		double JD ;
+		double e, JD, rad90 ;
 		String key ;
+
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
 		this.grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 
 		JD = Astrolabe.getEpoch().Julian() ;
 		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
-		eq = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90,
-				CAACoordinateTransformation.RadiansToDegrees( e ) ) ;
-		la = CAACoordinateTransformation.DegreesToRadians( eq[1] ) ;
-		ST = CAACoordinateTransformation.HoursToRadians( eq[0] ) ;
+		eq = ApplicationHelper.Ecliptic2Equatorial( 0, rad90, e ) ;
+		la = eq[1] ;
+		ST = eq[0] ;
 
 		try {
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
@@ -43,13 +43,7 @@ public class HorizonEcliptical implements Horizon {
 
 		JD = Astrolabe.getEpoch().Julian() ;
 		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
-		r = CAACoordinateTransformation.Ecliptic2Equatorial(
-				CAACoordinateTransformation.RadiansToDegrees( l ),
-				CAACoordinateTransformation.RadiansToDegrees( b ) ,
-				CAACoordinateTransformation.RadiansToDegrees( e ) ) ;
-
-		r[0] = CAACoordinateTransformation.HoursToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Ecliptic2Equatorial( l, b, e ) ;
 
 		return r ;
 	}
@@ -69,13 +63,7 @@ public class HorizonEcliptical implements Horizon {
 
 		JD = Astrolabe.getEpoch().Julian() ;
 		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
-		r = CAACoordinateTransformation.Equatorial2Ecliptic(
-				CAACoordinateTransformation.RadiansToHours( RA ),
-				CAACoordinateTransformation.RadiansToDegrees( d ),
-				CAACoordinateTransformation.RadiansToDegrees( e ) ) ;
-
-		r[0] = CAACoordinateTransformation.DegreesToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Equatorial2Ecliptic( RA, d, e ) ;
 
 		return r ;
 	}

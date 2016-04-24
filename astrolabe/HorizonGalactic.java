@@ -11,12 +11,15 @@ public class HorizonGalactic implements Horizon {
 
 	public HorizonGalactic( astrolabe.model.HorizonType hoT ) {
 		double[] eq ;
+		double rad90 ;
 		String key ;
 
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+
 		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
-		eq = CAACoordinateTransformation.Galactic2Equatorial( 0, 90 ) ;
-		la = CAACoordinateTransformation.DegreesToRadians( eq[1] ) ;
-		ST = CAACoordinateTransformation.HoursToRadians( eq[0] ) ;
+		eq = ApplicationHelper.Galactic2Equatorial( 0, rad90 ) ;
+		la = eq[1] ;
+		ST = eq[0] ;
 
 		try {
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
@@ -33,12 +36,7 @@ public class HorizonGalactic implements Horizon {
 	public double[] convert( double l, double b ) {
 		double[] r ;
 
-		r = CAACoordinateTransformation.Galactic2Equatorial(
-				CAACoordinateTransformation.RadiansToDegrees( l ),
-				CAACoordinateTransformation.RadiansToDegrees( b ) ) ;
-
-		r[0] = CAACoordinateTransformation.HoursToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Galactic2Equatorial( l, b ) ;
 
 		return r ;
 	}
@@ -54,12 +52,7 @@ public class HorizonGalactic implements Horizon {
 	public double[] unconvert( double RA, double d ) {
 		double[] r ;
 
-		r = CAACoordinateTransformation.Equatorial2Galactic(
-				CAACoordinateTransformation.RadiansToHours( RA ),
-				CAACoordinateTransformation.RadiansToDegrees( d ) ) ;
-
-		r[0] = CAACoordinateTransformation.DegreesToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Equatorial2Galactic( RA, d ) ;
 
 		return r ;
 	}

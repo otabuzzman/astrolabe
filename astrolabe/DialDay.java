@@ -9,7 +9,7 @@ public class DialDay extends DialDegree {
 		Sun sun ;
 		Quantity quantity ;
 
-		sun = AstrolabeFactory.createSun( ( (astrolabe.model.DialDay) dlT).getSun() ) ;
+		sun = AstrolabeFactory.createSun( ( (astrolabe.model.DialDay) dlT ).getSun() ) ;
 		quantity = new QuantityDay( circle, sun ) ;
 		setQuantity( quantity ) ;
 	}

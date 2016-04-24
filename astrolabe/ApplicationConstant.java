@@ -130,7 +130,7 @@ public final class ApplicationConstant {
 	public static final String PK_ANNOTATION_RISE				= "rise" ;
 	public static final String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
-	public static final String PN_GLYPTH_SIZE = "size" ;
+	public static final String PN_BODY_SIZE = "size" ;
 
 	public static final String PK_POSTSCRIPT_PRECISION	= "precision" ;
 	public static final String PK_POSTSCRIPT_SCANLINE	= "scanline" ;

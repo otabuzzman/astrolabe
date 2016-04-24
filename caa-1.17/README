@@ -1,3 +1,13 @@
-1. Copy contents of aaplus from aaplus.zip 1.17 into naa.
-2. Rename AAAberation.h to AAAberration.h (Two 'r').
-3. Run make.
+create folder src/caa
+copy AA distribution into folder
+run CPP on src/caa/AA[!+]*.h to create src/caa/CAA[!+]*.h
+	for h in AA[!+]*.h ; do g++ -E -I. $h -o C$h ; done
+get and compile CXXWRAP
+run CXXWRAP on src/caa/CAA[!+]*.h
+	for h in src/caa/C*.h ; do $CXXWRAP --jni --jni-attributes --root=src caa/`basename $h` ; done
+remove .*J2000 methods from caa/CAASaturn.java and caa/CAASaturn_jni.cxx
+run make
+
+Helpful links concerning JNI:
+http://java.sun.com/developer/JDCTechTips/2001/tt0612.html, chapter USING PEER CLASSES WITH THE JAVA NATIVE INTERFACE
+http://www.ddj.com/cpp/184401335, also available in PDF

@@ -1,9 +1,6 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-import caa.CAASun;
-
 public class SunTrue implements Sun {
 
 	private double JD ;
@@ -21,13 +18,11 @@ public class SunTrue implements Sun {
 		double r[] ;
 		double lo, la, e ;
 
-		lo = CAASun.GeometricEclipticLongitude( JD ) ;
-		la = CAASun.GeometricEclipticLatitude( JD ) ;
+		lo = ApplicationHelper.GeometricEclipticLongitude( JD ) ;
+		la = ApplicationHelper.GeometricEclipticLatitude( JD ) ;
 		e = ApplicationHelper.getObliquityOfEcliptic( mean, Astrolabe.getEpoch().Julian() ) ;
 
-		r = CAACoordinateTransformation.Ecliptic2Equatorial( lo, la, e ) ;
-		r[0] = CAACoordinateTransformation.HoursToRadians( r[0] ) ;
-		r[1] = CAACoordinateTransformation.DegreesToRadians( r[1] ) ;
+		r = ApplicationHelper.Ecliptic2Equatorial( lo, la, e ) ;
 
 		return r ;
 	}
