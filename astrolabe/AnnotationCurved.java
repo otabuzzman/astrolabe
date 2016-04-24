@@ -52,141 +52,144 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	public void headPS( PostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		ps.operator.gsave() ;
 
-		ps.array( true ) ;
-		for ( int t=0 ; t<getTextCount() ; t++ ) {
-			AnnotationStraight.emitPS( ps, getText( t ), size, 0,
-					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
-		}
-		ps.array( false ) ;
+		try {
+			ps.array( true ) ;
+			for ( int t=0 ; t<getTextCount() ; t++ ) {
+				AnnotationStraight.emitPS( ps, getText( t ), size, 0,
+						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
+			}
+			ps.array( false ) ;
 
-		ps.operator.currentpoint() ;
-		ps.operator.translate() ;
+			ps.operator.currentpoint() ;
+			ps.operator.translate() ;
 
-		if ( getReverse() ) {
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-		}
+			if ( getReverse() ) {
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+			}
 
-		ps.operator.mark() ;
-		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
-			ps.push( -rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.push( margin ) ;
-			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
-			ps.push( -rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
-			ps.push( -rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
-			ps.push( size/2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.push( margin ) ;
-			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
-			ps.push( size/2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
-			ps.push( size/2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
-			ps.push( size+rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.push( margin ) ;
-			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
-			ps.push( size+rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
-			ps.push( size+rise ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
-			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
-			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
-			ps.operator.exch() ;
-			ps.operator.sub() ;
-		}
+			ps.operator.mark() ;
+			if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+				ps.push( -rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.push( margin ) ;
+				ps.operator.add() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+				ps.push( -rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.div( 2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+				ps.push( -rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.add( margin ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+				ps.push( size/2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.push( margin ) ;
+				ps.operator.add() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+				ps.push( size/2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.div( 2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+				ps.push( size/2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.add( margin ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+				ps.push( size+rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.push( margin ) ;
+				ps.operator.add() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+				ps.push( size+rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.div( 2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+				ps.push( size+rise ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
+				ps.operator.dup() ;
+				ps.operator.stringwidth() ;
+				ps.operator.pop() ;
+				ps.operator.add( margin ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHLENGTH ) ;
+				ps.operator.div( 100 ) ;
+				ps.operator.mul( distance ) ;
+				ps.operator.exch() ;
+				ps.operator.sub() ;
+			}
 
-		ps.custom( ApplicationConstant.PS_PROLOG_PATHSHOW ) ;
+			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHOW ) ;
+		} catch ( ParameterNotValidException e ) {}
+		// concern custom(PS_PROLOG) invoke. prolog definitions are considered well-defined
 
 		ps.operator.grestore() ;
 	}

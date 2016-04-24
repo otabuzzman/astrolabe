@@ -15,7 +15,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	@SuppressWarnings("unused")
 	private double ST ;
 
-	public HorizonEquatorial( astrolabe.model.HorizonEquatorial peer, Projector projector ) {
+	public HorizonEquatorial( Object peer, Projector projector ) {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
 		this.projector = projector ;

@@ -22,6 +22,9 @@ public class DialDay extends DialDegree {
 	private double jdOy ;
 	private double jd0 ;
 
+	// cache
+	private double span ;
+
 	private String[] llday = {
 			ApplicationConstant.LL_SUNDAY, ApplicationConstant.LL_MONDAY, ApplicationConstant.LL_TUESDAY, ApplicationConstant.LL_WEDNESDAY,
 			ApplicationConstant.LL_THURSDAY, ApplicationConstant.LL_FRIDAY, ApplicationConstant.LL_SATURDAY 
@@ -32,25 +35,15 @@ public class DialDay extends DialDegree {
 			ApplicationConstant.LL_SEPTEMBER, ApplicationConstant.LL_OCTOBER, ApplicationConstant.LL_NOVEMBER, ApplicationConstant.LL_DECEMBER
 	} ;
 
-	public DialDay( astrolabe.model.DialDay peer, double epoch, Circle circle ) {
-		long y ;
-		CAADate d, cdA, cdO ;
+	public DialDay( Object peer, double epoch, Circle circle ) {
+		super( peer, circle, 0 ) ;
 
-		setup( peer, circle, 0 ) ;
+		long y ;
+		double jdOy, raAy, raOy ;
+		CAADate d, cdA, cdO ;
 
 		this.circle = circle ;
 		this.epoch = epoch ;
-
-		d = new CAADate( epoch, true ) ;
-		y =  d.Year() ;
-		d.delete() ;
-
-		cdA = new CAADate( y, 1, 1, true ) ;
-		jdAy = cdA.Julian() ;
-		cdO = new CAADate( y+1, 1, 1, true ) ;
-		jdOy = cdO.Julian() ;
-		cdA.delete() ;
-		cdO.delete() ;
 
 		try {
 			Class c ;
@@ -65,19 +58,50 @@ public class DialDay extends DialDegree {
 		} catch ( ClassNotFoundException e ) {
 		} catch ( NoSuchMethodException e ) {
 		}
+
+		d = new CAADate( epoch, true ) ;
+		y =  d.Year() ;
+		d.delete() ;
+
+		cdA = new CAADate( y, 1, 1, true ) ;
+		jdAy = cdA.Julian() ;
+		raAy = sunPositionEquatorial( sunPositionEcliptical( jdAy ), epoch )[0] ;
+		cdA.delete() ;
+
+		cdO = new CAADate( y+1, 1, 1, true ) ;
+		jdOy = cdO.Julian() ;
+		raOy = sunPositionEquatorial( sunPositionEcliptical( jdOy ), epoch )[0] ;
+		cdO.delete() ;
+		while( raOy>raAy ) {
+			jdOy = jdOy-1./*unit*//getGraduationSpan().getDivision() ;
+			raOy = sunPositionEquatorial( sunPositionEcliptical( jdOy ), epoch )[0] ;
+		}
+		this.jdOy = jdOy ;
 	}
 
 	public double mapIndexToAngleOfScale( int index, double span ) throws ParameterNotValidException {
 		double r ;
-		double a ;
+		double jd, ra, ra0 ;
 
-		if ( index==0 ) {
+		if ( span != this.span ) {
+			// dirty cache
+			this.span = span ;
+
 			jd0 = mapIndex0ToJD( span ) ;
 		}
 
-		a = mapIndexToRA( index, span ) ;
+		jd = mapIndexNToJD( index, span ) ;
+		ra = sunPositionEquatorial( sunPositionEcliptical( jd ), epoch )[0] ;
+		if ( ! circle.probe( ra ) ) {
+			throw new ParameterNotValidException() ;
+		}
 
-		r = a ;
+		ra0 = sunPositionEquatorial( sunPositionEcliptical( jd0 ), epoch )[0] ;
+		if ( index>0&&ra==ra0 ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		r = ra ;
 
 		return r ;
 	}
@@ -153,26 +177,6 @@ public class DialDay extends DialDegree {
 		} catch ( ParameterNotValidException e ) {}
 	}
 
-	private double mapIndexToRA( int index, double span ) throws ParameterNotValidException {
-		double r ;
-		double jd, ra, ra0 ;
-
-		jd = mapIndexNToJD( index, span ) ;
-		ra = sunPositionEquatorial( sunPositionEcliptical( jd ), epoch )[0] ;
-		if ( ! circle.probe( ra ) ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		ra0 = sunPositionEquatorial( sunPositionEcliptical( jd0 ), epoch )[0] ;
-		if ( index>0&&ra==ra0 ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		r = ra ;
-
-		return r ;
-	}
-
 	private double mapIndex0ToJD( double span ) {
 		double r ;
 		double jd, ra ;
@@ -234,7 +238,7 @@ public class DialDay extends DialDegree {
 
 		jd = jd0+index*span/* *unit */ ;
 
-		return jd>=jdOy?jdAy+( jd-jdOy ):jd ;
+		return jd>jdOy?jdAy+( jd-span/* *unit */-jdOy ):jd ;
 	}
 
 	public double[] sunPositionEcliptical( double jd ) {

@@ -474,12 +474,12 @@ public final class ApplicationHelper {
 
 	public static String getLocalizedString( String key ) throws ParameterNotValidException {
 		String v ;
-		ResourceBundle m ;
+		ResourceBundle rb ;
 
-		m = ResourceBundle.getBundle( ApplicationConstant.GC_APPLICATION ) ;
+		rb = ResourceBundle.getBundle( ApplicationConstant.GC_APPLICATION ) ;
 
 		try {
-			v = m.getString( key ) ;
+			v = rb.getString( key ) ;
 		} catch ( MissingResourceException e ) {
 			throw new ParameterNotValidException() ;
 		}

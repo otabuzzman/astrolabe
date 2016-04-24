@@ -19,7 +19,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 	private double begin ;
 	private double end ;
 
+	public CircleMeridian() {
+	}
+
 	public CircleMeridian( Object peer, Projector projector ) throws ParameterNotValidException {
+		setup( peer, projector ) ;
+	}
+
+	public void setup( Object peer, Projector projector ) throws ParameterNotValidException {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
@@ -138,7 +145,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<double[]> v ;
 		double[] xy ;
 
@@ -149,10 +156,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		try {
+			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
 		ps.operator.stroke() ;
 
-		ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+		try {
+			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+		} catch ( ParameterNotValidException e ) {} // optional
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -342,6 +353,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 	public boolean probe( double al ) {
 		return CircleParallel.probe( al, begin, end ) ;
+	}
+
+	public double mapIndexToAngleOfScale( int index ) {
+		return CircleParallel.mapIndexToAngleOfScale( index, segment, begin, end ) ;
 	}
 
 	public double mapIndexToAngleOfScale( double span ) {

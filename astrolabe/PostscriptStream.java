@@ -1,9 +1,15 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
 import java.util.prefs.BackingStoreException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PostscriptStream extends PrintStream {
+
+	private final static Log log = LogFactory.getLog( PostscriptStream.class ) ;
 
 	private final static int DEFAULT_PRECISION = 6 ;
 	private final static int DEFAULT_SCANLINE = 254 ;
@@ -21,7 +27,7 @@ public class PostscriptStream extends PrintStream {
 	private final int scanline = ApplicationHelper.getClassNode( this,
 			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
-	public PostscriptStream( java.io.PrintStream ps ) throws ParameterNotValidException {
+	public PostscriptStream( java.io.PrintStream ps ) {
 		super( ps ) ;
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
@@ -188,9 +194,7 @@ public class PostscriptStream extends PrintStream {
 					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
 				}
 			}
-		} catch ( BackingStoreException e ) {
-			throw new ParameterNotValidException() ;
-		}
+		} catch ( BackingStoreException e ) {}
 	} 
 
 	private String truncate( double number ) {        
@@ -315,14 +319,28 @@ public class PostscriptStream extends PrintStream {
 
 	public void push( String string ) throws ParameterNotValidException {        
 		if ( ! ( string.matches( "^/" ) || string.matches( "^(.*)$" ) ) ) {
-			throw new ParameterNotValidException() ;
+			String m ;
+
+			m = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_POSTSCRIPT_NOLITERALORSTRING ) ;
+			m = MessageFormat.format( m, new Object[] { string } ) ;
+
+			log.fatal( m ) ;
+
+			throw new ParameterNotValidException( m ) ;
 		}
 		print( string+"\n" ) ;
 	} 
 
 	public void custom( String def ) throws ParameterNotValidException {
 		if ( ! this.prolog.containsKey( "/"+def ) ) {
-			throw new ParameterNotValidException() ;
+			String m ;
+
+			m = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_POSTSCRIPT_NOSUCHDEFINTION ) ;
+			m = MessageFormat.format( m, new Object[] { def } ) ;
+
+			log.fatal( m ) ;
+
+			throw new ParameterNotValidException( m ) ;
 		}
 
 		print( def+"\n" ) ;
@@ -680,7 +698,11 @@ public class PostscriptStream extends PrintStream {
 			dsc.beginProlog() ;
 			prolog = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).keys() ;
 			for ( int p=0 ; p<prolog.length ; p++ ) {
-				push( prolog[p] ) ;
+				try {
+					push( prolog[p] ) ;
+				} catch ( ParameterNotValidException e ) {
+					continue ;
+				}
 				String[] token = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).get( prolog[p], null ).split( " " ) ;
 				for ( int t=0 ; t<token.length ; t++ ) {
 					print( token[t]+"\n" ) ;
@@ -690,7 +712,7 @@ public class PostscriptStream extends PrintStream {
 				this.prolog.put( prolog[p], prolog[p] ) ;
 			}
 			dsc.endProlog() ;
-		} catch ( Exception e ) {}
+		} catch ( BackingStoreException e ) {}
 	}
 
 	public void emitDSCTrailer() {

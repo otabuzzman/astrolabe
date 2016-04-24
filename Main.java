@@ -11,15 +11,15 @@ public class Main {
 	}
 
 	public static void main( String[] argv ) {
-		PostscriptStream ps ;
 		FileReader m ;
 		Astrolabe a ;
+		PostscriptStream ps ;
 
 		try {
-			ps = Astrolabe.initPS() ;
-
 			m = new FileReader( argv[0] ) ;
 			a = new AstrolabeReader().read( m ) ;
+
+			ps = Astrolabe.initPS() ;
 
 			a.emitPS( ps ) ;
 

@@ -17,14 +17,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 	private Vector tangent ;
 	private Vector origin ;
 
-	protected GraduationSpan() {
-	}
-
-	public GraduationSpan( astrolabe.model.GraduationSpan peer, double[] origin, double[] tangent ) {
-		setup( peer, origin, tangent ) ;
-	}
-
-	public void setup( Object peer, double[] origin, double[] tangent ) {
+	public GraduationSpan( Object peer, double[] origin, double[] tangent ) {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
 		this.origin = new Vector( origin ) ;
@@ -44,7 +37,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<double[]> v ;
 		double rad, deg ;
 		double[] xy ;
@@ -57,7 +50,9 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		try {
+			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
 		ps.operator.stroke() ;
 
 		rad = java.lang.Math.atan2( tangent.getY(), tangent.getX() ) ;

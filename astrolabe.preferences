@@ -3,10 +3,12 @@
 <preferences>
 	<root type="system">
 		<map/>
+		<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 		<node name="astrolabe">
 			<map/>
 			<node name="PostscriptStream">
 				<map>
+					<entry key="viewer" value="gswin32c.exe -q -dNOPAUSE -dBATCH -sPAPERSIZE=a0 -"/>
 					<entry key="precision" value="6"/>
 					<entry key="scanline" value="254"/>
 				</map>
@@ -58,8 +60,6 @@
 			</node>
 			<node name="ChartStereographic">
 				<map>
-					<!--pagewidth %w, pageheight %h, papersize %p. Keep DSC*.ps in sync with prolog node (above) and PostscriptStream.java-->
-					<entry key="viewer" value="gswin32c.exe -q -dNOPAUSE -dBATCH -dDEVICEWIDTHPOINTS=%w -dDEVICEHEIGHTPOINTS=%h DSCHeader.ps DSCProlog.ps - DSCTrailer.ps"/>
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
 				</map>

@@ -57,15 +57,15 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 		} catch ( ParameterNotValidException e ) {}
 	}
 
-	static public PostscriptStream initPS() throws ParameterNotValidException {
+	static public PostscriptStream initPS() {
 		return initPS( System.out ) ;
 	}
 
-	static public PostscriptStream initPS( java.io.PrintStream ps ) throws ParameterNotValidException {
-		return new PostscriptStream( new PrintStream( ps ) ) ;
+	static public PostscriptStream initPS( java.io.PrintStream ps ) {
+		return new PostscriptStream( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		ps.emitDSCHeader() ;
 		ps.emitDSCProlog() ;
 
@@ -73,7 +73,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			Chart chart ;
 
-			chart = AstrolabeFactory.createChart( getChart( ch ) ) ;
+			try {
+				chart = AstrolabeFactory.createChart( getChart( ch ) ) ;
+			} catch ( ParameterNotValidException e ) {
+				break ; // if ch unequal 0 there must be a chart
+			}
 			chart.headPS( ps ) ;
 
 			// Horizon processing.
@@ -82,7 +86,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 				ps.operator.gsave() ;
 
-				horizon = AstrolabeFactory.createHorizon( chart.getHorizon( ho ), epoch, chart ) ;
+				try {
+					horizon = AstrolabeFactory.createHorizon( chart.getHorizon( ho ), epoch, chart ) ;
+				} catch ( ParameterNotValidException e ) {
+					break ; // if ho unequal 0 there must be a horizon
+				}
 				horizon.headPS( ps ) ;
 
 				// Circle processing.
@@ -90,8 +98,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 					Circle circle ;
 
 					ps.operator.gsave() ;
-
-					circle = AstrolabeFactory.createCircle( horizon.getCircle( cl ), epoch, horizon ) ;
+					try {
+						circle = AstrolabeFactory.createCircle( horizon.getCircle( cl ), epoch, horizon ) ;
+					} catch ( ParameterNotValidException e ) {
+						break ; // if cl unequal 0 there must be a circle
+					}
 
 					try {
 						new Registry().register( circle.getName(), circle ) ;
@@ -115,7 +126,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 						ApplicationHelper.emitPS( ps, dial.getAnnotation() ) ;
 
 						ps.operator.grestore() ;
-					} catch ( ParameterNotValidException e ) {}
+					} catch ( ParameterNotValidException e ) {} // optional
 
 					circle.tailPS( ps ) ;
 
@@ -125,7 +136,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 				// Body processing
 				try {
 					ApplicationHelper.emitPS( ps, horizon.getBodyStellar(), horizon ) ;
-				} catch ( ParameterNotValidException e ) {}
+				} catch ( ParameterNotValidException e ) {} // optional
 
 				horizon.tailPS( ps ) ;
 

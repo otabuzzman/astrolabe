@@ -1,45 +1,44 @@
 
 package astrolabe;
 
+import java.io.IOException;
+
 public class PrintStream extends java.io.PrintStream {
 
-	private java.util.Hashtable<String, java.io.PrintStream> tee = new java.util.Hashtable< String, java.io.PrintStream>() ;
+	private Process viewer ;
+	private java.io.PrintStream ps ;
 
-	public PrintStream( java.io.OutputStream out ) throws ParameterNotValidException {
-		super( out ) ;
-		addPrintStream( new java.io.PrintStream( out ) ) ;
+	public PrintStream( java.io.PrintStream ps ) {
+		super( ps ) ;
+
+		String command ;
+
+		command = ApplicationHelper.getClassNode( this/*PostscriptStream*/,
+				null, null ).get( ApplicationConstant.PK_PRINTSTREAM_VIEWER, null ) ;
+
+		try {
+			viewer = Runtime.getRuntime().exec( command.split( " " ) ) ;
+			viewer.getInputStream().close() ;
+			viewer.getErrorStream().close() ;
+
+			this.ps = new java.io.PrintStream( viewer.getOutputStream() ) ;
+		} catch ( IOException e ) {}
 	}
 
-	public void addPrintStream( java.io.PrintStream out ) throws ParameterNotValidException {
-
-		if ( out == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		tee.put( out.toString(), out ) ;
-	}
-
-	public void delPrintStream( java.io.PrintStream out ) throws ParameterNotValidException {
-
-		if ( out == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		tee.remove( out.toString() ) ;
-	}
-
-	// Override PrintStream methods.
+	// override
 	public void print( String string ) {
-		java.util.Enumeration<java.io.PrintStream> list ;
-		java.io.PrintStream out ;
+		super.print( string ) ;
 
-		list = tee.elements() ;
+		ps.print( string ) ;
+		ps.flush() ;
+	}
 
-		for ( int t=0 ; t<tee.size() ; t++ ) {
-			out = list.nextElement() ;
+	// override
+	public void close() {
+		super.close() ;
 
-			out.print( string ) ;
-			out.flush() ;
-		}
+		ps.close() ;
+
+		viewer.destroy() ;
 	}
 }

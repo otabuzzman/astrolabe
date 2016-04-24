@@ -44,18 +44,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 	private double unit ;
 
-	protected DialDegree () {
+	public DialDegree( Object peer, Circle circle ) {
+		this( peer, circle, Math.rad1 ) ;
 	}
 
-	public DialDegree( astrolabe.model.DialDegree peer, Circle circle ) {
-		setup( peer, circle, Math.rad1 ) ;
-	}
-
-	public DialDegree( astrolabe.model.DialDegree peer, Circle circle, double unit ) {
-		setup( peer, circle, unit ) ;
-	}
-
-	public void setup( Object peer, Circle circle, double unit ) {
+	public DialDegree( Object peer, Circle circle, double unit ) {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
 		this.circle = circle ;	
@@ -107,7 +100,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		}
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<double[]> v ;
 		double[] xy ;
 
@@ -126,7 +119,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		try {
+			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		} catch ( ParameterNotValidException e ) {} // ployline is considered well-defined
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -201,11 +196,6 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			for ( ; ; nss++ ) {
 				b = mapIndexToAngleOfScale( nss, span ) ;
 				e = mapIndexToAngleOfScale( nss+1, span ) ;
-
-				// happens on turn of the year
-				if ( e<b ) {
-					continue ;
-				}
 
 				s = nss%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
@@ -286,16 +276,34 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 	private void tailPSBaselineRail( PostscriptStream ps ) {
 	}
 
-	private void emitPSGraduation( PostscriptStream ps ) throws ParameterNotValidException {
+	private void emitPSGraduation( PostscriptStream ps ) {
 		int ns ;
-		double a ;
+		double s, a ;
+		Vector bc, ec, bd ;
 		double[] o, t ;
 		Graduation g ;
 
+		// prepare circle closed check
+		s = getGraduationSpan().getSpan() ;
+		bc = new Vector( circle.project( circle.mapIndexToAngleOfScale( 0, s*unit ) ) ) ;
+		ec = new Vector( circle.project( circle.mapIndexToAngleOfScale( -1, s*unit ) ) ) ;
+		ec.sub( bc ) ;
 
-		for ( ns=1 ; ; ns++ ) {
+		// prepare dial start aligned with circle begin check
+		try {
+			bd = new Vector( circle.project( mapIndexToAngleOfScale( 0, s ) ) ) ;
+			bc.sub( bd ) ;
+		} catch ( ParameterNotValidException e ) {} // cannot happen with index 0
+
+		if ( Math.isLim0( ec.abs() ) && Math.isLim0( bc.abs() ) ) {
+			ns = 1 ;
+		} else {
+			ns = 0 ;
+		}
+
+		for ( ; ; ns++ ) {
 			try {
-				a = mapIndexToAngleOfScale( ns, getGraduationSpan().getSpan() ) ;
+				a = mapIndexToAngleOfScale( ns, s ) ;
 			} catch ( ParameterNotValidException e ) {
 				break ;
 			}

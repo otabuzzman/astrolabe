@@ -6,13 +6,12 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class CircleSouthernPolar extends CircleParallel {
 
-	public CircleSouthernPolar( astrolabe.model.CircleSouthernPolar peer, double epoch, Projector projector ) throws ParameterNotValidException {
+	public CircleSouthernPolar( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
 		double radal, degal ;
 
 		radal = -Math.rad90+ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
 		degal = CAACoordinateTransformation.RadiansToDegrees( radal ) ;
-
-		peer.getAngle().getRational().setValue( degal ) ;
+		( (astrolabe.model.CircleSouthernPolar) peer ).getAngle().getRational().setValue( degal ) ;
 		setup( peer, projector ) ;
 	}
 }

@@ -17,7 +17,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizo
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( astrolabe.model.HorizonLocal peer, double epoch, Projector projector ) {
+	public HorizonLocal( Object peer, double epoch, Projector projector ) {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;

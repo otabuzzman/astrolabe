@@ -78,6 +78,12 @@ public final class ApplicationConstant {
 	public static final String LK_MS_SECONDS	= "substitute.indicator.ms.seconds" ;
 	public static final String LK_MS_FRACTION	= "substitute.indicator.ms.fraction" ;
 
+	public static final String LK_ANNOTATION_NOSUBSTITUTE = "message.annotation.nosubstitute" ;
+
+	public static final String LK_POSTSCRIPT_NOLITERALORSTRING	= "message.postscript.noliteralorstring" ;
+	public static final String LK_POSTSCRIPT_NOSUCHDEFINTION	= "message.postscript.nosuchdefinition" ;
+
+	// model values (AV_), patterns (AP_)
 	public static final String AV_CHART_NORTHERN = "northern" ;
 	public static final String AV_CHART_SOUTHERN = "southern" ;
 	public static final String AP_CHART_PAGESIZE = "[0-9]+(\\.[0-9]+)?x[0-9]+(\\.[0-9]+)?" ;
@@ -103,7 +109,7 @@ public final class ApplicationConstant {
 	public static final String AV_ANNOTATION_BOTTOMMIDDLE	= "bottommiddle" ;
 	public static final String AV_ANNOTATION_BOTTOMRIGHT	= "bottomright" ;
 
-	public static final String PK_CHART_VIEWER		= "viewer" ;
+	// preferences keys (PK_), nodes (PN_)
 	public static final String PK_CHART_UNIT		= "unit" ;
 	public static final String PN_CHART_PAGESIZE	= "pagesize" ;
 
@@ -139,6 +145,9 @@ public final class ApplicationConstant {
 	public static final String PN_POSTSCRIPT_UNICODE	= "unicode" ;
 	public static final String PK_POSTSCRIPT_DEFAULT	= "default" ;
 
+	public static final String PK_PRINTSTREAM_VIEWER	= "viewer" ;
+
+	// psotscript prolog definitions
 	public static final String PS_PROLOG_ACOS			= "acos" ;
 	public static final String PS_PROLOG_ASIN			= "asin" ;
 	public static final String PS_PROLOG_LINE			= "line" ;

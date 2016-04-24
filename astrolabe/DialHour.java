@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class DialHour extends DialDegree {
 
-	public DialHour( astrolabe.model.DialHour peer, Circle circle ) {
-		setup( peer, circle, Math.rad1h ) ;
+	public DialHour( Object peer, Circle circle ) {
+		super( peer, circle, Math.rad1h ) ;
 	}
 }

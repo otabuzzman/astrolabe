@@ -13,7 +13,7 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	private double la ;
 	private double ST ;
 
-	public HorizonGalactic( astrolabe.model.HorizonGalactic peer, Projector projector ) {
+	public HorizonGalactic( Object peer, Projector projector ) {
 		double[] eq ;
 		String key ;
 

@@ -4,8 +4,8 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartGnomonic extends ChartStereographic {
 
-	public ChartGnomonic( astrolabe.model.ChartGnomonic peer ) {
-		setup( peer ) ;
+	public ChartGnomonic( Object peer ) {
+		super( peer ) ;
 	}
 
 	public double[] project( double RA, double d ) {

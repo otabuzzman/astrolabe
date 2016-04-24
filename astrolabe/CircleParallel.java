@@ -19,7 +19,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 	private double begin ;
 	private double end ;
 
-	protected CircleParallel() {
+	public CircleParallel() {
 	}
 
 	public CircleParallel( Object peer, Projector projector ) throws ParameterNotValidException {
@@ -145,7 +145,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<double[]> v ;
 		double[] xy ;
 
@@ -156,10 +156,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		try {
+			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
 		ps.operator.stroke() ;
 
-		ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+		try {
+			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+		} catch ( ParameterNotValidException e ) {} // optional
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -454,6 +458,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 		return r ;
 	}
 
+	public double mapIndexToAngleOfScale( int index ) {
+		return mapIndexToAngleOfScale( index, segment, begin, end ) ;
+	}
+
 	public double mapIndexToAngleOfScale( double span ) {
 		return mapIndexToAngleOfScale( 0, span, begin, end ) ;
 	}
@@ -467,11 +475,35 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 		double s ;
 
 		if ( index<0 ) { // last
-			s = end-(int) ( end/span)*span ;
-			r = end-( end>0?s:span-s )+index*span ;
+			s = java.lang.Math.abs( end-(int) ( end/span )*span ) ;
+			if ( end>0 ) {
+				if ( end>begin ) {
+					r = end-s ;
+				} else { // end<begin
+					r = end+span-s ;
+				}
+			} else { // end<0
+				if ( end>begin ) {
+					r = end-span+s ;
+				} else { // end<begin
+					r = end+s ;
+				}
+			}
 		} else {
-			s = begin-(int) ( begin/span)*span ;
-			r = begin+( begin>0?span-s:s )+index*span ;
+			s = java.lang.Math.abs( begin-(int) ( begin/span )*span ) ;
+			if ( begin>0 ) {
+				if ( begin<end ) {
+					r = begin+span-s+index*span ;
+				} else { // begin>end
+					r = begin-s-index*span ;
+				}
+			} else { // begin<0
+				if ( begin<end ) {
+					r = begin+s+index*span ;
+				} else { // begin>end
+					r = begin-span+s-index*span ;
+				}
+			}
 		}
 
 		return r ;

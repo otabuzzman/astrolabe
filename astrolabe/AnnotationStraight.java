@@ -1,8 +1,15 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements Annotation {
+
+	private final static Log log = LogFactory.getLog( AnnotationStraight.class ) ;
 
 	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
 	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
@@ -49,7 +56,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void headPS( PostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public void emitPS( PostscriptStream ps ) {
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
@@ -130,23 +137,25 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,
-			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
+			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) {
 		java.util.Vector FET, fet ;
 
 		FET = ps.ucFET( substitute( text.getValue() ) ) ;
-
-		for ( int e=0 ; e<FET.size() ; e++ ) {
-			fet = (java.util.Vector) FET.get( e ) ;
-			ps.array( true ) ;
-			ps.push( (String) fet.get( 0 ) ) ;
-			ps.push( (String[]) fet.get( 1 ) ) ;
-			ps.push( size ) ;
-			ps.push( shift ) ;
-			ps.push( true ) ;
-			ps.push( true ) ;
-			ps.push( (String) fet.get( 2 ) ) ;
-			ps.array( false ) ;
-		}
+		try {
+			for ( int e=0 ; e<FET.size() ; e++ ) {
+				fet = (java.util.Vector) FET.get( e ) ;
+				ps.array( true ) ;
+				ps.push( (String) fet.get( 0 ) ) ;
+				ps.push( (String[]) fet.get( 1 ) ) ;
+				ps.push( size ) ;
+				ps.push( shift ) ;
+				ps.push( true ) ;
+				ps.push( true ) ;
+				ps.push( (String) fet.get( 2 ) ) ;
+				ps.array( false ) ;
+			}
+		} catch ( ParameterNotValidException e ) {}
+		// concerns push(FET) invoke. FET chars and strings are considered well-defined
 
 		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
 			emitPS( ps, text.getSubscript( d ),
@@ -161,7 +170,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 	}
 
-	private static String substitute( String string ) throws ParameterNotValidException {
+	private static String substitute( String string ) {
 		String s, k, t, v ;
 		java.util.regex.Pattern p ;
 		java.util.regex.Matcher m ;
@@ -176,7 +185,20 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		while ( m.find( 0 ) ) {
 			s = t.substring( m.start(), m.end() ) ;
 			k = s.substring( 2, s.length()-2 ) ;
-			v = (String) r.retrieve( k ) ;
+			try {
+				v = (String) r.retrieve( k ) ;
+			} catch ( ParameterNotValidException e ) {
+				try {
+					String msg ;
+
+					msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ANNOTATION_NOSUBSTITUTE ) ;
+					msg = MessageFormat.format( msg, new Object[] { k, string } ) ;
+
+					log.info( msg ) ;
+				} catch ( ParameterNotValidException ee ) {}
+
+				v = s ;
+			}
 			t = m.replaceFirst( v ) ;
 			m = p.matcher( t ) ;
 		}

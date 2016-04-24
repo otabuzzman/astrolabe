@@ -16,7 +16,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 
 	private double e ; // mean obliquity of ecliptic
 
-	public HorizonEcliptical( astrolabe.model.HorizonEcliptical peer, double epoch, Projector projector ) {
+	public HorizonEcliptical( Object peer, double epoch, Projector projector ) {
 		double[] eq ;
 		String key ;
 

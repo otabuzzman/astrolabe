@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartStereographic extends astrolabe.model.ChartStereographic implements Chart {
 
-	private final static String DEFAULT_PAGESIZE = "210x297" ;
+	private final static String DEFAULT_PAGESIZE = "210x298" ;
 	private final static double DEFAULT_UNIT = 2.834646 ;
 
 	private double unit ;
@@ -13,17 +13,7 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	private double[] pagesize = new double[2] ;
 	private double scale ;
 
-	private Process viewer ;
-	private java.io.PrintStream ps ;
-
-	protected ChartStereographic() {
-	}
-
-	public ChartStereographic( astrolabe.model.ChartStereographic peer ) {
-		setup( peer ) ;
-	}
-
-	public void setup( Object peer ) {
+	public ChartStereographic( Object peer ) {
 		String[] pagesize ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
@@ -103,12 +93,12 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		return new double[] { RA, d } ;
 	}
 
-	public void headPS( PostscriptStream ps ) throws ParameterNotValidException {
-		viewer( ps ) ;
-
+	public void headPS( PostscriptStream ps ) {
 		ps.dsc.beginSetup() ;
 		// Set origin at center of page.
-		ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
+		try {
+			ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
+		} catch ( ParameterNotValidException e ) {} // pagesize is considered well-defined
 		ps.operator.mul( .5 ) ;
 		ps.operator.exch() ;
 		ps.operator.mul( .5 ) ;
@@ -126,56 +116,5 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	public void tailPS( PostscriptStream ps ) {
 		ps.operator.showpage() ;
 		ps.dsc.pageTrailer() ;
-
-		rollup( ps ) ;
-	}
-
-	private boolean viewer( PostscriptStream ps ) {
-		boolean r ;
-		String c ;
-		int i ;
-
-		try {
-			c = ApplicationHelper.getClassNode( this, getName(), null ).get( ApplicationConstant.PK_CHART_VIEWER, null ) ;
-
-			while ( ( i=c.indexOf( '%' ) )>0 ) {
-				switch ( c.charAt( i+1 ) ) {
-				case 'w':
-					c = c.substring( 0, i )+pagesize[0]*unit+c.substring( i+2, c.length() ) ;
-					break ;
-				case 'h':
-					c = c.substring( 0, i )+pagesize[1]*unit+c.substring( i+2, c.length() ) ;
-					break ;
-				case 'p':
-					String pagesize ;
-
-					pagesize = this.pagesize[0]+"x"+this.pagesize[1] ;
-					c = c.substring( 0, i )+pagesize+c.substring( i+2, c.length() ) ;
-					break ;
-				}
-			}
-
-			this.viewer = Runtime.getRuntime().exec( c.split( " " ) ) ;
-			this.ps = new java.io.PrintStream( this.viewer.getOutputStream() ) ;
-
-			ps.addPrintStream( this.ps ) ;
-
-			this.viewer.getInputStream().close() ;
-			this.viewer.getErrorStream().close() ;
-
-			r = true ;
-		} catch ( Exception e ) {
-			r = false ;
-		}
-
-		return r ;
-	}
-
-	private void rollup( PostscriptStream ps ) {
-		try {
-			ps.delPrintStream( this.ps ) ;
-		} catch ( ParameterNotValidException e ) {}
-
-		viewer.destroy() ;
 	}
 }

@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class GraduationFull extends GraduationSpan {
 
-	public GraduationFull( astrolabe.model.GraduationFull peer, double[] origin, double[] tangent ) {
-		setup( peer, origin, tangent ) ;
+	public GraduationFull( Object peer, double[] origin, double[] tangent ) {
+		super( peer, origin, tangent ) ;
 	}
 }
