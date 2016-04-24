@@ -1,9 +1,9 @@
 
 package astrolabe;
 
-public class GraduationHalf extends GraduationUnit {
+public class GraduationHalf extends GraduationSpan {
 
-	public GraduationHalf( Vector origin, Vector tangent ) {
+	public GraduationHalf( Vector origin, Vector tangent ) throws ParameterNotValidException {
 		super( origin, tangent ) ;
 
 		space = getClassNode( null, null ).getDouble( "space", .4 ) ;

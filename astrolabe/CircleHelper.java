@@ -28,4 +28,15 @@ public class CircleHelper extends Model {
 
 		return r ;
 	}
+
+	public static java.util.Vector<Vector> reverseVector( java.util.Vector<Vector> vector ) {
+		java.util.Vector<Vector> r ;
+
+		r = new java.util.Vector<Vector>() ;
+		for ( int n=vector.size() ; n>0 ; n-- ) {
+			r.add( vector.get( n-1 ) ) ;
+		}
+
+		return r ;
+	}
 }

@@ -2,7 +2,6 @@
 package astrolabe;
 
 import java.util.Vector;
-import java.lang.Math;
 
 import caa.CAACoordinateTransformation;
 
@@ -74,29 +73,33 @@ public class CircleParallel extends Model implements Circle {
 		}
 	}
 
-	public astrolabe.Vector cartesian( double[] ho, double shift) {
-		return cartesian( ho[0], ho[1], shift ) ;
-	}
-
-	public astrolabe.Vector cartesian( double az, double al, double shift) {
+	public astrolabe.Vector cartesian( double az, double shift ) throws ParameterNotValidException {
 		astrolabe.Vector r ;
 		double rad90 ;
+
+		if ( begin>end?( az<begin&&az>end ):( az<begin||az>end )  ) {
+			throw new ParameterNotValidException() ;
+		}
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
 		r = chart.project( horizon.convert( az, al ) ) ;
 		if ( shift != 0 ) {
-			r.add( tangentVector( az, al ).rotate( shift<0?-rad90:rad90 ).size( shift ) ) ;
+			r.add( tangentVector( az ).rotate( shift<0?-rad90:rad90 ).size( java.lang.Math.abs( shift ) ) ) ;
 		}
 
 		return r ;
 	}
 
-	public Vector<astrolabe.Vector> cartesianList() {
-		return cartesianList( 0, segment ) ;
+	public Vector<astrolabe.Vector> cartesianList() throws ParameterNotValidException {
+		return cartesianList( begin, end, 0 ) ;
 	}
 
-	public Vector<astrolabe.Vector> cartesianList( double shift, double division ) {
+	public Vector<astrolabe.Vector> cartesianList( double shift ) throws ParameterNotValidException {
+		return cartesianList( begin, end, shift ) ;
+	}
+
+	public Vector<astrolabe.Vector> cartesianList( double begin, double end, double shift ) throws ParameterNotValidException {
 		Vector<astrolabe.Vector> r ;
 		astrolabe.Vector a ;
 		double rad360 ;
@@ -106,42 +109,38 @@ public class CircleParallel extends Model implements Circle {
 
 		rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
 
-		a = cartesian( begin, al, shift ) ;
+		a = cartesian( begin, shift ) ;
 		r.add( a ) ;
 
-		s = Math.abs( astrolabe.Math.remainder( begin, division ) ) ;
-		for ( az=s>0?begin+s:begin+division ; ( begin>end?az-rad360:az )+.000001<end ; az=az+division ) {
-			a = cartesian( az, al, shift ) ;
+		s = java.lang.Math.abs( astrolabe.Math.remainder( begin, segment ) ) ;
+		for ( az=begin+( s>0?s/2:segment/2 ) ; ( begin>end?az-rad360:az )<end ; az=az+segment ) {
+			a = cartesian( az, shift ) ;
 			r.add( a ) ;
 		}
 
-		a = cartesian( end, al, shift ) ;
+		a = cartesian( end, shift ) ;
 		r.add( a ) ;
 
 		return r ;
 	}
 
-	public double tangentAngle( double[] ho ) {
-		return tangentAngle( ho[0], ho[1] ) ;
-	}
-
-	public double tangentAngle( double az, double al ) {
+	public double tangentAngle( double az ) throws ParameterNotValidException {
 		astrolabe.Vector t ;
 		double r ;
 
-		t = tangentVector( az, al ) ;
+		t = tangentVector( az ) ;
 		r = java.lang.Math.atan2( t.getY(), t.getX() ) ;
 
 		return r ;
 	}
 
-	public astrolabe.Vector tangentVector( double[] ho ) {
-		return tangentVector( ho[0], ho[1] ) ;
-	}
-
-	public astrolabe.Vector tangentVector( double az, double al ) {
+	public astrolabe.Vector tangentVector( double az ) throws ParameterNotValidException {
 		astrolabe.Vector r ;
 		double d ;
+
+		if ( begin<this.begin || end>this.end ) {
+			throw new ParameterNotValidException() ;
+		}
 
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
 		r = chart.project( horizon.convert( az+d, al ) ).sub( chart.project( horizon.convert( az, al ) ) ) ;
@@ -191,7 +190,7 @@ public class CircleParallel extends Model implements Circle {
 
 		rdC = rad90-al ;
 
-		gnC = rad90-gn.getAngle() ;
+		gnC = rad90-( (CircleParallel) gn ).al ;
 		gnGa = astrolabe.Math.LawOfEdgeCosineForAlpha( gnC, rdC, blC ) ;
 
 		if ( ascending ) {
@@ -231,7 +230,7 @@ public class CircleParallel extends Model implements Circle {
 		blBe = astrolabe.Math.LawOfEdgeCosineForAlpha( blB, blA, blC) ;
 
 		// convert actual green az into local
-		gnEq = horizon.convert( gn.getAngle(), 0 ) ;
+		gnEq = horizon.convert( ( (CircleMeridian) gn ).az, 0 ) ;
 		gnHo = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.RadiansToHours( horizon.getST()-gnEq[0] ),
 				CAACoordinateTransformation.RadiansToDegrees( gnEq[1] ),
@@ -244,7 +243,7 @@ public class CircleParallel extends Model implements Circle {
 		gnC = astrolabe.Math.MethodOfAuxAngle( rdC, blC, rdGa ) ;
 		gnGa = astrolabe.Math.LawOfEdgeCosineForAlpha( gnC, rdC, blC ) ;
 
-		rdBe = rad180+( Math.cos( gn.getAngle() )<0?blAl-gnGa:blAl+gnGa ) ;
+		rdBe = rad180+( java.lang.Math.cos( ( (CircleMeridian) gn ).az )<0?blAl-gnGa:blAl+gnGa ) ;
 
 		// unconvert local red az into actual
 		rEq = CAACoordinateTransformation.Horizontal2Equatorial(
@@ -258,15 +257,28 @@ public class CircleParallel extends Model implements Circle {
 		return rHo[0] ;
 	}
 
-	public double getBegin() {
-		return begin ;
+	public double span0Distance( double span ) {
+		double r ;
+
+		try {
+			r =  spanNDistance( span, 0 ) ;
+		} catch ( ParameterNotValidException e ) {
+			r = 0 ;
+		}
+
+		return r ;
 	}
 
-	public double getEnd() {
-		return end ;
-	}
+	public double spanNDistance( double span, int n ) throws ParameterNotValidException {
+		double s, r ;
 
-	public double getAngle() {
-		return al ;
+		s = java.lang.Math.abs( Math.remainder( begin, span ) ) ;
+		r = begin+( begin>0?span-s:s )+n*span ;
+
+		if ( r>end ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		return r ;
 	}
 }

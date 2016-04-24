@@ -127,18 +127,31 @@ public class Main {
 						// Dial processing.
 						try {
 							astrolabe.model.DialType dlT ;
-							Dial dial = null ;
+							Quantity quantity = null ;
 
-							if ( ( dlT = clT.getDial().getDialDegrees() ) != null ) {
-								dial = new DialDegrees( dlT, circle ) ;
-							} /* else if ( ( dlT = clT.getDial().getDialSunTrue() ) != null ) {
-								dial = new DialSunTrue( dlT, circle ) ;
-							} else if ( ( dlT = clT.getDial().getDialSunMean() ) != null ) {
-								dial = new DialSunMean( dlT, circle ) ;
-							} */
+							if ( ( dlT = clT.getDial().getDialAngle() ) != null ) {
+								quantity = new QuantityAngle( circle ) ;
+							} else if ( ( dlT = clT.getDial().getDialTime() ) != null ) {
+								quantity = new QuantityTime( circle ) ;
+							} else if ( ( dlT = clT.getDial().getDialDate() ) != null ) {
+								astrolabe.model.DialDate dlD ;
+								Sun sun = null ;
+
+								dlD = (astrolabe.model.DialDate) dlT ;
+
+								if ( dlD.getSun().equals( "apparent" ) ) {
+									sun = new SunApparent() ;
+								} else if ( dlD.getSun().equals( "mean" ) ) {
+									sun = new SunMean() ;
+								} else if ( dlD.getSun().equals( "true" ) ) {
+									sun = new SunTrue() ;
+								}
+
+								quantity = new QuantityDate( circle, sun, epoch ) ;
+							}
 
 							ps.operator.gsave() ;
-							dial.emitPS( ps ) ;
+							new Dial( dlT, circle, quantity ).emitPS( ps ) ;
 
 							// Dial annotation processing.
 							ps.operator.gsave() ;
@@ -160,11 +173,14 @@ public class Main {
 				ps.dcs.trailer() ;
 				ps.dcs.eOF() ;
 
+				ps.flush() ;
+				ps.close() ;
+
 				chart.rollup() ;
 			} // Chart processing.
 
-		} catch ( Exception exception ) {
-			exception.printStackTrace() ;
+		} catch ( Exception e ) {
+			e.printStackTrace() ;
 			System.exit( 1 ) ;
 		}
 

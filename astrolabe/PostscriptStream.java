@@ -221,7 +221,7 @@ public class PostscriptStream extends PrintStream {
 		print( "setencoding\n" ) ;
 	} 
 
-	public java.util.Vector ucFET( String string ) throws InvalidUnicodeCharacterException {        
+	public java.util.Vector ucFET( String string ) {        
 		int block = -1, pblock = -1,
 		chart = -1, pchart = -1, code = -1 , tcc ;
 		String fe[], rt = "", t = "" ;
@@ -304,12 +304,9 @@ public class PostscriptStream extends PrintStream {
 		return FET ;
 	} 
 
-	private static int ucSearch( PostscriptStream.UcBlock block[], int start, int end, int code ) throws InvalidUnicodeCharacterException {        
+	private static int ucSearch( PostscriptStream.UcBlock block[], int start, int end, int code ) {        
 		int m = ( start+end )/2 ;
 
-		if ( start > end ) {
-			throw new InvalidUnicodeCharacterException() ;
-		}
 		if ( block[m].getStart() < code ) {
 			if ( block[m].getEnd() >= code ) {
 				return m ;

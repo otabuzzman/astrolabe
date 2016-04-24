@@ -3,7 +3,7 @@ package astrolabe;
 
 public class AnnotationHelper extends Model {
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] annotation ) throws ParameterNotValidException, InvalidUnicodeCharacterException {
+	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] annotation ) throws ParameterNotValidException {
 
 		if ( annotation == null ) {
 			throw new ParameterNotValidException() ;
@@ -14,7 +14,7 @@ public class AnnotationHelper extends Model {
 		}
 	}
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation annotation ) throws ParameterNotValidException, InvalidUnicodeCharacterException {
+	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation annotation ) throws ParameterNotValidException {
 		astrolabe.model.AnnotationStraight anS ;
 		astrolabe.model.AnnotationCurved anC ;
 
@@ -29,7 +29,18 @@ public class AnnotationHelper extends Model {
 		}
 	}
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight annotation ) throws ParameterNotValidException, InvalidUnicodeCharacterException {
+	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight[] annotation ) throws ParameterNotValidException {
+
+		if ( annotation == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int a=0 ; a<annotation.length ; a++ ) {
+			emitPS( ps, annotation[a] ) ;
+		}
+	}
+
+	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight annotation ) throws ParameterNotValidException {
 		double subscriptshrink, subscriptshift ;
 		double superscriptshrink, superscriptshift ;
 		double margin, rise, size ;
@@ -59,6 +70,10 @@ public class AnnotationHelper extends Model {
 
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
+
+		if ( annotation.getRadiant() ) {
+			ps.operator.rotate( 90 ) ;
+		}
 
 		if ( annotation.getReverse() ) {
 			ps.operator.rotate( 180 ) ;
@@ -120,7 +135,7 @@ public class AnnotationHelper extends Model {
 		ps.operator.grestore() ;
 	}
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved annotation ) throws ParameterNotValidException, InvalidUnicodeCharacterException {
+	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved annotation ) throws ParameterNotValidException {
 		double subscriptshrink, subscriptshift ;
 		double superscriptshrink, superscriptshift ;
 		double margin, rise, size ;
@@ -272,7 +287,7 @@ public class AnnotationHelper extends Model {
 	}
 
 	private static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,
-			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException, InvalidUnicodeCharacterException {
+			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
 		java.util.Vector FET, fet ;
 
 		FET = ps.ucFET( replace( text.getValue() ) ) ;

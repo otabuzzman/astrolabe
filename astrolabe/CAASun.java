@@ -21,4 +21,7 @@ public class CAASun {
 		return r ;
 	}
 
+	static double MeanEclipticLatitude( double JD ) {
+		return 0 ;
+	}
 }

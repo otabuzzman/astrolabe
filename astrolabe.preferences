@@ -59,6 +59,7 @@
 				<map>
 					<!--pagewidth %w, pageheight %h, papersize %p-->
 					<entry key="viewer" value="gswin32c -dDEVICEWIDTHPOINTS=%w -dDEVICEHEIGHTPOINTS=%h -"/>
+					<!--<entry key="viewer" value="gswin32c -q -dNOPAUSE -dBATCH -dDEBUG -sstdout=_out -dDEVICEWIDTHPOINTS=%w -dDEVICEHEIGHTPOINTS=%h  -sDEVICE=pdfwrite -sOutputFile=_out.pdf -"/>-->
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
 				</map>
@@ -193,10 +194,8 @@
 					</map>
 				</node>
 			</node>
-			<node name="DialDegrees">
-				<map>
-					<entry key="segment" value="1"/>
-				</map>
+			<node name="Dial">
+				<map/>
 				<node name="annotation">
 					<map>
 						<entry key="rise" value="3.2"/>
@@ -261,7 +260,7 @@
 						<entry key="dialdescription" value="2.4"/>
 						<entry key="dialnumber" value="3.8"/>
 						<entry key="dialsubnumber" value="2.6"/>
-						<entry key="guidance" value="1.8"/>
+						<entry key="guidance" value="1.6"/>
 					</map>
 				</node>
 			</node>

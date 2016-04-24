@@ -19,9 +19,9 @@ public class Model extends Main implements Cloneable {
 		if ( ( dT = date.getDateOccidental() ) != null ) {
 			d = new DateOccidental( Model.condense( dT.getYMD() ), dT.getTime()!=null?CAACoordinateTransformation.RadiansToHours( Model.condense( dT.getTime() ) ):0 ).getDateOccidental() ;
 		} /* else if ( ( dT = date.getDateJewish() ) != null ) {
-			r = new DateDateJewish( Model.condense( dT.getYMD() ), dT.getTime()!=null?CAACoordinateTransformation.RadiansToHours( Model.condense( dT.getTime() ) ):0 ).getDateOccidental() ;
+			r = new DateJewish( Model.condense( dT.getYMD() ), dT.getTime()!=null?CAACoordinateTransformation.RadiansToHours( Model.condense( dT.getTime() ) ):0 ).getDateOccidental() ;
 		} else if ( ( dT = date.getDateIslamic() ) != null ) {
-			r = new DateDateIslamic( Model.condense( dT.getYMD() ), dT.getTime()!=null?CAACoordinateTransformation.RadiansToHours( Model.condense( dT.getTime() ) ):0 ).getDateOccidental() ;
+			r = new DateIslamic( Model.condense( dT.getYMD() ), dT.getTime()!=null?CAACoordinateTransformation.RadiansToHours( Model.condense( dT.getTime() ) ):0 ).getDateOccidental() ;
 		} */
 
 		return d ;

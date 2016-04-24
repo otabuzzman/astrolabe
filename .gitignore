@@ -1,4 +1,5 @@
 .settings/
+astrolabe/model/
 caa-1.17/*
 !caa-1.17/Makefile
 !caa-1.17/README

@@ -27,6 +27,7 @@ public class PrintStream extends java.io.PrintStream {
 			out = tee.get( t ) ;
 
 			out.print( string ) ;
-			out.flush() ; }
+			out.flush() ;
+		}
 	}
 }

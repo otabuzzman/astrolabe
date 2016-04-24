@@ -129,7 +129,7 @@
 	<xs:element name="CircleNorthernTropic" type="CircleType"/>
 	<xs:complexType name="DialType">
 		<xs:sequence>
-			<xs:element ref="GraduationUnit"/>
+			<xs:element ref="GraduationSpan"/>
 			<xs:element ref="GraduationHalf" minOccurs="0"/>
 			<xs:element ref="GraduationFull" minOccurs="0"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
@@ -142,32 +142,47 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="reflect" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	<xs:element name="Dial">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="DialDegrees"/>
-				<xs:element ref="DialSunTrue"/>
-				<xs:element ref="DialSunMean"/>
+				<xs:element ref="DialAngle"/>
+				<xs:element ref="DialTime"/>
+				<xs:element ref="DialDate"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="DialDegrees" type="DialType"/>
-	<xs:element name="DialSunMean" type="DialType"/>
-	<xs:element name="DialSunTrue" type="DialType"/>
+	<xs:element name="DialAngle">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="DialType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DialTime" type="DialType"/>
+	<xs:element name="DialDate">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="DialType">
+					<xs:attribute name="sun" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="apparent|mean|true"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="GraduationType">
 		<xs:sequence>
-			<xs:element ref="AnnotationStraight" minOccurs="0"/>
+			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="interval" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:double">
-					<xs:minExclusive value="0"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="span" type="xs:double" use="required"/>
 	</xs:complexType>
-	<xs:element name="GraduationUnit">
+	<xs:element name="GraduationSpan">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="GraduationType">
@@ -176,8 +191,20 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="GraduationHalf" type="GraduationType"/>
-	<xs:element name="GraduationFull" type="GraduationType"/>
+	<xs:element name="GraduationHalf">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="GraduationType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GraduationFull">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="GraduationType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="AnnotationType">
 		<xs:sequence>
 			<xs:element ref="Text" maxOccurs="unbounded"/>
@@ -197,6 +224,7 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="radiant" type="xs:boolean" use="required"/>
 		<xs:attribute name="reverse" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	<xs:element name="Annotation">

@@ -5,41 +5,36 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class GraduationUnit extends Model implements Graduation {
+public class GraduationSpan extends Model implements Graduation {
 
 	protected double space ;
 	protected double linelength ;
 	protected double linewidth ;
 
-	private astrolabe.Vector origin ;
 	private astrolabe.Vector tangent ;
+	private astrolabe.Vector origin ;
 
-	public GraduationUnit( astrolabe.Vector origin, astrolabe.Vector tangent ) {
-		this.origin = (astrolabe.Vector) origin.clone() ;
-		this.tangent = (astrolabe.Vector) tangent.clone() ;
+	public GraduationSpan( astrolabe.Vector origin, astrolabe.Vector tangent ) throws ParameterNotValidException {
+		this.origin = origin ;
+		this.tangent = tangent ;
 
 		space = getClassNode( null, null ).getDouble( "space", .4 ) ;
 		linelength = getClassNode( null, null ).getDouble( "linelength", 2.8 ) ;
 		linewidth = getClassNode( null, null ).getDouble( "linewidth", .01 ) ;
 	}
 
-	public Vector<astrolabe.Vector> cartesianList() {
-		double rad90 ;
+	private Vector<astrolabe.Vector> cartesianList() {
 		astrolabe.Vector a, b ;
 		Vector<astrolabe.Vector> r ;
-
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
 		a = (astrolabe.Vector) tangent.clone() ;
 		b = (astrolabe.Vector) tangent.clone() ;
 		r = new Vector<astrolabe.Vector>() ;
 
-		a.rotate( rad90 ) ;
 		a.size( space ) ;
 		a.add( origin ) ;
 		r.add( a ) ;
 
-		b.rotate( rad90 ) ;
 		b.size( space+linelength ) ;
 		b.add( origin ) ;
 		r.add( b ) ;
@@ -47,7 +42,7 @@ public class GraduationUnit extends Model implements Graduation {
 		return r ;
 	}
 
-	public void initPS( PostscriptStream ps ) {
+	private void initPS( PostscriptStream ps ) {
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
@@ -65,7 +60,7 @@ public class GraduationUnit extends Model implements Graduation {
 		ps.operator.stroke() ;
 
 		radA = java.lang.Math.atan2( tangent.getY(), tangent.getX() ) ;
-		degA = CAACoordinateTransformation.RadiansToDegrees( radA ) ;
+		degA = CAACoordinateTransformation.RadiansToDegrees( radA )-90 ;
 
 		ps.operator.rotate( degA ) ;
 	}
