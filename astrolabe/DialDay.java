@@ -12,14 +12,51 @@ public class DialDay extends DialDegree {
 
 	private Baseline baseline ;
 
-	private String[] llday = {
-			ApplicationConstant.LL_SUNDAY, ApplicationConstant.LL_MONDAY, ApplicationConstant.LL_TUESDAY, ApplicationConstant.LL_WEDNESDAY,
-			ApplicationConstant.LL_THURSDAY, ApplicationConstant.LL_FRIDAY, ApplicationConstant.LL_SATURDAY 
+	private String[] nameofday = {
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SUNDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_MONDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_TUESDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_WEDNESDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_THURSDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_FRIDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SATURDAY 
 	} ;
-	private String[] llmonth = {
-			ApplicationConstant.LL_JANUARY, ApplicationConstant.LL_FEBRUARY, ApplicationConstant.LL_MARCH, ApplicationConstant.LL_APRIL,
-			ApplicationConstant.LL_MAY, ApplicationConstant.LL_JUNE, ApplicationConstant.LL_JULY, ApplicationConstant.LL_AUGUST,
-			ApplicationConstant.LL_SEPTEMBER, ApplicationConstant.LL_OCTOBER, ApplicationConstant.LL_NOVEMBER, ApplicationConstant.LL_DECEMBER
+	private String[] shortnameofday = {
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_SUNDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_MONDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_TUESDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_WEDNESDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_THURSDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_FRIDAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_SATURDAY 
+	} ;
+	private String[] nameofmonth = {
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JANUARY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_FEBRUARY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_MARCH,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_APRIL,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_MAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JUNE,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JULY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_AUGUST,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SEPTEMBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_OCTOBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_NOVEMBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_DECEMBER
+	} ;
+	private String[] shortnameofmonth = {
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JANUARY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_FEBRUARY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_MARCH,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_APRIL,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_MAY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JUNE,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JULY,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_AUGUST,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_SEPTEMBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_OCTOBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_NOVEMBER,
+			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_DECEMBER
 	} ;
 
 	public DialDay( Object peer, Baseline baseline ) throws ParameterNotValidException {
@@ -78,11 +115,11 @@ public class DialDay extends DialDegree {
 
 			d.Set( jd, true ) ;
 
-			dn = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_CALENDAR_LONG+llday[ d.DayOfWeek() ] ) ;
-			dns = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_CALENDAR_SHORT+llday[ d.DayOfWeek() ] ) ;
+			dn = ApplicationHelper.getLocalizedString( nameofday[ d.DayOfWeek() ] ) ;
+			dns = ApplicationHelper.getLocalizedString( shortnameofday[ d.DayOfWeek() ] ) ;
 
-			mn = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_CALENDAR_LONG+llmonth[ -1+(int) d.Month() ] ) ;
-			mns = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_CALENDAR_SHORT+llmonth[ -1+(int) d.Month() ] ) ;
+			mn = ApplicationHelper.getLocalizedString( nameofmonth[ -1+(int) d.Month() ] ) ;
+			mns = ApplicationHelper.getLocalizedString( shortnameofmonth[ -1+(int) d.Month() ] ) ;
 
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DAY ) ;
 			ApplicationHelper.registerYMD( key, d ) ;

@@ -67,9 +67,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 			boolean leading ;
 
 			circle = (Circle) Registry.retrieve( getBegin().getReference().getCircle() ) ;
-
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
-
 			try {
 				begin = circle.isParallel()?
 						intersect( (CircleParallel) circle, leading ):
@@ -91,9 +89,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 			boolean leading ;
 
 			circle = (Circle) Registry.retrieve( getEnd().getReference().getCircle() ) ;
-
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
-
 			try {
 				end = circle.isParallel()?
 						intersect( (CircleParallel) circle, leading ):

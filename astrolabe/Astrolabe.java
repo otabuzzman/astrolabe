@@ -144,6 +144,9 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 						ps.operator.gsave() ;
 
 						catalog = AstrolabeFactory.companionOf( horizon.getCatalog( ct ), horizon ) ;
+
+						catalog.read() ;
+
 						catalog.headPS( ps ) ;
 						catalog.emitPS( ps ) ;
 						catalog.tailPS( ps ) ;

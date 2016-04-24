@@ -67,7 +67,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 			boolean leading ;
 
 			circle = (Circle) Registry.retrieve( getBegin().getReference().getCircle() ) ;
-
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 			try {
 				begin = circle.isParallel()?
@@ -82,6 +81,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 
 				begin = 0 ;
 			}
+		} finally {
+			begin = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
 		}
 		try {
 			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
@@ -90,7 +91,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 			boolean leading ;
 
 			circle = (Circle) Registry.retrieve( getEnd().getReference().getCircle() ) ;
-
 			leading = getEnd().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 			try {
 				end = circle.isParallel()?
@@ -103,8 +103,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
 				log.warn( msg ) ;
 
-				begin = Math.rad360 ;
+				end = Math.rad360 ;
 			}
+		} finally {
+			end = CAACoordinateTransformation.MapTo0To360Range( end ) ;
 		}
 	}
 

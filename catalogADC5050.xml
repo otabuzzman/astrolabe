@@ -793,14 +793,23 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/5/5050/catalog.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/5050/catalog.dat.gz-->
-						<CatalogADC5050 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/5050/catalog.dat.gz" random="1000">
-							<Annotation>
-								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="middleleft" radiant="false">
-									<Text value="@{bayerzeichen}@">
-										<Subscript value="@{bayerindex}@"/>
-									</Text>
-								</AnnotationStraight>
-							</Annotation>
+						<CatalogADC5050 fov="chart"
+							url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/5050/catalog.dat.gz"
+							restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+							<Select value="mag0,mag1">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0"
+										anchor="bottomleft" reverse="false" radiant="false">
+										<Text value="@{Name}@"></Text>
+									</AnnotationStraight>
+								</Annotation>
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0"
+										anchor="topleft" reverse="false" radiant="false">
+										<Text value="@{HR}@"></Text>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
 						</CatalogADC5050>
 					</Catalog>
 				</HorizonEquatorial>

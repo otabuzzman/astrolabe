@@ -368,7 +368,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 	public double mapIndexToScale( int index, double span ) throws ParameterNotValidException {
 		double r ;
 
-		r = baseline.mapIndexToScale( index, span*unit ) ;
+		r = Math.truncate( baseline.mapIndexToScale( index, span*unit ) ) ;
 		if ( ! baseline.probe( r ) || r>Math.rad360 ) {
 			String msg ;
 

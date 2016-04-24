@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 
 public class PostscriptStream extends PrintStream {
@@ -15,9 +16,9 @@ public class PostscriptStream extends PrintStream {
 	public final PostscriptStream.DSC dsc = new DSC();
 
 	private PostscriptStream.UcBlock ucBlock[] = null ;
-	private java.util.Hashtable<String, String> ucEncodingVectors = null ;
+	private Hashtable<String, String> ucEncodingVectors = null ;
 
-	private java.util.Hashtable<String, String> prolog = new java.util.Hashtable<String, String>() ;
+	private Hashtable<String, String> prolog = new Hashtable<String, String>() ;
 
 	private final int precision = ApplicationHelper.getClassNode( this,
 			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
@@ -175,7 +176,7 @@ public class PostscriptStream extends PrintStream {
 		ucBlock[143] = new UcBlock( "F0000..FFFFF", 0xF0000, 0xFFFFF, "Supplementary Private Use Area-A" ) ;
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
-		ucEncodingVectors = new java.util.Hashtable<String, String>() ;
+		ucEncodingVectors = new Hashtable<String, String>() ;
 		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = DEFAULT_FONTNAME ;

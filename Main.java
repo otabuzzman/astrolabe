@@ -2,6 +2,7 @@
 import astrolabe.Astrolabe;
 import astrolabe.AstrolabeReader;
 import astrolabe.PostscriptStream;
+import astrolabe.Registry;
 
 import java.io.FileReader;
 
@@ -24,6 +25,8 @@ public class Main {
 			a.emitPS( ps ) ;
 
 			ps.close();
+
+			Registry.remove() ;
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
 			System.exit( 1 ) ;

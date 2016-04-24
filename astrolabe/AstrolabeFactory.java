@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import org.exolab.castor.xml.ValidationException;
-
 import astrolabe.model.AngleType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
@@ -140,13 +138,16 @@ public final class AstrolabeFactory {
 	}
 
 	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
-		astrolabe.model.CatalogADC1239 ct1239 ;
+		astrolabe.model.CatalogADC1239H ct1239h ;
+		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
 		astrolabe.model.CatalogADC6049 ct6049 ;
 		Catalog catalog ;
 
-		if ( ( ct1239 = ct.getCatalogADC1239() ) != null ) {
-			catalog = new CatalogADC1239( ct1239, p ) ;
+		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
+			catalog = new CatalogADC1239H( ct1239h, p ) ;
+		} else if ( ( ct1239t = ct.getCatalogADC1239T() ) != null ) {
+			catalog = new CatalogADC1239T( ct1239t, p ) ;
 		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
 			catalog = new CatalogADC5050( ct5050, p ) ;
 		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
@@ -158,7 +159,7 @@ public final class AstrolabeFactory {
 		return catalog ;
 	}
 
-	public static astrolabe.model.Position modelPosition( double phi, double theta ) throws ParameterNotValidException {
+	public static astrolabe.model.Position modelPosition( double phi, double theta ) {
 		astrolabe.model.Position p = new astrolabe.model.Position() ;
 
 		modelSphericalType( p, 1, phi, theta ) ;
@@ -166,7 +167,7 @@ public final class AstrolabeFactory {
 		return p ;
 	}
 
-	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) throws ParameterNotValidException {
+	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) {
 		astrolabe.model.SphericalType sT = new astrolabe.model.SphericalType() ;
 
 		modelSphericalType( sT, r, phi, theta ) ;
@@ -174,7 +175,7 @@ public final class AstrolabeFactory {
 		return sT ;
 	}
 
-	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) throws ParameterNotValidException {
+	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) {
 		sT.setR( new astrolabe.model.R() ) ;
 		sT.getR().setValue( r ) ;
 		sT.setPhi( new astrolabe.model.Phi() ) ;
@@ -183,12 +184,6 @@ public final class AstrolabeFactory {
 		sT.setTheta( new astrolabe.model.Theta() ) ;
 		sT.getTheta().setRational( new astrolabe.model.Rational() ) ;
 		sT.getTheta().getRational().setValue( theta ) ;
-
-		try {
-			sT.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 	}
 
 	public static double valueOf( DateType date ) throws ParameterNotValidException {

@@ -1,31 +1,70 @@
+
 package astrolabe;
 
-import java.util.Hashtable;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.HashSet;
 
-import org.exolab.castor.xml.ValidationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Catalog {
+public class CatalogADC7118 extends CatalogType {
+
+	private static final int C_CHUNK = 96+1/*0x0a*/ ;
+
+	private final static Log log = LogFactory.getLog( CatalogADC7118.class ) ;
+
+	private HashSet<String> restrict ;
 
 	public CatalogADC7118( Object peer, Projector projector ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+		super( peer, projector ) ;
+
+		String[] rv ;
+
+		restrict = new HashSet<String>() ;
+		if ( ( (astrolabe.model.CatalogADC7118) peer ).getRestrict() != null ) {
+			rv = ( (astrolabe.model.CatalogADC7118) peer ).getRestrict().split( "," ) ;
+			for ( int v=0 ; v<rv.length ; v++ ) {
+				restrict.add( rv[v] ) ;
+			}
 		}
 	}
 
-	public void headPS(PostscriptStream ps) {
-	}
+	public CatalogRecord record( java.io.Reader catalog ) {
+		CatalogADC7118Record r = null ;
+		char[] c ;
+		String l ;
 
-	public void emitPS(PostscriptStream ps) {
-	}
+		c = new char[C_CHUNK] ;
 
-	public void tailPS(PostscriptStream ps) {
-	}
+		try {
+			while ( catalog.read( c, 0, C_CHUNK ) == C_CHUNK ) {
+				l = new String( c ) ;
+				l = l.substring( 0, l.length()-1 ) ;
 
-	public Hashtable<String, BodyStellar> read() {
-		return null;
+				try {
+					r = new CatalogADC7118Record( l ) ;
+
+					if ( r.matchAny( restrict ) ) {
+						break ;
+					} else {
+						continue ;
+					}
+				} catch ( ParameterNotValidException e ) {
+					String msg ;
+
+					msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageFormat.format( msg, new Object[] { "\""+l+"\"", "" } ) ;
+					log.warn( msg ) ;
+
+					continue ;
+				}
+			}
+		} catch ( IOException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		return r ;
 	}
 }

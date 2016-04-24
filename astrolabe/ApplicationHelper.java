@@ -477,6 +477,8 @@ public final class ApplicationHelper {
 			r = Preferences.systemRoot().node( n ) ;
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalArgumentException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		return r ;
@@ -496,6 +498,8 @@ public final class ApplicationHelper {
 
 			r = Preferences.systemRoot().node( n ) ;
 		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalArgumentException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
@@ -526,6 +530,8 @@ public final class ApplicationHelper {
 
 			r = Preferences.systemRoot().node( n ) ;
 		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalArgumentException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 

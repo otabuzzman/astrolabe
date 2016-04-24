@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
+astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2008" m="1" d="1"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<Latitude>
+						<Rational value="0.0"/>
+					</Latitude>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Body>
+						<BodyStellar type="mag2" glyph="&#xf811;" turn="0.0" spin="-12.0">
+							<Position>
+								<phi>
+									<Rational value="140.0"/>
+								</phi>
+								<theta>
+									<Rational value="-12"/>
+								</theta>
+							</Position>
+							<Annotation>
+								<AnnotationStraight purpose="bodylettering0" anchor="middleright" radiant="false" reverse="false">
+									<Text value="mag2"/>
+								</AnnotationStraight>
+							</Annotation>
+						</BodyStellar>
+					</Body>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>
