@@ -1,3 +1,4 @@
+.settings/
 caa-1.17/*
 !caa-1.17/Makefile
 !caa-1.17/README
@@ -16,3 +17,4 @@ xerces-2_5_0/
 .depend
 .project
 preferences.dtd
+*.class
