@@ -9,23 +9,13 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 	private final static double DEFAULT_LINEWIDTH = 0.36 ;
 	private final static double DEFAULT_LINEDASH = 0 ;
 
-	private java.util.Vector<double[]> outline ;
-
 	private double linewidth ;
 	private double linedash ;
 
 	public BodyAreal( Object peer, Projector projector ) throws ParameterNotValidException {
-		double[] lo ;
-
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
 		this.projector = projector ;
-
-		outline = new java.util.Vector<double[]>() ;
-		for ( int pn=0 ; pn<getPositionCount() ; pn++ ) {
-			lo = AstrolabeFactory.valueOf( getPosition( pn ) ) ;
-			outline.add( new double[] { lo[1], lo[2] } ) ; // lo[0] is r
-		}
 
 		linewidth = ApplicationHelper.getClassNode( this,
 				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
@@ -39,40 +29,37 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		double[] ho, xy ;
-		java.util.Vector<double[]> pn ;
-		double[] pt ;
-		Vector a, b ;
-		double s ;
+		double[] lo, xy ;
+		java.util.Vector<double[]> p ;
+		Vector k, l ;
 
-		pn = new java.util.Vector<double[]>() ;
+		p = new java.util.Vector<double[]>() ;
 
-		ps.operator.mark() ;
-		for ( int n=outline.size() ; n>0 ; n-- ) {
-			ho = (double[]) outline.get( n-1 ) ;
-			xy = projector.project( ho[0], ho[1] ) ;
-			ps.push( xy[0] ) ;
-			ps.push( xy[1] ) ;
-
-			pn.add( xy ) ;
-		}
-		try {
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
-		ps.operator.stroke() ;
-
-		a = new Vector( pn.get( 0 ) ) ;
-		b = new Vector( pn.get( 1 ) ) ;
-		b.sub( a ) ;
-		b.size( .001 ) ;
-		b.rotate( Math.rad1 ) ;
-		a.add( b ) ;
-		pt = new double[] { a.getX(), a.getY() } ;
-
-		s = 2 ;
 		try {
 			ps.operator.mark() ;
-			ps.push( Math.isPointInsidePolygon( pn , pt )?-s:s ) ; // shift value
+			for ( int n=getPositionCount() ; n>0 ; n-- ) {
+				lo = AstrolabeFactory.valueOf( getPosition( n-1 ) ) ;
+				xy = projector.project( lo[1], lo[2] ) ;
+
+				p.add( xy ) ;
+
+				ps.push( xy[0] ) ;
+				ps.push( xy[1] ) ;
+			}
+			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		} catch ( ParameterNotValidException e ) {}
+		// polyline is considered well-defined,
+		// valuOf should not fail in for clause
+
+		k = new Vector( p.get( 0 ) ) ;
+		l = new Vector( p.get( 1 ) ) ;
+		l.sub( k ) ;
+		l.rotate( Math.rad1 ) ;
+		k.add( l ) ;
+
+		try {
+			ps.operator.mark() ;
+			ps.push( Math.polygonCoversPoint( p , k.get() )?-linewidth/2:linewidth/2 ) ;
 			ps.push( true ) ; // parallel edges
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.operator.stroke() ;

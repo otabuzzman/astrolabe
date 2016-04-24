@@ -36,23 +36,21 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	}
 
 	public double[] project( double RA, double d ) {
-		double[] r = new double[2] ;
-		Vector v = new Vector() ;
+		Vector v ;
+		double x, y ;
 
 		if ( northern ) {
-			v.setX( java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.cos( RA ) ) ;
-			v.setY( -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ) ;
+			x = java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.cos( RA ) ;
+			y = -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ;
 		} else { // southern
-			v.setX( java.lang.Math.tan( ( -d )/2 )*java.lang.Math.cos( RA ) ) ;
-			v.setY( -java.lang.Math.tan( ( -d )/2 )*java.lang.Math.sin( RA ) ) ;
+			x = java.lang.Math.tan( ( -d )/2 )*java.lang.Math.cos( RA ) ;
+			y = -java.lang.Math.tan( ( -d )/2 )*java.lang.Math.sin( RA ) ;
 		}
 
+		v = new Vector( x, y ) ;
 		v.scale( scale ) ;
 
-		r[0] = v.getX() ;
-		r[1] = v.getY() ;
-
-		return r ;
+		return v.get() ;
 	}
 
 	public double[] unproject( double[] xy ) {

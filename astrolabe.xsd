@@ -389,7 +389,7 @@
 		<xs:attribute name="type" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="asteroid|comet|planet|satelite|spacecraft"/>
+					<xs:pattern value="asteroid|comet|planet|satelite"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -397,7 +397,7 @@
 	<xs:element name="BodyOrbital" type="BodyOrbitalType"/>
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
-			<xs:element ref="Position" maxOccurs="unbounded"/>
+			<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
 			<xs:element ref="AnnotationCurved" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -405,13 +405,6 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="constellation"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="annotation" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="none|(each|curved|hooked)(inside|beyond)"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

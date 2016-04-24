@@ -12,11 +12,15 @@ public class Vector {
 	private double y = 0 ;
 
 	public Vector() {
-		set( 0, 0 ) ;
+		this( 0, 0 ) ;
 	}
 
 	public Vector( double[] xy ) {
-		set( xy ) ;
+		this( xy[0], xy[1] ) ;
+	}
+
+	public Vector( Vector xy ) {
+		this( xy.getX(), xy.getY() ) ;
 	}
 
 	public Vector( double x, double y ) {
@@ -32,12 +36,8 @@ public class Vector {
 		this.y = y ;
 	}
 
-	public void setX( double x ) {
-		this.x = x ;
-	}
-
-	public void setY( double y ) {
-		this.y = y ;
+	public double[] get() {
+		return new double[] { x, y } ;
 	}
 
 	public double getX() {
@@ -102,10 +102,5 @@ public class Vector {
 
 	public double phi( Vector cartesian ) {
 		return java.lang.Math.acos( dot( cartesian )/( abs()*cartesian.abs() ) ) ;
-	}
-
-	// clone()
-	public Vector copy() {
-		return new Vector( x, y ) ;
 	}
 }

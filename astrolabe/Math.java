@@ -306,7 +306,7 @@ public final class Math {
 		return Double.doubleToLongBits( v )==Double.doubleToLongBits( Double.NaN )?true:false ;
 	}
 
-	public static boolean isPointInsidePolygon( java.util.Vector<double[]> polygon, double[] p ) {
+	public static boolean polygonCoversPoint( java.util.Vector<double[]> polygon, double[] p ) {
 		double[] xy ;
 		Coordinate[] cl ;
 		LinearRing gl ;

@@ -72,16 +72,16 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
 		Vector a, b ;
 
-		a = (Vector) tangent.copy() ;
-		b = (Vector) tangent.copy() ;
+		a = new Vector( tangent ) ;
+		b = new Vector( tangent ) ;
 
 		a.size( space ) ;
 		a.add( origin ) ;
-		r.add( new double[] { a.getX(), a.getY() } ) ;
+		r.add( a.get() ) ;
 
 		b.size( space+linelength ) ;
 		b.add( origin ) ;
-		r.add( new double[] { b.getX(), b.getY() } ) ;
+		r.add( b.get() ) ;
 
 		return r ;
 	}

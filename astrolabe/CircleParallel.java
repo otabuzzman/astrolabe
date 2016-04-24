@@ -83,7 +83,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 	}
 
 	public double[] project( double az, double shift ) {
-		double[] r = new double[2] ;
 		Vector v, t ;
 
 		v = new Vector( projector.project( az, al ) ) ;
@@ -93,14 +92,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 			v.add( t.rotate( Math.rad90 ).size( shift ) ) ;
 		}
 
-		r[0] = v.getX() ;
-		r[1] = v.getY() ;
-
-		return r ;
+		return v.get() ;
 	}
 
 	public double[] tangent( double az ) {
-		double[] r = new double[2] ;
 		Vector a, b ;
 		double d ;
 
@@ -111,10 +106,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 
 		a.sub( b ) ;
 
-		r[0] = a.getX() ;
-		r[1] = a.getY() ;
-
-		return r ;
+		return a.get() ;
 	}
 
 	public java.util.Vector<double[]> list() {

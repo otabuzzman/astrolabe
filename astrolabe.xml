@@ -1607,100 +1607,176 @@ astrolabe.xsd">
 						</BodyStellar>
 					</Body>
 					<Body>
-						<BodyAreal annotation="none" type="constellation">
+						<BodyAreal type="constellation">
 							<Position>
 								<phi>
-									<Rational value="312" />
-									
+									<Rational value="312"/>
 								</phi>
 								<theta>
-									<Rational value="25" />
-									
+									<Rational value="25"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="317" />
-									
+									<Rational value="317"/>
 								</phi>
 								<theta>
-									<Rational value="25" />
-									
+									<Rational value="25"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="317" />
-									
+									<Rational value="317"/>
 								</phi>
 								<theta>
-									<Rational value="21" />
-									
+									<Rational value="21"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="319" />
-									
+									<Rational value="319"/>
 								</phi>
 								<theta>
-									<Rational value="22" />
-									
+									<Rational value="22"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="319" />
-									
+									<Rational value="319"/>
 								</phi>
 								<theta>
-									<Rational value="25" />
-									
+									<Rational value="25"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="323" />
-									
+									<Rational value="323"/>
 								</phi>
 								<theta>
-									<Rational value="23" />
-									
+									<Rational value="23"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="323" />
-									
+									<Rational value="323"/>
 								</phi>
 								<theta>
-									<Rational value="15" />
-									
+									<Rational value="15"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="305" />
-									
+									<Rational value="305"/>
 								</phi>
 								<theta>
-									<Rational value="15" />
-									
+									<Rational value="15"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="305" />
-									
+									<Rational value="305"/>
 								</phi>
 								<theta>
-									<Rational value="25" />
-									
+									<Rational value="25"/>
 								</theta>
-							</Position><Position>
+							</Position>
+							<Position>
 								<phi>
-									<Rational value="310" />
-									
+									<Rational value="310"/>
 								</phi>
 								<theta>
-									<Rational value="25" />
-									
+									<Rational value="25"/>
 								</theta>
 							</Position>
 							<AnnotationCurved purpose="constellationdescription" reverse="false" anchor="topleft" distance="0.0">
-								<Text value="BodyAreal"></Text>
+								<Text value="BodyAreal"/>
+							</AnnotationCurved>
+						</BodyAreal>
+					</Body>
+					<Body>
+						<BodyAreal type="constellation">
+							<Position>
+								<phi>
+									<Rational value="312"/>
+								</phi>
+								<theta>
+									<Rational value="25"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="317"/>
+								</phi>
+								<theta>
+									<Rational value="25"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="317"/>
+								</phi>
+								<theta>
+									<Rational value="21"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="319"/>
+								</phi>
+								<theta>
+									<Rational value="22"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="319"/>
+								</phi>
+								<theta>
+									<Rational value="25"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="323"/>
+								</phi>
+								<theta>
+									<Rational value="23"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="323"/>
+								</phi>
+								<theta>
+									<Rational value="29"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="305"/>
+								</phi>
+								<theta>
+									<Rational value="29"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="305"/>
+								</phi>
+								<theta>
+									<Rational value="25"/>
+								</theta>
+							</Position>
+							<Position>
+								<phi>
+									<Rational value="310"/>
+								</phi>
+								<theta>
+									<Rational value="25"/>
+								</theta>
+							</Position>
+							<AnnotationCurved purpose="constellationdescription" reverse="false" anchor="bottomleft" distance="0.0">
+								<Text value="BodyAreal"/>
 							</AnnotationCurved>
 						</BodyAreal>
 					</Body>
