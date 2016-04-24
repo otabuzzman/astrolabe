@@ -1,6 +1,6 @@
 
 package astrolabe;
 
-public interface Graduation {
+public interface Annotation {
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException ;
 }

@@ -2,17 +2,28 @@
 package astrolabe;
 
 import caa.CAACoordinateTransformation;
-import caa.CAANutation;
+import caa.CAASun;
 
 public class SunTrue implements Sun {
 
-	public double[] positionEq( double JD ) {
+	private double JD ;
+	private boolean mean ; // ecliptic
+
+	public SunTrue( astrolabe.model.SunType sT ) {
+		mean = sT.getEcliptic().equals( ApplicationConstant.AV_SUN_ECLIPTICMEAN ) ;
+	}
+
+	public void setJD( double JD ) {
+		this.JD = JD ;
+	}
+
+	public double[] positionEq() {
 		double r[] ;
 		double lo, la, e ;
 
-		lo = caa.CAASun.GeometricEclipticLongitude( JD ) ;
-		la = caa.CAASun.GeometricEclipticLatitude( JD ) ;
-		e = CAANutation.MeanObliquityOfEcliptic( JD ) ;
+		lo = CAASun.GeometricEclipticLongitude( JD ) ;
+		la = CAASun.GeometricEclipticLatitude( JD ) ;
+		e = ApplicationHelper.getObliquityOfEcliptic( mean, Astrolabe.getEpoch().Julian() ) ;
 
 		r = CAACoordinateTransformation.Ecliptic2Equatorial( lo, la, e ) ;
 		r[0] = CAACoordinateTransformation.HoursToRadians( r[0] ) ;

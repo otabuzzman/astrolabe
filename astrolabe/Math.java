@@ -6,6 +6,8 @@ import caa.CAACoordinateTransformation;
 public final class Math {
 
 	public static final double e0 = .000000000001 ;
+	// approximate value of golden section
+	public static final double goldensection = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
 
 	private Math() {        
 	} 
@@ -33,7 +35,7 @@ public final class Math {
 
 		// sin(a):sin(b) = sin(al):sin(be)
 		// sin(b) = sin(be)*sin(a):sin(al) 
-		r = LawOfSine(al, be, a) ;
+		r = LawOfSine( al, be, a ) ;
 
 		return r ;
 	}

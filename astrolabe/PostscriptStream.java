@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.util.prefs.BackingStoreException;
+
 public class PostscriptStream extends PrintStream {
 
 	public final PostscriptStream.Operator operator = new Operator();
@@ -9,10 +11,12 @@ public class PostscriptStream extends PrintStream {
 	private PostscriptStream.UcBlock ucBlock[] = null ;
 	private java.util.Hashtable<String, String> ucEncodingVectors = null ;
 
-	private final int precision = getClassNode( null, null ).getInt( "precision", 6 ) ;
-	private final int scanline = getClassNode( null, null ).getInt( "scanline", 254 ) ;
+	private java.util.Hashtable<String, String> prolog = null ;
 
-	public PostscriptStream( PrintStream ps ) throws java.util.prefs.BackingStoreException, ParameterNotValidException {
+	private final int precision = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, 6 ) ;
+	private final int scanline = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, 254 ) ;
+
+	public PostscriptStream( java.io.PrintStream ps ) throws ParameterNotValidException {
 		super( ps ) ;
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
@@ -164,19 +168,23 @@ public class PostscriptStream extends PrintStream {
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
 		ucEncodingVectors = new java.util.Hashtable<String, String>() ;
-		String vector = getClassNode( null, "unicode" ).get( "default", null ) ;
+		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = "/Times-Roman:" ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
 				vector = vector+"/question"+( cs!=255?" ":"" ) ;
 			}
 		}
-		ucEncodingVectors.put( "default", vector ) ;
-		String[] encoding = getClassNode( null, "unicode" ).keys() ;
-		for ( int e=0 ; e<encoding.length ; e++ ) {
-			if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
-				ucEncodingVectors.put( encoding[e], getClassNode( null, "unicode" ).get( encoding[e], null ) ) ;
+		try {
+			ucEncodingVectors.put( "default", vector ) ;
+			String[] encoding = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
+			for ( int e=0 ; e<encoding.length ; e++ ) {
+				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
+					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
+				}
 			}
+		} catch ( BackingStoreException e ) {
+			throw new ParameterNotValidException() ;
 		}
 	} 
 
@@ -187,38 +195,6 @@ public class PostscriptStream extends PrintStream {
 		numberFormat.setGroupingUsed( false ) ;
 
 		return numberFormat.format( number ) ;
-	} 
-
-	public void polyline( java.util.Vector vector ) {        
-		double xy[] = null ;
-		operator.mark() ;
-		for ( int c=vector.size() ; c>0 ; c-- ) {
-			xy = (double[]) vector.get( c-1 ) ;
-			push( xy[0] ) ;
-			push( xy[1] ) ;
-		}
-		polyline() ;
-	} 
-
-	public void line( java.util.Vector vector ) {        
-		double xy[] = null ;
-		xy = (double[]) vector.get( 1 ) ;
-		push( xy[0] ) ;
-		push( xy[1] ) ;
-		xy = (double[]) vector.get( 0 ) ;
-		push( xy[0] ) ;
-		push( xy[1] ) ;
-		line() ;
-	} 
-
-	public void pathlength() {        
-		print( "pathlength\n" ) ;
-	} 
-
-	public void setencoding( String font, String[] encoding ) throws ParameterNotValidException {        
-		push( font ) ;
-		push( encoding ) ;
-		print( "setencoding\n" ) ;
 	} 
 
 	public java.util.Vector ucFET( String string ) {        
@@ -339,6 +315,14 @@ public class PostscriptStream extends PrintStream {
 		print( string+"\n" ) ;
 	} 
 
+	public void custom( String def ) throws ParameterNotValidException {
+		if ( ! this.prolog.containsKey( "/"+def ) ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		print( def+"\n" ) ;
+	}
+
 	public void push( boolean bool ) {        
 		print( ( bool?"true":"false" )+"\n" ) ;
 	} 
@@ -353,40 +337,6 @@ public class PostscriptStream extends PrintStream {
 
 	public void proc( boolean begin ) {        
 		print( begin?"{\n":"}\n" ) ;
-	} 
-
-	public void pathreverse() {        
-		print( "pathreverse\n" ) ;
-	} 
-
-	public void pathshift( double shift ) {        
-		push( shift ) ;
-		pathshift() ;
-	} 
-
-	public void line() {        
-		print( "line\n" ) ;
-	} 
-
-	public void polyline() {        
-		print( "polyline\n" ) ;
-	} 
-
-	public void pagesize() {        
-		print( "pagesize\n" ) ;
-	} 
-
-	public void pathshift() {        
-		print( "pathshift\n" ) ;
-	} 
-
-	public void pathshow() {        
-		print( "pathshow\n" ) ;
-	} 
-
-	public void pathshow( double distance ) {        
-		push( distance ) ;
-		pathshow() ;
 	} 
 
 	public class Operator {
@@ -408,16 +358,20 @@ public class PostscriptStream extends PrintStream {
 			translate() ;
 		} 
 
-		public void moveto( double[] xy ) {        
+		public void moveto( double[] xy ) {
 			push( xy[0] ) ;
 			push( xy[1] ) ;
 			moveto() ;
-		} 
+		}
+
+		public void lineto() {
+			print( "lineto\n" ) ;
+		}
 
 		public void lineto( double[] xy ) {        
 			push( xy[0] ) ;
 			push( xy[1] ) ;
-			print( "lineto\n" ) ;
+			lineto() ;
 		} 
 
 		public void stroke() {        
@@ -458,6 +412,21 @@ public class PostscriptStream extends PrintStream {
 			print( "closepath\n" ) ;
 		} 
 
+		public void copy( int num ) {
+			push( num ) ;
+			print( "copy\n" ) ;
+		} 
+
+		public void charpath() {        
+			print( "charpath\n" ) ;
+		} 
+
+		public void charpath( String string, boolean bool ) throws ParameterNotValidException {
+			push( string ) ;
+			push( bool ) ;
+			charpath() ;
+		} 
+
 		public void clip() {        
 			print( "clip\n" ) ;
 		} 
@@ -471,7 +440,12 @@ public class PostscriptStream extends PrintStream {
 		} 
 		public void stringwidth() {        
 			print( "stringwidth\n" ) ;
+		}
+
+		public void pathbbox() {        
+			print( "pathbbox\n" ) ;
 		} 
+
 		public void pop() {        
 			print( "pop\n" ) ;
 		} 
@@ -485,6 +459,10 @@ public class PostscriptStream extends PrintStream {
 		public void selectfont( String key, double scale ) throws ParameterNotValidException {        
 			push( key ) ;
 			push( scale ) ;
+			selectfont() ;
+		} 
+
+		public void selectfont() {        
 			print( "selectfont\n" ) ;
 		} 
 
@@ -574,6 +552,10 @@ public class PostscriptStream extends PrintStream {
 
 		public void div() {        
 			print( "div\n" ) ;
+		} 
+
+		public void arc() {        
+			print( "arc\n" ) ;
 		} 
 
 		public void add() {        
@@ -677,21 +659,6 @@ public class PostscriptStream extends PrintStream {
 		} 
 	}
 
-	public java.util.prefs.Preferences getClassNode( String instance, String qualifier ) {        
-		String i = instance != null ? "/"+instance : "" ;
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String d = "/"+this.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
-		String n = d+i+q ;
-
-		try {
-			if ( ! java.util.prefs.Preferences.systemRoot().nodeExists( n ) ) {
-				n = d+q ;
-			}
-		} catch ( java.util.prefs.BackingStoreException e ) {}
-
-		return java.util.prefs.Preferences.systemRoot().node( n ) ;
-	}
-
 	public void emitDSCHeader() {
 		print( "%!PS-Adobe-3.0\n" ) ;
 		dsc.creator( getClass().getName() ) ;
@@ -702,16 +669,20 @@ public class PostscriptStream extends PrintStream {
 	public void emitDSCProlog() {
 		String[] prolog ;
 
+		this.prolog = new java.util.Hashtable<String, String>() ;
+
 		try {
 			dsc.beginProlog() ;
-			prolog = getClassNode( null, "prolog" ).keys() ;
+			prolog = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).keys() ;
 			for ( int p=0 ; p<prolog.length ; p++ ) {
 				push( prolog[p] ) ;
-				String[] token = getClassNode( null, "prolog" ).get( prolog[p], null ).split( " " ) ;
+				String[] token = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).get( prolog[p], null ).split( " " ) ;
 				for ( int t=0 ; t<token.length ; t++ ) {
 					print( token[t]+"\n" ) ;
 				}
 				operator.def() ;
+
+				this.prolog.put( prolog[p], prolog[p] ) ;
 			}
 			dsc.endProlog() ;
 		} catch ( Exception e ) {}

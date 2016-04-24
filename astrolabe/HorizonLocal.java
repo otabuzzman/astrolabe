@@ -2,47 +2,58 @@
 package astrolabe;
 
 import caa.CAACoordinateTransformation ;
-import caa.CAANutation;
 import caa.CAADate;
 
-public class HorizonLocal extends Model implements Horizon {
+public class HorizonLocal implements Horizon {
 
 	private double grayscale ;
 	private double la ;
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( astrolabe.model.HorizonType hoT, CAADate epoch ) {
-		this.grayscale = getClassNode( hoT.getName(), "practicality" ).getDouble( hoT.getPracticality(), 0 ) ;
+	public HorizonLocal( astrolabe.model.HorizonType hoT ) {
+		String key ;
+
+		this.grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 
 		try {
-			la = Model.condense( hoT.getLatitude() ) ;
-			ReplacementHelper.registerDMS( "latitude", la, 2 ) ;
+			la = AstrolabeFactory.valueOf( hoT.getLatitude() ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+			ApplicationHelper.registerDMS( key, la, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
-		try {
-			lo = Model.condense( hoT.getLongitude() ) ;
-			ReplacementHelper.registerDMS( "longitude", lo, 2 ) ;
+		try {			
+			lo = AstrolabeFactory.valueOf( hoT.getLongitude() ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
+			ApplicationHelper.registerDMS( key, lo, 2 ) ;
 		} catch ( ParameterNotValidException e ) {
 			lo = 0 ;
 		}
 		try {
+			double rad180, rad360 ;
 			double lt, ra0, lo0, la0, e ;
 			CAADate date ;
 
-			date = Model.condense( hoT.getDate() ) ;
+			rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
+			rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
+
+			date = AstrolabeFactory.valueOf( hoT.getDate() ) ;
 			lt = date.Hour()+date.Minute()/60.+date.Second()/3600 ;
-			ReplacementHelper.registerHMS( "local",
+			lt = lt+CAACoordinateTransformation.RadiansToHours( lo>rad180?lo-rad360:lo ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
+			ApplicationHelper.registerHMS( key,
 					CAACoordinateTransformation.HoursToRadians( lt ), 2 ) ;
 
-			lo0 = CAAHelper.MeanEclipticLongitude( date.Julian() ) ;
-			la0 = CAAHelper.MeanEclipticLatitude( date.Julian() ) ;
-			e = CAANutation.MeanObliquityOfEcliptic( epoch.Julian() ) ;
+			lo0 = ApplicationHelper.MeanEclipticLongitude( date.Julian() ) ;
+			la0 = ApplicationHelper.MeanEclipticLatitude( date.Julian() ) ;
+			e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), Astrolabe.getEpoch().Julian() ) ;
 
-			ra0 = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e )[0] ;
+			ra0 = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0,
+					CAACoordinateTransformation.RadiansToDegrees( e ) )[0] ;
 
 			ST = CAACoordinateTransformation.HoursToRadians(
 					CAACoordinateTransformation.MapTo0To24Range( ra0+lt-12 ) ) ;
-			ReplacementHelper.registerHMS( "sidereal", ST, 2 ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+			ApplicationHelper.registerHMS( key, ST, 2 ) ;
 		} catch ( ParameterNotValidException e ) {
 			ST = 0 ;
 		}

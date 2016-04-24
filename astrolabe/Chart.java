@@ -2,7 +2,7 @@
 package astrolabe;
 
 public interface Chart {
-	public void initPS( PostscriptStream ps ) ;
+	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException ;
 	public Vector project( double[] eq ) ;
 	public Vector project( double RA, double d ) ;
 	public double[] unproject( Vector xy ) ;
