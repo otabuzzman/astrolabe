@@ -5,18 +5,22 @@ import caa.CAACoordinateTransformation;
 
 public class HorizonGalactic implements Horizon {
 
+	private Chart chart ;
+
 	private double grayscale ;
 	private double la ;
 	private double ST ;
 
-	public HorizonGalactic( astrolabe.model.HorizonType hoT ) {
+	public HorizonGalactic( astrolabe.model.HorizonType hoT, Chart chart ) {
 		double[] eq ;
 		double rad90 ;
 		String key ;
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
+		this.chart = chart ;
 		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+
 		eq = ApplicationHelper.Galactic2Equatorial( 0, rad90 ) ;
 		la = eq[1] ;
 		ST = eq[0] ;
@@ -79,5 +83,9 @@ public class HorizonGalactic implements Horizon {
 
 	public boolean isLocal() {
 		return false ;
+	}
+
+	public Chart dotDot() {
+		return chart ;
 	}
 }

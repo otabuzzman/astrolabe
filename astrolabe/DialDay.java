@@ -7,10 +7,21 @@ public class DialDay extends DialDegree {
 		super( dlT, circle ) ;
 
 		Sun sun ;
-		Quantity quantity ;
+		Span quantity ;
+		astrolabe.model.DialDay ddT ;
 
-		sun = AstrolabeFactory.createSun( ( (astrolabe.model.DialDay) dlT ).getSun() ) ;
-		quantity = new QuantityDay( circle, sun ) ;
+		ddT = (astrolabe.model.DialDay) dlT ;
+
+		sun = new Sun() ;
+		if ( ddT.getSun().equals( ApplicationConstant.AV_DIAL_APPARENT ) ) {
+			sun.setPositionApparent() ;
+		} else if ( ddT.getSun().equals( ApplicationConstant.AV_DIAL_MEAN ) ) {
+			sun.setPositionMean() ;
+		} else { // ApplicationConstant.AV_DIAL_TRUE
+			sun.setPositionTrue() ;
+		}
+
+		quantity = new SpanDay( circle, sun ) ;
 		setQuantity( quantity ) ;
 	}
 }

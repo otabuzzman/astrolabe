@@ -73,24 +73,20 @@ public final class ApplicationConstant {
 	public static final String LK_MS_SECONDS	= "substitute.indicator.ms.seconds" ;
 	public static final String LK_MS_FRACTION	= "substitute.indicator.ms.fraction" ;
 
-	public static final String AV_ASTROLABE_ECLIPTICMEAN = "mean" ;
-	public static final String AV_ASTROLABE_ECLIPTICTRUE = "true" ;
-
 	public static final String AV_CHART_NORTHERN = "northern" ;
 	public static final String AV_CHART_SOUTHERN = "southern" ;
 	public static final String AP_CHART_PAGESIZE = "[0-9]+(\\.[0-9]+)?x[0-9]+(\\.[0-9]+)?" ;
 
 	public static final String AV_CIRCLE_CHASING = "chasing" ;
 	public static final String AV_CIRCLE_LEADING = "leading" ;
-	public static final String AV_CIRCLE_ECLIPTICMEAN = "mean" ;
-	public static final String AV_CIRCLE_ECLIPTICTRUE = "true" ;
 
 	public static final String AV_DIAL_NONE = "none" ;
 	public static final String AV_DIAL_LINE = "line" ;
 	public static final String AV_DIAL_RAIL = "rail" ;
 
-	public static final String AV_SUN_ECLIPTICMEAN = "mean" ;
-	public static final String AV_SUN_ECLIPTICTRUE = "true" ;
+	public static final String AV_DIAL_APPARENT	= "apparent" ;
+	public static final String AV_DIAL_MEAN		= "mean" ;
+	public static final String AV_DIAL_TRUE		= "true" ;
 
 	public static final String AV_ANNOTATION_TOPLEFT		= "topleft" ;
 	public static final String AV_ANNOTATION_TOPMIDDLE		= "topmiddle" ;
@@ -130,7 +126,7 @@ public final class ApplicationConstant {
 	public static final String PK_ANNOTATION_RISE				= "rise" ;
 	public static final String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
-	public static final String PN_BODY_SIZE = "size" ;
+	public static final String PN_GLYPH_SIZE = "size" ;
 
 	public static final String PK_POSTSCRIPT_PRECISION	= "precision" ;
 	public static final String PK_POSTSCRIPT_SCANLINE	= "scanline" ;

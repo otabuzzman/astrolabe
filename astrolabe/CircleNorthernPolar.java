@@ -5,10 +5,10 @@ import caa.CAACoordinateTransformation;
 
 public class CircleNorthernPolar extends CircleParallel {
 
-	public CircleNorthernPolar( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
-		super( clT, chart, horizon ) ;
+	public CircleNorthernPolar( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
+		super( clT, horizon ) ;
 
-		double rad90, al ;
+		double rad90, al, JD ;
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
@@ -16,8 +16,8 @@ public class CircleNorthernPolar extends CircleParallel {
 			throw new ParameterNotValidException() ;
 		}
 
-		al = rad90-ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(),
-				Astrolabe.getEpoch().Julian() ) ;
+		JD = horizon.dotDot()/*Chart*/.dotDot()/*Astrolabe*/.getEpoch() ;
+		al = rad90-ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
 		setAl( al ) ;
 	}
 }

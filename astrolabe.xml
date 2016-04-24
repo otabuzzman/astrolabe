@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
 astrolabe.xsd">
-	<Epoch ecliptic="mean">
+	<Epoch>
 		<Calendar>
 			<YMD y="2000" m="1" d="1"/>
 		</Calendar>
@@ -384,7 +384,7 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
-					<Body value="N" turn="0.0" spin="-3.0">
+					<BodyStellar>
 						<Position>
 							<phi>
 								<Rational value="0.0"/>
@@ -393,22 +393,24 @@ astrolabe.xsd">
 								<Rational value="90"/>
 							</theta>
 						</Position>
-						<Annotation>
-							<AnnotationStraight purpose="bodydescription" anchor="bottomleft" radiant="false" reverse="false">
-								<Text value="@{azimutgrd}@&#x00b0;@{azimutgmin}@', @{h&#x00f6;hegrd}@&#x00b0;@{h&#x00f6;hegmin}@' (l,b)"/>
-							</AnnotationStraight>
-						</Annotation>
-						<Annotation>
-							<AnnotationStraight purpose="bodydescription" anchor="middleleft" radiant="false" reverse="false">
-								<Text value="@{rektaszensiongrd}@&#x00b0;@{rektaszensiongmin}@', @{deklinationgrd}@&#x00b0;@{deklinationgmin}@' (RA,d)"/>
-							</AnnotationStraight>
-						</Annotation>
-						<Annotation>
-							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
-								<Text value="Galaktischer NP"/>
-							</AnnotationCurved>
-						</Annotation>
-					</Body>
+						<Glyph value="N" turn="0.0" spin="-3.0">
+							<Annotation>
+								<AnnotationStraight purpose="bodydescription" anchor="bottomleft" radiant="false" reverse="false">
+									<Text value="@{azimutgrd}@&#x00b0;@{azimutgmin}@', @{h&#x00f6;hegrd}@&#x00b0;@{h&#x00f6;hegmin}@' (l,b)"/>
+								</AnnotationStraight>
+							</Annotation>
+							<Annotation>
+								<AnnotationStraight purpose="bodydescription" anchor="middleleft" radiant="false" reverse="false">
+									<Text value="@{rektaszensiongrd}@&#x00b0;@{rektaszensiongmin}@', @{deklinationgrd}@&#x00b0;@{deklinationgmin}@' (RA,d)"/>
+								</AnnotationStraight>
+							</Annotation>
+							<Annotation>
+								<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
+									<Text value="Galaktischer NP"/>
+								</AnnotationCurved>
+							</Annotation>
+						</Glyph>
+					</BodyStellar>
 				</HorizonGalactic>
 			</Horizon>
 			<!--ecliptical-->
@@ -1601,7 +1603,7 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
-					<Body value="Z" turn="0.0" spin="0.0">
+					<BodyStellar>
 						<Position>
 							<phi>
 								<Rational value="0.0"/>
@@ -1610,12 +1612,14 @@ astrolabe.xsd">
 								<Rational value="90"/>
 							</theta>
 						</Position>
-						<Annotation>
-							<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
-								<Text value="Zenit"/>
-							</AnnotationCurved>
-						</Annotation>
-					</Body>
+						<Glyph value="Z" turn="0.0" spin="0.0">
+							<Annotation>
+								<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
+									<Text value="Zenit"/>
+								</AnnotationCurved>
+							</Annotation>
+						</Glyph>
+					</BodyStellar>
 				</HorizonLocal>
 			</Horizon>
 			<!--51d30m58s circumpolar-->
@@ -1787,7 +1791,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Dial>
-								<DialDay baseline="rail" reflect="false">
+								<DialDay baseline="rail" reflect="false" sun="true">
 									<GraduationSpan span="1" division="4">
 										<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{wochentagkurz}@"/>
@@ -1841,9 +1845,6 @@ astrolabe.xsd">
 											<Text value="), Zeitgleichung"/>
 										</AnnotationCurved>
 									</Annotation>
-									<Sun>
-										<SunTrue ecliptic="mean"/>
-									</Sun>
 								</DialDay>
 							</Dial>
 						</CircleParallel>
@@ -1864,7 +1865,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Dial>
-								<DialDay baseline="rail" reflect="true">
+								<DialDay baseline="rail" reflect="true" sun="mean">
 									<GraduationSpan span="1" division="4">
 										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
 											<Text value="@{wertt}@."/>
@@ -1883,9 +1884,6 @@ astrolabe.xsd">
 											<Text value=")"/>
 										</AnnotationCurved>
 									</Annotation>
-									<Sun>
-										<SunMean ecliptic="mean"/>
-									</Sun>
 								</DialDay>
 							</Dial>
 						</CircleParallel>

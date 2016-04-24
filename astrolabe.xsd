@@ -71,7 +71,7 @@
 			<xs:element ref="Longitude" minOccurs="0"/>
 			<xs:element ref="Date" minOccurs="0"/>
 			<xs:element ref="Circle" maxOccurs="unbounded"/>
-			<xs:element ref="Body" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="BodyStellar" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="practicality" use="required">
@@ -234,34 +234,17 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="DialType">
-					<xs:sequence>
-						<xs:element ref="Sun"/>
-					</xs:sequence>
+					<xs:attribute name="sun" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="apparent|mean|true"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="SunType">
-		<xs:attribute name="ecliptic" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="mean|true"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Sun">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="SunApparent"/>
-				<xs:element ref="SunMean"/>
-				<xs:element ref="SunTrue"/>
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="SunApparent" type="SunType"/>
-	<xs:element name="SunMean" type="SunType"/>
-	<xs:element name="SunTrue" type="SunType"/>
 	<xs:complexType name="GraduationType">
 		<xs:sequence>
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
@@ -358,9 +341,8 @@
 	<xs:element name="Text" type="TextType"/>
 	<xs:element name="Subscript" type="TextType"/>
 	<xs:element name="Superscript" type="TextType"/>
-	<xs:complexType name="BodyType">
+	<xs:complexType name="GlyphType">
 		<xs:sequence>
-			<xs:element ref="Position"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -388,7 +370,20 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Body" type="BodyType"/>
+	<xs:element name="Glyph" type="GlyphType"/>
+	<xs:complexType name="BodyStellarType">
+		<xs:sequence>
+			<xs:element ref="Position"/>
+			<xs:element ref="Glyph"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="BodyStellar" type="BodyStellarType"/>
+	<xs:complexType name="BodyOrbitalType">
+		<xs:sequence/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="BodyOrbital" type="BodyOrbitalType"/>
 	<!--Basistypen und -elemente-->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" type="xs:double" use="required"/>
@@ -400,15 +395,6 @@
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="r" type="RationalType"/>
-	<xs:complexType name="StringType">
-		<xs:attribute name="value" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value=""/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
 	<xs:complexType name="DMSType">
 		<xs:attribute name="deg" type="xs:integer" use="required"/>
 		<xs:attribute name="min" use="required">
@@ -518,15 +504,7 @@
 	<xs:element name="Epoch">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="DateType">
-					<xs:attribute name="ecliptic" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="mean|true"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
+				<xs:extension base="DateType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>

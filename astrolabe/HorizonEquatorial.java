@@ -3,10 +3,13 @@ package astrolabe;
 
 public class HorizonEquatorial implements Horizon {
 
+	private Chart chart ;
+
 	private double grayscale ;
 	private double la ;
 
-	public HorizonEquatorial( astrolabe.model.HorizonType hoT ) {
+	public HorizonEquatorial( astrolabe.model.HorizonType hoT, Chart chart ) {
+		this.chart = chart ;
 		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 		la = caa.CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 	}
@@ -63,5 +66,9 @@ public class HorizonEquatorial implements Horizon {
 
 	public boolean isLocal() {
 		return false ;
+	}
+
+	public Chart dotDot() {
+		return chart ;
 	}
 }

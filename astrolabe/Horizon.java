@@ -13,4 +13,5 @@ public interface Horizon {
 	public boolean isEquatorial() ;
 	public boolean isGalactic() ;
 	public boolean isLocal() ;
+	public Chart dotDot() ;
 }

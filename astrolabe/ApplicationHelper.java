@@ -6,6 +6,7 @@ import java.util.prefs.Preferences;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
+import caa.CAADate;
 import caa.CAANutation;
 import caa.CAASun;
 
@@ -14,16 +15,7 @@ public final class ApplicationHelper {
 	private ApplicationHelper() {
 	}
 
-	public static double getObliquityOfEcliptic( boolean mean, double JD ) {
-		double r ;
-
-		r = mean?CAANutation.MeanObliquityOfEcliptic( JD ):CAANutation.TrueObliquityOfEcliptic( JD ) ;
-		r = CAACoordinateTransformation.DegreesToRadians( r ) ;
-
-		return r ;
-	}
-
-	public static void registerYMD( String key, caa.CAADate date ) throws ParameterNotValidException {
+	public static void registerYMD( String key, CAADate date ) throws ParameterNotValidException {
 		String ind ;
 
 		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFYEAR ) ;
@@ -233,7 +225,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double ApparentEclipticLongtitude( double JD ) {
+	public static double ApparentEclipticLongitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.ApparentEclipticLongtitude( JD ) ) ;
 	}
 
@@ -247,6 +239,14 @@ public final class ApplicationHelper {
 
 	public static double GeometricEclipticLatitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLatitude( JD ) ) ;
+	}
+
+	public static double MeanObliquityOfEcliptic( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( JD ) ) ;
+	}
+
+	public static double TrueObliquityOfEcliptic( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAANutation.TrueObliquityOfEcliptic( JD ) ) ;
 	}
 
 	public static double[] Ecliptic2Equatorial( double La, double Be, double e ) {
@@ -329,7 +329,7 @@ public final class ApplicationHelper {
 		rho4 = rho3*rho ;
 		rho5 = rho4*rho ;
 
-		r = caa.CAACoordinateTransformation.MapTo0To360Range(
+		r = CAACoordinateTransformation.MapTo0To360Range(
 				280.4664567+360007.6982779*rho+0.03032028*rho2+rho3/49931-rho4/15300-rho5/2000000 ) ;
 
 		return CAACoordinateTransformation.DegreesToRadians( r ) ;

@@ -6,15 +6,19 @@ import caa.CAADate;
 
 public class HorizonLocal implements Horizon {
 
+	private Chart chart ;
+
 	private double grayscale ;
 	private double la ;
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( astrolabe.model.HorizonType hoT ) {
+	public HorizonLocal( astrolabe.model.HorizonType hoT, Chart chart ) {
 		String key ;
+		CAADate d = null;
 
-		this.grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+		this.chart = chart ;
+		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 
 		try {
 			la = AstrolabeFactory.valueOf( hoT.getLatitude() ) ;
@@ -30,31 +34,33 @@ public class HorizonLocal implements Horizon {
 		}
 		try {
 			double rad180, rad360 ;
-			double lt, ra0, lo0, la0, e ;
-			CAADate date ;
+			double lt, ra0, lo0, la0, JD, e ;
 
 			rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
 			rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
 
-			date = AstrolabeFactory.valueOf( hoT.getDate() ) ;
-			lt = CAACoordinateTransformation.HoursToRadians( date.Hour()+date.Minute()/60.+date.Second()/3600 ) ;
+			d = AstrolabeFactory.valueOf( hoT.getDate() ) ;
+			lt = CAACoordinateTransformation.HoursToRadians( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
 			lt = lt+( lo>rad180?lo-rad360:lo ) ;
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
 			ApplicationHelper.registerHMS( key, lt, 2 ) ;
 
-			lo0 = ApplicationHelper.MeanEclipticLongitude( date.Julian() ) ;
-			la0 = ApplicationHelper.MeanEclipticLatitude( date.Julian() ) ;
-			e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), Astrolabe.getEpoch().Julian() ) ;
+			lo0 = ApplicationHelper.MeanEclipticLongitude( d.Julian() ) ;
+			la0 = ApplicationHelper.MeanEclipticLatitude( d.Julian() ) ;
+			JD = chart.dotDot()/*Astrolabe*/.getEpoch() ;
+			e = ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
 
 			ra0 = ApplicationHelper.Ecliptic2Equatorial( lo0, la0, e )[0] ;
 
 			ST = ApplicationHelper.MapTo0To24Range( ra0+lt-rad180/*12h*/ ) ;
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			ApplicationHelper.registerHMS( key, ST, 2 ) ;
-
-			date.delete() ;
 		} catch ( ParameterNotValidException e ) {
 			ST = 0 ;
+		} finally {
+			if ( d!=null ) {
+				d.delete() ;
+			}
 		}
 	}
 
@@ -114,5 +120,9 @@ public class HorizonLocal implements Horizon {
 
 	public boolean isLocal() {
 		return true ;
+	}
+
+	public Chart dotDot() {
+		return chart ;
 	}
 }

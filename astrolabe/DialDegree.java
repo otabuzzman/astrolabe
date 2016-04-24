@@ -23,7 +23,7 @@ public class DialDegree implements Dial {
 	private astrolabe.model.DialType dlT ;
 	private Circle circle ;
 
-	private Quantity quantity ;
+	private Span quantity ;
 
 	public DialDegree( astrolabe.model.DialType dlT, Circle circle ) {
 		String baseline, node ;
@@ -31,7 +31,7 @@ public class DialDegree implements Dial {
 		this.dlT = dlT ;
 		this.circle = circle ;
 
-		quantity = new QuantityDegree( circle ) ;
+		quantity = new SpanDegree( circle ) ;
 
 		span = dlT.getGraduationSpan().getSpan() ;
 
@@ -105,12 +105,12 @@ public class DialDegree implements Dial {
 		java.util.Vector<double[]> vD ;
 
 		vV = new java.util.Vector<astrolabe.Vector>() ;
-		quantity.setSpan( span ) ;
+		quantity.set( span ) ;
 
 		try { // baseline
 			for ( ; ; ns++ ) {
-				b = quantity.spanNDistance( ns ) ;
-				e = quantity.spanNDistance( ns+1 ) ;
+				b = quantity.distanceN( ns ) ;
+				e = quantity.distanceN( ns+1 ) ;
 
 				// in case that quantity handles dates this happens on turn of the year
 				if ( e<b ) {
@@ -142,12 +142,12 @@ public class DialDegree implements Dial {
 		java.util.Vector<astrolabe.Vector> vVFw, vVRv ;
 		java.util.Vector<double[]> vDFw = null ;
 
-		quantity.setSpan( span/division ) ;
+		quantity.set( span/division ) ;
 
 		try { // baseline
 			for ( ; ; nss++ ) {
-				b = quantity.spanNDistance( nss ) ;
-				e = quantity.spanNDistance( nss+1 ) ;
+				b = quantity.distanceN( nss ) ;
+				e = quantity.distanceN( nss+1 ) ;
 
 				// in case that quantity handles dates this happens on turn of the year
 				if ( e<b ) {
@@ -238,14 +238,14 @@ public class DialDegree implements Dial {
 		origin = null ;
 		tangent = null ;
 
-		quantity.setSpan( span ) ;
+		quantity.set( span ) ;
 
 		// Closed circle and dial starting at 0
-		ns = circle.isClosed()&&Math.isE0( quantity.span0Distance() )?1:0 ;
+		ns = circle.isClosed()&&Math.isE0( quantity.distance0() )?1:0 ;
 
 		for ( ; ; ns++ ) {
 			try {
-				d = quantity.spanNDistance( ns ) ;
+				d = quantity.distanceN( ns ) ;
 			} catch ( ParameterNotValidException e ) {
 				break ;
 			}
@@ -259,14 +259,14 @@ public class DialDegree implements Dial {
 			g = new GraduationSpan( origin, tangent ) ;
 
 			try { // half
-				if ( quantity.isSpanModN( dlT.getGraduationHalf().getSpan(), ns ) ) {
+				if ( quantity.isGraduationModN( dlT.getGraduationHalf().getSpan(), ns ) ) {
 					gdT = dlT.getGraduationHalf() ;
 					g = new GraduationHalf( origin, tangent ) ;
 				}
 			} catch ( NullPointerException e ) {}
 
 			try { // full
-				if ( quantity.isSpanModN( dlT.getGraduationFull().getSpan(), ns ) ) {
+				if ( quantity.isGraduationModN( dlT.getGraduationFull().getSpan(), ns ) ) {
 					gdT = dlT.getGraduationFull() ;
 					g = new GraduationFull( origin, tangent ) ;
 				}
@@ -295,7 +295,11 @@ public class DialDegree implements Dial {
 		}
 	}
 
-	public void setQuantity( Quantity quantity ) {
+	public void setQuantity( Span quantity ) {
 		this.quantity = quantity ;
+	}
+
+	public Circle dotDot() {
+		return circle ;
 	}
 }

@@ -3,6 +3,8 @@ package astrolabe;
 
 public class ChartStereographic implements Chart {
 
+	private Astrolabe astrolabe ;
+
 	private double unit ;
 	private boolean northern ;
 
@@ -12,20 +14,23 @@ public class ChartStereographic implements Chart {
 	private Process viewer ;
 	private java.io.PrintStream ps ;
 
-	public ChartStereographic( astrolabe.model.ChartType chT, PostscriptStream ps ) {
+	private String name ;
+
+	public ChartStereographic( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
 		String pagesize ;
 
-		unit = ApplicationHelper.getClassNode( this, chT.getName(), null ).getDouble( ApplicationConstant.PK_CHART_UNIT, 2.834646 ) ;
+		this.astrolabe = astrolabe ;
 
-		pagesize = ApplicationHelper.getClassNode( this, chT.getName(), ApplicationConstant.PN_CHART_PAGESIZE ).get( chT.getPagesize(), "210x297" /*a4*/ ) ;
+		name = chT.getName() ;
+
+		pagesize = ApplicationHelper.getClassNode( this, name, ApplicationConstant.PN_CHART_PAGESIZE ).get( chT.getPagesize(), "210x297" /*a4*/ ) ;
 		this.pagesize = parsePagesize( pagesize ) ;
 
+		unit = ApplicationHelper.getClassNode( this, name, null ).getDouble( ApplicationConstant.PK_CHART_UNIT, 2.834646 ) ;
 		scale = java.lang.Math.min( this.pagesize[0], this.pagesize[1] )/2/Math.goldensection ;
 		scale = scale*chT.getScale()/100 ;
 
 		northern = chT.getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
-
-		setupViewerProcess( ApplicationHelper.getClassNode( this, chT.getName(), null ).get( ApplicationConstant.PK_CHART_VIEWER, null ), ps ) ;
 	}
 
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
@@ -94,13 +99,13 @@ public class ChartStereographic implements Chart {
 		return r ;
 	}
 
-	public boolean setupViewerProcess( String command, PostscriptStream ps ) {
+	public boolean viewer( PostscriptStream ps ) {
 		boolean r ;
 		String c ;
 		int i ;
 
 		try {
-			c = new String( command ) ;
+			c = ApplicationHelper.getClassNode( this, name, null ).get( ApplicationConstant.PK_CHART_VIEWER, null ) ;
 
 			while ( ( i=c.indexOf( '%' ) )>0 ) {
 				switch ( c.charAt( i+1 ) ) {
@@ -135,19 +140,7 @@ public class ChartStereographic implements Chart {
 		return r ;
 	}
 
-	public void setNorthern( boolean northern ) {
-		this.northern = northern ;
-	}
-
-	public void setPagesize( double[] pagesize ) {
-		this.pagesize = pagesize ;
-	}
-
-	public void setScale( double scale ) {
-		this.scale = scale ;
-	}
-
-	public void setUnit( double unit ) {
-		this.unit = unit ;
+	public Astrolabe dotDot() {
+		return astrolabe ;
 	}
 }

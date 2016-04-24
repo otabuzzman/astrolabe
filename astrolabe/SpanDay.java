@@ -5,7 +5,7 @@ import caa.CAACoordinateTransformation;
 import caa.CAADate;
 import caa.CAAEquationOfTime;
 
-public class QuantityDay implements Quantity {
+public class SpanDay implements Span {
 
 	private Circle circle ;
 	private Sun sun ;
@@ -16,8 +16,9 @@ public class QuantityDay implements Quantity {
 	private double jdAy ;
 	private double jdOy ;
 	private double jd0 ;
-	private double jd0ra ;
 	private boolean jd0ready ;
+
+	private double raJD0 ;
 
 	private String[] llday = {
 			ApplicationConstant.LL_SUNDAY, ApplicationConstant.LL_MONDAY, ApplicationConstant.LL_TUESDAY, ApplicationConstant.LL_WEDNESDAY,
@@ -30,18 +31,24 @@ public class QuantityDay implements Quantity {
 			ApplicationConstant.LL_SEPTEMBER, ApplicationConstant.LL_OCTOBER, ApplicationConstant.LL_NOVEMBER, ApplicationConstant.LL_DECEMBER
 	} ;
 
-	public QuantityDay( Circle circle, Sun sun ) throws ParameterNotValidException {
+	public SpanDay( Circle circle, Sun sun ) throws ParameterNotValidException {
 		long y ;
-		CAADate cdA, cdO ;
+		double JD ;
+		CAADate e, cdA, cdO ;
 
-		if ( ! circle.getHo().isEquatorial() || ! circle.isParallel() ) {
+		if ( ! circle.dotDot()/*Horizon*/.isEquatorial() || ! circle.isParallel() ) {
 			throw new ParameterNotValidException() ;
 		}
 
 		this.circle = circle ;
 		this.sun = sun ;
 
-		y = Astrolabe.getEpoch().Year() ;
+		JD = circle.dotDot()/*Horizon*/.dotDot()/*Chart*/.dotDot()/*Astrolabe*/.getEpoch() ;
+		e = new CAADate( JD, true ) ;
+		y =  e.Year() ;
+
+		e.delete() ;
+
 		cdA = new CAADate( y, 1, 1, true ) ;
 		jdAy = cdA.Julian() ;
 		cdO = new CAADate( y+1, 1, 1, true ) ;
@@ -53,7 +60,7 @@ public class QuantityDay implements Quantity {
 		unit = 1 ;
 	}
 
-	public boolean isSpanModN( double span, int n ) {
+	public boolean isGraduationModN( double graduation, int n ) {
 		boolean r ;
 		double jd ;
 		CAADate d ;
@@ -62,12 +69,12 @@ public class QuantityDay implements Quantity {
 
 		d = new CAADate( jd, true ) ;
 
-		if ( span == 7 ) {
+		if ( graduation==7 ) {
 			r = d.DayOfWeek()==1 ;
-		} else if ( span == 30 ) {
+		} else if ( graduation==30 ) {
 			r = d.Day()==1 ;
 		} else {
-			r = Math.remainder( jd-jd0, span*unit )==0 ;
+			r = Math.remainder( jd-jd0, graduation*unit )==0 ;
 		}
 
 		d.delete() ;
@@ -76,7 +83,7 @@ public class QuantityDay implements Quantity {
 	}
 
 	public void register( int n ) {
-		CAADate d ;
+		CAADate d = null ;
 		String dn, dns, mn, mns, key ;
 		double jd, eot ;
 
@@ -92,7 +99,7 @@ public class QuantityDay implements Quantity {
 			mns = Astrolabe.getLocalizedString( ApplicationConstant.LN_CALENDAR_SHORT+llmonth[ -1+(int) d.Month() ] ) ;
 
 			eot = CAAEquationOfTime.Calculate( jd ) ;
-			// Adjust in case of more than 20 minutes, convert to hours
+			// convert to hours if greater than 20 minutes
 			eot = ( eot>20?eot-24*60:eot )/60 ;
 			eot = CAACoordinateTransformation.HoursToRadians( eot ) ;
 
@@ -114,30 +121,28 @@ public class QuantityDay implements Quantity {
 
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
 			ApplicationHelper.registerMS( key, eot, 2, true ) ;
-
+		} catch ( ParameterNotValidException e ) {
+		} finally {
 			d.delete() ;
-		} catch ( ParameterNotValidException e ) {}
+		}
 	}
 
-	public void setSpan( double span ) {
+	public void set( double span ) {
 		this.span = span*unit ;
 		this.jd0ready = false ;
 	}
 
-	public double span0Distance() {
-		double ra ;
-		double jd, eq[] ;
+	public double distance0() {
+		double jd, ra ;
 
 		if ( jd0ready ) {
-			sun.setJD( jd0 ) ;
-			ra = sun.positionEq()[0] ;
+			raJD0 = sun.positionEq( jd0 )[0] ;
 		} else {
 			jd = jdAy ;
 
 			try {
-				sun.setJD( jd ) ;
-				eq = sun.positionEq() ;			
-				circle.cartesian( eq[0], 0 ) ;
+				ra = sun.positionEq( jd )[0] ;			
+				circle.cartesian( ra, 0 ) ;
 				// RA of jd > circle.begin
 				try {
 					double p ;
@@ -146,13 +151,12 @@ public class QuantityDay implements Quantity {
 
 					// Decrease jd until RA < circle.begin
 					for ( jd=jd+365 ; ; jd=jd-span ) {
-						sun.setJD( jd ) ;
-						eq = sun.positionEq() ;
-						circle.cartesian( eq[0], 0 ) ;
-						if ( eq[0] > p ) {
+						ra = sun.positionEq( jd )[0] ;
+						circle.cartesian( ra, 0 ) ;
+						if ( ra > p ) {
 							throw new ParameterNotValidException() ;
 						} else {
-							p = eq[0] ;
+							p = ra ;
 						}
 					}
 				} catch ( ParameterNotValidException e ) {
@@ -165,9 +169,8 @@ public class QuantityDay implements Quantity {
 				// Increase jd until RA > circle.begin thus jd 1st > circle.begin
 				for ( jd=jd+span ; ; jd=jd+span ) {
 					try {
-						sun.setJD( jd ) ;
-						eq = sun.positionEq() ;
-						circle.cartesian( eq[0], 0 ) ;
+						ra = sun.positionEq( jd )[0] ;
+						circle.cartesian( ra, 0 ) ;
 
 						break ;
 					} catch ( ParameterNotValidException ee ) {
@@ -176,34 +179,32 @@ public class QuantityDay implements Quantity {
 				}
 			}
 
-			sun.setJD( jd ) ;
-			ra = sun.positionEq()[0] ;
+			raJD0 = sun.positionEq( jd )[0] ;
 
 			jd0 = jd ;
-			jd0ra = ra ;
 			jd0ready = true ;
 		}
 
-		return ra ;
+		return raJD0 ;
 	}
 
-	public double spanNDistance( int n ) throws ParameterNotValidException {
-		double ra ;
+	public double distanceN( int n ) throws ParameterNotValidException {
+		double jd, ra ;
 		double eq[] ;
 
 		if ( jd0ready ) {
-			sun.setJD( convertN2JD( n ) ) ;
-			eq = sun.positionEq() ;
+			jd = convertN2JD( n ) ;
+			eq = sun.positionEq( jd ) ;
 
 			circle.cartesian( eq[0], 0 ) ;
-			if ( n > 0 && eq[0] == jd0ra ) {
+			if ( n>0&&eq[0]==raJD0 ) {
 				throw new ParameterNotValidException() ;
 			}
 
 			ra = eq[0] ;
 		} else {
-			span0Distance() ;
-			ra = spanNDistance( n ) ;
+			distance0() ;
+			ra = distanceN( n ) ;
 		}
 
 		return ra ;

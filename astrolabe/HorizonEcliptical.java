@@ -5,21 +5,26 @@ import caa.CAACoordinateTransformation;
 
 public class HorizonEcliptical implements Horizon {
 
+	private Chart chart ;
+
 	private double grayscale ;
 	private double la ;
 	private double ST ;
 
-	public HorizonEcliptical( astrolabe.model.HorizonType hoT ) {
+	private double e ; // mean obliquity of ecliptic
+
+	public HorizonEcliptical( astrolabe.model.HorizonType hoT, Chart chart ) {
 		double[] eq ;
-		double e, JD, rad90 ;
+		double JD, rad90 ;
 		String key ;
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		this.grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+		this.chart = chart ;
+		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 
-		JD = Astrolabe.getEpoch().Julian() ;
-		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
+		JD = chart.dotDot()/*Astrolabe*/.getEpoch() ;
+		e = ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
 		eq = ApplicationHelper.Ecliptic2Equatorial( 0, rad90, e ) ;
 		la = eq[1] ;
 		ST = eq[0] ;
@@ -38,11 +43,7 @@ public class HorizonEcliptical implements Horizon {
 
 	public double[] convert( double l, double b ) {
 		double[] r ;
-		double e ;
-		double JD ;
 
-		JD = Astrolabe.getEpoch().Julian() ;
-		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
 		r = ApplicationHelper.Ecliptic2Equatorial( l, b, e ) ;
 
 		return r ;
@@ -58,11 +59,7 @@ public class HorizonEcliptical implements Horizon {
 
 	public double[] unconvert( double RA, double d ) {
 		double[] r ;
-		double e ;
-		double JD ;
 
-		JD = Astrolabe.getEpoch().Julian() ;
-		e = ApplicationHelper.getObliquityOfEcliptic( Astrolabe.isEclipticMean(), JD ) ;
 		r = ApplicationHelper.Equatorial2Ecliptic( RA, d, e ) ;
 
 		return r ;
@@ -90,5 +87,9 @@ public class HorizonEcliptical implements Horizon {
 
 	public boolean isLocal() {
 		return false ;
+	}
+
+	public Chart dotDot() {
+		return chart ;
 	}
 }

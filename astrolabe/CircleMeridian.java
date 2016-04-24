@@ -7,7 +7,6 @@ import caa.CAACoordinateTransformation;
 
 public class CircleMeridian implements Circle {
 
-	private Chart chart ;
 	private Horizon horizon ;
 
 	private double segment ;
@@ -18,14 +17,13 @@ public class CircleMeridian implements Circle {
 	private double begin ;
 	private double end ;
 
-	public CircleMeridian( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
+	public CircleMeridian( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
 		String key ;
 
 		segment = caa.CAACoordinateTransformation.DegreesToRadians(
 				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
 		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
 
-		this.chart = chart ;
 		this.horizon = horizon ;
 
 		try {
@@ -77,7 +75,7 @@ public class CircleMeridian implements Circle {
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		r = chart.project( horizon.convert( az, al ) ) ;
+		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ;
 		if ( shift != 0 ) {
 			r.add( tangentVector( al ).rotate( shift<0?-rad90:rad90 ).size( java.lang.Math.abs( shift ) ) ) ;
 		}
@@ -150,7 +148,7 @@ public class CircleMeridian implements Circle {
 		double d ;
 
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
-		r = chart.project( horizon.convert( az, al+d ) ).sub( chart.project( horizon.convert( az, al ) ) ) ;
+		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az, al+d ) ).sub( horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ) ;
 
 		return r ;
 	}
@@ -285,8 +283,8 @@ public class CircleMeridian implements Circle {
 
 		gnB = rad90-gn.getAl() ;
 		blA = rad90-transformParallelLa() ;
-		blB = rad90-gn.getHo().getLa() ;
-		blGa = gn.getHo().getST()-transformParallelST() ;
+		blB = rad90-gn.dotDot().getLa() ;
+		blGa = gn.dotDot().getST()-transformParallelST() ;
 
 		inaz = CircleParallel.intersection( rad90, gnB, blA, blB, blGa ) ;
 
@@ -295,13 +293,13 @@ public class CircleMeridian implements Circle {
 		inaz[1] = transformMeridianAl( inaz[1] ) ;
 
 		// unconvert local gn into actual
-		gneqA = ApplicationHelper.Horizontal2Equatorial( inaz[2], gn.getAl(), gn.getHo().getLa() ) ;
-		gneqA[0] = getHo().getST()-gneqA[0] ;
-		gnhoA = getHo().unconvert( gneqA ) ;
+		gneqA = ApplicationHelper.Horizontal2Equatorial( inaz[2], gn.getAl(), gn.dotDot().getLa() ) ;
+		gneqA[0] = horizon.getST()-gneqA[0] ;
+		gnhoA = horizon.unconvert( gneqA ) ;
 
-		gneqO = ApplicationHelper.Horizontal2Equatorial( inaz[3], gn.getAl(), gn.getHo().getLa() ) ;
-		gneqO[0] = getHo().getST()-gneqO[0] ;
-		gnhoO = getHo().unconvert( gneqO ) ;
+		gneqO = ApplicationHelper.Horizontal2Equatorial( inaz[3], gn.getAl(), gn.dotDot().getLa() ) ;
+		gneqO[0] = horizon.getST()-gneqO[0] ;
+		gnhoO = horizon.unconvert( gneqO ) ;
 
 		// sort associated values
 		if ( inaz[0]>inaz[1] ) {
@@ -366,11 +364,11 @@ public class CircleMeridian implements Circle {
 		return leading?inaz[1]:inaz[0] ;
 	}
 
-	public double span0Distance( double span ) {
+	public double distance0( double span ) {
 		double r ;
 
 		try {
-			r =  spanNDistance( span, 0 ) ;
+			r =  distanceN( span, 0 ) ;
 		} catch ( ParameterNotValidException e ) {
 			r = 0 ;
 		}
@@ -378,7 +376,7 @@ public class CircleMeridian implements Circle {
 		return r ;
 	}
 
-	public double spanNDistance( double span, int n ) throws ParameterNotValidException {
+	public double distanceN( double span, int n ) throws ParameterNotValidException {
 		double s, r ;
 
 		s = java.lang.Math.abs( Math.remainder( begin, span ) ) ;
@@ -391,15 +389,15 @@ public class CircleMeridian implements Circle {
 		return r ;
 	}
 
-	public Horizon getHo() {
-		return horizon ;
-	}
-
 	public double getAz() {
 		return az ;
 	}
 
 	public void setAz( double az ) {
 		this.az = az ;
+	}
+
+	public Horizon dotDot() {
+		return horizon ;
 	}
 }

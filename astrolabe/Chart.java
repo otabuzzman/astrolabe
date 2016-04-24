@@ -10,4 +10,6 @@ public interface Chart {
 	public boolean isNorthern();
 	public boolean isSouthern();
 	public void rollup( PostscriptStream ps ) ;
+	public boolean viewer( PostscriptStream ps ) ;
+	public Astrolabe dotDot() ;
 }

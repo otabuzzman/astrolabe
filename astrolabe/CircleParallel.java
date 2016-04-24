@@ -7,7 +7,6 @@ import caa.CAACoordinateTransformation;
 
 public class CircleParallel implements Circle {
 
-	private Chart chart ;
 	private Horizon horizon ;
 
 	private double segment ;
@@ -18,14 +17,13 @@ public class CircleParallel implements Circle {
 	private double begin ;
 	private double end ;
 
-	public CircleParallel( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
+	public CircleParallel( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
 		String key ;
 
 		segment = caa.CAACoordinateTransformation.DegreesToRadians(
 				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
 		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
 
-		this.chart = chart ;
 		this.horizon = horizon ;
 
 		try {
@@ -77,7 +75,7 @@ public class CircleParallel implements Circle {
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		r = chart.project( horizon.convert( az, al ) ) ;
+		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ;
 		if ( shift != 0 ) {
 			r.add( tangentVector( az ).rotate( shift<0?-rad90:rad90 ).size( java.lang.Math.abs( shift ) ) ) ;
 		}
@@ -153,7 +151,7 @@ public class CircleParallel implements Circle {
 		double d ;
 
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
-		r = chart.project( horizon.convert( az+d, al ) ).sub( chart.project( horizon.convert( az, al ) ) ) ;
+		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az+d, al ) ).sub( horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ) ;
 
 		return r ;
 	}
@@ -455,11 +453,11 @@ public class CircleParallel implements Circle {
 		return leading?rdhoO[0]:rdhoA[0] ;
 	}
 
-	public double span0Distance( double span ) {
+	public double distance0( double span ) {
 		double r ;
 
 		try {
-			r =  spanNDistance( span, 0 ) ;
+			r =  distanceN( span, 0 ) ;
 		} catch ( ParameterNotValidException e ) {
 			r = 0 ;
 		}
@@ -467,7 +465,7 @@ public class CircleParallel implements Circle {
 		return r ;
 	}
 
-	public double spanNDistance( double span, int n ) throws ParameterNotValidException {
+	public double distanceN( double span, int n ) throws ParameterNotValidException {
 		double s, r ;
 
 		s = java.lang.Math.abs( Math.remainder( begin, span ) ) ;
@@ -480,15 +478,15 @@ public class CircleParallel implements Circle {
 		return r ;
 	}
 
-	public Horizon getHo() {
-		return horizon ;
-	}
-
 	public double getAl() {
 		return al ;
 	}
 
 	public void setAl( double al ) {
 		this.al = al ;
+	}
+
+	public Horizon dotDot() {
+		return horizon ;
 	}
 }

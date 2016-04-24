@@ -3,9 +3,9 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
-public class QuantityHour extends QuantityDegree {
+public class SpanHour extends SpanDegree {
 
-	public QuantityHour( Circle circle ) {
+	public SpanHour( Circle circle ) {
 		super( circle ) ;
 
 		double unit ;

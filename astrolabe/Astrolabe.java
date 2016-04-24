@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
-import caa.CAADate;
+import caa.CAADate ;
 
 public class Astrolabe {
 
@@ -18,14 +18,14 @@ public class Astrolabe {
 
 	private static ResourceBundle messages ;
 
-	private static CAADate epoch ;
-	private static boolean mean ;
+	private double epoch ;
 
 	private astrolabe.model.AstrolabeType alT ;
 
 	public Astrolabe( astrolabe.model.AstrolabeType alT ) throws ParameterNotValidException {
 		String pn ;
 		String ln, lc[] ;
+		CAADate d = null ;
 		String key ;
 		java.io.FileInputStream pr ;
 
@@ -58,12 +58,15 @@ public class Astrolabe {
 		}
 
 		try {
-			epoch = AstrolabeFactory.valueOf( alT.getEpoch() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
-			ApplicationHelper.registerYMD( key, epoch ) ;
-		} catch ( ParameterNotValidException e ) {}
+			d = AstrolabeFactory.valueOf( alT.getEpoch() ) ;
 
-		mean = alT.getEpoch().getEcliptic().equals( ApplicationConstant.AV_ASTROLABE_ECLIPTICMEAN ) ;
+			epoch = d.Julian() ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
+			ApplicationHelper.registerYMD( key, d ) ;
+		} catch ( ParameterNotValidException e ) {
+		} finally {
+			d.delete() ;
+		}
 	}
 
 	public PostscriptStream initPS( java.io.PrintStream ps ) throws ParameterNotValidException {
@@ -80,7 +83,8 @@ public class Astrolabe {
 			Chart chart ;
 
 			chT = AstrolabeFactory.getChartType( alT.getChart( ch ) ) ;
-			chart = AstrolabeFactory.createChart( alT.getChart( ch ), ps) ;
+			chart = AstrolabeFactory.createChart( alT.getChart( ch ), this ) ;
+			chart.viewer( ps ) ;
 			chart.emitPS( ps ) ;
 
 			ps.dsc.page( chT.getName(), ch ) ;
@@ -93,7 +97,7 @@ public class Astrolabe {
 				ps.operator.gsave() ;
 
 				hoT = AstrolabeFactory.getHorizonType( chT.getHorizon( ho ) ) ;
-				horizon = AstrolabeFactory.createHorizon( chT.getHorizon( ho ) ) ;
+				horizon = AstrolabeFactory.createHorizon( chT.getHorizon( ho ), chart ) ;
 				horizon.initPS( ps ) ;
 
 				// Circle processing.
@@ -104,7 +108,7 @@ public class Astrolabe {
 					ps.operator.gsave() ;
 
 					clT = AstrolabeFactory.getCircleType(hoT.getCircle( cl ) ) ;
-					circle = AstrolabeFactory.createCircle( hoT.getCircle( cl ), chart, horizon) ;
+					circle = AstrolabeFactory.createCircle( hoT.getCircle( cl ), horizon ) ;
 
 					try {
 						new Registry().register( clT.getName(), circle ) ;
@@ -151,7 +155,7 @@ public class Astrolabe {
 				} // Circle processing.
 
 				// Body processing
-				emitPS( ps, hoT.getBody(), chart, horizon ) ;
+				emitPS( ps, hoT.getBodyStellar(), horizon ) ;
 
 				ps.operator.grestore() ;
 			} // Horizon processing.
@@ -167,17 +171,17 @@ public class Astrolabe {
 		ps.close();
 	}
 
-	private static void emitPS( PostscriptStream ps, astrolabe.model.Body[] bd, Chart chart, Horizon horizon ) throws ParameterNotValidException {
-		for ( int b=0 ; b<bd.length ; b++ ) {
-			Body body ;
+	private static void emitPS( PostscriptStream ps, astrolabe.model.BodyStellar[] bs, Horizon horizon ) throws ParameterNotValidException {
+		for ( int b=0 ; b<bs.length ; b++ ) {
+			BodyStellar bodystellar ;
 
 			ps.operator.gsave() ;
 
-			body = new Body( bd[b], chart, horizon ) ;
-			body.emitPS( ps ) ;
+			bodystellar = new BodyStellar( bs[b], horizon ) ;
+			bodystellar.emitPS( ps ) ;
 
 			// Body annotation processing.
-			emitPS( ps, bd[b].getAnnotation() ) ;
+			emitPS( ps, bs[b].getGlyph().getAnnotation() ) ;
 
 			ps.operator.grestore() ;
 		}
@@ -208,19 +212,7 @@ public class Astrolabe {
 		return value ;
 	}
 
-	public static CAADate getEpoch() {
+	public double getEpoch() {
 		return epoch ;
-	}
-
-	public static boolean isEclipticMean() {
-		return mean ;
-	}
-
-	public static boolean isEclipticTrue() {
-		return ! mean ;
-	}
-
-	public void finalize() {
-		epoch.delete() ;
 	}
 }

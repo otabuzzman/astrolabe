@@ -356,7 +356,12 @@
 					</map>
 				</node>
 			</node>
-			<node name="Body">
+			<node name="Glyph">
+				<map>
+					<entry key="size" value="2.2"/>
+				</map>
+			</node>
+			<node name="BodyStellar">
 				<map>
 					<entry key="size" value="2.2"/>
 				</map>

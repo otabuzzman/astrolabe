@@ -3,14 +3,14 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
-public class QuantityDegree implements Quantity {
+public class SpanDegree implements Span {
 
 	private Circle circle ;
 
 	private double span ;
 	private double unit ;
 
-	public QuantityDegree( Circle circle ) {
+	public SpanDegree( Circle circle ) {
 		this.circle = circle ;
 
 		unit = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
@@ -21,7 +21,7 @@ public class QuantityDegree implements Quantity {
 		String key ;
 
 		try {
-			d = circle.spanNDistance( span, n ) ;
+			d = circle.distanceN( span, n ) ;
 			rad12h = CAACoordinateTransformation.HoursToRadians( 12 ) ;
 
 			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
@@ -33,23 +33,23 @@ public class QuantityDegree implements Quantity {
 		} catch ( ParameterNotValidException  e ) {}
 	}
 
-	public void setSpan( double span ) {
+	public void set( double span ) {
 		this.span = span*unit ;
 	}
 
-	public double span0Distance() {
-		return circle.span0Distance( span ) ;
+	public double distance0() {
+		return circle.distance0( span ) ;
 	}
 
-	public double spanNDistance( int n ) throws ParameterNotValidException {
-		return circle.spanNDistance( span, n ) ;
+	public double distanceN( int n ) throws ParameterNotValidException {
+		return circle.distanceN( span, n ) ;
 	}
 
-	public boolean isSpanModN( double span, int n ) {
+	public boolean isGraduationModN( double graduation, int n ) {
 		boolean r ;
 
 		try {
-			r = Math.remainder( circle.spanNDistance( this.span, n ), span*unit )==0 ;
+			r = Math.remainder( circle.distanceN( span, n ), graduation*unit )==0 ;
 		} catch ( ParameterNotValidException e ) {
 			r = false ;
 		}
