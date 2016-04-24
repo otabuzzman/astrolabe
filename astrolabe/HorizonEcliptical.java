@@ -3,34 +3,33 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 import caa.CAANutation;
-import caa.CAADate;
 
-public class HorizonEcliptical extends Model implements Horizon {
-
-	private CAADate epoch ;
+public class HorizonEcliptical implements Horizon {
 
 	private double grayscale ;
 	private double la ;
 	private double ST ;
 
-	public HorizonEcliptical( astrolabe.model.HorizonType hoT, CAADate epoch ) {
+	public HorizonEcliptical( astrolabe.model.HorizonType hoT ) {
 		double[] eq ;
 		double e ;
 		double JD ;
+		String key ;
 
-		this.epoch = epoch ;
-		this.grayscale = getClassNode( hoT.getName(), "practicality" ).getDouble( hoT.getPracticality(), 0 ) ;
-		JD = epoch.Julian() ;
+		this.grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+
+		JD = Astrolabe.getEpoch().Julian() ;
 		e = CAANutation.MeanObliquityOfEcliptic( JD ) ;
 		eq = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
 		la = CAACoordinateTransformation.DegreesToRadians( eq[1] ) ;
 		ST = CAACoordinateTransformation.HoursToRadians( eq[0] ) ;
 
 		try {
-			ReplacementHelper.registerDMS( "ecliptic",
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
+			ApplicationHelper.registerDMS( key,
 					CAACoordinateTransformation.DegreesToRadians( e ), 2 ) ;		
-			ReplacementHelper.registerDMS( "latitude", la, 2 ) ;		
-			ReplacementHelper.registerHMS( "sidereal", ST, 2 ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+			ApplicationHelper.registerDMS( "latitude", la, 2 ) ;		
 		} catch ( ParameterNotValidException ePNV ) {}
 	}
 
@@ -43,7 +42,7 @@ public class HorizonEcliptical extends Model implements Horizon {
 		double e ;
 		double JD ;
 
-		JD = epoch.Julian() ;
+		JD = Astrolabe.getEpoch().Julian() ;
 		e = CAANutation.MeanObliquityOfEcliptic( JD ) ;
 		r = CAACoordinateTransformation.Ecliptic2Equatorial(
 				CAACoordinateTransformation.RadiansToDegrees( l ),
@@ -68,7 +67,7 @@ public class HorizonEcliptical extends Model implements Horizon {
 		double e ;
 		double JD ;
 
-		JD = epoch.Julian() ;
+		JD = Astrolabe.getEpoch().Julian() ;
 		e = CAANutation.MeanObliquityOfEcliptic( JD ) ;
 		r = CAACoordinateTransformation.Equatorial2Ecliptic(
 				CAACoordinateTransformation.RadiansToHours( RA ),

@@ -17,5 +17,6 @@ xerces-2_5_0/
 .classpath
 .depend
 .project
+.umlproject
 preferences.dtd
 *.class

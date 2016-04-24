@@ -3,7 +3,7 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
-public class HorizonGalactic extends Model implements Horizon {
+public class HorizonGalactic implements Horizon {
 
 	private double grayscale ;
 	private double la ;
@@ -11,15 +11,18 @@ public class HorizonGalactic extends Model implements Horizon {
 
 	public HorizonGalactic( astrolabe.model.HorizonType hoT ) {
 		double[] eq ;
+		String key ;
 
-		grayscale = getClassNode( hoT.getName(), "practicality" ).getDouble( hoT.getPracticality(), 0 ) ;
+		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 		eq = CAACoordinateTransformation.Galactic2Equatorial( 0, 90 ) ;
 		la = CAACoordinateTransformation.DegreesToRadians( eq[1] ) ;
 		ST = CAACoordinateTransformation.HoursToRadians( eq[0] ) ;
 
 		try {
-			ReplacementHelper.registerDMS( "latitude", la, 2 ) ;		
-			ReplacementHelper.registerHMS( "sidereal", ST, 2 ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+			ApplicationHelper.registerDMS( key, la, 2 ) ;		
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+			ApplicationHelper.registerHMS( key, ST, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 	}
 
@@ -68,6 +71,7 @@ public class HorizonGalactic extends Model implements Horizon {
 	public double getST() {
 		return ST ;
 	}
+
 	public boolean isEcliptical() {
 		return false ;
 	}

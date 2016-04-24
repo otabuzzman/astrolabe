@@ -5,30 +5,30 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class GraduationSpan extends Model implements Graduation {
+public class GraduationSpan implements Graduation {
 
-	protected double space ;
-	protected double linelength ;
-	protected double linewidth ;
+	private double space ;
+	private double linelength ;
+	private double linewidth ;
 
 	private astrolabe.Vector tangent ;
 	private astrolabe.Vector origin ;
 
-	public GraduationSpan( astrolabe.Vector origin, astrolabe.Vector tangent ) throws ParameterNotValidException {
+	public GraduationSpan( astrolabe.Vector origin, astrolabe.Vector tangent ) {
 		this.origin = origin ;
 		this.tangent = tangent ;
 
-		space = getClassNode( null, null ).getDouble( "space", .4 ) ;
-		linelength = getClassNode( null, null ).getDouble( "linelength", 2.8 ) ;
-		linewidth = getClassNode( null, null ).getDouble( "linewidth", .01 ) ;
+		space = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_SPACE, .4 ) ;
+		linelength = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINELENGTH, 2.8 ) ;
+		linewidth = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINEWIDTH, .01 ) ;
 	}
 
 	private Vector<astrolabe.Vector> cartesianList() {
 		astrolabe.Vector a, b ;
 		Vector<astrolabe.Vector> r ;
 
-		a = (astrolabe.Vector) tangent.clone() ;
-		b = (astrolabe.Vector) tangent.clone() ;
+		a = (astrolabe.Vector) tangent.copy() ;
+		b = (astrolabe.Vector) tangent.copy() ;
 		r = new Vector<astrolabe.Vector>() ;
 
 		a.size( space ) ;
@@ -54,7 +54,7 @@ public class GraduationSpan extends Model implements Graduation {
 		initPS( ps ) ;
 
 		v = cartesianList() ;
-		d = CircleHelper.convertCartesianVectorToDouble( v ) ;
+		d = ApplicationHelper.convertCartesianVectorToDouble( v ) ;
 
 		ps.polyline( d ) ;
 		ps.operator.stroke() ;
@@ -63,5 +63,17 @@ public class GraduationSpan extends Model implements Graduation {
 		degA = CAACoordinateTransformation.RadiansToDegrees( radA )-90 ;
 
 		ps.operator.rotate( degA ) ;
+	}
+
+	public void setSpace( double space ) {
+		this.space = space ;
+	}
+
+	public void setLinelength( double linelength ) {
+		this.linelength = linelength ;
+	}
+
+	public void setLinewidth( double linewidth ) {
+		this.linewidth = linewidth ;
 	}
 }

@@ -1,43 +1,49 @@
 
 package astrolabe;
 
-public class ChartStereographic extends Model implements Chart {
+public class ChartStereographic implements Chart {
 
-	protected double unit ;
-	protected boolean northern ;
+	private double unit ;
+	private boolean northern ;
 
-	private java.util.Hashtable<String, double[]> pageformat ;
-	protected String pagesize ;
-	protected double scale ;
+	private double[] pagesize ;
+	private double scale ;
 
 	private Process viewer ;
+	private java.io.PrintStream ps ;
 
 	public ChartStereographic( astrolabe.model.ChartType chT, PostscriptStream ps ) {
-		pageformat = new java.util.Hashtable<String, double[]>() ;
+		String pagesize ;
+		double gs ;
 
-		pageformat.put( "a0", new double[] { 2380, 3368 } ) ;
-		pageformat.put( "a1", new double[] { 1684, 2380 } ) ;
-		pageformat.put( "a2", new double[] { 1190, 1684 } ) ;
-		pageformat.put( "a3", new double[] { 842, 1190 } ) ;
-		pageformat.put( "a4", new double[] { 595, 842 } ) ;
-		pageformat.put( "a5", new double[] { 421, 595 } ) ;
-		pageformat.put( "a6", new double[] { 297, 421 } ) ;
+		unit = ApplicationHelper.getClassNode( this, chT.getName(), null ).getDouble( ApplicationConstant.PK_CHART_UNIT, 2.834646 ) ;
 
-		unit = getClassNode( chT.getName(), null ).getDouble( "unit", 2.834646 ) ;
+		pagesize = ApplicationHelper.getClassNode( this, chT.getName(), ApplicationConstant.PN_CHART_PAGESIZE ).get( chT.getPagesize(), "210x297" /*a4*/ ) ;
+		this.pagesize = parsePagesize( pagesize ) ;
 
-		pagesize = chT.getPagesize() ;
-		scale = getClassNode( chT.getName(), "scale" ).getDouble( pagesize, 1 ) ;
+		gs = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
+		scale = java.lang.Math.min( this.pagesize[0], this.pagesize[1] )/gs/2 ;
+		scale = scale*chT.getScale()/100 ;
 
-		northern = chT.getHemisphere().equals( "northern" ) ? true : /*"southern"*/ false ;
+		northern = chT.getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
 
-		setupUserPagesize( pagesize ) ;
-		setupViewerProcess( chT.getName(), ps ) ;
+		setupViewerProcess( ApplicationHelper.getClassNode( this, chT.getName(), null ).get( ApplicationConstant.PK_CHART_VIEWER, null ), ps ) ;
 	}
 
-	public void initPS( PostscriptStream ps ) {
-		ps.dcs.beginPageSetup() ;
+	public void emitPS( PostscriptStream ps ) {
+		ps.dsc.beginSetup() ;
+		// Set origin at center of page.
+		ps.pagesize() ;
+		ps.operator.mul( .5 ) ;
+		ps.operator.exch() ;
+		ps.operator.mul( .5 ) ;
+		ps.operator.exch() ;
+		ps.operator.translate() ;
+		ps.dsc.endSetup() ;
+
+		ps.dsc.beginPageSetup() ;
 		ps.operator.scale( unit ) ;
-		ps.dcs.endPageSetup() ;
+		ps.dsc.endPageSetup() ;
 	}
 
 	public Vector project( double[] eq ) {
@@ -70,57 +76,55 @@ public class ChartStereographic extends Model implements Chart {
 		return ! northern ;
 	}
 
-	public void rollup() {
+	public void rollup( PostscriptStream ps ) {
+		try {
+			ps.delPrintStream( this.ps ) ;
+		} catch ( ParameterNotValidException e ) {}
+
 		viewer.destroy() ;
 	}
 
-	protected boolean setupUserPagesize( String pagesize ) {
-		boolean r ;
+	public double[] parsePagesize( String pagesize ) {
+		double[] r = new double[2] ;
+		String[] ps ;
 
-		if ( pagesize.matches( "[0-9]+(\\.[0-9]+)?x[0-9]+(\\.[0-9]+)?" ) ) {
-			String wh[] ;
-			double w, h ;
+		ps = pagesize.split( "x" ) ;
 
-			wh = pagesize.split( "x" ) ;
-			w = new Double( wh[0] ).doubleValue()*unit ;
-			h = new Double( wh[1] ).doubleValue()*unit ;
-
-			pageformat.put( pagesize, new double[] { w, h } ) ;
-
-			r = true ;
-		} else {
-			r = false ;
-		}
+		r[0] = new Double( ps[0] ).doubleValue() ;
+		r[1] = new Double( ps[1] ).doubleValue() ;
 
 		return r ;
 	}
 
-	protected boolean setupViewerProcess( String node, PostscriptStream ps ) {
+	public boolean setupViewerProcess( String command, PostscriptStream ps ) {
 		boolean r ;
-		String viewer ;
+		String c ;
 		int i ;
 
 		try {
-			viewer = getClassNode( node, null ).get( "viewer", null ) ;
+			c = new String( command ) ;
 
-			while ( ( i=viewer.indexOf( '%' ) )>0 ) {
-				switch ( viewer.charAt( i+1 ) ) {
+			while ( ( i=c.indexOf( '%' ) )>0 ) {
+				switch ( c.charAt( i+1 ) ) {
 				case 'w':
-					viewer = viewer.substring( 0, i )+pageformat.get( pagesize )[0]+viewer.substring( i+2, viewer.length() ) ;
+					c = c.substring( 0, i )+pagesize[0]*unit+c.substring( i+2, c.length() ) ;
 					break ;
 				case 'h':
-					viewer = viewer.substring( 0, i )+pageformat.get( pagesize )[1]+viewer.substring( i+2, viewer.length() ) ;
+					c = c.substring( 0, i )+pagesize[1]*unit+c.substring( i+2, c.length() ) ;
 					break ;
 				case 'p':
-					viewer = viewer.substring( 0, i )+pagesize+viewer.substring( i+2, viewer.length() ) ;
+					String pagesize ;
+
+					pagesize = this.pagesize[0]+"x"+this.pagesize[1] ;
+					c = c.substring( 0, i )+pagesize+c.substring( i+2, c.length() ) ;
 					break ;
 				}
 			}
 
-			this.viewer = Runtime.getRuntime().exec( viewer.split( " " ) ) ;
+			this.viewer = Runtime.getRuntime().exec( c.split( " " ) ) ;
+			this.ps = new java.io.PrintStream( this.viewer.getOutputStream() ) ;
 
-			ps.addPrintStream(
-					new java.io.PrintStream( this.viewer.getOutputStream() ) ) ;
+			ps.addPrintStream( this.ps ) ;
 
 			r = true ;
 		} catch ( Exception e ) {
@@ -128,5 +132,21 @@ public class ChartStereographic extends Model implements Chart {
 		}
 
 		return r ;
+	}
+
+	public void setNorthern( boolean northern ) {
+		this.northern = northern ;
+	}
+
+	public void setPagesize( double[] pagesize ) {
+		this.pagesize = pagesize ;
+	}
+
+	public void setScale( double scale ) {
+		this.scale = scale ;
+	}
+
+	public void setUnit( double unit ) {
+		this.unit = unit ;
 	}
 }

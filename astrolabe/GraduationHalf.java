@@ -3,11 +3,16 @@ package astrolabe;
 
 public class GraduationHalf extends GraduationSpan {
 
-	public GraduationHalf( Vector origin, Vector tangent ) throws ParameterNotValidException {
+	public GraduationHalf( Vector origin, Vector tangent ) {
 		super( origin, tangent ) ;
 
-		space = getClassNode( null, null ).getDouble( "space", .4 ) ;
-		linelength = getClassNode( null, null ).getDouble( "linelength", 3.6 ) ;
-		linewidth = getClassNode( null, null ).getDouble( "linewidth", .01 ) ;
+		double space, linelength, linewidth ;
+
+		space = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_SPACE, .4 ) ;
+		setSpace( space ) ;
+		linelength = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINELENGTH, 3.6 ) ;
+		setLinelength( linelength ) ;
+		linewidth = ApplicationHelper.getClassNode( this, null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINEWIDTH, .01 ) ;
+		setLinewidth( linewidth ) ;
 	}
 }

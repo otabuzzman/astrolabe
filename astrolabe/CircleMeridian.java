@@ -5,52 +5,65 @@ import java.util.Vector;
 
 import caa.CAACoordinateTransformation;
 
-public class CircleMeridian extends Model implements Circle {
+public class CircleMeridian implements Circle {
 
 	private Chart chart ;
-	protected Horizon horizon ;
+	private Horizon horizon ;
 
 	private double segment ;
 	private double linewidth ;
 
-	protected double az ;
+	private double az ;
 
 	private double begin ;
 	private double end ;
 
 	public CircleMeridian( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
+		String key ;
+
 		segment = caa.CAACoordinateTransformation.DegreesToRadians(
-				getClassNode( clT.getName(), null ).getDouble( "division", 1 ) ) ;
-		linewidth = getClassNode( clT.getName(), "importance" ).getDouble( clT.getImportance(), .1 ) ;
+				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
+		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
 
 		this.chart = chart ;
 		this.horizon = horizon ;
 
 		try {
-			az = Model.condense( clT.getAngle() ) ;
-			ReplacementHelper.registerDMS( "circle", az, 2 ) ;
+			az = AstrolabeFactory.valueOf( clT.getAngle() ) ;
+			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
+			ApplicationHelper.registerDMS( key, az, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 		try {
-			begin = Model.condense( clT.getBegin().getImmediate() ) ;
+			begin = AstrolabeFactory.valueOf( clT.getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
+			boolean leading ;
 
 			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( Model.condense( clT.getBegin().getReference() ) ) ;
+			circle = (Circle) registry.retrieve( clT.getBegin().getReference().getCircle() ) ;
 
-			begin = intersectionAngle( circle ) ;
+			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+
+			begin = circle.isParallel()?
+					intersect( (CircleParallel) circle, leading ):
+						intersect( (CircleMeridian) circle, leading ) ;
 		}
 		try {
-			end = Model.condense( clT.getEnd().getImmediate() ) ;
+			end = AstrolabeFactory.valueOf( clT.getEnd().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
+			boolean leading ;
 
 			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( Model.condense( clT.getEnd().getReference() ) ) ;
+			circle = (Circle) registry.retrieve( clT.getEnd().getReference().getCircle() ) ;
 
-			end = intersectionAngle( circle ) ;
+			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+
+			end = circle.isParallel()?
+					intersect( (CircleParallel) circle, leading ):
+						intersect( (CircleMeridian) circle, leading ) ;
 		}
 	}
 
@@ -58,7 +71,7 @@ public class CircleMeridian extends Model implements Circle {
 		astrolabe.Vector r ;
 		double rad90 ;
 
-		if ( begin>end?( al<begin&&al>end ):( al<begin||al>end )  ) {
+		if ( ! examine( al ) ) {
 			throw new ParameterNotValidException() ;
 		}
 
@@ -68,6 +81,26 @@ public class CircleMeridian extends Model implements Circle {
 		if ( shift != 0 ) {
 			r.add( tangentVector( al ).rotate( shift<0?-rad90:rad90 ).size( java.lang.Math.abs( shift ) ) ) ;
 		}
+
+		return r ;
+	}
+
+	public astrolabe.Vector cartesianA( double shift ) {
+		astrolabe.Vector r = null ;
+
+		try {
+			r = cartesian( begin, shift ) ;
+		} catch ( ParameterNotValidException e ) {}
+
+		return r ;
+	}
+
+	public astrolabe.Vector cartesianO( double shift ) {
+		astrolabe.Vector r = null ;
+
+		try {
+			r = cartesian( end, shift ) ;
+		} catch ( ParameterNotValidException e ) {}
 
 		return r ;
 	}
@@ -116,10 +149,6 @@ public class CircleMeridian extends Model implements Circle {
 		astrolabe.Vector r ;
 		double d ;
 
-		if ( begin<this.begin || end>this.end ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
 		r = chart.project( horizon.convert( az, al+d ) ).sub( chart.project( horizon.convert( az, al ) ) ) ;
 
@@ -138,111 +167,203 @@ public class CircleMeridian extends Model implements Circle {
 		return true ;
 	}
 
-	private double intersectionAngle( Circle gn ) {
-		double r ;
+	public boolean isClosed() {
+		double b, e ;
 
-		if ( gn.isMeridian() ) {
-			r = intersectMeridian( gn ) ;
-		} else { // gn.isParallel()
-			r = intersectParallel( gn ) ;
+		b = ApplicationHelper.MapTo0To360Range( begin ) ;
+		e = ApplicationHelper.MapTo0To360Range( end ) ;
+
+		return e==b||e>b ;
+	}
+
+	public boolean examine( double al ) {
+		double b, e ;
+		double v ;
+
+		b = ApplicationHelper.MapTo0To360Range( begin ) ;
+		e = ApplicationHelper.MapTo0To360Range( end ) ;
+		v = ApplicationHelper.MapTo0To360Range( al ) ;
+
+		return b>e?v>=b||v<=e:v>=b&&v<=e ;
+	}
+
+	private double[] transform() {
+		double[] r = new double[3] ;
+		double blB, vlA, vlD, vlAl, vlDe ;
+		double gneq[], gnho[], gnaz ;
+		double rad90, rad180 ;
+
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
+
+		blB = rad90-horizon.getLa() ;
+		if ( blB==0 ) {	// prevent infinity from tan
+			blB = Math.e0 ;
 		}
+
+		// convert actual gn into local
+		gneq = horizon.convert( this.az, 0 ) ;
+		gnho = ApplicationHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
+		gnaz = gnho[0] ;
+		if ( gnaz==0 ) {	// prevent infinity from tan
+			gnaz = Math.e0 ;
+		}
+
+
+		if ( java.lang.Math.tan( gnaz )>0 ) {	// QI, QIII
+			vlAl = ApplicationHelper.MapTo0To90Range( gnaz ) ;
+
+			// Rule of Napier : cos(90-a) = sin(al)*sin(c)
+			vlA = java.lang.Math.acos( java.lang.Math.sin( vlAl )*java.lang.Math.sin( blB ) ) ;
+			// Rule of Napier : cos(be) = cot(90-a)*cot(c)
+			vlDe = java.lang.Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
+
+			r[1] = horizon.getST()-rad180+vlDe ;
+		} else {							// QII, QIV
+			vlAl = rad90-ApplicationHelper.MapTo0To90Range( gnaz ) ;
+
+			vlA = java.lang.Math.acos( java.lang.Math.sin( vlAl )*java.lang.Math.sin( blB ) ) ;
+			vlDe = java.lang.Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
+
+			r[1] = horizon.getST()+rad180-vlDe ;
+		}
+
+		r[0] = rad90-vlA ;
+
+		// Rule of Napier : cos(c) = sin(90-a)*sin(90-b)
+		// sin(90-b) = cos(c):sin(90-a)
+		vlD = rad90-java.lang.Math.asin( java.lang.Math.cos( blB )/java.lang.Math.sin( vlA ) ) ;
+
+		r[2] = vlD ;
 
 		return r ;
 	}
 
-	private double intersectParallel( Circle gn ) {
-		double blA, blB, blC, blAl, blGa ;
-		double rdC, rdBe ;
-		double[] rdEq, rdHo ;
-		double gnC, gnGa ;
-		double rad90, rad180 ;
-		double[] rEq, rHo ;
-
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-
-		blA = rad90-( (CircleParallel) gn ).horizon.getLa() ;
-		blB = rad90-horizon.getLa() ;
-		blGa = ( (CircleParallel) gn ).horizon.getST()-horizon.getST() ;
-		blC = astrolabe.Math.LawOfEdgeCosine( blA, blB, blGa ) ;
-		blAl = astrolabe.Math.LawOfEdgeCosineForAlpha( blA, blB, blC) ;
-
-		// convert actual red az into local
-		rdEq = horizon.convert( az, 0 ) ;
-		rdHo = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.RadiansToHours( horizon.getST()-rdEq[0] ),
-				CAACoordinateTransformation.RadiansToDegrees( rdEq[1] ),
-				CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ) ;
-		rdBe = rad180-CAACoordinateTransformation.DegreesToRadians( rdHo[0] ) ;
-
-		gnC = rad90-( (CircleParallel) gn ).al ;
-		gnGa = -blAl-rdBe ;
-
-		rdC = astrolabe.Math.MethodOfAuxAngle( gnC, blC, gnGa ) ;
-
-		// unconvert local red al into actual
-		rEq = CAACoordinateTransformation.Horizontal2Equatorial(
-				CAACoordinateTransformation.RadiansToDegrees( az ),
-				CAACoordinateTransformation.RadiansToDegrees( rad90-rdC ),
-				CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ) ;
-		rEq[0] = horizon.getST()-CAACoordinateTransformation.HoursToRadians( rEq[0] ) ;
-		rEq[1] = CAACoordinateTransformation.DegreesToRadians( rEq[1] ) ;
-		rHo = horizon.unconvert( rEq ) ;
-
-		return rHo[1] ;
+	public double transformParallelLa() {
+		return transform()[0] ;
 	}
 
-	private double intersectMeridian( Circle gn ) {
-		double blA, blB, blC, blAl, blBe, blGa ;
-		double rdC, rdBe, rdGa ;
-		double[] rdEq, rdHo ;
-		double gnAl, gnBe, gnGa ;
-		double[] gnEq, gnHo ;
-		double rad90, rad180 ;
-		double[] rEq, rHo ;
+	public double transformParallelST() {
+		return transform()[1] ;
+	}
+
+	public double transformMeridianAl( double vlaz ) {
+		double gneq[], gnho[], gnaz, gnal, vlD ;
+		double rad90, rad180, rad270, rad360 ;
 
 		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
+		rad270 = CAACoordinateTransformation.DegreesToRadians( 270 ) ;
+		rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
 
-		blA = rad90-( (CircleMeridian) gn ).horizon.getLa() ;
-		blB = rad90-horizon.getLa() ;
-		blGa = ( (CircleMeridian) gn ).horizon.getST()-horizon.getST() ;
-		blC = astrolabe.Math.LawOfEdgeCosine( blA, blB, blGa ) ;
-		blAl = astrolabe.Math.LawOfEdgeCosineForAlpha( blA, blB, blC) ;
-		blBe = astrolabe.Math.LawOfEdgeCosineForAlpha( blB, blA, blC) ;
+		// convert actual gn into local
+		gneq = horizon.convert( this.az, 0 ) ;
+		gnho = ApplicationHelper.Equatorial2Horizontal( horizon.getST()-gneq[0], gneq[1], horizon.getLa() ) ;
+		gnaz = gnho[0] ;
+		if ( gnaz==0 ) {	// prevent infinity from tan
+			gnaz = Math.e0 ;
+		}
 
-		// convert actual red az into local
-		rdEq = horizon.convert( az, 0 ) ;
-		rdHo = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.RadiansToHours( horizon.getST()-rdEq[0] ),
-				CAACoordinateTransformation.RadiansToDegrees( rdEq[1] ),
-				CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ) ;
-		rdBe = rad180-CAACoordinateTransformation.DegreesToRadians( rdHo[0] ) ;
+		// convert vl az into gn
+		vlD = transform()[2] ;
+		gnal = java.lang.Math.tan( gnaz )>0?vlaz-vlD:vlaz+vlD ;
+		// convert gn az into al
+		gnal = gnaz>rad180?gnal-rad90:-( gnal-rad270 ) ;
+		// map range from -180 to 180
+		gnal = gnal>rad180?gnal-rad360:gnal ;
 
-		// convert actual green az into local
-		gnEq = horizon.convert( ( (CircleMeridian) gn ).az, 0 ) ;
-		gnHo = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.RadiansToHours( horizon.getST()-gnEq[0] ),
-				CAACoordinateTransformation.RadiansToDegrees( gnEq[1] ),
-				CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ) ;
-		gnBe = rad180-CAACoordinateTransformation.DegreesToRadians( gnHo[0] ) ;
+		return gnal ;
+	}
 
-		rdGa = gnBe-blBe ;
-		gnGa = -blAl-rdBe ;
-		gnAl = astrolabe.Math.LawOfAngleCosine( rdGa, gnGa, blC ) ;
+	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
+		double blA, blB, blGa, gnB ;
+		double[] gneqA, gneqO, gnhoA, gnhoO ;
+		double rad90 ;
+		double inaz[], gnaz ;
 
-		rdC = astrolabe.Math.LawOfAngleCosineForA( rdGa, gnAl, gnGa ) ;
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		// unconvert local red al into actual
-		rEq = CAACoordinateTransformation.Horizontal2Equatorial(
-				CAACoordinateTransformation.RadiansToDegrees( az ),
-				CAACoordinateTransformation.RadiansToDegrees( java.lang.Math.cos( az )<0?rdC-rad90:rad90-rdC ),
-				CAACoordinateTransformation.RadiansToDegrees( horizon.getLa() ) ) ;
-		rEq[0] = horizon.getST()-CAACoordinateTransformation.HoursToRadians( rEq[0] ) ;
-		rEq[1] = CAACoordinateTransformation.DegreesToRadians( rEq[1] ) ;
-		rHo = horizon.unconvert( rEq ) ;
+		gnB = rad90-gn.getAl() ;
+		blA = rad90-transformParallelLa() ;
+		blB = rad90-gn.getHo().getLa() ;
+		blGa = gn.getHo().getST()-transformParallelST() ;
 
-		return rHo[1] ;
+		inaz = CircleParallel.intersection( rad90, gnB, blA, blB, blGa ) ;
+
+		// convert rd az into al
+		inaz[0] = transformMeridianAl( inaz[0] ) ;
+		inaz[1] = transformMeridianAl( inaz[1] ) ;
+
+		// unconvert local gn into actual
+		gneqA = ApplicationHelper.Horizontal2Equatorial( inaz[2], gn.getAl(), gn.getHo().getLa() ) ;
+		gneqA[0] = getHo().getST()-gneqA[0] ;
+		gnhoA = getHo().unconvert( gneqA ) ;
+
+		gneqO = ApplicationHelper.Horizontal2Equatorial( inaz[3], gn.getAl(), gn.getHo().getLa() ) ;
+		gneqO[0] = getHo().getST()-gneqO[0] ;
+		gnhoO = getHo().unconvert( gneqO ) ;
+
+		// sort associated values
+		if ( inaz[0]>inaz[1] ) {
+			double v ;
+
+			v = inaz[0] ;
+			inaz[0] = inaz[1] ;
+			inaz[1] = v ;
+
+			v = gnhoA[0] ;
+			gnhoA[0] = gnhoO[0] ;
+			gnhoO[0] = v ;
+		}
+
+		gnaz = leading?gnhoO[0]:gnhoA[0] ;
+
+		if ( ! gn.examine( gnaz ) ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		return leading?inaz[1]:inaz[0] ;
+	}
+
+	public double intersect( CircleMeridian gn, boolean leading ) throws ParameterNotValidException {
+		double blA, blB, blGa ;
+		double rad90 ;
+		double inaz[], gnal ;
+
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+
+		blA = rad90-transformParallelLa() ;
+		blB = rad90-gn.transformParallelLa() ;
+		blGa = gn.transformParallelST()-transformParallelST() ;
+
+		inaz = CircleParallel.intersection( rad90, rad90, blA, blB, blGa ) ;
+
+		// convert az into al
+		inaz[0] = transformMeridianAl( inaz[0] ) ;
+		inaz[1] = transformMeridianAl( inaz[1] ) ;
+		inaz[2] = gn.transformMeridianAl( inaz[2] ) ;
+		inaz[3] = gn.transformMeridianAl( inaz[3] ) ;
+
+		// sort associated values
+		if ( inaz[0]>inaz[1] ) {
+			double v ;
+
+			v = inaz[0] ;
+			inaz[0] = inaz[1] ;
+			inaz[1] = v ;
+
+			v = inaz[2] ;
+			inaz[2] = inaz[3] ;
+			inaz[3] = v ;
+		}
+
+		gnal = leading?inaz[3]:inaz[2] ;
+
+		if ( ! gn.examine( gnal ) ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		return leading?inaz[1]:inaz[0] ;
 	}
 
 	public double span0Distance( double span ) {
@@ -268,5 +389,17 @@ public class CircleMeridian extends Model implements Circle {
 		}
 
 		return r ;
+	}
+
+	public Horizon getHo() {
+		return horizon ;
+	}
+
+	public double getAz() {
+		return az ;
+	}
+
+	public void setAz( double az ) {
+		this.az = az ;
 	}
 }

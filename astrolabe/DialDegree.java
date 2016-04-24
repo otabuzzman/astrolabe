@@ -1,0 +1,249 @@
+
+package astrolabe;
+
+import caa.CAACoordinateTransformation;
+
+public class DialDegree implements Dial {
+
+	private double rise ;
+
+	private double space ;
+	private double thickness ;
+	private double linewidth ;
+
+	private double span ;
+	private int division ;
+
+	private boolean reflect ;
+
+	private boolean hasBaseNone ;
+	private boolean hasBaseLine ;
+	private boolean hasBaseRail ;
+
+	private astrolabe.model.DialType dlT ;
+	private Circle circle ;
+
+	private Quantity quantity ;
+
+	public DialDegree( astrolabe.model.DialType dlT, Circle circle ) {
+		String baseline, node ;
+
+		this.dlT = dlT ;
+		this.circle = circle ;
+
+		quantity = new QuantityDegree( circle ) ;
+
+		span = dlT.getGraduationSpan().getSpan() ;
+
+		reflect = dlT.getReflect() ;
+		baseline = dlT.getBaseline() ;
+
+		hasBaseNone = false ;
+		hasBaseLine = false ;
+		hasBaseRail = false ;
+
+		if ( baseline.equals( ApplicationConstant.AV_DIAL_NONE) ) {
+			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_NONE ;
+			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, .1 ) ;
+			thickness = 0 ;
+
+			hasBaseNone = true ;
+		} else if ( baseline.equals( ApplicationConstant.AV_DIAL_LINE ) ) {
+			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_LINE ;
+			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, 1 ) ;
+			thickness = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, .2 ) ;
+
+			hasBaseLine = true ;
+		} else if ( baseline.equals( ApplicationConstant.AV_DIAL_RAIL ) ) {
+			division = dlT.getGraduationSpan().getDivision() ;
+
+			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_RAIL ;
+			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, 1 ) ;
+			thickness = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, 1.2 ) ;
+			linewidth = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, .01 ) ;
+
+			hasBaseRail = true ;
+		}
+
+		rise = ApplicationHelper.getClassNode( this, dlT.getName(), ApplicationConstant.PN_DIAL_ANNOTATION ).getDouble( ApplicationConstant.PK_DIAL_RISE, 3.2 ) ;
+	}
+
+	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+		java.util.Vector<astrolabe.Vector> vV ;
+		java.util.Vector<double[]> vD ;
+
+		if ( hasBaseNone ) {
+			emitPSBaseNone( ps ) ;
+		} else if ( hasBaseLine ) {
+			ps.operator.setlinewidth( thickness ) ;
+			emitPSBaseLine( ps ) ;
+		} else if ( hasBaseRail ) {
+			ps.operator.setlinewidth( linewidth ) ;
+			emitPSBaseRail( ps ) ;
+		}
+
+		vV = circle.cartesianList( reflect?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
+		vD = ApplicationHelper.convertCartesianVectorToDouble( vV ) ;
+		ps.polyline( vD ) ;
+	}
+
+	private void emitPSBaseNone( PostscriptStream ps ) throws ParameterNotValidException {
+		graduation( ps ) ;
+	}
+
+	private void emitPSBaseLine( PostscriptStream ps ) throws ParameterNotValidException {
+		java.util.Vector<astrolabe.Vector> vV ;
+		java.util.Vector<double[]> vD ;
+		int ns = 0 ;
+
+		vV = new java.util.Vector<astrolabe.Vector>() ;
+		quantity.setSpan( span ) ;
+
+		try { // baseline
+			for ( ; ; ns++ ) {
+				vV.addAll( circle.cartesianList( quantity.spanNDistance( ns ),
+						quantity.spanNDistance( ns+1 ), reflect?-space:space ) ) ;
+			}
+		} catch ( ParameterNotValidException e ) {
+			vD = ApplicationHelper.convertCartesianVectorToDouble( vV ) ;
+			ps.polyline( vD ) ;
+			ps.operator.stroke() ;
+		}
+
+		graduation( ps ) ;
+	}
+
+	private void emitPSBaseRail( PostscriptStream ps ) throws ParameterNotValidException {
+		double b, e, s ;
+		int nss = 0 ;
+		java.util.Vector<astrolabe.Vector> vVFw, vVRv ;
+		java.util.Vector<double[]> vDFw = null ;
+
+		quantity.setSpan( span/division ) ;
+
+		try { // baseline
+			for ( ; ; nss++ ) {
+				b = quantity.spanNDistance( nss ) ;
+				e = quantity.spanNDistance( nss+1 ) ;
+
+				s = nss%2==0?space:space+linewidth/2 ;
+				s = reflect?-s:s ;			
+				vVFw = circle.cartesianList( b, e, s ) ;
+
+				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
+				s = reflect?-s:s ;
+				vVRv = circle.cartesianList( b, e, s ) ;
+
+				vVRv = ApplicationHelper.reverseVector( vVRv ) ;
+				vVFw.addAll( vVRv ) ;
+
+				vDFw = ApplicationHelper.convertCartesianVectorToDouble( vVFw ) ;
+
+				if ( nss%2 == 0 ) { // subunit filled
+					ps.polyline( vDFw ) ;
+					ps.operator.closepath() ;
+					ps.operator.fill() ;
+				} else { // subunit unfilled
+					ps.polyline( new java.util.Vector<double[]>( vDFw.subList( 0, vDFw.size()/2 ) ) ) ;
+					ps.operator.stroke() ;
+					ps.polyline( new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ) ;
+					ps.operator.stroke() ;
+				}
+			}
+		} catch ( ParameterNotValidException ePNV ) {
+			if ( nss%2 == 0 ) { // close unfilled subunit
+				ps.line( new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2-1, vDFw.size()/2+1 ) ) ) ;
+				ps.operator.stroke() ;
+			}
+		}
+
+		graduation( ps ) ;
+	}
+
+	private void graduation( PostscriptStream ps ) throws ParameterNotValidException {
+		double d ;
+		double rad90 ;
+		int ns ;
+		Vector origin, tangent ;
+		Graduation g ;
+		astrolabe.model.GraduationType gdT ;
+
+		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+
+		origin = null ;
+		tangent = null ;
+
+		quantity.setSpan( span ) ;
+
+		ns = circle.isClosed()&&isAligned()?1:0 ;
+
+		for ( ; ; ns++ ) {
+			try {
+				d = quantity.spanNDistance( ns ) ;
+			} catch ( ParameterNotValidException e ) {
+				break ;
+			}
+
+			try {
+				origin = circle.cartesian( d, reflect?-( space+thickness ):space+thickness ) ;
+				tangent = circle.tangentVector( d ).rotate( reflect?-rad90:rad90 ) ;
+			} catch ( ParameterNotValidException e ) {}
+
+			gdT = dlT.getGraduationSpan() ;
+			g = new GraduationSpan( origin, tangent ) ;
+
+			try { // half
+				if ( quantity.isSpanModN( dlT.getGraduationHalf().getSpan(), ns ) ) {
+					gdT = dlT.getGraduationHalf() ;
+					g = new GraduationHalf( origin, tangent ) ;
+				}
+			} catch ( NullPointerException e ) {}
+
+			try { // full
+				if ( quantity.isSpanModN( dlT.getGraduationFull().getSpan(), ns ) ) {
+					gdT = dlT.getGraduationFull() ;
+					g = new GraduationFull( origin, tangent ) ;
+				}
+			} catch ( NullPointerException e ) {}
+
+			ps.operator.gsave() ;
+
+			g.emitPS( ps ) ;
+
+			quantity.register( ns ) ;
+
+			for ( int an=0 ; an<gdT.getAnnotationStraightCount() ; an++ ) {
+				astrolabe.model.AnnotationType anT ;
+				Annotation annotation ;
+
+				ps.operator.gsave() ;
+
+				anT = gdT.getAnnotationStraight( an ) ;
+				annotation = new AnnotationStraight( anT ) ;
+				annotation.emitPS( ps ) ;
+
+				ps.operator.grestore() ;
+			}
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	private boolean isAligned() {
+		Vector dA, d0 ;
+
+		dA = null ;
+		d0 = null ;
+
+		try {
+			dA = circle.cartesianA( 0 ) ;
+			d0 = circle.cartesian( quantity.span0Distance(), 0 ) ;
+		} catch ( ParameterNotValidException e ) {}
+
+		return Math.isE0( dA.getX()-d0.getX() )&&Math.isE0( dA.getY()-d0.getY() ) ;
+	}
+
+	public void setQuantity( Quantity quantity ) {
+		this.quantity = quantity ;
+	}
+}

@@ -1,6 +1,6 @@
 
 package astrolabe;
 
-public interface Dial {
+public interface Annotation {
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException ;
 }

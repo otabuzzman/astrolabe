@@ -1,18 +1,20 @@
 
 package astrolabe;
 
+import java.util.prefs.BackingStoreException;
+
 public class PostscriptStream extends PrintStream {
 
 	public final PostscriptStream.Operator operator = new Operator();
-	public final PostscriptStream.DCS dcs = new DCS();
+	public final PostscriptStream.DSC dsc = new DSC();
 
 	private PostscriptStream.UcBlock ucBlock[] = null ;
-	private java.util.Hashtable ucEncodingVectors = null ;
+	private java.util.Hashtable<String, String> ucEncodingVectors = null ;
 
-	private final int precision = getClassNode( null, null ).getInt( "precision", 6 ) ;
-	private final int scanline = getClassNode( null, null ).getInt( "scanline", 254 ) ;
+	private final int precision = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, 6 ) ;
+	private final int scanline = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, 254 ) ;
 
-	public PostscriptStream( PrintStream ps ) throws java.util.prefs.BackingStoreException, ParameterNotValidException {
+	public PostscriptStream( java.io.PrintStream ps ) throws ParameterNotValidException {
 		super( ps ) ;
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
@@ -163,20 +165,24 @@ public class PostscriptStream extends PrintStream {
 		ucBlock[143] = new UcBlock( "F0000..FFFFF", 0xF0000, 0xFFFFF, "Supplementary Private Use Area-A" ) ;
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
-		ucEncodingVectors = new java.util.Hashtable() ;
-		String vector = getClassNode( null, "unicode" ).get( "default", null ) ;
+		ucEncodingVectors = new java.util.Hashtable<String, String>() ;
+		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = "/Times-Roman:" ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
 				vector = vector+"/question"+( cs!=255?" ":"" ) ;
 			}
 		}
-		ucEncodingVectors.put( "default", vector ) ;
-		String[] encoding = getClassNode( null, "unicode" ).keys() ;
-		for ( int e=0 ; e<encoding.length ; e++ ) {
-			if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
-				ucEncodingVectors.put( encoding[e], getClassNode( null, "unicode" ).get( encoding[e], null ) ) ;
+		try {
+			ucEncodingVectors.put( "default", vector ) ;
+			String[] encoding = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
+			for ( int e=0 ; e<encoding.length ; e++ ) {
+				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
+					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
+				}
 			}
+		} catch ( BackingStoreException e ) {
+			throw new ParameterNotValidException() ;
 		}
 	} 
 
@@ -225,9 +231,9 @@ public class PostscriptStream extends PrintStream {
 		int block = -1, pblock = -1,
 		chart = -1, pchart = -1, code = -1 , tcc ;
 		String fe[], rt = "", t = "" ;
-		java.util.Vector FET = new java.util.Vector(), fet ;
+		java.util.Vector<java.util.Vector> FET = new java.util.Vector<java.util.Vector>() ;
+		java.util.Vector<Object> fet ;
 		java.text.StringCharacterIterator rti, si = new java.text.StringCharacterIterator( string ) ;
-		char tc[] = new char[1] ;
 
 		for ( char sc=si.first() ; sc!=java.text.StringCharacterIterator.DONE; sc=si.next() ) {
 			block = ucSearch( ucBlock, 0, ucBlock.length, sc ) ;
@@ -255,13 +261,13 @@ public class PostscriptStream extends PrintStream {
 							tcc++ ;
 						}
 						if ( tcc%( scanline-2 ) == 0 ) {
-							fet = new java.util.Vector() ;
+							fet = new java.util.Vector<Object>() ;
 							fet.add( fe[0] ) ; fet.add( fe[1].split( " " ) ) ; fet.add( "("+t+")" ) ;
 							FET.add( fet ) ;
 							t = "" ;
 						}
 					}
-					fet = new java.util.Vector() ;
+					fet = new java.util.Vector<Object>() ;
 					fet.add( fe[0] ) ; fet.add( fe[1].split( " " ) ) ; fet.add( "("+t+")" ) ;
 					FET.add( fet ) ;
 					rt = t = "" ;
@@ -291,13 +297,13 @@ public class PostscriptStream extends PrintStream {
 				tcc++ ;
 			}
 			if ( tcc%( scanline-2 ) == 0 ) {
-				fet = new java.util.Vector() ;
+				fet = new java.util.Vector<Object>() ;
 				fet.add( fe[0] ) ; fet.add( fe[1].split( " " ) ) ; fet.add( "("+t+")" ) ;
 				FET.add( fet ) ;
 				t = "" ;
 			}
 		}
-		fet = new java.util.Vector() ;
+		fet = new java.util.Vector<Object>() ;
 		fet.add( fe[0] ) ; fet.add( fe[1].split( " " ) ) ; fet.add( "("+t+")" ) ;
 		FET.add( fet ) ;
 
@@ -581,7 +587,7 @@ public class PostscriptStream extends PrintStream {
 		} 
 	}
 
-	public class DCS {
+	public class DSC {
 
 		public void creator( String creator ) {        
 			print( "%%Creator: "+creator+"\n" ) ;
@@ -608,7 +614,7 @@ public class PostscriptStream extends PrintStream {
 		} 
 
 		public void endSetup() {        
-			print( "%%EndProlog\n" ) ;
+			print( "%%EndSetup\n" ) ;
 		} 
 
 		public void page( String label, int ordinal ) {        
@@ -677,43 +683,33 @@ public class PostscriptStream extends PrintStream {
 		} 
 	}
 
-	public java.util.prefs.Preferences getClassNode( String instance, String qualifier ) {        
-		String i = instance != null ? "/"+instance : "" ;
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String d = "/"+this.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
-		String n = d+i+q ;
-
-		try {
-			if ( ! java.util.prefs.Preferences.systemRoot().nodeExists( n ) ) {
-				n = d+q ;
-			}
-		} catch ( java.util.prefs.BackingStoreException e ) {}
-
-		return java.util.prefs.Preferences.systemRoot().node( n ) ;
-	}
-
-	public void emitDCSHeader() {
+	public void emitDSCHeader() {
 		print( "%!PS-Adobe-3.0\n" ) ;
-		dcs.creator( getClass().getName() ) ;
-		dcs.creationDate( new java.util.Date().toString() ) ;
-		dcs.endComments() ;
+		dsc.creator( getClass().getName() ) ;
+		dsc.creationDate( new java.util.Date().toString() ) ;
+		dsc.endComments() ;
 	}
 
-	public void emitDCSProlog() {
+	public void emitDSCProlog() {
 		String[] prolog ;
 
 		try {
-			dcs.beginProlog() ;
-			prolog = getClassNode( null, "prolog" ).keys() ;
+			dsc.beginProlog() ;
+			prolog = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).keys() ;
 			for ( int p=0 ; p<prolog.length ; p++ ) {
 				push( prolog[p] ) ;
-				String[] token = getClassNode( null, "prolog" ).get( prolog[p], null ).split( " " ) ;
+				String[] token = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).get( prolog[p], null ).split( " " ) ;
 				for ( int t=0 ; t<token.length ; t++ ) {
 					print( token[t]+"\n" ) ;
 				}
 				operator.def() ;
 			}
-			dcs.endProlog() ;
+			dsc.endProlog() ;
 		} catch ( Exception e ) {}
+	}
+
+	public void emitDSCTrailer() {
+		dsc.trailer() ;
+		dsc.eOF() ;
 	}
 }

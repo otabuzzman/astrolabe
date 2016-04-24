@@ -1,22 +1,21 @@
 
 package astrolabe;
 
-import java.util.Vector;
-
 import caa.CAACoordinateTransformation;
 import caa.CAANutation;
-import caa.CAADate;
 
 public class CircleSouthernTropic extends CircleParallel {
 
-	public CircleSouthernTropic( astrolabe.model.CircleType clT, Chart chart, Horizon horizon, CAADate epoch )
-	throws ParameterNotValidException, ParameterNotPlausibleException {
+	public CircleSouthernTropic( astrolabe.model.CircleType clT, Chart chart, Horizon horizon ) throws ParameterNotValidException {
 		super( clT, chart, horizon ) ;
 
+		double al ;
+
 		if ( ! horizon.isEquatorial() ) {
-			throw new ParameterNotPlausibleException() ;
+			throw new ParameterNotValidException() ;
 		}
 
-		al = -CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( epoch.Julian() ) ) ;
+		al = -CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( Astrolabe.getEpoch().Julian() ) ) ;
+		setAl( al ) ;
 	}
 }

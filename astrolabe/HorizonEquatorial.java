@@ -1,23 +1,14 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-
-public class HorizonEquatorial extends Model implements Horizon {
+public class HorizonEquatorial implements Horizon {
 
 	private double grayscale ;
 	private double la ;
-	private double ST ;
 
 	public HorizonEquatorial( astrolabe.model.HorizonType hoT ) {
-		grayscale = getClassNode( hoT.getName(), "practicality" ).getDouble( hoT.getPracticality(), 0 ) ;
+		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
 		la = caa.CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-		ST = 0 ;
-
-		try {
-			ReplacementHelper.registerDMS( "latitude", la, 2 ) ;		
-			ReplacementHelper.registerHMS( "sidereal", ST, 2 ) ;
-		} catch ( ParameterNotValidException e ) {}
 	}
 
 	public double[] convert( double[] hoeq ) {
@@ -55,7 +46,7 @@ public class HorizonEquatorial extends Model implements Horizon {
 	}
 
 	public double getST() {
-		return ST ;
+		return 0 ;
 	}
 
 	public boolean isEcliptical() {

@@ -1,9 +1,12 @@
 
 package astrolabe;
 
-public class Registry extends Model {
+public class Registry {
 
 	private static final java.util.Hashtable<String, Object> registry = new java.util.Hashtable<String, Object>() ;
+
+	public Registry() {
+	}
 
 	public Object retrieve( String key ) throws ParameterNotValidException {
 		Object r ;

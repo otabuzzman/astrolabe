@@ -1,10 +1,15 @@
 
 package astrolabe;
 
-public class Vector extends Model {
+public class Vector {
 
 	private double x = 0 ;
 	private double y = 0 ;
+
+	// clone()
+	public Vector copy() {
+		return new Vector( x, y ) ;
+	}
 
 	public Vector( double x, double y ) {
 		set( x, y ) ;

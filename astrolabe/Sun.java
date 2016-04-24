@@ -2,5 +2,6 @@
 package astrolabe;
 
 public interface Sun {
-	public double[] positionEq( double JD ) ;
+	public void setJD( double JD ) ;
+	public double[] positionEq() ;
 }
