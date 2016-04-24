@@ -39,6 +39,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		linewidth = ApplicationHelper.getClassNode( this,
 				getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( getImportance(), DEFAULT_IMPORTANCE ) ;
 
+		fov() ;
+
 		try {
 			az = AstrolabeFactory.valueOf( getAngle() ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
@@ -47,12 +49,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		try {
 			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
-			Registry registry ;
 			Circle circle ;
 			boolean leading ;
 
-			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( getBegin().getReference().getCircle() ) ;
+			circle = (Circle) Registry.retrieve( getBegin().getReference().getCircle() ) ;
 
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
@@ -63,12 +63,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		try {
 			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
-			Registry registry ;
 			Circle circle ;
 			boolean leading ;
 
-			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( getEnd().getReference().getCircle() ) ;
+			circle = (Circle) Registry.retrieve( getEnd().getReference().getCircle() ) ;
 
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
@@ -83,30 +81,37 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 	}
 
 	public double[] project( double al, double shift ) {
+		double[] xy ;
 		Vector v, t ;
 
-		v = new Vector( projector.project( az, al ) ) ;
+		xy = projector.project( az, al ) ;
+		v = new Vector( xy[0], xy[1] ) ;
 
 		if ( shift != 0 ) {
-			t = new Vector( tangent( al ) ) ;
-			v.add( t.rotate( Math.rad90 ).size( shift ) ) ;
+			xy = tangent( al ) ;
+			t = new Vector( xy[0], xy[1] ) ;
+			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
+			t.scale( shift ) ;
+			v.add( t ) ;
 		}
 
-		return v.get() ;
+		return new double[] { v.x, v.y } ;
 	}
 
 	public double[] tangent( double al ) {
 		Vector a, b ;
-		double d ;
+		double d, xy[] ;
 
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
 
-		a = new Vector( projector.project( az, al+d ) ) ;
-		b = new Vector( projector.project( az, al ) ) ;
+		xy = projector.project( az, al+d ) ;
+		a = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( az, al ) ;
+		b = new Vector( xy[0], xy[1] ) ;
 
 		a.sub( b ) ;
 
-		return a.get() ;
+		return new double[] { a.x, a.y } ;
 	}
 
 	public java.util.Vector<double[]> list() {
@@ -381,5 +386,28 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 	public double mapIndexToAngleOfRange( int index, double begin, double end ) {
 		return CircleParallel.gap( index, segment, begin , end ) ;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fov() throws ParameterNotValidException {
+		java.util.Vector<String> fov ;
+		String[] fv ;
+
+		if ( getName() != null ) {
+			Registry.register( getName(), this ) ;
+
+			if ( getFov() != null ) {
+				fv = getFov().split( "," ) ;
+				for ( int f=0 ; f<fv.length ; f++ ) {
+					try {
+						fov = (java.util.Vector<String>) Registry.retrieve( getFov() ) ;
+					} catch ( ParameterNotValidException e ) {
+						fov = new java.util.Vector<String>() ;
+						Registry.register( getFov(), fov ) ;
+					}
+					fov.add( getName() ) ;
+				}
+			}
+		}
 	}
 }

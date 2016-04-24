@@ -4,6 +4,8 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import caa.CAACoordinateTransformation;
+
 @SuppressWarnings("serial")
 public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
@@ -45,7 +47,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 	private double unit ;
 
 	public DialDegree( Object peer, Circle circle ) {
-		this( peer, circle, Math.rad1 ) ;
+		this( peer, circle, CAACoordinateTransformation.DegreesToRadians( 1 ) ) ;
 	}
 
 	public DialDegree( Object peer, Circle circle, double unit ) {
@@ -284,18 +286,21 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		int ns ;
 		double s, a ;
 		Vector bc, ec, bd ;
-		double[] o, t ;
+		double[] o, t, xy ;
 		Graduation g ;
 
 		// prepare circle closed check
 		s = getGraduationSpan().getSpan() ;
-		bc = new Vector( circle.project( circle.mapIndexToAngleOfScale( 0, s*unit ) ) ) ;
-		ec = new Vector( circle.project( circle.mapIndexToAngleOfScale( -1, s*unit ) ) ) ;
+		xy = circle.project( circle.mapIndexToAngleOfScale( 0, s*unit ) ) ;
+		bc = new Vector( xy[0], xy[1] ) ;
+		xy = circle.project( circle.mapIndexToAngleOfScale( -1, s*unit ) ) ;
+		ec = new Vector( xy[0], xy[1] ) ;
 		ec.sub( bc ) ;
 
 		// prepare dial start aligned with circle begin check
 		try {
-			bd = new Vector( circle.project( mapIndexToAngleOfScale( 0, s ) ) ) ;
+			xy = circle.project( mapIndexToAngleOfScale( 0, s ) ) ;
+			bd = new Vector( xy[0], xy[1] ) ;
 			bc.sub( bd ) ;
 		} catch ( ParameterNotValidException e ) {} // cannot happen with index 0
 

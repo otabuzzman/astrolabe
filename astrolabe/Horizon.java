@@ -9,4 +9,6 @@ public interface Horizon extends Projector {
 	public astrolabe.model.Circle getCircle( int circle ) ;
 	public int getBodyCount() ;
 	public astrolabe.model.Body getBody( int body ) ;
+	public int getCatalogCount() ;
+	public astrolabe.model.Catalog getCatalog( int catalog ) ;
 }

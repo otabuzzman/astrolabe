@@ -3,104 +3,91 @@ package astrolabe;
 
 public class Vector {
 
-	private final static int Q1 = 1 ;
-	private final static int Q2 = 2 ;
-	private final static int Q3 = 3 ;
-	private final static int Q4 = 4 ;
-
-	private double x = 0 ;
-	private double y = 0 ;
+	public double x = 0 ;
+	public double y = 0 ;
+	public double z = 0 ;
 
 	public Vector() {
-		this( 0, 0 ) ;
+		this( 0, 0, 0 ) ;
 	}
 
-	public Vector( double[] xy ) {
-		this( xy[0], xy[1] ) ;
-	}
-
-	public Vector( Vector xy ) {
-		this( xy.getX(), xy.getY() ) ;
+	public Vector( Vector v ) {
+		this( v.x, v.y, v.z ) ;
 	}
 
 	public Vector( double x, double y ) {
-		set( x, y ) ;
+		this( x, y, 0 ) ;
 	}
 
-	public void set( double[] xy ) {
-		set( xy[0], xy[1] ) ;
-	}
-
-	public void set( double x, double y ) {
+	public Vector( double x, double y, double z ) {
 		this.x = x ;
 		this.y = y ;
-	}
-
-	public double[] get() {
-		return new double[] { x, y } ;
-	}
-
-	public double getX() {
-		return x ;
-	}
-
-	public double getY() {
-		return y ;
-	}
-
-	public int q() {
-		return y>=0?( x>=0?Q1:Q2 ):( x>=0?Q4:Q3 ) ;
-	}
-
-	public Vector add( Vector cartesian ) {
-		x = x+cartesian.getX() ;
-		y = y+cartesian.getY() ;
-
-		return this ;
-	}
-
-	public Vector sub( Vector cartesian ) {
-		x = x-cartesian.getX() ;
-		y = y-cartesian.getY() ;
-
-		return this ;
-	}
-
-	public double dot( Vector cartesian ) {
-		return x*cartesian.getX()+y*cartesian.getY() ;
-	}
-
-	public Vector scale( double s ) {
-		x = x*s ;
-		y = y*s ;
-
-		return this ;
-	}
-
-	public Vector size( double length ) {
-		double l = abs() ;
-
-		x = x/l*length ;
-		y = y/l*length ;
-
-		return this ;
+		this.z = z ;
 	}
 
 	public double abs() {
-		return java.lang.Math.abs( java.lang.Math.sqrt( x*x+y*y ) ) ;
+		return java.lang.Math.sqrt( x*x+y*y+z*z ) ;
 	}
 
-	public Vector rotate( double angle ) {
-		double l = abs() ;
-		double t = java.lang.Math.atan2( y, x ) ;
-
-		x = l*java.lang.Math.cos( t+angle ) ;
-		y = l*java.lang.Math.sin( t+angle ) ;
+	public Vector add( Vector v ) {
+		x = x+v.x ;
+		y = y+v.y ;
+		z = z+v.z ;
 
 		return this ;
 	}
 
-	public double phi( Vector cartesian ) {
-		return java.lang.Math.acos( dot( cartesian )/( abs()*cartesian.abs() ) ) ;
+	public Vector sub( Vector v ) {
+		x = x-v.x ;
+		y = y-v.y ;
+		z = z-v.z ;
+
+		return this ;
+	}
+
+	public Vector mul( double s ) {
+		x = x*s ;
+		y = y*s ;
+		z = z*s ;
+
+		return this ;
+	}
+
+	public Vector scale( double l ) {
+		double p = abs() ;
+
+		x = x/p*l ;
+		y = y/p*l ;
+		z = z/p*l ;
+
+		return this ;
+	}
+
+	public double dot( Vector v ) {
+		return x*v.x+y*v.y+z*v.z ;
+	}
+
+	public double angle( Vector v ) {
+		return java.lang.Math.acos( dot( v )/( abs()*v.abs() ) ) ;
+	}
+
+	public Vector cross( Vector v ) {
+		x = y*v.z-z*v.y ;
+		y = z*v.x-x*v.z ;
+		z = x*v.y-y*v.x ;
+
+		return this ;
+	}
+
+	public Vector apply( double[] m ) {
+		double x = this.x ;
+		double y = this.y ;
+		double z = this.z ;
+
+		this.x = x*m[0]+y*m[1]+z*m[2] ;
+		this.y = x*m[3]+y*m[4]+z*m[5] ;
+		this.z = x*m[6]+y*m[7]+z*m[8] ;
+
+		return this ;
 	}
 }

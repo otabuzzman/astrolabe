@@ -20,10 +20,10 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 	public GraduationSpan( Object peer, double[] origin, double[] tangent ) {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		this.origin = new Vector( origin ) ;
-		this.tangent = new Vector( tangent ) ;
+		this.origin = new Vector( origin[0], origin[1] ) ;
+		this.tangent = new Vector( tangent[0], tangent[1] ) ;
 
-		this.tangent.rotate( Math.rad90 ) ;
+		this.tangent.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 
 		space = ApplicationHelper.getClassNode( this,
 				null, null ).getDouble( ApplicationConstant.PK_GRADUATION_SPACE, DEFAULT_SPACE ) ;
@@ -55,7 +55,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
 		ps.operator.stroke() ;
 
-		rad = java.lang.Math.atan2( tangent.getY(), tangent.getX() ) ;
+		rad = java.lang.Math.atan2( tangent.y, tangent.x ) ;
 		deg = CAACoordinateTransformation.RadiansToDegrees( rad )-90 ;
 
 		ps.operator.rotate( deg ) ;
@@ -75,13 +75,13 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		a = new Vector( tangent ) ;
 		b = new Vector( tangent ) ;
 
-		a.size( space ) ;
+		a.scale( space ) ;
 		a.add( origin ) ;
-		r.add( a.get() ) ;
+		r.add( new double[] { a.x, a.y } ) ;
 
-		b.size( space+linelength ) ;
+		b.scale( space+linelength ) ;
 		b.add( origin ) ;
-		r.add( b.get() ) ;
+		r.add( new double[] { b.x, b.y } ) ;
 
 		return r ;
 	}

@@ -4,7 +4,7 @@ package astrolabe;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
+public class BodyStellar extends astrolabe.model.BodyStellar implements Body, CatalogRecord {
 
 	@SuppressWarnings("unused")
 	private Projector projector ;

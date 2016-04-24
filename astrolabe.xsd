@@ -72,6 +72,7 @@
 			<xs:element ref="Date" minOccurs="0"/>
 			<xs:element ref="Circle" maxOccurs="unbounded"/>
 			<xs:element ref="Body" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Catalog" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="practicality" use="required">
@@ -117,6 +118,13 @@
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="fov" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+(,[^,]+)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -343,15 +351,6 @@
 	<xs:element name="Text" type="TextType"/>
 	<xs:element name="Subscript" type="TextType"/>
 	<xs:element name="Superscript" type="TextType"/>
-	<xs:element name="Body">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="BodyStellar"/>
-				<xs:element ref="BodyOrbital"/>
-				<xs:element ref="BodyAreal"/>
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
 	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
 			<xs:element ref="Position"/>
@@ -382,23 +381,20 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
+	<xs:element name="Body">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="BodyStellar"/>
+				<xs:element ref="BodyAreal"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="BodyStellar" type="BodyStellarType"/>
 	<xs:element name="Position" type="SphericalType"/>
-	<xs:complexType name="BodyOrbitalType">
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="asteroid|comet|planet|satelite"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="BodyOrbital" type="BodyOrbitalType"/>
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
 			<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
-			<xs:element ref="AnnotationCurved" maxOccurs="unbounded"/>
+			<xs:element ref="AnnotationStraight" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="type" use="required">
@@ -410,6 +406,50 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyAreal" type="BodyArealType"/>
+	<xs:complexType name="CatalogType">
+		<xs:sequence>
+			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Select" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="fov" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+(,[^,]+)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="url" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+	<xs:element name="Catalog">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="CatalogADC6042"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Select">
+		<xs:annotation>
+			<xs:documentation>Kommaseparierte Bezeichnerliste von Katalogeinträgen.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="AnnotationStraight" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="value" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL)(,(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL))*"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC6042" type="CatalogType">
+		<xs:annotation>
+			<xs:documentation>Constellation boundary data.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<!--Basistypen und -elemente-->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" type="xs:double" use="required"/>

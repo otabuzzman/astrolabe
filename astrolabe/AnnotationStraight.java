@@ -174,9 +174,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		String s, k, t, v ;
 		java.util.regex.Pattern p ;
 		java.util.regex.Matcher m ;
-		astrolabe.Registry r ;
 
-		r = new astrolabe.Registry() ;
 		t = new String( string ) ;
 
 		p = java.util.regex.Pattern.compile( ApplicationConstant.LP_SUBSTITUTE ) ;
@@ -186,7 +184,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			s = t.substring( m.start(), m.end() ) ;
 			k = s.substring( 2, s.length()-2 ) ;
 			try {
-				v = (String) r.retrieve( k ) ;
+				v = (String) Registry.retrieve( k ) ;
 			} catch ( ParameterNotValidException e ) {
 				try {
 					String msg ;

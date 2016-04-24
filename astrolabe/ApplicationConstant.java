@@ -26,6 +26,8 @@ public final class ApplicationConstant {
 	public static final String LK_BODY_ALTITUDE			= "substitute.body.altitude" ;
 	public static final String LK_BODY_RIGHTASCENSION	= "substitute.body.rightascension" ;
 	public static final String LK_BODY_DECLINATION		= "substitute.body.declination" ;
+	public static final String LK_BODY_STERADIAN		= "substitute.body.steradian" ;
+	public static final String LK_BODY_SQUAREDEGREE		= "substitute.body.squaredegre" ;
 
 	public static final String LK_DIAL_DEGREE			= "substitute.dial.degree" ;
 	public static final String LK_DIAL_HOUR				= "substitute.dial.hour" ;
@@ -37,6 +39,13 @@ public final class ApplicationConstant {
 	public static final String LK_DIAL_NAMEOFMONTHSHORT	= "substitute.dial.day.nameofmonthshort" ;
 	public static final String LK_DIAL_JULIANDAY		= "substitute.dial.day.julianday" ;
 	public static final String LK_DIAL_EQUATIONOFTIME	= "substitute.dial.day.equationoftime" ;
+
+	public static final String LK_ADC6049_CONSTELLATION	= "substitute.adc6049.constellation" ;
+	public static final String LK_ADC6049_ABBREVIATION	= "substitute.adc6049.abbreviation" ;
+	public static final String LK_ADC6049_NOMINATIVE	= "substitute.adc6049.nominative" ;
+	public static final String LK_ADC6049_GENITIVE		= "substitute.adc6049.genitive" ;
+
+	public static final String LN_ADC6049 = "adc6049" ;
 
 	public static final String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;
 
@@ -109,6 +118,8 @@ public final class ApplicationConstant {
 	public static final String AV_ANNOTATION_BOTTOMMIDDLE	= "bottommiddle" ;
 	public static final String AV_ANNOTATION_BOTTOMRIGHT	= "bottomright" ;
 
+	public static final String AV_BODY_CONSTELLATION = "constellation" ;
+
 	// preferences keys (PK_), nodes (PN_)
 	public static final String PK_CHART_UNIT		= "unit" ;
 	public static final String PN_CHART_PAGESIZE	= "pagesize" ;
@@ -153,6 +164,13 @@ public final class ApplicationConstant {
 	public static final String PS_PROLOG_ACOS			= "acos" ;
 	public static final String PS_PROLOG_ASIN			= "asin" ;
 	public static final String PS_PROLOG_LINE			= "line" ;
+	public static final String PS_PROLOG_LIM0			= "lim0" ;
+	public static final String PS_PROLOG_LISTREDUCE		= "listreduce" ;
+	public static final String PS_PROLOG_MATROT90CC		= "matrot90cc" ;
+	public static final String PS_PROLOG_MATROT90C		= "matrot90c" ;
+	public static final String PS_PROLOG_MATROT180CC	= "matrot180cc" ;
+	public static final String PS_PROLOG_MATROT180C		= "matrot180c" ;
+	public static final String PS_PROLOG_MATROTARB		= "matrotarb" ;
 	public static final String PS_PROLOG_MOD			= "mod" ;
 	public static final String PS_PROLOG_PAGESIZE		= "pagesize" ;
 	public static final String PS_PROLOG_PATHLENGTH		= "pathlength" ;
@@ -161,12 +179,13 @@ public final class ApplicationConstant {
 	public static final String PS_PROLOG_PATHSHOW		= "pathshow" ;
 	public static final String PS_PROLOG_POLYLINE		= "polyline" ;
 	public static final String PS_PROLOG_SETENCODING	= "setencoding" ;
+	public static final String PS_PROLOG_TRUNCATEF		= "truncatef" ;
 	public static final String PS_PROLOG_VABS			= "vabs" ;
 	public static final String PS_PROLOG_VADD			= "vadd" ;
+	public static final String PS_PROLOG_VANGLE			= "vangle" ;
+	public static final String PS_PROLOG_VAPPLY			= "vapply" ;
 	public static final String PS_PROLOG_VDOT			= "vdot" ;
-	public static final String PS_PROLOG_VPHI			= "vphi" ;
-	public static final String PS_PROLOG_VROTATE		= "vrotate" ;
+	public static final String PS_PROLOG_VMUL			= "vmul" ;
 	public static final String PS_PROLOG_VSCALE			= "vscale" ;
-	public static final String PS_PROLOG_VSIZE			= "vsize" ;
 	public static final String PS_PROLOG_VSUB			= "vsub" ;
 }

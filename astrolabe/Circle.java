@@ -21,7 +21,6 @@ public interface Circle {
 	public boolean isParallel() ;
 	public boolean isMeridian() ;
 	// inherited methods from model 
-	public String getName() ;
 	public astrolabe.model.Annotation[] getAnnotation() ;
 	public astrolabe.model.Dial getDial() ;
 }

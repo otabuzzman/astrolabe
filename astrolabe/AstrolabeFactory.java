@@ -21,7 +21,7 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static Chart createChart( astrolabe.model.Chart ch ) throws ParameterNotValidException {
+	public static Chart companionOf( astrolabe.model.Chart ch ) throws ParameterNotValidException {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
 		astrolabe.model.ChartEquidistant chE ;
@@ -46,7 +46,7 @@ public final class AstrolabeFactory {
 		return chart ;
 	}
 
-	public static Horizon createHorizon( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
+	public static Horizon companionOf( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.HorizonLocal hoLo ;
 		astrolabe.model.HorizonEquatorial hoEq ;
 		astrolabe.model.HorizonEcliptical hoEc ;
@@ -69,7 +69,7 @@ public final class AstrolabeFactory {
 		return horizon ;
 	}
 
-	public static Circle createCircle( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
+	public static Circle companionOf( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.CircleParallel clP ;
 		astrolabe.model.CircleMeridian clM ;
 		astrolabe.model.CircleSouthernPolar clSP ;
@@ -98,27 +98,7 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
-	public static Body createBody( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
-		astrolabe.model.BodyStellar bdS ;
-		astrolabe.model.BodyOrbital bdO ;
-		Body body ;
-
-		if ( bd == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		if ( ( bdS = bd.getBodyStellar() ) != null ) {
-			body = new BodyStellar( bdS, p ) ;
-		} else if ( ( bdO = bd.getBodyOrbital() ) != null ) {
-			body = new BodyOrbital( bdO, p ) ;
-		} else { // bd.getBodyAreal() != null
-			body = new BodyAreal( bd.getBodyAreal(), p ) ;
-		}
-
-		return body ;
-	}
-
-	public static Dial createDial( astrolabe.model.Dial dl, double epoch, Circle circle ) throws ParameterNotValidException {
+	public static Dial companionOf( astrolabe.model.Dial dl, double epoch, Circle circle ) throws ParameterNotValidException {
 		astrolabe.model.DialDegree dlD ;
 		astrolabe.model.DialHour dlH ;
 		Dial dial ;
@@ -138,7 +118,7 @@ public final class AstrolabeFactory {
 		return dial ;
 	}
 
-	public static Annotation createAnnotation( astrolabe.model.Annotation an ) throws ParameterNotValidException {
+	public static Annotation companionOf( astrolabe.model.Annotation an ) throws ParameterNotValidException {
 		astrolabe.model.AnnotationStraight anS ;
 		Annotation annotation ;
 
@@ -153,6 +133,67 @@ public final class AstrolabeFactory {
 		}
 
 		return annotation ;
+	}
+
+	public static Body companionOf( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
+		astrolabe.model.BodyStellar bdS ;
+		Body body ;
+
+		if ( bd == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( bdS = bd.getBodyStellar() ) != null ) {
+			body = new BodyStellar( bdS, p ) ;
+		} else { // bd.getBodyAreal() != null
+			body = new BodyAreal( bd.getBodyAreal(), p ) ;
+		}
+
+		return body ;
+	}
+
+	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
+		astrolabe.model.CatalogADC6042 ct6042 ;
+		Catalog catalog ;
+
+		if ( ct == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( ct6042 = ct.getCatalogADC6042() ) != null ) {
+			catalog = new CatalogADC6042( ct6042, p ) ;
+		} else { // TBD
+			catalog = null ;
+		}
+
+		return catalog ;
+	}
+
+	public static astrolabe.model.Position modelPosition( double phi, double theta ) {
+		astrolabe.model.Position p = new astrolabe.model.Position() ;
+
+		modelSphericalType( p, 1, phi, theta ) ;
+
+		return p ;
+	}
+
+	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) {
+		astrolabe.model.SphericalType sT = new astrolabe.model.SphericalType() ;
+
+		modelSphericalType( sT, r, phi, theta ) ;
+
+		return sT ;
+	}
+
+	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) {
+		sT.setR( new astrolabe.model.R() ) ;
+		sT.getR().setValue( r ) ;
+		sT.setPhi( new astrolabe.model.Phi() ) ;
+		sT.getPhi().setRational( new astrolabe.model.Rational() ) ;
+		sT.getPhi().getRational().setValue( phi ) ;
+		sT.setTheta( new astrolabe.model.Theta() ) ;
+		sT.getTheta().setRational( new astrolabe.model.Rational() ) ;
+		sT.getTheta().getRational().setValue( theta ) ;
 	}
 
 	public static double valueOf( DateType date ) throws ParameterNotValidException {
@@ -207,6 +248,20 @@ public final class AstrolabeFactory {
 			r = CAACoordinateTransformation.HoursToRadians( AstrolabeFactory.valueOf( time.getRational() ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			r = AstrolabeFactory.valueOf( time.getHMS() ) ;
+		}
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> valueOf( SphericalType[] spherical ) throws ParameterNotValidException {
+		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+
+		if ( spherical == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int n=0 ; n<spherical.length ; n++ ) {
+			r.add( valueOf( spherical[n] ) ) ;
 		}
 
 		return r ;

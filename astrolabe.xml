@@ -8,14 +8,15 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
-			<!--eqp-24.5-->
+			<!--fov chart-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
 					<Latitude>
 						<Rational value="0.0"/>
 					</Latitude>
+					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" importance="canonical">
+						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Angle>
 								<Rational value="-24.5"/>
 							</Angle>
@@ -1027,7 +1028,7 @@ astrolabe.xsd">
 					</Circle>
 					<!--horizon-->
 					<Circle>
-						<CircleParallel importance="cardinal">
+						<CircleParallel name="lop0" fov="horizon" importance="cardinal">
 							<Angle>
 								<DMS deg="0" min="0" sec="0.0"/>
 							</Angle>
@@ -1606,181 +1607,75 @@ astrolabe.xsd">
 							</Annotation>
 						</BodyStellar>
 					</Body>
-					<Body>
-						<BodyAreal type="constellation">
-							<Position>
-								<phi>
-									<Rational value="312"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="317"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="317"/>
-								</phi>
-								<theta>
-									<Rational value="21"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="319"/>
-								</phi>
-								<theta>
-									<Rational value="22"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="319"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="323"/>
-								</phi>
-								<theta>
-									<Rational value="23"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="323"/>
-								</phi>
-								<theta>
-									<Rational value="15"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="305"/>
-								</phi>
-								<theta>
-									<Rational value="15"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="305"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="310"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<AnnotationCurved purpose="constellationdescription" reverse="false" anchor="topleft" distance="0.0">
-								<Text value="BodyAreal"/>
-							</AnnotationCurved>
-						</BodyAreal>
-					</Body>
-					<Body>
-						<BodyAreal type="constellation">
-							<Position>
-								<phi>
-									<Rational value="312"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="317"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="317"/>
-								</phi>
-								<theta>
-									<Rational value="21"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="319"/>
-								</phi>
-								<theta>
-									<Rational value="22"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="319"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="323"/>
-								</phi>
-								<theta>
-									<Rational value="23"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="323"/>
-								</phi>
-								<theta>
-									<Rational value="29"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="305"/>
-								</phi>
-								<theta>
-									<Rational value="29"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="305"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<Position>
-								<phi>
-									<Rational value="310"/>
-								</phi>
-								<theta>
-									<Rational value="25"/>
-								</theta>
-							</Position>
-							<AnnotationCurved purpose="constellationdescription" reverse="false" anchor="bottomleft" distance="0.0">
-								<Text value="BodyAreal"/>
-							</AnnotationCurved>
-						</BodyAreal>
-					</Body>
 				</HorizonLocal>
+			</Horizon>
+			<!--fov horizon-->
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<Latitude>
+						<Rational value="0.0"/>
+					</Latitude>
+					<Circle>
+						<CircleParallel name="eqp-24.4" fov="horizon" importance="canonical">
+							<Angle>
+								<Rational value="-24.4"/>
+							</Angle>
+							<Begin>
+								<Reference circle="lop0" node="chasing"/>
+							</Begin>
+							<End>
+								<Reference circle="lop0" node="leading"/>
+							</End>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<!--catalogs-->
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<Latitude>
+						<DMS min="0" sec="0.0" deg="0"/>
+					</Latitude>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<DMS min="0" sec="0.0" deg="0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Catalog>
+						<CatalogADC6042 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049_bound_20.dat">
+							<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomleft" radiant="false">
+								<Text value="@{abk&#x00fc;rzung}@"/>
+							</AnnotationStraight>
+							<Select value="CMI,CNC,MON">
+								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topleft" radiant="false">
+									<Text value="@{abk&#x00fc;rzung}@"/>
+								</AnnotationStraight>
+							</Select>
+							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
+								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomright" radiant="false">
+									<Text value="@{abk&#x00fc;rzung}@"/>
+								</AnnotationStraight>
+							</Select>
+							<Select value="LAC,SCT,SER2">
+								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topright" radiant="false">
+									<Text value="@{abk&#x00fc;rzung}@"/>
+								</AnnotationStraight>
+							</Select>
+						</CatalogADC6042>
+					</Catalog>
+				</HorizonEquatorial>
 			</Horizon>
 			<!--51d30m58s circumpolar-->
 			<Horizon>
@@ -2228,7 +2123,11 @@ astrolabe.xsd">
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
 							<Angle>
-								<Rational value="0.0"/>
+								<Rational value="0.0" />
+								
+								
+								
+								
 							</Angle>
 							<Begin>
 								<Immediate>
@@ -2251,7 +2150,11 @@ astrolabe.xsd">
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
 							<Angle>
-								<Rational value="0.0"/>
+								<Rational value="0.0" />
+								
+								
+								
+								
 							</Angle>
 							<Begin>
 								<Immediate>

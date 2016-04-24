@@ -94,24 +94,15 @@ public final class ApplicationHelper {
 	}
 
 	public static void registerNumber( String key, double value ) throws ParameterNotValidException {
-		Registry r ;
-
-		r = new Registry() ;
-		r.register( key, (Object) new Double( value ).toString() ) ;
+		Registry.register( key, (Object) new Double( value ).toString() ) ;
 	}
 
 	public static void registerNumber( String key, long value ) throws ParameterNotValidException {
-		Registry r ;
-
-		r = new Registry() ;
-		r.register( key, (Object) new Long( value ).toString() ) ;
+		Registry.register( key, (Object) new Long( value ).toString() ) ;
 	}
 
 	public static void registerName( String key, String value ) throws ParameterNotValidException {
-		Registry r ;
-
-		r = new Registry() ;
-		r.register( key, new String( value ) ) ;
+		Registry.register( key, new String( value ) ) ;
 	}
 
 	public static void registerAngle( String key, double value, int precision ) throws ParameterNotValidException {
@@ -522,7 +513,7 @@ public final class ApplicationHelper {
 
 			ps.operator.gsave() ;
 
-			annotation = AstrolabeFactory.createAnnotation( an[a] ) ;
+			annotation = AstrolabeFactory.companionOf( an[a] ) ;
 			annotation.headPS( ps ) ;
 			annotation.emitPS( ps ) ;
 			annotation.tailPS( ps ) ;

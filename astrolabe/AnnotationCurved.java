@@ -70,7 +70,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
 			}
 
-			ps.operator.mark() ;
 			if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 				ps.push( rise ) ;
 				ps.push( true ) ;

@@ -17,27 +17,37 @@
 					<map>
 						<entry key="/acos" value="{dup dup mul 1 exch sub sqrt exch atan}"/>
 						<entry key="/asin" value="{dup dup mul 1 exch sub sqrt atan}"/>
+						<entry key="/lim0" value=".000001"/>
 						<entry key="/line" value="{newpath moveto lineto}"/>
+						<entry key="/listreduce" value="{counttomark dup /n exch 1 add def 2 div cvi 1 sub {4 copy vsub vabs truncatef .0 eq {pop pop /n n 2 sub def} {n 2 roll} ifelse} repeat n 3 roll}"/>
 						<entry key="/mod" value="{exch dup type /integertype eq {systemdict begin exch mod end} {dup dup cvi sub exch cvi 3 2 roll systemdict begin mod end add} ifelse}"/>
+						<!--{90 matrotarb}-->
+						<entry key="/matrot90cc" value="{[ 0 -1 1 0 ]}"/>
+						<!--{-90 matrotarb}-->
+						<entry key="/matrot90c" value="{[ 0 1 -1 0 ]}"/>
+						<!--{180 matrotarb}-->
+						<entry key="/matrot180cc" value="{[ -1 0 0 -1 ]}"/>
+						<!--{-180 matrotarb}-->
+						<entry key="/matrot180c" value="{[ -1 0 0 -1 ]}"/>
+						<entry key="/matrotarb" value="{[ exch dup cos exch sin -1 mul 2 copy -1 mul exch ]}"/>
 						<entry key="/pagesize" value="{currentpagedevice {exch /PageSize ne {pop} {dup 0 get exch 1 get} ifelse} forall}"/>
-						<entry key="/pathlength" value="{flattenpath {/ny exch def /nx exch def 0} {/px nx def /py ny def /ny exch def /nx exch def nx px sub dup mul ny py sub dup mul add sqrt add} {} {} pathforall}"/>
+						<entry key="/pathlength" value="{8 dict begin flattenpath {/ny exch def /nx exch def 0} {/px nx def /py ny def /ny exch def /nx exch def nx px sub dup mul ny py sub dup mul add sqrt add} {} {} pathforall end}"/>
 						<entry key="/pathreverse" value="{mark flattenpath {} {} {} {} pathforall polyline}"/>
-						<entry key="/pathshift" value="{/e exch def /o exch def mark flattenpath {} {} {} {} pathforall 4 copy vsub /B0y exch def /B0x exch def B0x B0y o vsize e {-90 vrotate} {-180 vrotate} ifelse vadd /A0y exch def /A0x exch def counttomark dup /n exch 1 add def 2 div cvi 1 sub {/Ay exch def /Ax exch def 2 copy Ax Ay vsub /B1y exch def /B1x exch def B0x B0y B1x B1y vphi dup dup o exch 90 sub cos dup 0 ne {div} {pop} ifelse B1x B1y B0y B0x atan -1 mul vrotate exch atan 180 lt {B1x exch B1y exch vsize 3 2 roll -1 mul vrotate 2 copy 5 4 roll 180 exch sub -1 mul vrotate vadd} {B1x exch B1y exch vsize 2 copy 6 4 roll pop 180 exch sub -1 mul vrotate vadd} ifelse e not {o vsize} if Ax Ay vadd /B0x B1x def /B0y B1y def n 2 roll} repeat B1x B1y o vsize e {-90 vrotate} if vadd n 2 roll pop A0x A0y polyline pathreverse}"/>
-						<entry key="/pathshow" value="{/td exch def /t exch def /pd 0 def /nc 0 def gsave flattenpath {/fy exch def /fx exch def /nx fx def /ny fy def /os 0 def fx fy transform /cy exch def /cy exch def} {/px nx def /py ny def /ny exch def /nx exch def /dx nx px sub def /dy ny py sub def /rpl dx dup mul dy dup mul add sqrt def rpl 0 ne {/osx dx rpl div os mul def /osy dy rpl div os mul def px osx add py osy add transform /cy exch def /cx exch def /pd pd rpl add def {td pd le {nc t 0 exch {6 get length add} forall lt {t nc 1 add exch 0 exch 0 exch {6 get length dup 3 1 roll add dup 4 index ge {exch sub 2 index exch sub 1 sub exit} {exch pop exch 1 add exch} ifelse} forall 3 2 roll pop /ci exch def /ti exch def /c t ti get 6 get ci 1 getinterval def /nc nc 1 add def gsave t ti get dup 0 get exch 1 get setencoding t ti get 0 get findfont t ti get 2 get scalefont setfont /cw c stringwidth pop def cx cy itransform translate dy dx atan rotate 0 t ti get 3 get moveto c show currentpoint t ti get 3 get sub transform /cy exch def /cx exch def grestore /td td cw add def} {exit} ifelse} {/os td pd sub def exit} ifelse} loop} if} {} {fx fy lineto fx fy moveto} pathforall grestore}"/>
+						<entry key="/pathshift" value="{16 dict begin /e exch def /o exch def mark mark flattenpath {} {} {} {} pathforall 4 copy vsub /B0y exch def /B0x exch def B0x B0y o vscale e {matrot90c vapply} {matrot180c vapply} ifelse vadd /A0y exch def /A0x exch def counttomark dup /n exch 1 add def 2 div cvi 1 sub {/Ay exch def /Ax exch def 2 copy Ax Ay vsub /B1y exch def /B1x exch def B0x B0y B1x B1y vangle dup dup o exch 90 sub cos dup 0 ne {div} {pop} ifelse B1x B1y B0y B0x atan -1 mul matrotarb vapply exch atan 180 lt {B1x exch B1y exch vscale 3 2 roll -1 mul matrotarb vapply 2 copy 5 4 roll 180 exch sub -1 mul matrotarb vapply vadd} {B1x exch B1y exch vscale 2 copy 6 4 roll pop 180 exch sub -1 mul matrotarb vapply vadd} ifelse e not {o vscale} if Ax Ay vadd /B0x B1x def /B0y B1y def n 2 roll} repeat B1x B1y o vscale e {matrot90c vapply} if vadd n 2 roll pop A0x A0y polyline pathreverse end}"/>
+						<entry key="/pathshow" value="{32 dict begin /td exch def /t exch def /pd 0 def /nc 0 def gsave flattenpath {/fy exch def /fx exch def /nx fx def /ny fy def /os 0 def fx fy transform /cy exch def /cy exch def} {/px nx def /py ny def /ny exch def /nx exch def /dx nx px sub def /dy ny py sub def /rpl dx dup mul dy dup mul add sqrt def rpl 0 ne {/osx dx rpl div os mul def /osy dy rpl div os mul def px osx add py osy add transform /cy exch def /cx exch def /pd pd rpl add def {td pd le {nc t 0 exch {6 get length add} forall lt {t nc 1 add exch 0 exch 0 exch {6 get length dup 3 1 roll add dup 4 index ge {exch sub 2 index exch sub 1 sub exit} {exch pop exch 1 add exch} ifelse} forall 3 2 roll pop /ci exch def /ti exch def /c t ti get 6 get ci 1 getinterval def /nc nc 1 add def gsave t ti get dup 0 get exch 1 get setencoding t ti get 0 get findfont t ti get 2 get scalefont setfont /cw c stringwidth pop def cx cy itransform translate dy dx atan rotate 0 t ti get 3 get moveto c show currentpoint t ti get 3 get sub transform /cy exch def /cx exch def grestore /td td cw add def} {exit} ifelse} {/os td pd sub def exit} ifelse} loop} if} {} {fx fy lineto fx fy moveto} pathforall grestore end}"/>
 						<entry key="/polyline" value="{newpath moveto counttomark 2 sub 0 exch 2 exch {pop lineto} for pop}"/>
-						<entry key="/setencoding" value="{exch dup findfont dup length dict begin {1 index /FID ne {def} {pop pop} ifelse} forall exch /Encoding exch def currentdict end definefont pop}"/>
+						<entry key="/setencoding" value="{2 dict begin exch dup findfont dup length dict begin {1 index /FID ne {def} {pop pop} ifelse} forall exch /Encoding exch def currentdict end definefont pop end}"/>
 						<entry key="/show" value="{dup type /stringtype eq {systemdict begin show end} {{dup dup dup dup 0 get exch 1 get setencoding 0 get findfont exch 2 get scalefont setfont [currentpoint] exch dup 3 get 0 exch rmoveto dup dup 6 get exch 5 get {systemdict begin show end} {stringwidth pop 0 rmoveto} ifelse dup 4 get {3 get neg 0 exch rmoveto pop} {pop aload pop moveto} ifelse} forall} ifelse}"/>
-						<entry key="/sqrt" value="{dup 6 truncate 0 ne {systemdict begin sqrt end} if}"/>
+						<entry key="/sqrt" value="{dup truncatef 0 ne {systemdict begin sqrt end} if}"/>
 						<entry key="/stringwidth" value="{dup type /stringtype eq {systemdict begin stringwidth end} {0 exch {dup 4 get {dup dup 0 get findfont exch 2 get scalefont setfont 6 get systemdict begin stringwidth end pop add} {pop} ifelse} forall 0.} ifelse}"/>
-						<entry key="/truncate" value="{10 exch exp 2 copy mul systemdict begin truncate end exch div exch pop}"/>
+						<entry key="/truncatef" value="{1 lim0 div cvi 2 copy mul truncate exch div exch pop}"/>
 						<entry key="/vabs" value="{dup mul exch dup mul add sqrt abs}"/>
 						<entry key="/vadd" value="{3 2 roll add 3 1 roll add exch}"/>
+						<entry key="/vangle" value="{4 copy vdot truncatef 5 1 roll vabs 3 1 roll vabs mul truncatef div acos}"/>
+						<entry key="/vapply" value="{2 dict begin /m exch def 2 copy m 1 get mul exch m 0 get mul add 3 1 roll m 3 get mul exch m 2 get mul add end}"/>
 						<entry key="/vdot" value="{3 2 roll mul 3 1 roll mul add}"/>
-						<entry key="/vphi" value="{4 copy vdot 6 truncate 5 1 roll vabs 3 1 roll vabs mul 6 truncate div acos}"/>
-						<entry key="/vq" value="{0 ge {0 ge {1} {2} ifelse} {0 ge {4} {3} ifelse} ifelse}"/>
-						<entry key="/vrotate" value="{3 copy pop 5 copy exch atan add cos 3 1 roll vabs mul 6 1 roll exch atan add sin 3 1 roll vabs mul}"/>
-						<entry key="/vscale" value="{dup 3 1 roll mul 3 1 roll mul exch}"/>
-						<entry key="/vsize" value="{3 1 roll 2 copy 5 copy vabs div exch pop mul 6 1 roll vabs exch pop div mul exch}"/>
+						<entry key="/vmul" value="{dup 3 1 roll mul 3 1 roll mul exch}"/>
+						<entry key="/vscale" value="{3 1 roll 2 copy 5 copy vabs div exch pop mul 6 1 roll vabs exch pop div mul exch}"/>
 						<entry key="/vsub" value="{-1 mul exch -1 mul exch vadd}"/>
 					</map>
 				</node>
@@ -365,57 +375,6 @@
 				<map>
 					<entry key="size" value="2.2"/>
 				</map>
-			</node>
-			<node name="BodyOrbital">
-				<map/>
-				<node name="asteroid">
-					<map>
-						<entry key="linewidth" value=".36"/>
-						<entry key="linedash" value="0"/>
-					</map>
-					<node name="excess">
-						<map>
-							<entry key="linewidth" value=".36"/>
-							<entry key="linedash" value="0"/>
-						</map>
-					</node>
-				</node>
-				<node name="comet">
-					<map>
-						<entry key="linewidth" value=".36"/>
-						<entry key="linedash" value="0"/>
-					</map>
-					<node name="excess">
-						<map>
-							<entry key="linewidth" value=".36"/>
-							<entry key="linedash" value="0"/>
-						</map>
-					</node>
-				</node>
-				<node name="planet">
-					<map>
-						<entry key="linewidth" value=".36"/>
-						<entry key="linedash" value="0"/>
-					</map>
-					<node name="excess">
-						<map>
-							<entry key="linewidth" value=".36"/>
-							<entry key="linedash" value="0"/>
-						</map>
-					</node>
-				</node>
-				<node name="satelite">
-					<map>
-						<entry key="linewidth" value=".36"/>
-						<entry key="linedash" value="0"/>
-					</map>
-					<node name="excess">
-						<map>
-							<entry key="linewidth" value=".36"/>
-							<entry key="linedash" value="0"/>
-						</map>
-					</node>
-				</node>
 			</node>
 			<node name="BodyAreal">
 				<map/>

@@ -48,9 +48,9 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		}
 
 		v = new Vector( x, y ) ;
-		v.scale( scale ) ;
+		v.mul( scale ) ;
 
-		return v.get() ;
+		return new double[] { v.x, v.y } ;
 	}
 
 	public double[] unproject( double[] xy ) {
@@ -62,14 +62,14 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		Vector v ;
 
 		v = new Vector( x, -y ) ;
-		v.scale( 1/scale ) ;
+		v.mul( 1/scale ) ;
 
-		r[0] = java.lang.Math.atan2( v.getY(), v.getX() ) ;
+		r[0] = java.lang.Math.atan2( v.y, v.x ) ;
 
 		if ( northern ) {
-			r[1] = Math.rad90-java.lang.Math.atan( v.getX()/java.lang.Math.cos( r[0] ) )*2 ;
+			r[1] = Math.rad90-java.lang.Math.atan( v.x/java.lang.Math.cos( r[0] ) )*2 ;
 		} else { // southern
-			r[1] = -java.lang.Math.atan( v.getX()/java.lang.Math.cos( r[0] ) )*2 ;
+			r[1] = -java.lang.Math.atan( v.x/java.lang.Math.cos( r[0] ) )*2 ;
 		}
 
 		return r ;

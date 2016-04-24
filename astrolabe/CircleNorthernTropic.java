@@ -11,7 +11,19 @@ public class CircleNorthernTropic extends CircleParallel {
 
 		radal = ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
 		degal = CAACoordinateTransformation.RadiansToDegrees( radal ) ;
-		( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational().setValue( degal ) ;
+
+		if ( ( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational() == null ) {
+			int d = (int) degal ;
+			int m = (int) ( ( degal-d )*60 ) ;
+			double s = ( ( degal-d )*60-m )*60 ;
+
+			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setDeg( d ) ;
+			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setMin( m ) ;
+			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setSec( s ) ;
+		} else {
+			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational().setValue( degal ) ;
+		}
+
 		setup( peer, projector ) ;
 	}
 }

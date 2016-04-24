@@ -74,7 +74,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 			Chart chart ;
 
 			try {
-				chart = AstrolabeFactory.createChart( getChart( ch ) ) ;
+				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
 			} catch ( ParameterNotValidException e ) {
 				break ; // if ch unequal 0 there must be a chart
 			}
@@ -87,7 +87,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 				ps.operator.gsave() ;
 
 				try {
-					horizon = AstrolabeFactory.createHorizon( chart.getHorizon( ho ), epoch, chart ) ;
+					horizon = AstrolabeFactory.companionOf( chart.getHorizon( ho ), epoch, chart ) ;
 				} catch ( ParameterNotValidException e ) {
 					break ; // if ho unequal 0 there must be a horizon
 				}
@@ -99,14 +99,10 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 					ps.operator.gsave() ;
 					try {
-						circle = AstrolabeFactory.createCircle( horizon.getCircle( cl ), epoch, horizon ) ;
+						circle = AstrolabeFactory.companionOf( horizon.getCircle( cl ), epoch, horizon ) ;
 					} catch ( ParameterNotValidException e ) {
 						break ; // if cl unequal 0 there must be a circle
 					}
-
-					try {
-						new Registry().register( circle.getName(), circle ) ;
-					} catch ( ParameterNotValidException e ) {}
 
 					circle.headPS( ps ) ;
 					circle.emitPS( ps ) ;
@@ -117,7 +113,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 						ps.operator.gsave() ;
 
-						dial = AstrolabeFactory.createDial( circle.getDial(), epoch, circle ) ;
+						dial = AstrolabeFactory.companionOf( circle.getDial(), epoch, circle ) ;
 						dial.headPS( ps ) ;
 						dial.emitPS( ps ) ;
 						dial.tailPS( ps ) ;
@@ -130,6 +126,18 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 					ps.operator.grestore() ;
 				} // Circle processing.
 
+				// Catalog processing
+				try {
+					for ( int ct=0 ; ct<horizon.getCatalogCount() ; ct++ ) {
+						Catalog catalog ;
+
+						catalog = AstrolabeFactory.companionOf( horizon.getCatalog( ct ), horizon ) ;
+						catalog.headPS( ps ) ;
+						catalog.emitPS( ps ) ;
+						catalog.tailPS( ps ) ;
+					}
+				} catch ( ParameterNotValidException e ) {} // optional
+
 				// Body processing
 				try {
 					for ( int bd=0 ; bd<horizon.getBodyCount() ; bd++ ) {
@@ -137,7 +145,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 						ps.operator.gsave() ;
 
-						body = AstrolabeFactory.createBody( horizon.getBody( bd ), horizon ) ;
+						body = AstrolabeFactory.companionOf( horizon.getBody( bd ), horizon ) ;
 						body.headPS( ps ) ;
 						body.emitPS( ps ) ;
 						body.tailPS( ps ) ;

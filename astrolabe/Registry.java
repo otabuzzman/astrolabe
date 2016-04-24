@@ -5,10 +5,10 @@ public class Registry {
 
 	private static final java.util.Hashtable<String, Object> registry = new java.util.Hashtable<String, Object>() ;
 
-	public Registry() {
+	private Registry() {
 	}
 
-	public Object retrieve( String key ) throws ParameterNotValidException {
+	public static Object retrieve( String key ) throws ParameterNotValidException {
 		Object r ;
 
 		r = registry.get( key ) ;
@@ -20,7 +20,7 @@ public class Registry {
 		return r ;
 	} 
 
-	public void register( String key, Object value ) throws ParameterNotValidException {
+	public static void register( String key, Object value ) throws ParameterNotValidException {
 
 		if ( key == null ) {
 			throw new ParameterNotValidException() ;
