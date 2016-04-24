@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="modelAstrolabe">
+		<xs:annotation>
+			<xs:documentation>Datenmodell zur Beschreibung von Himmelskarten.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="astrolabeEpoch" type="dateType"/>
+				<xs:element name="astrolabeChart" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="chartHemisphere">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="north|south"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="chartView">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="down|up"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="chartProjection">
+								<xs:complexType>
+									<xs:all>
+										<xs:element name="projectionType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:pattern value="stereographic|orthographic|equidistant|gnomonic|equalarea"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="projectionCenter" type="sphericalType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Neigung und Drehung des Projektionszentrums zum Frühlingspunkt beziehungsweise mit der Rektaszension.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="projectionScale">
+											<xs:simpleType>
+												<xs:restriction base="xs:double">
+													<xs:minInclusive value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="chartUnit">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value="mm|inch"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="chartHorizon" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="horizonType">
+											<xs:complexType>
+												<xs:choice>
+													<xs:element name="typeLocal">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="localLatitude" type="angleType"/>
+																<xs:element name="localLongitude" type="angleType" minOccurs="0"/>
+																<xs:element name="localHA" type="timeType">
+																	<xs:annotation>
+																		<xs:documentation>Stundenwinkel des Ortsmeridians.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="typeEquatorial" type="xs:boolean" default="true"/>
+													<xs:element name="typeEcliptical" type="xs:boolean" default="true"/>
+													<xs:element name="typeGalactic" type="xs:boolean" default="true"/>
+												</xs:choice>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="horizonPracticality">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:pattern value="never|seldom|sometimes|frequent|always"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="horizonCircle" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="circleType">
+														<xs:complexType>
+															<xs:choice>
+																<xs:element name="typeMeridian">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="meridianBegin" type="limitType">
+																				<xs:annotation>
+																					<xs:documentation>Altitude.</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="meridianEnd" type="limitType"/>
+																			<xs:element name="meridianAzimuth" type="angleType"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="typeParallel">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="parallelBegin" type="limitType">
+																				<xs:annotation>
+																					<xs:documentation>Azimuth.</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="parallelEnd" type="limitType"/>
+																			<xs:element name="parallelAltitude" type="angleType"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="typeLoxodrom">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="loxodromBegin" type="sphericalType">
+																				<xs:annotation>
+																					<xs:documentation>Azimuth/Altitude.</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="loxodromEnd" type="limitType"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="typeSouthernTropic" type="xs:boolean" default="true">
+																	<xs:annotation>
+																		<xs:documentation>In Verbindung mit horizonType Ecliptical.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="typeNorthernTropic" type="xs:boolean" default="true"/>
+																<xs:element name="typeSouthernPolar" type="xs:boolean" default="true">
+																	<xs:annotation>
+																		<xs:documentation>In Verbindung mit horizonType Local.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="typeNorthernPolar" type="xs:boolean" default="true"/>
+																<xs:element name="typeCircumPolar" type="xs:boolean" default="true">
+																	<xs:annotation>
+																		<xs:documentation>In Verbindung mit horizonType Local. Erfordert Hilfs-horizonType Ecliptical.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+															</xs:choice>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="circleImportance">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:pattern value="canonical|cardinal"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="circleDial" minOccurs="0">
+														<xs:complexType>
+															<xs:complexContent>
+																<xs:extension base="dialType"/>
+															</xs:complexContent>
+														</xs:complexType>
+													</xs:element>
+													<xs:element name="circleAnnotation" type="annotationType" minOccurs="0" maxOccurs="unbounded"/>
+												</xs:sequence>
+												<xs:attribute name="name" use="optional">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:pattern value="[^/]+"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" use="optional">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:pattern value="[^/]+"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="chartCatalogue" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType/>
+							</xs:element>
+							<xs:element name="chartConstellation" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType/>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="name" use="optional">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="[^/]+"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="version" type="xs:positiveInteger" use="required" fixed="1"/>
+			<xs:attribute name="name" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[^/]+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="dateType">
+		<xs:choice>
+			<xs:element name="dCivic">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="dcYear" type="xs:integer"/>
+						<xs:element name="dcMonth">
+							<xs:simpleType>
+								<xs:restriction base="xs:positiveInteger">
+									<xs:minInclusive value="1"/>
+									<xs:maxInclusive value="12"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="dcDay">
+							<xs:simpleType>
+								<xs:restriction base="xs:double">
+									<xs:minInclusive value="0.0"/>
+									<xs:maxInclusive value="31.0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="dcTime" type="timeType" minOccurs="0"/>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dJulian">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="timeType">
+		<xs:sequence>
+			<xs:element name="tSystem" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="UTC"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="tValue">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="tvDiscrete">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="tvdHour">
+										<xs:simpleType>
+											<xs:restriction base="xs:integer"/>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="tvdMinute">
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:maxExclusive value="60"/>
+												<xs:minExclusive value="-60"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="tvdSecond">
+										<xs:simpleType>
+											<xs:restriction base="xs:double">
+												<xs:maxExclusive value="60.0"/>
+												<xs:minExclusive value="-60.0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="tvDecimal">
+							<xs:simpleType>
+								<xs:restriction base="xs:double"/>
+							</xs:simpleType>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="angleType">
+		<xs:choice>
+			<xs:element name="aDiscrete">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="adDegree">
+							<xs:simpleType>
+								<xs:restriction base="xs:integer"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="adMinute">
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minExclusive value="-60"/>
+									<xs:maxExclusive value="60"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="adSecond">
+							<xs:simpleType>
+								<xs:restriction base="xs:double">
+									<xs:minExclusive value="-60.0"/>
+									<xs:maxExclusive value="60.0"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="aDecimal">
+				<xs:simpleType>
+					<xs:restriction base="xs:double"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="cartesianType">
+		<xs:sequence>
+			<xs:element name="cX" type="xs:double"/>
+			<xs:element name="cY" type="xs:double"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="sphericalType">
+		<xs:sequence>
+			<xs:element name="sLambda" type="angleType"/>
+			<xs:element name="sPhi" type="angleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="dialType">
+		<xs:sequence>
+			<xs:element name="dBaseline">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="none|line|rail"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="dUnit">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="degree|degree-minute|degree-second|hour|hour-minute|hour-second"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="dGraduation">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="dgUnit">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="dguInterval">
+										<xs:annotation>
+											<xs:documentation>Skaleneinheiten pro Einer-Teilstrich.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:positiveInteger">
+												<xs:minInclusive value="1"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="dguSubdivision">
+										<xs:annotation>
+											<xs:documentation>Unterteilung der Einer-Teilstriche.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:positiveInteger">
+												<xs:enumeration value="1"/>
+												<xs:enumeration value="2"/>
+												<xs:enumeration value="3"/>
+												<xs:enumeration value="4"/>
+												<xs:enumeration value="6"/>
+												<xs:enumeration value="8"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="dguAnnotation" type="annotationType" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="dgFive" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="dgfInterval">
+										<xs:annotation>
+											<xs:documentation>Einer-Teilstriche pro Teilstrich</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:positiveInteger">
+												<xs:minInclusive value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="dgfAnnotation" type="annotationType" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="dgTen" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="dgtInterval">
+										<xs:annotation>
+											<xs:documentation>Einer-Teilstriche pro Teilstrich</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:positiveInteger">
+												<xs:minInclusive value="2"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="dgtAnnotation" type="annotationType" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dAnnotation" type="annotationType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^/]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="annotationType">
+		<xs:sequence>
+			<xs:element name="aText" type="textType" maxOccurs="unbounded"/>
+			<xs:element name="aPurpose">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="obscure|circledescription|dialdescription|dialnumber|dialsubnumber|guidance"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="aAnchor">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="aDistance" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0.0"/>
+						<xs:maxInclusive value="100.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="aReverse" type="xs:boolean" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^/]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="textType">
+		<xs:sequence>
+			<xs:element name="tRegular" type="xs:string"/>
+			<xs:element name="tSubscript" type="textType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="tSuperscript" type="textType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="glyphType"/>
+	<xs:complexType name="limitType">
+		<xs:choice>
+			<xs:element name="lExplicit" type="angleType"/>
+			<xs:element name="lImplicit">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[^/]+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+</xs:schema>

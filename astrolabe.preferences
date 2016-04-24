@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
+<preferences>
+	<root type="system">
+		<map/>
+		<node name="astrolabe">
+			<map/>
+			<node name="document">
+				<map/>
+				<node name="Postscript">
+					<map>
+						<entry key="linewidth" value=".01"/>
+						<entry key="display" value="c:/programme/gs/gs7.04/bin/gswin32c -"/>
+					</map>
+					<node name="unicode">
+						<map>
+							<entry key="default" value="/Times-Roman:/question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question /question"/>
+							<entry key="0000..007F-0" value="/Times-Roman:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quotesingle /parenleft /parenright /asterisk /plus /comma /hyphen /period /slash /zero /one /two /three /four /five /six /seven /eight /nine /colon /semicolon /less /equal /greater /question /at /A /B /C /D /E /F /G /H /I /J /K /L /M /N /O /P /Q /R /S /T /U /V /W /X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore /grave /a /b /c /d /e /f /g /h /i /j /k /l /m /n /o /p /q /r /s /t /u /v /w /x /y /z /braceleft /bar /braceright /asciitilde /.notdef"/>
+							<entry key="0080..00FF-0" value="/Times-Roman:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /exclamdown /cent /sterling /currency /yen /brokenbar /section /dieresis /copyright /ordfeminine /guillemotleft /logicalnot /.notdef /registered /macron /degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /periodcentered /cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla /Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis /Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply /Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls /agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis /eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide /oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis"/>
+							<entry key="0100..017F-0" value="/Times-Roman:/Amacron /amacron /Abreve /abreve /Aogonek /aogonek /Cacute /cacute /.notdef /.notdef /.notdef /.notdef /Ccaron /ccaron /Dcaron /dcaron /Dcroat /dcroat /Emacron /emacron /.notdef /.notdef /Edotaccent /edotaccent /Eogonek /eogonek /Ecaron /ecaron /.notdef /.notdef /Gbreve /gbreve /.notdef /.notdef /Gcommaaccent /gcommaaccent /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /Imacron /imacron /.notdef /.notdef /Iogonek /iogonek /Idotaccent /dotlessi /.notdef /.notdef /.notdef /.notdef /Kcommaaccent /kcommaaccent /.notdef /Lacute /lacute /Lcommaaccent /lcommaaccent /Lcaron /lcaron /.notdef /.notdef /Lslash /lslash /Nacute /nacute /Ncommaaccent /ncommaaccent /Ncaron /ncaron /.notdef /.notdef /.notdef /Omacron /omacron /.notdef /.notdef /Ohungarumlaut /ohungarumlaut /OE /oe /Racute /racute /Rcommaaccent /rcommaaccent /Rcaron /rcaron /Sacute /sacute /.notdef /.notdef /Scedilla /scedilla /Scaron /scaron /.notdef /.notdef /Tcaron /tcaron /.notdef /.notdef /.notdef /.notdef /Umacron /umacron /.notdef /.notdef /Uring /uring /Uhungarumlaut /uhungarumlaut /Uogonek /uogonek /.notdef /.notdef /.notdef /.notdef /Ydieresis /Zacute /zacute /Zdotaccent /zdotaccent /Zcaron /zcaron /.notdef"/>
+							<entry key="0180..024F-0" value="/Times-Roman:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /florin /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /Scommaaccent /scommaaccent /Tcommaaccent /tcommaaccent /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="0300..036F-0" value="/Times-Roman:/grave /acute /circumflex /tilde /macron /.notdef /breve /dotaccent /dieresis /.notdef /ring /hungarumlaut /caron /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /commaaccent /cedilla /ogonek /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="0370..03FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /Alpha /Beta /Gamma /Delta /Epsilon /Zeta /Eta /Theta /Iota /Kappa /Lambda /Mu /Nu /Xi /Omicron /Pi /Rho /.notdef /Sigma /Tau /Upsilon /Phi /Chi /Psi /Omega /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /alpha /beta /gamma /delta /epsilon /zeta /eta /theta /iota /kappa /lambda /mu /nu /xi /omicron /pi /rho /sigma1 /sigma /tau /upsilon /phi1 /chi /psi /omega /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /theta1 /.notdef /.notdef /.notdef /phi /omega1 /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2000..206F-0" value="/Times-Roman:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /hyphen /.notdef /.notdef /endash /emdash /.notdef /.notdef /.notdef /quoteleft /quoteright /quotesinglbase /.notdef /quotedblleft /quotedblright /quotedblbase /.notdef /dagger /daggerdbl /.notdef /.notdef /.notdef /.notdef /ellipsis /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /perthousand /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /fraction /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="20A0..20CF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /Euro /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2100..214F-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /Ifraktur /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /weierstrass /.notdef /.notdef /.notdef /Rfraktur /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /aleph /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2190..21FF-0" value="/Symbol:/arrowleft /arrowup /arrowright /arrowdown /arrowboth /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /arrowdblleft /arrowdblup /arrowdblright /arrowdbldown /arrowdblboth /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2200..22FF-0" value="/Symbol:/universal /.notdef /partialdiff /existential /.notdef /emptyset /Delta /gradient /element /notelement /.notdef /suchthat /.notdef /.notdef /.notdef /product /.notdef /summation /minus /.notdef /.notdef /fraction /.notdef /asteriskmath /.notdef /bullet /radical /.notdef /.notdef /proportional /infinity /.notdef /angle /.notdef /.notdef /bar /.notdef /.notdef /.notdef /logicaland /logicalor /intersection /union /integral /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /therefore /.notdef /colon /.notdef /.notdef /.notdef /.notdef /.notdef /similar /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /congruent /.notdef /.notdef /approxequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /notequal /equivalence /.notdef /.notdef /lessequal /greaterequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /propersubset /propersuperset /notsubset /.notdef /reflexsubset /reflexsuperset /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /circleplus /.notdef /circlemultiply /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /perpendicular /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /dotmath /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2300..23FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /angleleft /angleright /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /parenlefttp /parenleftex /parenleftbt /parenrighttp /parenrightex /parenrightbt /bracketlefttp /bracketleftex /bracketleftbt /bracketrighttp /bracketrightex /bracketrightbt /bracelefttp /braceleftmid /braceleftbt /braceex /bracerighttp /bracerightmid /bracerightbt /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="2600..26FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /spade /.notdef /.notdef /club /.notdef /heart /diamond /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+							<entry key="FB00..FB4F-0" value="/Times-Roman:/.notdef /fi /fl /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+						</map>
+					</node>
+				</node>
+			</node>
+			<node name="Horizon">
+				<map/>
+				<node name="practicality">
+					<map>
+						<entry key="never" value=".85"/>
+						<entry key="seldom" value=".75"/>
+						<entry key="sometimes" value=".5"/>
+						<entry key="frequent" value=".25"/>
+						<entry key="always" value="0"/>
+					</map>
+				</node>
+			</node>
+			<node name="Circle">
+				<map>
+					<entry key="sectorsize" value="1"/>
+				</map>
+				<node name="importance">
+					<map>
+						<entry key="canonical" value=".1"/>
+						<entry key="cardinal" value=".5"/>
+					</map>
+				</node>
+			</node>
+			<node name="Dial">
+				<map>
+					<entry key="linewidth" value=".01"/>
+				</map>
+				<node name="None">
+					<map>
+						<entry key="space" value=".1"/>
+					</map>
+				</node>
+				<node name="Line">
+					<map>
+						<entry key="space" value="1"/>
+						<entry key="thickness" value=".2"/>
+					</map>
+				</node>
+				<node name="Rail">
+					<map>
+						<entry key="space" value="1"/>
+						<entry key="thickness" value="1.2"/>
+					</map>
+				</node>
+				<node name="Unit">
+					<map>
+						<entry key="space" value=".4"/>
+						<entry key="linelength" value="2.8"/>
+						<entry key="linewidth" value=".01"/>
+					</map>
+				</node>
+				<node name="Five">
+					<map>
+						<entry key="space" value=".4"/>
+						<entry key="linelength" value="3.6"/>
+						<entry key="linewidth" value=".01"/>
+					</map>
+				</node>
+				<node name="Ten">
+					<map>
+						<entry key="space" value=".4"/>
+						<entry key="linelength" value="4.2"/>
+						<entry key="linewidth" value=".01"/>
+					</map>
+				</node>
+				<node name="Annotation">
+					<map>
+						<entry key="rise" value="4.2"/>
+					</map>
+				</node>
+			</node>
+			<node name="Annotation">
+				<map>
+					<entry key="subscriptshift" value="-.3"/>
+					<entry key="superscriptshift" value=".5"/>
+					<entry key="subscriptshrink" value=".8"/>
+					<entry key="superscriptshrink" value=".8"/>
+					<entry key="margin" value="1.2"/>
+					<entry key="rise" value="1.2"/>
+				</map>
+				<node name="purpose">
+					<map>
+						<entry key="obscure" value=".2"/>
+						<entry key="circledescription" value="3.8"/>
+						<entry key="dialdescription" value="2.4"/>
+						<entry key="dialnumber" value="3.8"/>
+						<entry key="dialsubnumber" value="2.6"/>
+						<entry key="guidance" value="2.2"/>
+					</map>
+				</node>
+			</node>
+			<node name="Parameter">
+				<map>
+					<entry key="precision" value="2"/>
+				</map>
+			</node>
+		</node>
+	</root>
+</preferences>
