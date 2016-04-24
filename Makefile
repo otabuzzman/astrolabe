@@ -1,19 +1,38 @@
 APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
-JDK       = /cygdrive/c/j2sdk1.4.2
+JDK14     = /cygdrive/c/j2sdk1.4.2
+JDK15     = /cygdrive/c/programme/java/jre1.5.0_11
 
 .PHONY: all clean tidy
 
-CLASSPATH = "./castor-0.9.6/castor-0.9.6-srcgen-ant-task.jar;./castor-0.9.6/castor-0.9.6-xml.jar;./castor-0.9.6/castor-0.9.6.jar;./castor-0.9.6/jdbc-se2.0.jar;./castor-0.9.6/jta1.0.1.jar;./commons-logging-1.0.5/commons-logging-api.jar;./commons-logging-1.0.5/commons-logging-optional.jar;./commons-logging-1.0.5/commons-logging.jar;./xerces-2_5_0/xercesImpl.jar;./xerces-2_5_0/xml-apis.jar;./xerces-2_5_0/xmlParserAPIs.jar"
+empty =
+space = $(empty) $(empty)
+
+CLASSPATH = ./castor-0.9.6/castor-0.9.6.jar \
+	./castor-0.9.6/castor-0.9.6-xml.jar \
+	./castor-0.9.6/jdbc-se2.0.jar \
+	./castor-0.9.6/jta1.0.1.jar \
+	./commons-logging-1.0.5/commons-logging.jar \
+	./commons-logging-1.0.5/commons-logging-api.jar \
+	./commons-logging-1.0.5/commons-logging-optional.jar \
+	./xerces-2_5_0/xercesImpl.jar \
+	./xerces-2_5_0/xmlParserAPIs.jar \
+	./xerces-2_5_0/xml-apis.jar \
+	./jts-1.8.0/lib/jts-1.8.jar \
+	./jts-1.8.0/lib/jtsio-1.8.jar \
+	./jakarta-oro-2.0.8/jakarta-oro-2.0.8.jar \
+	./commons-cli-1.0/commons-cli-1.0.jar
 
 all: $(APPL)/model
 
 $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
-	@$(JDK)/bin/java -classpath $(CLASSPATH) \
-		org.exolab.castor.builder.SourceGenerator \
-		-i $<
+	@$(JDK14)/bin/java \
+		-classpath $(subst $(space),\;, \
+		./castor-0.9.6/castor-0.9.6-srcgen-ant-task.jar \
+		$(CLASSPATH)) \
+		org.exolab.castor.builder.SourceGenerator -i $<
 	@touch $@
 	@echo "done!"
 
@@ -22,3 +41,18 @@ clean:
 
 tidy: clean
 
+
+
+_out.ps:
+	@time ( PATH=/cygdrive/c/programme/gs/gs7.04/bin:caa-1.17:$$PATH \
+		$(JDK15)/bin/java \
+			-classpath $(subst $(space),\;, \
+			./astrolabe \
+			./astrolabe/model \
+			./caa-1.17/caa-1.17.jar \
+			$(CLASSPATH)) \
+			Main ./astrolabe.xml >$@ )
+
+_out.pdf: _out.ps
+	@time ( PATH=/cygdrive/c/programme/gs/gs7.04/bin:$$PATH \
+		gs -q -dBATCH -dNOPAUSE -sPAPERSIZE=a0 -sDEVICE=pdfwrite -sOutputFile=$@ $< )

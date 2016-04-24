@@ -162,17 +162,20 @@ public final class AstrolabeFactory {
 	}
 
 	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
-		astrolabe.model.CatalogADC6042 ct6042 ;
+		astrolabe.model.CatalogADC1239 ct1239 ;
+		astrolabe.model.CatalogADC6049 ct6049 ;
 		Catalog catalog ;
 
 		if ( ct == null ) {
 			throw new ParameterNotValidException() ;
 		}
 
-		if ( ( ct6042 = ct.getCatalogADC6042() ) != null ) {
-			catalog = new CatalogADC6042( ct6042, p ) ;
-		} else { // TBD
-			catalog = null ;
+		if ( ( ct1239 = ct.getCatalogADC1239() ) != null ) {
+			catalog = new CatalogADC1239( ct1239, p ) ;
+		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
+			catalog = new CatalogADC6049( ct6049, p ) ;
+		} else { // // ct.getCatalogADC7118() != null
+			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p ) ;
 		}
 
 		return catalog ;

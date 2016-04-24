@@ -4,7 +4,7 @@ package astrolabe;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class BodyAreal extends astrolabe.model.BodyAreal implements Body, CatalogRecord {
+public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 	private Projector projector ;
 
@@ -16,7 +16,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body, Catalo
 
 	private java.util.Vector<double[]> outline ;
 
-	public BodyAreal( Object peer, Projector projector ) throws ParameterNotValidException {
+	public BodyAreal( Object peer, Projector projector ) {
 		PolygonSpherical polygon ;
 		String key ;
 		double rad1 ;
@@ -30,14 +30,16 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body, Catalo
 		linedash = ApplicationHelper.getClassNode( this,
 				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEDASH, DEFAULT_LINEDASH ) ;
 
-		outline = AstrolabeFactory.valueOf( getPosition() ) ;
+		try {
+			outline = AstrolabeFactory.valueOf( getPosition() ) ;
+		} catch ( ParameterNotValidException e ) {}
 		polygon = new PolygonSpherical( outline ) ;
 		try {
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
 			ApplicationHelper.registerDMS( key, polygon.area(), 2 ) ;
 			rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-			ApplicationHelper.registerDMS( key, ( rad1*rad1 )*polygon.area(), 2 ) ;		
+			ApplicationHelper.registerDMS( key, polygon.area()/( rad1*rad1 ), 2 ) ;		
 		} catch ( ParameterNotValidException e ) {}
 	}
 
@@ -93,7 +95,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body, Catalo
 		ps.operator.rotate( a ) ;
 
 		try {
-			ApplicationHelper.emitPS( ps, getAnnotationStraight() ) ;
+			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
 		} catch ( ParameterNotValidException e ) {} // optional
 	}
 

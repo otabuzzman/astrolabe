@@ -14,13 +14,16 @@ public class PostscriptStream extends PrintStream {
 	private final static int DEFAULT_PRECISION = 6 ;
 	private final static int DEFAULT_SCANLINE = 254 ;
 
+	private final static String DEFAULT_FONTNAME = "/Times-Roman" ;
+	private final static String DEFAULT_CHARPROC = "/question" ;
+
 	public final PostscriptStream.Operator operator = new Operator();
 	public final PostscriptStream.DSC dsc = new DSC();
 
 	private PostscriptStream.UcBlock ucBlock[] = null ;
 	private java.util.Hashtable<String, String> ucEncodingVectors = null ;
 
-	private java.util.Hashtable<String, String> prolog = null ;
+	private java.util.Hashtable<String, String> prolog = new java.util.Hashtable<String, String>() ;
 
 	private final int precision = ApplicationHelper.getClassNode( this,
 			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
@@ -181,13 +184,13 @@ public class PostscriptStream extends PrintStream {
 		ucEncodingVectors = new java.util.Hashtable<String, String>() ;
 		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
-			vector = "/Times-Roman:" ;
+			vector = DEFAULT_FONTNAME ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
-				vector = vector+"/question"+( cs!=255?" ":"" ) ;
+				vector = vector+DEFAULT_CHARPROC+( cs!=255?" ":"" ) ;
 			}
 		}
 		try {
-			ucEncodingVectors.put( "default", vector ) ;
+			ucEncodingVectors.put( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, vector ) ;
 			String[] encoding = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
 			for ( int e=0 ; e<encoding.length ; e++ ) {
 				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
@@ -216,14 +219,14 @@ public class PostscriptStream extends PrintStream {
 
 		for ( char sc=si.first() ; sc!=java.text.StringCharacterIterator.DONE; sc=si.next() ) {
 			block = ucSearch( ucBlock, 0, ucBlock.length, sc ) ;
-			chart = ( sc-ucBlock[block].getStart() )/256 ;
-			code = ( sc-ucBlock[block].getStart() )%256 ;
+			chart = ( sc-ucBlock[block].start )/256 ;
+			code = ( sc-ucBlock[block].start )%256 ;
 			if ( block != pblock || chart != pchart ) {
 				if ( pblock != -1 ) {
 					try {
-						fe = ( (String) ucEncodingVectors.get( ucBlock[pblock].getBlock()+"-"+new Integer( pchart ).toString() ) ).split( ":" ) ;
+						fe = ( (String) ucEncodingVectors.get( ucBlock[pblock].block+"-"+new Integer( pchart ).toString() ) ).split( ":" ) ;
 					} catch ( NullPointerException e ) {
-						fe = ( (String) ucEncodingVectors.get( "default" ) ).split( ":" ) ;
+						fe = ( (String) ucEncodingVectors.get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT ) ).split( ":" ) ;
 					}
 					tcc = 0 ;
 					rti = new java.text.StringCharacterIterator( rt ) ;
@@ -257,7 +260,7 @@ public class PostscriptStream extends PrintStream {
 			rt = rt+new Character( (char) code ).toString() ;
 		}
 		try {
-			fe = ( (String) ucEncodingVectors.get( ucBlock[block].getBlock()+"-"+new Integer( chart ).toString() ) ).split( ":" ) ;
+			fe = ( (String) ucEncodingVectors.get( ucBlock[block].block+"-"+new Integer( chart ).toString() ) ).split( ":" ) ;
 		} catch ( NullPointerException e ) {
 			fe = ( (String) ucEncodingVectors.get( "default" ) ).split( ":" ) ;
 		}
@@ -292,13 +295,13 @@ public class PostscriptStream extends PrintStream {
 	private static int ucSearch( PostscriptStream.UcBlock block[], int start, int end, int code ) {        
 		int m = ( start+end )/2 ;
 
-		if ( block[m].getStart() < code ) {
-			if ( block[m].getEnd() >= code ) {
+		if ( block[m].start < code ) {
+			if ( block[m].end >= code ) {
 				return m ;
 			} else {
 				return ucSearch( block, m+1, end, code ) ;
 			}
-		} else if ( block[m].getStart() > code ) {
+		} else if ( block[m].start > code ) {
 			return ucSearch( block, start, m-1, code ) ;
 		} else {
 			return m ;
@@ -308,6 +311,14 @@ public class PostscriptStream extends PrintStream {
 	public void array( boolean begin ) {        
 		print( begin?"[\n":"]\n" ) ;
 	} 
+
+	public void proc( boolean begin ) {        
+		print( begin?"{\n":"}\n" ) ;
+	}
+
+	public void push( boolean bool ) {        
+		print( ( bool?"true":"false" )+"\n" ) ;
+	}
 
 	public void push( int num ) {        
 		print( num+"\n" ) ;
@@ -331,6 +342,14 @@ public class PostscriptStream extends PrintStream {
 		print( string+"\n" ) ;
 	} 
 
+	public void push( String[] string ) throws ParameterNotValidException {        
+		this.array( true ) ;
+		for ( int i=0 ; i<string.length ; i++ ) {
+			push( string[i] ) ;
+		}
+		this.array( false ) ;
+	}
+
 	public void custom( String def ) throws ParameterNotValidException {
 		if ( ! this.prolog.containsKey( "/"+def ) ) {
 			String m ;
@@ -346,45 +365,123 @@ public class PostscriptStream extends PrintStream {
 		print( def+"\n" ) ;
 	}
 
-	public void push( boolean bool ) {        
-		print( ( bool?"true":"false" )+"\n" ) ;
-	} 
-
-	public void push( String[] string ) throws ParameterNotValidException {        
-		this.array( true ) ;
-		for ( int i=0 ; i<string.length ; i++ ) {
-			push( string[i] ) ;
-		}
-		this.array( false ) ;
-	} 
-
-	public void proc( boolean begin ) {        
-		print( begin?"{\n":"}\n" ) ;
-	} 
-
 	public class Operator {
 
-		public void scale( double s ) {        
-			push( s ) ;
-			dup() ;
-			print( "scale\n" ) ;
-		} 
+		public void add() {        
+			print( "add\n" ) ;
+		}
 
-		public void setlinewidth( double num ) {        
+		public void add( double num ) {        
 			push( num ) ;
-			print( "setlinewidth\n" ) ;
-		} 
+			add() ;
+		}
 
-		public void translate( double[] t ) {        
-			push( t[0] ) ;
-			push( t[1] ) ;
-			translate() ;
-		} 
+		public void arc() {        
+			print( "arc\n" ) ;
+		}
 
-		public void moveto( double[] xy ) {
-			push( xy[0] ) ;
-			push( xy[1] ) ;
-			moveto() ;
+		public void begin() {        
+			print( "begin\n" ) ;
+		}
+
+		public void bind() {        
+			print( "bind\n" ) ;
+		}
+
+		public void charpath() {        
+			print( "charpath\n" ) ;
+		}
+
+		public void charpath( String string, boolean bool ) throws ParameterNotValidException {
+			push( string ) ;
+			push( bool ) ;
+			charpath() ;
+		}
+
+		public void clip() {        
+			print( "clip\n" ) ;
+		}
+
+		public void closepath() {        
+			print( "closepath\n" ) ;
+		}
+
+		public void copy( ) {
+			print( "copy\n" ) ;
+		}
+
+		public void copy( int num ) {
+			push( num ) ;
+			copy() ;
+		}
+
+		public void currentdict() {        
+			print( "currentdict\n" ) ;
+		}
+
+		public void currentpoint() {        
+			print( "currentpoint\n" ) ;
+		}
+
+		public void def() {        
+			print( "def\n" ) ;
+		}
+
+		public void definefont() {        
+			print( "definefont\n" ) ;
+		}
+
+		public void dict() {        
+			print( "dict\n" ) ;
+		}
+
+		public void dict( double num ) {        
+			push( num ) ;
+			dict() ;
+		}
+
+		public void div() {        
+			print( "div\n" ) ;
+		}
+
+		public void div( double num ) {        
+			push( num ) ;
+			div() ;
+		}
+
+		public void dup() {        
+			print( "dup\n" ) ;
+		}
+
+		public void dup( int num ) {        
+			for ( int i=0 ; i<num ; i++ ) {
+				dup() ;
+			}
+		}
+
+		public void end() {        
+			print( "end\n" ) ;
+		}
+
+		public void exch() {        
+			print( "exch\n" ) ;
+		}
+
+		public void fill() {        
+			print( "fill\n" ) ;
+		}
+
+		public void get( int index ) {        
+			push( index ) ;
+			print( "get\n" ) ;
+		}
+
+		public void grestore() {        
+			print( "grestore\n" ) ;
+		}
+
+		public void gsave() {        
+			print( "gsave\n" ) ;
 		}
 
 		public void lineto() {
@@ -395,33 +492,96 @@ public class PostscriptStream extends PrintStream {
 			push( xy[0] ) ;
 			push( xy[1] ) ;
 			lineto() ;
-		} 
+		}
 
-		public void stroke() {        
-			gsave() ;
-			print( "stroke\n" ) ;
-			grestore() ;
-		} 
+		public void mark() {        
+			print( "mark\n" ) ;
+		}
 
-		public void showpage() {        
-			print( "showpage\n" ) ;
-		} 
+		public void moveto() {        
+			print( "moveto\n" ) ;
+		}
 
-		public void save( String save ) throws ParameterNotValidException {        
-			push( save ) ;
-			print( "save\n" ) ;
-			def() ;
-		} 
+		public void moveto( double[] xy ) {
+			push( xy[0] ) ;
+			push( xy[1] ) ;
+			moveto() ;
+		}
+
+		public void mul() {        
+			print( "mul\n" ) ;
+		}
+
+		public void mul( double num ) {        
+			push( num ) ;
+			mul() ;
+		}
+
+		public void newpath() {        
+			print( "newpath\n" ) ;
+		}
+
+		public void pathbbox() {        
+			print( "pathbbox\n" ) ;
+		}
+
+		public void pop() {        
+			print( "pop\n" ) ;
+		}
+
+		public void pop( int num ) {        
+			for ( int i=0 ; i<num ; i++ ) {
+				pop() ;
+			}
+		}
+
+		public void put( int index, boolean bool ) {        
+			push( index ) ;
+			push( bool ) ;
+			print( "put\n" ) ;
+		}
 
 		public void restore( String save ) throws ParameterNotValidException {        
 			push( save ) ;
 			print( "restore\n" ) ;
 		} 
 
-		public void setgray( double num ) {        
-			push( num ) ;
-			print( "setgray\n" ) ;
-		} 
+		public void roll( int n, int j ) {        
+			push( n ) ;
+			push( j ) ;
+			print( "roll\n" ) ;
+		}
+
+		public void rotate( double angle ) {        
+			push( angle ) ;
+			print( "rotate\n" ) ;
+		}
+
+		public void save( String save ) throws ParameterNotValidException {        
+			push( save ) ;
+			print( "save\n" ) ;
+			def() ;
+		}
+
+		public void scale( double s ) {        
+			push( s ) ;
+			dup() ;
+			print( "scale\n" ) ;
+		}
+
+		public void selectfont() {        
+			print( "selectfont\n" ) ;
+		}
+
+		public void selectfont( String key, double scale ) throws ParameterNotValidException {        
+			push( key ) ;
+			push( scale ) ;
+			selectfont() ;
+		}
+
+		public void setdash() {        
+			print( "setdash\n" ) ;
+		}
 
 		public void setdash( double dash ) {
 			array( true ) ;
@@ -431,141 +591,38 @@ public class PostscriptStream extends PrintStream {
 			array( false ) ;
 			push( 0 ) ;
 			setdash() ;
-		} 
+		}
 
-		public void setdash() {        
-			print( "setdash\n" ) ;
-		} 
-
-		public void gsave() {        
-			print( "gsave\n" ) ;
-		} 
-
-		public void grestore() {        
-			print( "grestore\n" ) ;
-		} 
-
-		public void closepath() {        
-			print( "closepath\n" ) ;
-		} 
-
-		public void copy( int num ) {
+		public void setgray( double num ) {        
 			push( num ) ;
-			print( "copy\n" ) ;
+			print( "setgray\n" ) ;
 		} 
 
-		public void charpath() {        
-			print( "charpath\n" ) ;
-		} 
-
-		public void charpath( String string, boolean bool ) throws ParameterNotValidException {
-			push( string ) ;
-			push( bool ) ;
-			charpath() ;
-		} 
-
-		public void clip() {        
-			print( "clip\n" ) ;
-		} 
-
-		public void fill() {        
-			print( "fill\n" ) ;
-		} 
+		public void setlinewidth( double num ) {        
+			push( num ) ;
+			print( "setlinewidth\n" ) ;
+		}
 
 		public void show() {        
 			print( "show\n" ) ;
-		} 
+		}
+
+		public void showpage() {        
+			print( "showpage\n" ) ;
+		}
+
 		public void stringwidth() {        
 			print( "stringwidth\n" ) ;
 		}
 
-		public void pathbbox() {        
-			print( "pathbbox\n" ) ;
-		} 
+		public void stroke() {        
+			gsave() ;
+			print( "stroke\n" ) ;
+			grestore() ;
+		}
 
-		public void pop() {        
-			print( "pop\n" ) ;
-		} 
-
-		public void pop( int num ) {        
-			for ( int i=0 ; i<num ; i++ ) {
-				pop() ;
-			}
-		} 
-
-		public void selectfont( String key, double scale ) throws ParameterNotValidException {        
-			push( key ) ;
-			push( scale ) ;
-			selectfont() ;
-		} 
-
-		public void selectfont() {        
-			print( "selectfont\n" ) ;
-		} 
-
-		public void newpath() {        
-			print( "newpath\n" ) ;
-		} 
-
-		public void dup() {        
-			print( "dup\n" ) ;
-		} 
-
-		public void exch() {        
-			print( "exch\n" ) ;
-		} 
-
-		public void roll( int n, int j ) {        
-			push( n ) ;
-			push( j ) ;
-			print( "roll\n" ) ;
-		} 
-		public void put( int index, boolean bool ) {        
-			push( index ) ;
-			push( bool ) ;
-			print( "put\n" ) ;
-		} 
-		public void dup( int num ) {        
-			for ( int i=0 ; i<num ; i++ ) {
-				dup() ;
-			}
-		} 
-		public void get( int index ) {        
-			push( index ) ;
-			print( "get\n" ) ;
-		} 
-		public void def() {        
-			print( "def\n" ) ;
-		} 
-
-		public void mark() {        
-			print( "mark\n" ) ;
-		} 
-
-		public void translate() {        
-			print( "translate\n" ) ;
-		} 
-
-		public void currentpoint() {        
-			print( "currentpoint\n" ) ;
-		} 
-
-		public void rotate( double angle ) {        
-			push( angle ) ;
-			print( "rotate\n" ) ;
-		} 
-
-		public void moveto() {        
-			print( "moveto\n" ) ;
-		} 
-
-		public void add( double num ) {        
-			push( num ) ;
-			add() ;
-		} 
-
-		public void add() {        
-			print( "add\n" ) ;
+		public void sub() {        
+			print( "sub\n" ) ;
 		}
 
 		public void sub( double num ) {        
@@ -573,30 +630,14 @@ public class PostscriptStream extends PrintStream {
 			sub() ;
 		}
 
-		public void sub() {        
-			print( "sub\n" ) ;
-		} 
-
-		public void mul( double num ) {        
-			push( num ) ;
-			mul() ;
+		public void translate() {        
+			print( "translate\n" ) ;
 		}
 
-		public void mul() {        
-			print( "mul\n" ) ;
-		} 
-
-		public void div( double num ) {        
-			push( num ) ;
-			div() ;
-		}
-
-		public void div() {        
-			print( "div\n" ) ;
-		} 
-
-		public void arc() {        
-			print( "arc\n" ) ;
+		public void translate( double[] t ) {        
+			push( t[0] ) ;
+			push( t[1] ) ;
+			translate() ;
 		} 
 	}
 
@@ -665,34 +706,18 @@ public class PostscriptStream extends PrintStream {
 
 	private class UcBlock {
 
-		private String block = null ;
+		public String block = null ;
 
-		private int start = 0 ;
-		private int end = 0 ;
+		public int start = 0 ;
+		public int end = 0 ;
 
-		private String name = null ;
+		public String name = null ;
 
 		public  UcBlock( String block, int start, int end, String name ) {        
 			this.block = new String( block ) ;
 			this.start = start ;
 			this.end = end ;
 			this.name = new String( name ) ;
-		} 
-
-		public String getBlock() {        
-			return block ;
-		} 
-
-		public int getStart() {        
-			return start ;
-		} 
-
-		public int getEnd() {        
-			return end ;
-		} 
-
-		public String getName() {        
-			return name ;
 		} 
 	}
 
@@ -704,29 +729,57 @@ public class PostscriptStream extends PrintStream {
 	}
 
 	public void emitDSCProlog() {
-		String[] prolog ;
+		String node, fontname[], procedure[] ;
 
-		this.prolog = new java.util.Hashtable<String, String>() ;
+		dsc.beginProlog() ;
 
 		try {
-			dsc.beginProlog() ;
-			prolog = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).keys() ;
-			for ( int p=0 ; p<prolog.length ; p++ ) {
-				try {
-					push( prolog[p] ) ;
-				} catch ( ParameterNotValidException e ) {
-					continue ;
-				}
-				String[] token = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_PROLOG ).get( prolog[p], null ).split( " " ) ;
-				for ( int t=0 ; t<token.length ; t++ ) {
-					print( token[t]+"\n" ) ;
-				}
-				operator.def() ;
+			fontname = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
+			for ( int f=0 ; f<fontname.length ; f++ ) {
+				push( "/"+fontname[f] ) ;
 
-				this.prolog.put( prolog[p], prolog[p] ) ;
+				node = ApplicationConstant.PN_POSTSCRIPT_TYPE3+"/"+fontname[f] ;
+				procedure = ApplicationHelper.getClassNode( this, null, node ).keys() ;
+
+				operator.dict( procedure.length ) ;
+				operator.begin() ;
+				for ( int p=0 ; p<procedure.length ; p++ ) {
+					emitProcedureDefintion( procedure[p],
+							ApplicationHelper.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
+				}
+				operator.currentdict() ;
+				operator.end() ;
+
+				operator.definefont() ;
+				operator.pop() ;
 			}
-			dsc.endProlog() ;
-		} catch ( BackingStoreException e ) {}
+		} catch ( BackingStoreException e ) {
+		} catch ( ParameterNotValidException e ) {}
+
+		prolog.clear() ;
+		try {
+			node = ApplicationConstant.PN_POSTSCRIPT_PROLOG ;
+			procedure = ApplicationHelper.getClassNode( this, null, node ).keys() ;
+			for ( int p=0 ; p<procedure.length ; p++ ) {
+				emitProcedureDefintion( procedure[p],
+						ApplicationHelper.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
+				prolog.put( procedure[p], procedure[p] ) ;
+			}
+		} catch ( BackingStoreException e ) {
+		} catch ( ParameterNotValidException e ) {}
+
+		dsc.endProlog() ;
+	}
+
+	private void emitProcedureDefintion( String procedure, String definition ) throws ParameterNotValidException {
+		String[] token ;
+
+		push( procedure ) ;
+		token = definition.split( " ") ;
+		for ( int t=0 ; t<token.length ; t++ ) {
+			print( token[t]+"\n" ) ;
+		}
+		operator.def() ;
 	}
 
 	public void emitDSCTrailer() {

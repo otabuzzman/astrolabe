@@ -4,12 +4,13 @@ package astrolabe;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class BodyStellar extends astrolabe.model.BodyStellar implements Body, CatalogRecord {
+public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 
 	@SuppressWarnings("unused")
 	private Projector projector ;
 
 	private final static double DEFAULT_SIZE = 2.2 ;
+	private final static String DEFAULT_CLUE = "\uf812" ;
 
 	private double size ;
 
@@ -19,7 +20,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body, Ca
 	private double x ;
 	private double y ;
 
-	public BodyStellar( Object peer, Projector projector ) throws ParameterNotValidException {
+	public BodyStellar( Object peer, Projector projector ) {
 		double[] lo, eq, xy ;
 		String key ;
 
@@ -27,20 +28,23 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body, Ca
 
 		this.projector = projector ;
 
-		size = ApplicationHelper.getClassNode( this,
-				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_SIZE, DEFAULT_SIZE ) ;
+		size = ApplicationHelper.getClassNode( this, getName(), null ).getDouble( getType(), 0 ) ;
+		if ( ! ( size>0 ) ) {
+			size = DEFAULT_SIZE ;
+			setGlyph( DEFAULT_CLUE ) ;
+		}
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
 
-		lo = AstrolabeFactory.valueOf( getPosition() ) ;
-		eq = projector.convert( lo[1], lo[2] ) ;
-		xy = projector.project( lo[1], lo[2] ) ;
-
-		x = xy[0] ;
-		y = xy[1] ;
-
 		try {
+			lo = AstrolabeFactory.valueOf( getPosition() ) ;
+			eq = projector.convert( lo[1], lo[2] ) ;
+			xy = projector.project( lo[1], lo[2] ) ;
+
+			x = xy[0] ;
+			y = xy[1] ;
+
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_AZIMUTH ) ;
 			ApplicationHelper.registerDMS( key, lo[1], 2 ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_ALTITUDE ) ;
@@ -78,8 +82,14 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body, Ca
 
 			ps.operator.dup() ;
 			ps.operator.get( 0 ) ;
-			ps.operator.dup() ;
-			ps.operator.dup() ;
+
+			ps.operator.dup( 2 ) ;
+			ps.operator.get( 0 ) ; // font
+			ps.operator.exch() ;
+			ps.operator.get( 1 ) ; // encoding
+			ps.custom( ApplicationConstant.PS_PROLOG_SETENCODING ) ;
+
+			ps.operator.dup( 2 ) ;
 			ps.operator.get( 0 ) ; // font
 			ps.operator.exch() ;
 			ps.operator.get( 2 ) ; // size

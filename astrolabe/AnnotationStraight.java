@@ -155,7 +155,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 				ps.array( false ) ;
 			}
 		} catch ( ParameterNotValidException e ) {}
-		// concerns push(FET) invoke. FET chars and strings are considered well-defined
+		// concern push(FET) invoke. FET chars and strings are considered well-defined
 
 		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
 			emitPS( ps, text.getSubscript( d ),

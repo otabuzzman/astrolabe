@@ -27,7 +27,7 @@ public final class ApplicationConstant {
 	public static final String LK_BODY_RIGHTASCENSION	= "substitute.body.rightascension" ;
 	public static final String LK_BODY_DECLINATION		= "substitute.body.declination" ;
 	public static final String LK_BODY_STERADIAN		= "substitute.body.steradian" ;
-	public static final String LK_BODY_SQUAREDEGREE		= "substitute.body.squaredegre" ;
+	public static final String LK_BODY_SQUAREDEGREE		= "substitute.body.squaredegree" ;
 
 	public static final String LK_DIAL_DEGREE			= "substitute.dial.degree" ;
 	public static final String LK_DIAL_HOUR				= "substitute.dial.hour" ;
@@ -139,7 +139,6 @@ public final class ApplicationConstant {
 	public static final String PK_ANNOTATION_RISE				= "rise" ;
 	public static final String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
-	public static final String PK_BODY_SIZE			= "size" ;
 	public static final String PK_BODY_SEGMENT		= "segment" ;
 	public static final String PK_BODY_STRETCH		= "stretch" ;
 	public static final String PK_BODY_LINEWIDTH	= "linewidth" ;
@@ -147,6 +146,7 @@ public final class ApplicationConstant {
 
 	public static final String PK_POSTSCRIPT_PRECISION	= "precision" ;
 	public static final String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
+	public static final String PN_POSTSCRIPT_TYPE3		= "type3" ;
 	public static final String PN_POSTSCRIPT_PROLOG		= "prolog" ;
 	public static final String PN_POSTSCRIPT_UNICODE	= "unicode" ;
 	public static final String PK_POSTSCRIPT_DEFAULT	= "default" ;

@@ -361,7 +361,7 @@
 		<xs:attribute name="type" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="zenit"/>
+					<xs:pattern value="zenit|(mag([x]|(-?[0-9]+)))"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -406,7 +406,7 @@
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
 			<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
-			<xs:element ref="AnnotationStraight" maxOccurs="unbounded"/>
+			<xs:element ref="Annotation" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="type" use="required">
@@ -497,7 +497,7 @@
 	</xs:element>
 	<xs:complexType name="CatalogType">
 		<xs:sequence>
-			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Select" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -510,33 +510,72 @@
 		</xs:attribute>
 		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 	</xs:complexType>
+	<xs:complexType name="SelectType">
+		<xs:sequence>
+			<xs:element ref="Annotation" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="value" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+(,[^,]+)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="Select" type="SelectType"/>
 	<xs:element name="Catalog">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="CatalogADC6042"/>
+				<xs:element ref="CatalogADC1239"/>
+				<xs:element ref="CatalogADC6049"/>
+				<xs:element ref="CatalogADC7118"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="Select">
+	<xs:element name="CatalogADC1239">
 		<xs:annotation>
-			<xs:documentation>Kommaseparierte Bezeichnerliste von Katalogeinträgen.</xs:documentation>
+			<xs:documentation>The Hipparcos and Tycho Catalogues.</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="AnnotationStraight" maxOccurs="unbounded"/>
-			</xs:sequence>
-			<xs:attribute name="value" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:pattern value="(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL)(,(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL))*"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
+			<xs:complexContent>
+				<xs:extension base="CatalogType">
+					<xs:attribute name="restrict" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|H[1-9][0-9]*(,H[1-9][0-9]*)*|T[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,T[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="random" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:positiveInteger"/>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="CatalogADC6042" type="CatalogType">
+	<xs:element name="CatalogADC6049">
 		<xs:annotation>
-			<xs:documentation>Constellation boundary data.</xs:documentation>
+			<xs:documentation>Constellation Boundary Data.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogType">
+					<xs:attribute name="restrict" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL)(,(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL))*"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC7118" type="CatalogType">
+		<xs:annotation>
+			<xs:documentation>NGC 2000.0, The Complete New General Catalogue and Index Catalogue of Nebulae and Star Clusters.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<!--Basistypen und -elemente-->

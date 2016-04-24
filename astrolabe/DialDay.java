@@ -40,9 +40,12 @@ public class DialDay extends DialDegree {
 	public boolean isIndexAligned( int index, double span ) {
 		CAADate d = new CAADate() ;
 		boolean r ;
-		double jd ;
+		double s, jd0, jd ;
 
-		jd = baseline.mapIndexToScale( index, getGraduationSpan().getSpan() ) ;
+		s = getGraduationSpan().getSpan() ;
+		
+		jd0 = baseline.mapIndexToScale( 0, s ) ;
+		jd = baseline.mapIndexToScale( index, s ) ;
 
 		if ( span==7 ) {
 			d.Set( jd, true ) ;
@@ -51,7 +54,7 @@ public class DialDay extends DialDegree {
 			d.Set( jd, true ) ;
 			r = d.Day()==1 ;
 		} else {
-			r = Math.isLim0( jd-(int) ( jd/span )*span ) ;
+			r = Math.isLim0( ( jd-jd0 )/span-(int) ( ( jd-jd0 )/span ) ) ;
 		}
 
 		d.delete() ;

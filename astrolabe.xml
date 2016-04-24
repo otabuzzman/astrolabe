@@ -8,7 +8,7 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
-			<!--fov chart-->
+			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
 					<Latitude>
@@ -34,7 +34,7 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonEquatorial>
 			</Horizon>
-			<!--galactic-->
+			<!--galaktisch-->
 			<Horizon>
 				<HorizonGalactic practicality="seldom">
 					<Latitude>
@@ -386,7 +386,7 @@ astrolabe.xsd">
 						</CircleMeridian>
 					</Circle>
 					<Body>
-						<BodyStellar type="zenit" glyph="N" turn="0.0" spin="-3.0">
+						<BodyStellar type="zenit" glyph="&#xf810;" turn="0.0" spin="-3.0">
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -414,7 +414,7 @@ astrolabe.xsd">
 					</Body>
 				</HorizonGalactic>
 			</Horizon>
-			<!--sun dials-->
+			<!--sonnenskalen-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<Latitude>
@@ -456,7 +456,7 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonEquatorial>
 			</Horizon>
-			<!--ecliptical-->
+			<!--ekliptisch-->
 			<Horizon>
 				<HorizonEcliptical practicality="sometimes">
 					<Latitude>
@@ -1799,7 +1799,7 @@ astrolabe.xsd">
 						</CircleMeridian>
 					</Circle>
 					<Body>
-						<BodyStellar type="zenit" glyph="Z" turn="0.0" spin="0.0">
+						<BodyStellar type="zenit" glyph="&#xf810;" turn="0.0" spin="0.0">
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -1817,7 +1817,7 @@ astrolabe.xsd">
 					</Body>
 				</HorizonLocal>
 			</Horizon>
-			<!--fov horizon-->
+			<!--fov horizont-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
 					<Latitude>
@@ -1838,54 +1838,7 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonEquatorial>
 			</Horizon>
-			<!--catalogs-->
-			<Horizon>
-				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<DMS min="0" sec="0.0" deg="0"/>
-					</Latitude>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS min="0" sec="0.0" deg="0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Catalog>
-						<CatalogADC6042 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049_bound_20.dat">
-							<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomleft" radiant="false">
-								<Text value="@{abk&#x00fc;rzung}@"/>
-							</AnnotationStraight>
-							<Select value="CMI,CNC,MON">
-								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topleft" radiant="false">
-									<Text value="@{abk&#x00fc;rzung}@"/>
-								</AnnotationStraight>
-							</Select>
-							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
-								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomright" radiant="false">
-									<Text value="@{abk&#x00fc;rzung}@"/>
-								</AnnotationStraight>
-							</Select>
-							<Select value="LAC,SCT,SER2">
-								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topright" radiant="false">
-									<Text value="@{abk&#x00fc;rzung}@"/>
-								</AnnotationStraight>
-							</Select>
-						</CatalogADC6042>
-					</Catalog>
-				</HorizonEquatorial>
-			</Horizon>
-			<!--51d30m58s circumpolar-->
+			<!--51d30m58s zirkumpolarkreis-->
 			<Horizon>
 				<HorizonLocal practicality="always">
 					<Latitude>
@@ -1915,7 +1868,7 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonLocal>
 			</Horizon>
-			<!--51d30m58s local time dial-->
+			<!--51d30m58s lokalzeitskala-->
 			<Horizon>
 				<HorizonLocal practicality="always">
 					<Latitude>
@@ -1974,7 +1927,7 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonLocal>
 			</Horizon>
-			<!--equatorial-->
+			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<Latitude>
@@ -2729,6 +2682,88 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
+					<!--hipparch und tycho-->
+					<Catalog>
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/hip_main.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_00.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_01.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_02.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_03.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_04.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_05.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_06.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_07.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_08.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_09.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_10.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_11.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_12.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_13.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_14.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_15.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_16.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_17.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_18.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_19.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_00.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_01.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_02.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_03.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_04.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_05.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_06.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_07.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_08.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_09.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_10.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_11.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_12.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_13.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_14.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_15.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_16.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_17.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_18.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_19.dat.gz-->
+						<CatalogADC1239 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6" random="1000"/>
+					</Catalog>
+					<!--sternbilder-->
+					<Catalog>
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_18.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_20.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/6/6049/public/6049_bound_18.dat-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/6/6049/public/6049_bound_20.dat-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz-->
+						<CatalogADC6049 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz">
+							<Annotation>
+								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomleft" radiant="false">
+									<Text value="@{abk&#x00fc;rzung}@"/>
+								</AnnotationStraight>
+							</Annotation>
+							<Select value="CMI,CNC,MON">
+								<Annotation>
+									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topleft" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
+								<Annotation>
+									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomright" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+							<Select value="LAC,SCT,SER2">
+								<Annotation>
+									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topright" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+						</CatalogADC6049>
+					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>
 		</ChartStereographic>
