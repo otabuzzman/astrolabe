@@ -5,14 +5,23 @@ import caa.CAACoordinateTransformation;
 
 public final class Math {
 
-	public static final double e0 = .000000000001 ;
+	public static final double lim0 = .000000000001 ;
+
+	public static final double rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
+	public static final double rad1h = CAACoordinateTransformation.DegreesToRadians( 15 ) ;
+
+	public static final double rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+	public static final double rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
+	public static final double rad270 = CAACoordinateTransformation.DegreesToRadians( 270 ) ;
+	public static final double rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
+
 	// approximate value of golden section
 	public static final double goldensection = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
 
 	private Math() {        
 	} 
 
-	public static double LawOfSine( double a, double b, double al ) {
+	public static double lawOfSine( double a, double b, double al ) {
 		double sina, sinb ;		// edges
 		double sinal, sinbe ;	// angles
 		double r ;
@@ -30,17 +39,17 @@ public final class Math {
 		return r ;
 	} 
 
-	public static double LawOfSineSolveEdge( double a, double al, double be ) {
+	public static double lawOfSineSolveEdge( double a, double al, double be ) {
 		double r ;
 
 		// sin(a):sin(b) = sin(al):sin(be)
 		// sin(b) = sin(be)*sin(a):sin(al) 
-		r = LawOfSine( al, be, a ) ;
+		r = lawOfSine( al, be, a ) ;
 
 		return r ;
 	}
 
-	public static double LawOfEdgeCosine( double b, double c, double al ) {
+	public static double lawOfEdgeCosine( double b, double c, double al ) {
 		double sinb, sinc, cosa, cosb, cosc ;	// edges
 		double cosal ;							// angle
 		double r ;
@@ -59,7 +68,7 @@ public final class Math {
 		return r ;
 	}
 
-	public static double LawOfEdgeCosineSolveAngle( double a, double b, double c ) {
+	public static double lawOfEdgeCosineSolveAngle( double a, double b, double c ) {
 		double sinb, sinc, cosa, cosb, cosc ;	// edges
 		double cosal ;							// angle
 		double r ;
@@ -78,7 +87,7 @@ public final class Math {
 		return r ;
 	}
 
-	public static double LawOfAngleCosine( double a, double be, double ga ) {
+	public static double lawOfAngleCosine( double a, double be, double ga ) {
 		double sinbe, singa, cosal, cosbe, cosga ;	// angles
 		double cosa ;								// edge
 		double r ;
@@ -97,7 +106,7 @@ public final class Math {
 		return r ;
 	} 
 
-	public static double LawOfAngleCosineSolveEdge( double al, double be, double ga ) {
+	public static double lawOfAngleCosineSolveEdge( double al, double be, double ga ) {
 		double sinbe, singa, cosal, cosbe, cosga ;	// angles
 		double cosa ;								// edge
 		double r ;
@@ -116,7 +125,7 @@ public final class Math {
 		return r ;
 	}
 
-	public static double LawOfHalfAngles( double al, double be, double ga ) {
+	public static double lawOfHalfAngles( double al, double be, double ga ) {
 		double cosoal, cosobe, cosoga ;
 		double cota2 ;
 		double o, coso, k ;
@@ -138,7 +147,7 @@ public final class Math {
 		return r ;
 	}
 
-	public static double LawOfHalfEdges( double a, double b, double c ) {        
+	public static double lawOfHalfEdges( double a, double b, double c ) {        
 		double sinsa, sinsb, sinsc ;
 		double s, sins, k ;
 		double r ;
@@ -157,56 +166,53 @@ public final class Math {
 		return r ;
 	}
 
-	public static double[] TriangleSolveEEE( double a, double b, double c ) {
+	public static double[] solveTriangleEEE( double a, double b, double c ) {
 		double r[] = new double[3] ;	// r[ al, be, ga]
 
-		r[0] = LawOfEdgeCosineSolveAngle( a, b, c ) ;
-		r[1] = LawOfEdgeCosineSolveAngle( b, c, a ) ;
-		r[2] = LawOfEdgeCosineSolveAngle( c, a, b ) ;
+		r[0] = lawOfEdgeCosineSolveAngle( a, b, c ) ;
+		r[1] = lawOfEdgeCosineSolveAngle( b, c, a ) ;
+		r[2] = lawOfEdgeCosineSolveAngle( c, a, b ) ;
 
 		return r ;
 	}
 
-	public static double[] TriangleSolveAAA( double al, double be, double ga ) {
+	public static double[] solveTriangleAAA( double al, double be, double ga ) {
 		double r[] = new double[3] ;	// r[ a, b, c]
 
-		r[0] = LawOfAngleCosineSolveEdge( al, be, ga ) ;
-		r[1] = LawOfAngleCosineSolveEdge( be, ga, al ) ;
-		r[2] = LawOfAngleCosineSolveEdge( ga, al, be ) ;
+		r[0] = lawOfAngleCosineSolveEdge( al, be, ga ) ;
+		r[1] = lawOfAngleCosineSolveEdge( be, ga, al ) ;
+		r[2] = lawOfAngleCosineSolveEdge( ga, al, be ) ;
 
 		return r ;
 	}
 
-	public static double[] TriangleSolveEAE( double a, double b, double ga ) {
+	public static double[] solveTriangleEAE( double a, double b, double ga ) {
 		double r[] = new double[3] ;	// r[ c, al, be]
 
-		r[0] = LawOfEdgeCosine( a, b, ga ) ;
-		r[1] = LawOfEdgeCosineSolveAngle( a, b, r[0] ) ;
-		r[2] = LawOfEdgeCosineSolveAngle( b, r[0], a ) ;
+		r[0] = lawOfEdgeCosine( a, b, ga ) ;
+		r[1] = lawOfEdgeCosineSolveAngle( a, b, r[0] ) ;
+		r[2] = lawOfEdgeCosineSolveAngle( b, r[0], a ) ;
 
 		return r ;
 	}
 
-	public static double[] TriangleSolveAEA( double a, double be, double ga ) {
+	public static double[] solveTriangleAEA( double a, double be, double ga ) {
 		double r[] = new double[3] ;	// r[ b, c, al]
 
-		r[2] = LawOfAngleCosine( a, be, ga ) ;
-		r[0] = LawOfAngleCosineSolveEdge( be, ga, r[2] ) ;
-		r[1] = LawOfAngleCosineSolveEdge( ga, r[2], be ) ;
+		r[2] = lawOfAngleCosine( a, be, ga ) ;
+		r[0] = lawOfAngleCosineSolveEdge( be, ga, r[2] ) ;
+		r[1] = lawOfAngleCosineSolveEdge( ga, r[2], be ) ;
 
 		return r ;
 	}
 
-	public static double[] TriangleSolveEEA( double a, double b, double al, boolean ambiguous ) {
+	public static double[] solveTriangleEEA( double a, double b, double al, boolean ambiguous ) {
 		double r[] = new double[3] ;	// r[ c, be, ga]
 		double c, be, ga ;
 		double tanapb2, cosalpbe2, cosalmbe2 ;
 		double cotal2, cosbpc2, cosbmc2 ;
-		double rad180 ;
 
-		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-
-		be = LawOfSine( a, b, al ) ;
+		be = lawOfSine( a, b, al ) ;
 		be = ambiguous?rad180-be:be ;
 
 		// tan(al:2-be:2)*sin(a:2+b:2)=cot(ga:2)*sin(a:2-b:2)
@@ -243,16 +249,13 @@ public final class Math {
 		return r ;
 	}
 
-	public static double[] TriangleSolveAAE( double a, double al, double be, boolean ambiguous ) {
+	public static double[] solveTriangleAAE( double a, double al, double be, boolean ambiguous ) {
 		double r[] = new double[3] ;	// r[ b, c, ga]
 		double b, c, ga ;
 		double tanapb2, cosalpbe2, cosalmbe2 ;
 		double cotal2, cosbpc2, cosbmc2 ;
-		double rad180 ;
 
-		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-
-		b = LawOfSineSolveEdge( a, al, be ) ;
+		b = lawOfSineSolveEdge( a, al, be ) ;
 		b = ambiguous?rad180-b:b ;
 
 		// tan(c:2)=tan(a:2+b:2)*cos(al:2+be:2):cos(al:2-be:2)
@@ -276,14 +279,10 @@ public final class Math {
 		return r ;
 	}
 
-	public static double remainder( double a, double b ) {
-		return a-(int) (a/b)*b ;
-	}
-
 	public static double truncate( double v ) {
 		double r, d ;
 
-		d = 1/Math.e0 ;
+		d = 1/Math.lim0 ;
 		r = (long) ( v*d )/d ;
 
 		return r ;
@@ -293,8 +292,8 @@ public final class Math {
 		return 1/java.lang.Math.tan( al ) ;
 	}
 
-	public static boolean isE0( double v ) {
-		return java.lang.Math.abs( v )<e0?true:false ;
+	public static boolean isLim0( double v ) {
+		return java.lang.Math.abs( v )<lim0?true:false ;
 	}
 
 	public static boolean isNaN( double v ) {

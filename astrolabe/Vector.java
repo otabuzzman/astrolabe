@@ -6,13 +6,20 @@ public class Vector {
 	private double x = 0 ;
 	private double y = 0 ;
 
-	// clone()
-	public Vector copy() {
-		return new Vector( x, y ) ;
+	public Vector() {
+		set( 0, 0 ) ;
+	}
+
+	public Vector( double[] xy ) {
+		set( xy ) ;
 	}
 
 	public Vector( double x, double y ) {
 		set( x, y ) ;
+	}
+
+	public void set( double[] xy ) {
+		set( xy[0], xy[1] ) ;
 	}
 
 	public void set( double x, double y ) {
@@ -86,5 +93,10 @@ public class Vector {
 
 	public double phi( Vector cartesian ) {
 		return java.lang.Math.acos( dot( cartesian )/( abs()*cartesian.abs() ) ) ;
+	}
+
+	// clone()
+	public Vector copy() {
+		return new Vector( x, y ) ;
 	}
 }

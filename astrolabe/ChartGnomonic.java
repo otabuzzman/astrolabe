@@ -1,13 +1,14 @@
 
 package astrolabe;
 
+@SuppressWarnings("serial")
 public class ChartGnomonic extends ChartStereographic {
 
-	public ChartGnomonic( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
-		super( chT, astrolabe ) ;
+	public ChartGnomonic( astrolabe.model.ChartGnomonic peer ) {
+		setup( peer ) ;
 	}
 
-	public Vector project( double RA, double d ) {
+	public double[] project( double RA, double d ) {
 		return null ;
 	}
 

@@ -1,6 +1,11 @@
 
 package astrolabe;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -18,11 +23,11 @@ public final class ApplicationHelper {
 	public static void registerYMD( String key, CAADate date ) throws ParameterNotValidException {
 		String ind ;
 
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFYEAR ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFYEAR ) ;
 		registerNumber( key+ind, date.Year() ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFMONTH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFMONTH ) ;
 		registerNumber( key+ind, date.Month() ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFDAY ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFDAY ) ;
 		registerNumber( key+ind, date.Day() ) ;
 	}
 
@@ -32,9 +37,9 @@ public final class ApplicationHelper {
 
 		h = CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
 
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
 		registerNumber( key+ind, (long) h ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_HMS_MSPREFIX ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_MSPREFIX ) ;
 		registerMS( key+ind, java.lang.Math.abs( hms ), precision, true ) ;
 	}
 
@@ -44,9 +49,9 @@ public final class ApplicationHelper {
 
 		d = CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
 
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
 		registerNumber( key+ind, (long) d ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_DMS_MSPREFIX ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_MSPREFIX ) ;
 		registerMS( key+ind, java.lang.Math.abs( dms ), precision, false ) ;
 	}
 
@@ -66,11 +71,11 @@ public final class ApplicationHelper {
 		m = (long) ( 60*ms ) ;
 		s = (long) ( 60*( 60*ms-m ) ) ;
 		f = (long) ( ( ( 60*( 60*ms-m ) )-s )*p+.5 ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_MS_MINUTES ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_MINUTES ) ;
 		registerNumber( key+ind, m ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_MS_SECONDS ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_SECONDS ) ;
 		registerNumber( key+ind, java.lang.Math.abs( s ) ) ;
-		ind = Astrolabe.getLocalizedString( ApplicationConstant.LK_MS_FRACTION ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_FRACTION ) ;
 		registerNumber( key+ind, java.lang.Math.abs( f ) ) ;
 	}
 
@@ -112,7 +117,7 @@ public final class ApplicationHelper {
 	public static void registerAngle( String key, double value, int precision ) throws ParameterNotValidException {
 		double a ;
 
-		a = MapTo0To360Range( value ) ;
+		a = mapTo0To360Range( value ) ;
 
 		registerDMS( key, a, precision ) ;
 	}
@@ -120,41 +125,82 @@ public final class ApplicationHelper {
 	public static void registerTime( String key, double value, int precision ) throws ParameterNotValidException {
 		double t ;
 
-		t = MapTo0To24Range( value ) ;
+		t = mapTo0To24Range( value ) ;
 
 		registerHMS( key, t, precision ) ;
 	}
 
-	public static java.util.Vector<double[]> convertCartesianVectorToDouble( java.util.Vector<Vector> vector ) {
+	public static double jdOfNow() {
+		return jdOfCalendar( Calendar.getInstance() ) ;
+	}
+
+	public static double jdOfNoon() {
+		Calendar c ;
+
+		c = Calendar.getInstance() ;
+
+		c.set( Calendar.HOUR_OF_DAY, 12 ) ;
+		c.set( Calendar.MINUTE, 0 ) ;
+		c.set( Calendar.SECOND, 0 ) ;
+
+		return jdOfCalendar( c ) ;
+	}
+
+	public static double jdOfToday() {
+		Calendar c ;
+
+		c = Calendar.getInstance() ;
+
+		c.set( Calendar.HOUR_OF_DAY, 0 ) ;
+		c.set( Calendar.MINUTE, 0 ) ;
+		c.set( Calendar.SECOND, 0 ) ;
+
+		return jdOfCalendar( c ) ;
+	}
+
+	public static double jdOfYear() {
+		Calendar c ;
+
+		c = Calendar.getInstance() ;
+
+		return jdOfYear( c.get( Calendar.YEAR ) ) ;
+	}
+
+	public static double jdOfYear( long year ) {
+		Calendar c ;
+
+		c = Calendar.getInstance() ;
+		c.set( Calendar.HOUR_OF_DAY, 0 ) ;
+		c.set( Calendar.MINUTE, 0 ) ;
+		c.set( Calendar.SECOND, 0 ) ;
+
+		c.set( (int) year, 1, 1 ) ;
+
+		return jdOfCalendar( c ) ;
+	}
+
+	public static double jdOfCalendar( Calendar calendar ) {
+		double r ;
+		double t ;
+		CAADate cd ;
+
+		t = calendar.get( Calendar.HOUR_OF_DAY )
+		+calendar.get( Calendar.MINUTE )/60.
+		+calendar.get( Calendar.SECOND )/3600. ;
+
+		cd = new CAADate( calendar.get( Calendar.YEAR ),
+				calendar.get( Calendar.MONTH ),
+				calendar.get( Calendar.DATE )+t/24, true ) ;
+		r = cd.Julian() ;
+		cd.delete() ;
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> reverseVector( java.util.Vector<double[]> vector ) {
 		java.util.Vector<double[]> r ;
-		Vector v ;
 
 		r = new java.util.Vector<double[]>() ;
-		for ( int n=0 ; n<vector.size() ; n++ ) {
-			v = vector.get( n ) ;
-			r.add( new double[] { v.getX(), v.getY() } ) ;
-		}
-
-		return r ;
-	}
-
-	public static java.util.Vector<Vector> convertCartesianDoubleToVector( java.util.Vector<double[]> vector ) {
-		java.util.Vector<Vector> r ;
-		double[] v ;
-
-		r = new java.util.Vector<Vector>() ;
-		for ( int n=0 ; n<vector.size() ; n++ ) {
-			v = vector.get( n ) ;
-			r.add( new Vector( v[0], v[1] ) ) ;
-		}
-
-		return r ;
-	}
-
-	public static java.util.Vector<Vector> reverseVector( java.util.Vector<Vector> vector ) {
-		java.util.Vector<Vector> r ;
-
-		r = new java.util.Vector<Vector>() ;
 		for ( int n=vector.size() ; n>0 ; n-- ) {
 			r.add( vector.get( n-1 ) ) ;
 		}
@@ -162,13 +208,13 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double MapTo0To24Range( double h ) {
+	public static double mapTo0To24Range( double h ) {
 		return CAACoordinateTransformation.HoursToRadians(
 				CAACoordinateTransformation.MapTo0To24Range(
 						CAACoordinateTransformation.RadiansToHours( h ) ) ) ;
 	}
 
-	public static double MapTo0To90Range( double d ) {
+	public static double mapTo0To90Range( double d ) {
 		double r ;
 
 		r = d ;
@@ -183,13 +229,28 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double MapTo0To360Range( double d ) {
+	public static double mapTo0To360Range( double d ) {
 		return CAACoordinateTransformation.DegreesToRadians(
 				CAACoordinateTransformation.MapTo0To360Range(
 						CAACoordinateTransformation.RadiansToDegrees( d ) ) ) ;
 	}
 
-	public static double[] Horizontal2Equatorial( double az, double al, double la ) {
+	public static double mapToNTo360Range( double d ) {
+		double r ;
+		double a ;
+
+		a = mapTo0To360Range( d ) ;
+
+		if ( d<0&&a>Math.rad180 ) {
+			r = a-Math.rad360 ;
+		} else {
+			r = a ;
+		}
+
+		return r ;
+	}
+
+	public static double[] horizontal2Equatorial( double az, double al, double la ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -207,7 +268,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double[] Equatorial2Horizontal( double HA, double de, double la ) {
+	public static double[] equatorial2Horizontal( double HA, double de, double la ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -225,31 +286,39 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double ApparentEclipticLongitude( double JD ) {
+	public static double apparentEclipticLongitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.ApparentEclipticLongtitude( JD ) ) ;
 	}
 
-	public static double ApparentEclipticLatitude( double JD ) {
+	public static double apparentEclipticLatitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.ApparentEclipticLatitude( JD ) ) ;
 	}
 
-	public static double GeometricEclipticLongitude( double JD ) {
+	public static double geometricEclipticLongitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLongitude( JD ) ) ;
 	}
 
-	public static double GeometricEclipticLatitude( double JD ) {
+	public static double geometricEclipticLatitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLatitude( JD ) ) ;
 	}
 
-	public static double MeanObliquityOfEcliptic( double JD ) {
+	public static double trueEclipticLatitude( double JD ) {
+		return geometricEclipticLatitude( JD ) ;
+	}
+
+	public static double trueEclipticLongitude( double JD ) {
+		return geometricEclipticLongitude( JD ) ;
+	}
+
+	public static double meanObliquityOfEcliptic( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAANutation.MeanObliquityOfEcliptic( JD ) ) ;
 	}
 
-	public static double TrueObliquityOfEcliptic( double JD ) {
+	public static double trueObliquityOfEcliptic( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAANutation.TrueObliquityOfEcliptic( JD ) ) ;
 	}
 
-	public static double[] Ecliptic2Equatorial( double La, double Be, double e ) {
+	public static double[] ecliptic2Equatorial( double La, double Be, double e ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -267,7 +336,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double[] Equatorial2Ecliptic( double Al, double De, double e ) {
+	public static double[] equatorial2Ecliptic( double Al, double De, double e ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -285,7 +354,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double[] Galactic2Equatorial( double l, double b ) {
+	public static double[] galactic2Equatorial( double l, double b ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -302,7 +371,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double[] Equatorial2Galactic( double Al, double De ) {
+	public static double[] equatorial2Galactic( double Al, double De ) {
 		CAA2DCoordinate c ;
 		double[] r ;
 
@@ -319,7 +388,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static double MeanEclipticLongitude( double JD ) {
+	public static double meanEclipticLongitude( double JD ) {
 		double r ;
 		double rho, rho2, rho3, rho4, rho5 ;
 
@@ -335,7 +404,7 @@ public final class ApplicationHelper {
 		return CAACoordinateTransformation.DegreesToRadians( r ) ;
 	}
 
-	public static double MeanEclipticLatitude( double JD ) {
+	public static double meanEclipticLatitude( double JD ) {
 		return 0 ;
 	}
 
@@ -401,5 +470,128 @@ public final class ApplicationHelper {
 		} catch ( BackingStoreException e ) {}
 
 		return r ;
+	}
+
+	public static String getLocalizedString( String key ) throws ParameterNotValidException {
+		String v ;
+		ResourceBundle m ;
+
+		m = ResourceBundle.getBundle( ApplicationConstant.GC_APPLICATION ) ;
+
+		try {
+			v = m.getString( key ) ;
+		} catch ( MissingResourceException e ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		return v ;
 	} 
+
+	public static void setupCompanionFromPeer( Object companion, Object peer ) {
+		Method method[] , gm, sm ;
+		String gn, sn ;
+		Class[] pt ;
+
+		method = peer.getClass().getMethods() ;
+		for ( int m=0 ; m<method.length ; m++ ) {
+			gn = method[m].getName() ;
+			if ( gn.matches( "get[A-Z].*" ) ) {
+				gm = method[m] ;
+
+				try {
+					pt = new Class[] { gm.getReturnType() } ;
+					sn = gn.replaceFirst( "g", "s" ) ;
+					sm = companion.getClass().getMethod( sn, pt ) ;
+					sm.invoke( companion, gm.invoke( peer, (Object[]) null ) ) ;
+				} catch ( NoSuchMethodException e ) {
+					continue ;
+				} catch ( InvocationTargetException e ) {
+				} catch ( IllegalAccessException e ) {
+				}
+			}
+		}
+	}
+
+	public static void emitPS( PostscriptStream ps, astrolabe.model.BodyStellar[] bs, Projector projector ) throws ParameterNotValidException {
+		if ( bs == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int b=0 ; b<bs.length ; b++ ) {
+			BodyStellar bodystellar ;
+
+			if ( bs[b]== null ) {
+				continue ;
+			}
+
+			ps.operator.gsave() ;
+
+			bodystellar = new BodyStellar( bs[b], projector ) ;
+			bodystellar.headPS( ps ) ;
+			bodystellar.emitPS( ps ) ;
+			bodystellar.tailPS( ps ) ;
+
+			// Body annotation processing.
+			emitPS( ps, bs[b].getGlyph().getAnnotation() ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
+		if ( an == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int a=0 ; a<an.length ; a++ ) {
+			Annotation annotation ;
+
+			ps.operator.gsave() ;
+
+			annotation = AstrolabeFactory.createAnnotation( an[a] ) ;
+			annotation.headPS( ps ) ;
+			annotation.emitPS( ps ) ;
+			annotation.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved[] an ) throws ParameterNotValidException {
+		if ( an == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int a=0 ; a<an.length ; a++ ) {
+			Annotation annotation ;
+
+			ps.operator.gsave() ;
+
+			annotation = new AnnotationCurved( an[a] ) ;
+			annotation.headPS( ps ) ;
+			annotation.emitPS( ps ) ;
+			annotation.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight[] an ) throws ParameterNotValidException {
+		if ( an == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		for ( int a=0 ; a<an.length ; a++ ) {
+			Annotation annotation ;
+
+			ps.operator.gsave() ;
+
+			annotation = new AnnotationStraight( an[a] ) ;
+			annotation.headPS( ps ) ;
+			annotation.emitPS( ps ) ;
+			annotation.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
 }

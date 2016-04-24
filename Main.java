@@ -11,15 +11,19 @@ public class Main {
 	}
 
 	public static void main( String[] argv ) {
-		FileReader model ;
 		PostscriptStream ps ;
+		FileReader m ;
 		Astrolabe a ;
 
 		try {
-			model = new FileReader( argv[0] ) ;
-			a = new AstrolabeReader().read( model ) ;
-			ps = a.initPS( System.out ) ;
+			ps = Astrolabe.initPS() ;
+
+			m = new FileReader( argv[0] ) ;
+			a = new AstrolabeReader().read( m ) ;
+
 			a.emitPS( ps ) ;
+
+			ps.close();
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
 			System.exit( 1 ) ;

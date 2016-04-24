@@ -4,83 +4,99 @@ package astrolabe;
 import caa.CAACoordinateTransformation ;
 import caa.CAADate;
 
-public class HorizonLocal implements Horizon {
+@SuppressWarnings("serial")
+public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizon {
 
-	private Chart chart ;
+	private final static double DEFAULT_PRACTICALITY = 0 ;
+
+	private Projector projector ;
 
 	private double grayscale ;
+
 	private double la ;
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( astrolabe.model.HorizonType hoT, Chart chart ) {
+	public HorizonLocal( astrolabe.model.HorizonLocal peer, double epoch, Projector projector ) {
 		String key ;
-		CAADate d = null;
 
-		this.chart = chart ;
-		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+
+		this.projector = projector ;
+
+		grayscale = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
 
 		try {
-			la = AstrolabeFactory.valueOf( hoT.getLatitude() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+			la = AstrolabeFactory.valueOf( getLatitude() ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
 			ApplicationHelper.registerDMS( key, la, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 		try {			
-			lo = AstrolabeFactory.valueOf( hoT.getLongitude() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
+			lo = AstrolabeFactory.valueOf( getLongitude() ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
 			ApplicationHelper.registerDMS( key, lo, 2 ) ;
 		} catch ( ParameterNotValidException e ) {
 			lo = 0 ;
 		}
 		try {
-			double rad180, rad360 ;
-			double lt, ra0, lo0, la0, JD, e ;
+			double lt, ra0, lo0, la0, e, jd ;
+			CAADate d ;
 
-			rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-			rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
+			jd = AstrolabeFactory.valueOf( getDate() ) ;
+			d = new CAADate( jd, true ) ;
 
-			d = AstrolabeFactory.valueOf( hoT.getDate() ) ;
 			lt = CAACoordinateTransformation.HoursToRadians( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
-			lt = lt+( lo>rad180?lo-rad360:lo ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
+
+			d.delete() ;
+
+			lt = lt+( lo>Math.rad180?lo-Math.rad360:lo ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
 			ApplicationHelper.registerHMS( key, lt, 2 ) ;
 
-			lo0 = ApplicationHelper.MeanEclipticLongitude( d.Julian() ) ;
-			la0 = ApplicationHelper.MeanEclipticLatitude( d.Julian() ) ;
-			JD = chart.dotDot()/*Astrolabe*/.getEpoch() ;
-			e = ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
+			lo0 = ApplicationHelper.meanEclipticLongitude( jd ) ;
+			la0 = ApplicationHelper.meanEclipticLatitude( jd ) ;
+			e = ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
 
-			ra0 = ApplicationHelper.Ecliptic2Equatorial( lo0, la0, e )[0] ;
+			ra0 = ApplicationHelper.ecliptic2Equatorial( lo0, la0, e )[0] ;
 
-			ST = ApplicationHelper.MapTo0To24Range( ra0+lt-rad180/*12h*/ ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+			ST = ApplicationHelper.mapTo0To24Range( ra0+lt-Math.rad180/*12h*/ ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			ApplicationHelper.registerHMS( key, ST, 2 ) ;
 		} catch ( ParameterNotValidException e ) {
 			ST = 0 ;
-		} finally {
-			if ( d!=null ) {
-				d.delete() ;
-			}
 		}
 	}
 
-	public double[] convert( double[] holo ) {
-		return convert( holo[0], holo[1] ) ;
+	public double[] project( double[] lo ) {
+		return project( lo[0], lo[1] ) ;
+	}
+
+	public double[] project( double A, double h ) {
+		return projector.project( convert( A, h ) ) ;
+	}
+
+	public double[] unproject( double[] xy ) {
+		return project( xy[0], xy[1] ) ;
+	}
+
+	public double[] unproject( double x, double y ) {
+		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] lo ) {
+		return convert( lo[0], lo[1] ) ;
 	}
 
 	public double[] convert( double A, double h ) {
 		double[] r ;
 
-		r = ApplicationHelper.Horizontal2Equatorial( A, h, la ) ;
+		r = ApplicationHelper.horizontal2Equatorial( A, h, la ) ;
 
 		// r[0] is HA is ST-lo-RA.
 		r[0] = ST-r[0] ;
 
 		return r ;
-	}
-
-	public void initPS( PostscriptStream ps ) {
-		ps.operator.setgray( grayscale ) ; 
 	}
 
 	public double[] unconvert( double[] eq ) {
@@ -90,39 +106,15 @@ public class HorizonLocal implements Horizon {
 	public double[] unconvert( double RA, double d ) {
 		double[] r ;
 
-		r = ApplicationHelper.Equatorial2Horizontal( this.ST-RA, d, la ) ;
+		r = ApplicationHelper.equatorial2Horizontal( this.ST-RA, d, la ) ;
 
 		return r ;
 	}
 
-	public double getLa() {
-		return la ;
+	public void headPS( PostscriptStream ps ) {
+		ps.operator.setgray( grayscale ) ; 
 	}
 
-	public double getST() {
-		return ST ;
-	}
-
-	public double getLo() {
-		return lo ;
-	}
-	public boolean isEcliptical() {
-		return false ;
-	}
-
-	public boolean isEquatorial() {
-		return false ;
-	}
-
-	public boolean isGalactic() {
-		return false ;
-	}
-
-	public boolean isLocal() {
-		return true ;
-	}
-
-	public Chart dotDot() {
-		return chart ;
+	public void tailPS( PostscriptStream ps ) {
 	}
 }

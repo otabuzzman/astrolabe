@@ -1,15 +1,11 @@
 
 package astrolabe;
 
-public interface Chart {
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException ;
-	public Vector project( double[] eq ) ;
-	public Vector project( double RA, double d ) ;
-	public double[] unproject( Vector xy ) ;
-	public double[] unproject( double x, double y ) ;
-	public boolean isNorthern();
-	public boolean isSouthern();
-	public void rollup( PostscriptStream ps ) ;
-	public boolean viewer( PostscriptStream ps ) ;
-	public Astrolabe dotDot() ;
+public interface Chart extends Projector {
+	public void headPS( PostscriptStream ps ) throws ParameterNotValidException ;
+	public void tailPS( PostscriptStream ps ) ;
+	// inherited methods from model 
+	public String getName() ;
+	public int getHorizonCount() ;
+	public astrolabe.model.Horizon getHorizon( int horizon ) ;
 }

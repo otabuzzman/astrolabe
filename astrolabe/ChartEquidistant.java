@@ -1,13 +1,14 @@
 
 package astrolabe;
 
+@SuppressWarnings("serial")
 public class ChartEquidistant extends ChartStereographic {
 
-	public ChartEquidistant( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
-		super( chT, astrolabe ) ;
+	public ChartEquidistant( astrolabe.model.ChartEquidistant peer ) {
+		setup( peer ) ;
 	}
 
-	public Vector project( double RA, double d ) {
+	public double[] project( double RA, double d ) {
 		return null ;
 	}
 

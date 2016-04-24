@@ -1,9 +1,18 @@
 
 package astrolabe;
 
-public class AnnotationStraight implements Annotation {
+@SuppressWarnings("serial")
+public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements Annotation {
 
-	private astrolabe.model.AnnotationStraight anT ;
+	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
+	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
+	private final static double DEFAULT_SUPERSCRIPTSHRINK = .8 ;
+	private final static double DEFAULT_SUPERSCRIPTSHIFT = .5 ;
+
+	private final static double DEFAULT_MARGIN = 1.2 ;
+	private final static double DEFAULT_RISE = 1.2 ;
+
+	private final static double DEFAULT_PURPOSE = 3.8 ;
 
 	private double subscriptshrink ;
 	private double subscriptshift ;
@@ -15,26 +24,37 @@ public class AnnotationStraight implements Annotation {
 
 	private double size ;
 
-	public AnnotationStraight( astrolabe.model.AnnotationType anT ) {
-		this.anT = (astrolabe.model.AnnotationStraight) anT ;
+	public AnnotationStraight( Object peer ) {
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		subscriptshrink = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, .8 ) ;
-		subscriptshift = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, -.3 ) ;
-		superscriptshrink = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, .8 ) ;
-		superscriptshift = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, .5 ) ;
 
-		margin = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, 1.2 ) ;
-		rise = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, 1.2 ) ;
+		subscriptshrink = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		size = ApplicationHelper.getClassNode( this, anT.getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( anT.getPurpose(), 3.8 ) ;
+		margin = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+
+		size = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( getPurpose(), DEFAULT_PURPOSE ) ;
+	}
+
+	public void headPS( PostscriptStream ps ) {
 	}
 
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
-		for ( int t=0 ; t<anT.getTextCount() ; t++ ) {
-			emitPS( ps, anT.getText( t ), size, 0,
+		for ( int t=0 ; t<getTextCount() ; t++ ) {
+			emitPS( ps, getText( t ), size, 0,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 		ps.array( false ) ;
@@ -42,56 +62,56 @@ public class AnnotationStraight implements Annotation {
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
 
-		if ( ( (astrolabe.model.AnnotationStraight) anT ).getRadiant() ) {
+		if ( getRadiant() ) {
 			ps.operator.rotate( 90 ) ;
 		}
 
-		if ( anT.getReverse() ) {
+		if ( getReverse() ) {
 			ps.operator.rotate( 180 ) ;
 		}
 
-		if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( rise ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( rise ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( rise ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
@@ -104,6 +124,9 @@ public class AnnotationStraight implements Annotation {
 		ps.operator.show() ;
 
 		ps.operator.grestore() ;
+	}
+
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,

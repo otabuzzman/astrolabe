@@ -1,52 +1,67 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
+@SuppressWarnings("serial")
+public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements Horizon {
 
-public class HorizonGalactic implements Horizon {
+	private final static double DEFAULT_PRACTICALITY = 0 ;
 
-	private Chart chart ;
+	private Projector projector ;
 
 	private double grayscale ;
+
 	private double la ;
 	private double ST ;
 
-	public HorizonGalactic( astrolabe.model.HorizonType hoT, Chart chart ) {
+	public HorizonGalactic( astrolabe.model.HorizonGalactic peer, Projector projector ) {
 		double[] eq ;
-		double rad90 ;
 		String key ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		this.chart = chart ;
-		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
+		this.projector = projector ;
 
-		eq = ApplicationHelper.Galactic2Equatorial( 0, rad90 ) ;
+		grayscale = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
+
+		eq = ApplicationHelper.galactic2Equatorial( 0, Math.rad90 ) ;
 		la = eq[1] ;
 		ST = eq[0] ;
 
 		try {
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
 			ApplicationHelper.registerDMS( key, la, 2 ) ;		
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			ApplicationHelper.registerHMS( key, ST, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 	}
 
-	public double[] convert( double[] hoga ) {
-		return convert( hoga[0], hoga[1] ) ;
+	public double[] project( double[] ga ) {
+		return project( ga[0], ga[1] ) ;
+	}
+
+	public double[] project( double l, double b ) {
+		return projector.project( convert( l, b ) ) ;
+	}
+
+	public double[] unproject( double[] xy ) {
+		return project( xy[0], xy[1] ) ;
+	}
+
+	public double[] unproject( double x, double y ) {
+		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] ga ) {
+		return convert( ga[0], ga[1] ) ;
 	}
 
 	public double[] convert( double l, double b ) {
 		double[] r ;
 
-		r = ApplicationHelper.Galactic2Equatorial( l, b ) ;
+		r = ApplicationHelper.galactic2Equatorial( l, b ) ;
 
 		return r ;
-	}
-
-	public void initPS( PostscriptStream ps ) {
-		ps.operator.setgray( grayscale ) ; 
 	}
 
 	public double[] unconvert( double[] eq ) {
@@ -56,36 +71,15 @@ public class HorizonGalactic implements Horizon {
 	public double[] unconvert( double RA, double d ) {
 		double[] r ;
 
-		r = ApplicationHelper.Equatorial2Galactic( RA, d ) ;
+		r = ApplicationHelper.equatorial2Galactic( RA, d ) ;
 
 		return r ;
 	}
 
-	public double getLa() {
-		return la ;
+	public void headPS( PostscriptStream ps ) {
+		ps.operator.setgray( grayscale ) ; 
 	}
 
-	public double getST() {
-		return ST ;
-	}
-
-	public boolean isEcliptical() {
-		return false ;
-	}
-
-	public boolean isEquatorial() {
-		return false ;
-	}
-
-	public boolean isGalactic() {
-		return true ;
-	}
-
-	public boolean isLocal() {
-		return false ;
-	}
-
-	public Chart dotDot() {
-		return chart ;
+	public void tailPS( PostscriptStream ps ) {
 	}
 }

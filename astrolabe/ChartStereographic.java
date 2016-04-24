@@ -1,39 +1,111 @@
 
 package astrolabe;
 
-public class ChartStereographic implements Chart {
+@SuppressWarnings("serial")
+public class ChartStereographic extends astrolabe.model.ChartStereographic implements Chart {
 
-	private Astrolabe astrolabe ;
+	private final static String DEFAULT_PAGESIZE = "210x297" ;
+	private final static double DEFAULT_UNIT = 2.834646 ;
 
 	private double unit ;
 	private boolean northern ;
 
-	private double[] pagesize ;
+	private double[] pagesize = new double[2] ;
 	private double scale ;
 
 	private Process viewer ;
 	private java.io.PrintStream ps ;
 
-	private String name ;
-
-	public ChartStereographic( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
-		String pagesize ;
-
-		this.astrolabe = astrolabe ;
-
-		name = chT.getName() ;
-
-		pagesize = ApplicationHelper.getClassNode( this, name, ApplicationConstant.PN_CHART_PAGESIZE ).get( chT.getPagesize(), "210x297" /*a4*/ ) ;
-		this.pagesize = parsePagesize( pagesize ) ;
-
-		unit = ApplicationHelper.getClassNode( this, name, null ).getDouble( ApplicationConstant.PK_CHART_UNIT, 2.834646 ) ;
-		scale = java.lang.Math.min( this.pagesize[0], this.pagesize[1] )/2/Math.goldensection ;
-		scale = scale*chT.getScale()/100 ;
-
-		northern = chT.getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
+	protected ChartStereographic() {
 	}
 
-	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+	public ChartStereographic( astrolabe.model.ChartStereographic peer ) {
+		setup( peer ) ;
+	}
+
+	public void setup( Object peer ) {
+		String[] pagesize ;
+
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+
+		pagesize = ApplicationHelper.getClassNode( this, getName(),
+				ApplicationConstant.PN_CHART_PAGESIZE ).get( getPagesize(), DEFAULT_PAGESIZE /*a4*/ ).split( "x" ) ;
+		this.pagesize[0] = new Double( pagesize[0] ).doubleValue() ;
+		this.pagesize[1] = new Double( pagesize[1] ).doubleValue() ;
+
+		unit = ApplicationHelper.getClassNode( this, getName(),
+				null ).getDouble( ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
+		scale = java.lang.Math.min( this.pagesize[0], this.pagesize[1] )/2/Math.goldensection ;
+		scale = scale*getScale()/100 ;
+
+		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
+	}
+
+	public double[] project( double[] eq ) {
+		return project( eq[0], eq[1] ) ;
+	}
+
+	public double[] project( double RA, double d ) {
+		double[] r = new double[2] ;
+		Vector v = new Vector() ;
+
+		if ( northern ) {
+			v.setX( java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.cos( RA ) ) ;
+			v.setY( -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ) ;
+		} else { // southern
+			v.setX( java.lang.Math.tan( ( -d )/2 )*java.lang.Math.cos( RA ) ) ;
+			v.setY( -java.lang.Math.tan( ( -d )/2 )*java.lang.Math.sin( RA ) ) ;
+		}
+
+		v.scale( scale ) ;
+
+		r[0] = v.getX() ;
+		r[1] = v.getY() ;
+
+		return r ;
+	}
+
+	public double[] unproject( double[] xy ) {
+		return unproject( xy[0], xy[1] ) ;
+	}
+
+	public double[] unproject( double x, double y ) {
+		double[] r = new double[2] ;
+		Vector v ;
+
+		v = new Vector( x, -y ) ;
+		v.scale( 1/scale ) ;
+
+		r[0] = java.lang.Math.atan2( v.getY(), v.getX() ) ;
+
+		if ( northern ) {
+			r[1] = Math.rad90-java.lang.Math.atan( v.getX()/java.lang.Math.cos( r[0] ) )*2 ;
+		} else { // southern
+			r[1] = -java.lang.Math.atan( v.getX()/java.lang.Math.cos( r[0] ) )*2 ;
+		}
+
+		return r ;
+	}
+
+	public double[] convert( double[] eq ) {
+		return eq ;
+	}
+
+	public double[] convert( double RA, double d ) {
+		return new double[] { RA, d } ;
+	}
+
+	public double[] unconvert( double[] eq ) {
+		return eq ;
+	}
+
+	public double[] unconvert( double RA, double d ) {
+		return new double[] { RA, d } ;
+	}
+
+	public void headPS( PostscriptStream ps ) throws ParameterNotValidException {
+		viewer( ps ) ;
+
 		ps.dsc.beginSetup() ;
 		// Set origin at center of page.
 		ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
@@ -47,65 +119,24 @@ public class ChartStereographic implements Chart {
 		ps.dsc.beginPageSetup() ;
 		ps.operator.scale( unit ) ;
 		ps.dsc.endPageSetup() ;
+
+		ps.dsc.page( getName(), 1 ) ;
 	}
 
-	public Vector project( double[] eq ) {
-		return project( eq[0], eq[1] ) ;
+	public void tailPS( PostscriptStream ps ) {
+		ps.operator.showpage() ;
+		ps.dsc.pageTrailer() ;
+
+		rollup( ps ) ;
 	}
 
-	public Vector project( double RA, double d ) {
-		Vector r = new Vector( 0, 0 ) ;
-		double rad90 = caa.CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-
-		r.setX( java.lang.Math.tan( ( rad90-d )/2 )*java.lang.Math.cos( RA ) ) ;
-		r.setY( -java.lang.Math.tan( ( rad90-d )/2 )*java.lang.Math.sin( RA ) ) ;
-
-		return r.scale( scale ) ;
-	}
-
-	public double[] unproject( Vector xy ) {
-		return unproject( xy.getX(), xy.getY() ) ;
-	}
-
-	public double[] unproject( double x, double y ) {
-		return null ;
-	}
-
-	public boolean isNorthern() {
-		return northern ;
-	}
-
-	public boolean isSouthern() {
-		return ! northern ;
-	}
-
-	public void rollup( PostscriptStream ps ) {
-		try {
-			ps.delPrintStream( this.ps ) ;
-		} catch ( ParameterNotValidException e ) {}
-
-		viewer.destroy() ;
-	}
-
-	public double[] parsePagesize( String pagesize ) {
-		double[] r = new double[2] ;
-		String[] ps ;
-
-		ps = pagesize.split( "x" ) ;
-
-		r[0] = new Double( ps[0] ).doubleValue() ;
-		r[1] = new Double( ps[1] ).doubleValue() ;
-
-		return r ;
-	}
-
-	public boolean viewer( PostscriptStream ps ) {
+	private boolean viewer( PostscriptStream ps ) {
 		boolean r ;
 		String c ;
 		int i ;
 
 		try {
-			c = ApplicationHelper.getClassNode( this, name, null ).get( ApplicationConstant.PK_CHART_VIEWER, null ) ;
+			c = ApplicationHelper.getClassNode( this, getName(), null ).get( ApplicationConstant.PK_CHART_VIEWER, null ) ;
 
 			while ( ( i=c.indexOf( '%' ) )>0 ) {
 				switch ( c.charAt( i+1 ) ) {
@@ -140,7 +171,11 @@ public class ChartStereographic implements Chart {
 		return r ;
 	}
 
-	public Astrolabe dotDot() {
-		return astrolabe ;
+	private void rollup( PostscriptStream ps ) {
+		try {
+			ps.delPrintStream( this.ps ) ;
+		} catch ( ParameterNotValidException e ) {}
+
+		viewer.destroy() ;
 	}
 }

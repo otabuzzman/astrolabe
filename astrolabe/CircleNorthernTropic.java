@@ -1,19 +1,18 @@
 
 package astrolabe;
 
+import caa.CAACoordinateTransformation;
+
+@SuppressWarnings("serial")
 public class CircleNorthernTropic extends CircleParallel {
 
-	public CircleNorthernTropic( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
-		super( clT, horizon ) ;
+	public CircleNorthernTropic( astrolabe.model.CircleNorthernTropic peer, double epoch, Projector projector ) throws ParameterNotValidException {
+		double radal, degal ;
 
-		double al, JD ;
+		radal = ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
+		degal = CAACoordinateTransformation.RadiansToDegrees( radal ) ;
 
-		if ( ! horizon.isEquatorial() ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		JD = horizon.dotDot()/*Chart*/.dotDot()/*Astrolabe*/.getEpoch() ;
-		al = ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
-		setAl( al ) ;
+		peer.getAngle().getRational().setValue( degal ) ;
+		setup( peer, projector ) ;
 	}
 }

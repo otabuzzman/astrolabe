@@ -1,9 +1,18 @@
 
 package astrolabe;
 
-public class AnnotationCurved implements Annotation {
+@SuppressWarnings("serial")
+public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements Annotation {
 
-	private astrolabe.model.AnnotationCurved anT ;
+	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
+	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
+	private final static double DEFAULT_SUPERSCRIPTSHRINK = .8 ;
+	private final static double DEFAULT_SUPERSCRIPTSHIFT = .5 ;
+
+	private final static double DEFAULT_MARGIN = 1.2 ;
+	private final static double DEFAULT_RISE = 1.2 ;
+
+	private final static double DEFAULT_PURPOSE = 3.8 ;
 
 	private double subscriptshrink ;
 	private double subscriptshift ;
@@ -17,28 +26,38 @@ public class AnnotationCurved implements Annotation {
 
 	private double distance ;
 
-	public AnnotationCurved( astrolabe.model.AnnotationType anT ) {
-		this.anT = (astrolabe.model.AnnotationCurved) anT ;
+	public AnnotationCurved( Object peer ) {
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		subscriptshrink = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, .8 ) ;
-		subscriptshift = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, -.3 ) ;
-		superscriptshrink = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, .8 ) ;
-		superscriptshift = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, .5 ) ;
+		subscriptshrink = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		margin = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, 1.2 ) ;
-		rise = ApplicationHelper.getClassNode( this, anT.getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, 1.2 ) ;
+		margin = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = ApplicationHelper.getClassNode( this,
+				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
 
-		size = ApplicationHelper.getClassNode( this, anT.getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( anT.getPurpose(), 3.8 ) ;
+		size = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( getPurpose(), DEFAULT_PURPOSE ) ;
 
-		distance = this.anT.getDistance() ;
+		distance = getDistance() ;
+	}
+
+	public void headPS( PostscriptStream ps ) {
 	}
 
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
-		for ( int t=0 ; t<anT.getTextCount() ; t++ ) {
-			AnnotationStraight.emitPS( ps, anT.getText( t ), size, 0,
+		for ( int t=0 ; t<getTextCount() ; t++ ) {
+			AnnotationStraight.emitPS( ps, getText( t ), size, 0,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 		ps.array( false ) ;
@@ -46,12 +65,12 @@ public class AnnotationCurved implements Annotation {
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
 
-		if ( anT.getReverse() ) {
+		if ( getReverse() ) {
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
 		}
 
 		ps.operator.mark() ;
-		if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 			ps.push( -rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -61,7 +80,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 			ps.push( -rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -75,7 +94,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 			ps.push( -rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -89,7 +108,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( size/2 ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -99,7 +118,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.push( size/2 ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -113,7 +132,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.push( size/2 ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -127,7 +146,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( size+rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -137,7 +156,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.push( size+rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -151,7 +170,7 @@ public class AnnotationCurved implements Annotation {
 			ps.operator.mul( distance ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( anT.getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.push( size+rise ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
@@ -170,5 +189,8 @@ public class AnnotationCurved implements Annotation {
 		ps.custom( ApplicationConstant.PS_PROLOG_PATHSHOW ) ;
 
 		ps.operator.grestore() ;
+	}
+
+	public void tailPS( PostscriptStream ps ) {
 	}
 }

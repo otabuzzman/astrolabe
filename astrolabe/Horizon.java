@@ -1,17 +1,11 @@
 
 package astrolabe;
 
-public interface Horizon {
-	public void initPS( PostscriptStream ps ) ;
-	public double[] convert( double[] ho) ;
-	public double[] convert( double phi, double theta ) ;
-	public double[] unconvert( double[] eq ) ;
-	public double[] unconvert( double RA, double d ) ;
-	public double getLa() ;
-	public double getST() ;
-	public boolean isEcliptical() ;
-	public boolean isEquatorial() ;
-	public boolean isGalactic() ;
-	public boolean isLocal() ;
-	public Chart dotDot() ;
+public interface Horizon extends Projector {
+	public void headPS( PostscriptStream ps ) ;
+	public void tailPS( PostscriptStream ps ) ;
+	// inherited methods from model 
+	public int getCircleCount() ;
+	public astrolabe.model.Circle getCircle( int circle ) ;
+	public astrolabe.model.BodyStellar[] getBodyStellar() ;
 }

@@ -3,21 +3,16 @@ package astrolabe;
 
 import caa.CAACoordinateTransformation;
 
+@SuppressWarnings("serial")
 public class CircleNorthernPolar extends CircleParallel {
 
-	public CircleNorthernPolar( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
-		super( clT, horizon ) ;
+	public CircleNorthernPolar( astrolabe.model.CircleNorthernPolar peer, double epoch, Projector projector ) throws ParameterNotValidException {
+		double radal, degal ;
 
-		double rad90, al, JD ;
+		radal = Math.rad90-ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
+		degal = CAACoordinateTransformation.RadiansToDegrees( radal ) ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-
-		if ( ! horizon.isEquatorial() ) {
-			throw new ParameterNotValidException() ;
-		}
-
-		JD = horizon.dotDot()/*Chart*/.dotDot()/*Astrolabe*/.getEpoch() ;
-		al = rad90-ApplicationHelper.MeanObliquityOfEcliptic( JD ) ;
-		setAl( al ) ;
+		peer.getAngle().getRational().setValue( degal ) ;
+		setup( peer, projector ) ;
 	}
 }

@@ -5,6 +5,9 @@ import java.util.prefs.BackingStoreException;
 
 public class PostscriptStream extends PrintStream {
 
+	private final static int DEFAULT_PRECISION = 6 ;
+	private final static int DEFAULT_SCANLINE = 254 ;
+
 	public final PostscriptStream.Operator operator = new Operator();
 	public final PostscriptStream.DSC dsc = new DSC();
 
@@ -13,8 +16,10 @@ public class PostscriptStream extends PrintStream {
 
 	private java.util.Hashtable<String, String> prolog = null ;
 
-	private final int precision = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, 6 ) ;
-	private final int scanline = ApplicationHelper.getClassNode( this, null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, 254 ) ;
+	private final int precision = ApplicationHelper.getClassNode( this,
+			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
+	private final int scanline = ApplicationHelper.getClassNode( this,
+			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
 	public PostscriptStream( java.io.PrintStream ps ) throws ParameterNotValidException {
 		super( ps ) ;

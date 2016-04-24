@@ -6,6 +6,11 @@ public final class ApplicationConstant {
 	private ApplicationConstant() {
 	}
 
+	// general constants (GC_), patterns (GP_)
+	public static final String GC_APPLICATION	= "astrolabe" ;
+	public static final String GC_NATLIB_CAA	= "cygcaa-1.17" ;
+
+	// locale keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public static final String LK_ASTROLABE_EPOCH = "substitue.astrolabe.epoch" ;
 
 	public static final String LK_HORIZON_LATITUDE			= "substitute.horizon.latitude" ;
@@ -126,7 +131,7 @@ public final class ApplicationConstant {
 	public static final String PK_ANNOTATION_RISE				= "rise" ;
 	public static final String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
-	public static final String PN_GLYPH_SIZE = "size" ;
+	public static final String PN_BODY_SIZE = "size" ;
 
 	public static final String PK_POSTSCRIPT_PRECISION	= "precision" ;
 	public static final String PK_POSTSCRIPT_SCANLINE	= "scanline" ;

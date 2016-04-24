@@ -1,21 +1,49 @@
 
 package astrolabe;
 
-public class HorizonEquatorial implements Horizon {
+@SuppressWarnings("serial")
+public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial implements Horizon {
 
-	private Chart chart ;
+	private final static double DEFAULT_PRACTICALITY = 0 ;
+
+	private Projector projector ;
 
 	private double grayscale ;
-	private double la ;
 
-	public HorizonEquatorial( astrolabe.model.HorizonType hoT, Chart chart ) {
-		this.chart = chart ;
-		grayscale = ApplicationHelper.getClassNode( this, hoT.getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( hoT.getPracticality(), 0 ) ;
-		la = caa.CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+	@SuppressWarnings("unused")
+	private double la ;
+	@SuppressWarnings("unused")
+	private double ST ;
+
+	public HorizonEquatorial( astrolabe.model.HorizonEquatorial peer, Projector projector ) {
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+
+		this.projector = projector ;
+
+		grayscale = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
+		la = Math.rad90 ;
+		ST = 0 ;
 	}
 
-	public double[] convert( double[] hoeq ) {
-		return convert( hoeq[0], hoeq[1] ) ;
+	public double[] project( double[] ho ) {
+		return project( ho[0], ho[1] ) ;
+	}
+
+	public double[] project( double RA, double d ) {
+		return projector.project( convert( RA, d ) ) ;
+	}
+
+	public double[] unproject( double[] xy ) {
+		return project( xy[0], xy[1] ) ;
+	}
+
+	public double[] unproject( double x, double y ) {
+		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] eq ) {
+		return convert( eq[0], eq[1] ) ;
 	}
 
 	public double[] convert( double RA, double d ) {
@@ -25,10 +53,6 @@ public class HorizonEquatorial implements Horizon {
 		r[1] = d ;
 
 		return r ;
-	}
-
-	public void initPS( PostscriptStream ps ) {
-		ps.operator.setgray( grayscale ) ; 
 	}
 
 	public double[] unconvert( double[] eq ) {
@@ -44,31 +68,10 @@ public class HorizonEquatorial implements Horizon {
 		return r ;
 	}
 
-	public double getLa() {
-		return la ;
+	public void headPS( PostscriptStream ps ) {
+		ps.operator.setgray( grayscale ) ; 
 	}
 
-	public double getST() {
-		return 0 ;
-	}
-
-	public boolean isEcliptical() {
-		return false ;
-	}
-
-	public boolean isEquatorial() {
-		return true ;
-	}
-
-	public boolean isGalactic() {
-		return false ;
-	}
-
-	public boolean isLocal() {
-		return false ;
-	}
-
-	public Chart dotDot() {
-		return chart ;
+	public void tailPS( PostscriptStream ps ) {
 	}
 }

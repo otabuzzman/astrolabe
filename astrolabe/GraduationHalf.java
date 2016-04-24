@@ -1,9 +1,10 @@
 
 package astrolabe;
 
+@SuppressWarnings("serial")
 public class GraduationHalf extends GraduationSpan {
 
-	public GraduationHalf( Vector origin, Vector tangent ) {
-		super( origin, tangent ) ;
+	public GraduationHalf( astrolabe.model.GraduationHalf peer, double[] origin, double[] tangent ) {
+		setup( peer, origin, tangent ) ;
 	}
 }

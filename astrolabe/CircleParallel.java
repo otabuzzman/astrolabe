@@ -1,13 +1,15 @@
 
 package astrolabe;
 
-import java.util.Vector;
-
 import caa.CAACoordinateTransformation;
 
-public class CircleParallel implements Circle {
+@SuppressWarnings("serial")
+public class CircleParallel extends astrolabe.model.CircleParallel implements Circle {
 
-	private Horizon horizon ;
+	private final static double DEFAULT_SEGMENT = 1 ;
+	private final static double DEFAULT_IMPORTANCE = .1 ;
+
+	private Projector projector ;
 
 	private double segment ;
 	private double linewidth ;
@@ -17,47 +19,58 @@ public class CircleParallel implements Circle {
 	private double begin ;
 	private double end ;
 
-	public CircleParallel( astrolabe.model.CircleType clT, Horizon horizon ) throws ParameterNotValidException {
+	protected CircleParallel() {
+	}
+
+	public CircleParallel( Object peer, Projector projector ) throws ParameterNotValidException {
+		setup( peer, projector ) ;
+	}
+
+	public void setup( Object peer, Projector projector ) throws ParameterNotValidException {
 		String key ;
 
-		segment = caa.CAACoordinateTransformation.DegreesToRadians(
-				ApplicationHelper.getClassNode( this, clT.getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, 1 ) ) ;
-		linewidth = ApplicationHelper.getClassNode( this, clT.getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( clT.getImportance(), .1 ) ;
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-		this.horizon = horizon ;
+		this.projector = projector ;
+
+		segment = CAACoordinateTransformation.DegreesToRadians(
+				ApplicationHelper.getClassNode( this,
+						getName(), null ).getDouble( ApplicationConstant.PK_CIRCLE_SEGMENT, DEFAULT_SEGMENT ) ) ;
+		linewidth = ApplicationHelper.getClassNode( this,
+				getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ).getDouble( getImportance(), DEFAULT_IMPORTANCE ) ;
 
 		try {
-			al = AstrolabeFactory.valueOf( clT.getAngle() ) ;
-			key = Astrolabe.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
+			al = AstrolabeFactory.valueOf( getAngle() ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
 			ApplicationHelper.registerDMS( key, al, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 		try {
-			begin = AstrolabeFactory.valueOf( clT.getBegin().getImmediate() ) ;
+			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
 			boolean leading ;
 
 			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( clT.getBegin().getReference().getCircle() ) ;
+			circle = (Circle) registry.retrieve( getBegin().getReference().getCircle() ) ;
 
-			leading = clT.getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
 			begin = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
 						intersect( (CircleMeridian) circle, leading ) ;
 		}
 		try {
-			end = AstrolabeFactory.valueOf( clT.getEnd().getImmediate() ) ;
+			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
 			Registry registry ;
 			Circle circle ;
 			boolean leading ;
 
 			registry = new Registry() ;
-			circle = (Circle) registry.retrieve( clT.getEnd().getReference().getCircle() ) ;
+			circle = (Circle) registry.retrieve( getEnd().getReference().getCircle() ) ;
 
-			leading = clT.getEnd().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = getEnd().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
 			end = circle.isParallel()?
 					intersect( (CircleParallel) circle, leading ):
@@ -65,127 +78,91 @@ public class CircleParallel implements Circle {
 		}
 	}
 
-	public astrolabe.Vector cartesian( double az, double shift ) throws ParameterNotValidException {
-		astrolabe.Vector r ;
-		double rad90 ;
+	public double[] project( double az ) {
+		return project( az, 0 ) ;
+	}
 
-		if ( ! examine( az ) ) {
-			throw new ParameterNotValidException() ;
-		}
+	public double[] project( double az, double shift ) {
+		double[] r = new double[2] ;
+		Vector v, t ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+		v = new Vector( projector.project( az, al ) ) ;
 
-		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ;
 		if ( shift != 0 ) {
-			r.add( tangentVector( az ).rotate( shift<0?-rad90:rad90 ).size( java.lang.Math.abs( shift ) ) ) ;
+			t = new Vector( tangent( az ) ) ;
+			v.add( t.rotate( Math.rad90 ).size( shift ) ) ;
 		}
 
-		return r ;
-	}
-
-	public astrolabe.Vector cartesianA( double shift ) {
-		astrolabe.Vector r = null ;
-
-		try {
-			r = cartesian( begin, shift ) ;
-		} catch ( ParameterNotValidException e ) {}
+		r[0] = v.getX() ;
+		r[1] = v.getY() ;
 
 		return r ;
 	}
 
-	public astrolabe.Vector cartesianO( double shift ) {
-		astrolabe.Vector r = null ;
-
-		try {
-			r = cartesian( end, shift ) ;
-		} catch ( ParameterNotValidException e ) {}
-
-		return r ;
-	}
-
-	public Vector<astrolabe.Vector> cartesianList() throws ParameterNotValidException {
-		return cartesianList( begin, end, 0 ) ;
-	}
-
-	public Vector<astrolabe.Vector> cartesianList( double shift ) throws ParameterNotValidException {
-		return cartesianList( begin, end, shift ) ;
-	}
-
-	public Vector<astrolabe.Vector> cartesianList( double begin, double end, double shift ) throws ParameterNotValidException {
-		Vector<astrolabe.Vector> r ;
-		astrolabe.Vector a ;
-		double rad360 ;
-		double s, az ;
-
-		r = new Vector<astrolabe.Vector>() ;
-
-		rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
-
-		a = cartesian( begin, shift ) ;
-		r.add( a ) ;
-
-		s = java.lang.Math.abs( astrolabe.Math.remainder( begin, segment ) ) ;
-		for ( az=begin+( s>0?s/2:segment/2 ) ; ( begin>end?az-rad360:az )<end ; az=az+segment ) {
-			a = cartesian( az, shift ) ;
-			r.add( a ) ;
-		}
-
-		a = cartesian( end, shift ) ;
-		r.add( a ) ;
-
-		return r ;
-	}
-
-	public double tangentAngle( double az ) throws ParameterNotValidException {
-		astrolabe.Vector t ;
-		double r ;
-
-		t = tangentVector( az ) ;
-		r = java.lang.Math.atan2( t.getY(), t.getX() ) ;
-
-		return r ;
-	}
-
-	public astrolabe.Vector tangentVector( double az ) throws ParameterNotValidException {
-		astrolabe.Vector r ;
+	public double[] tangent( double az ) {
+		double[] r = new double[2] ;
+		Vector a, b ;
 		double d ;
 
 		d = CAACoordinateTransformation.DegreesToRadians( 10./3600 ) ;
-		r = horizon.dotDot()/*Chart*/.project( horizon.convert( az+d, al ) ).sub( horizon.dotDot()/*Chart*/.project( horizon.convert( az, al ) ) ) ;
+
+		a = new Vector( projector.project( az+d, al ) ) ;
+		b = new Vector( projector.project( az, al ) ) ;
+
+		a.sub( b ) ;
+
+		r[0] = a.getX() ;
+		r[1] = a.getY() ;
 
 		return r ;
 	}
 
-	public void initPS( PostscriptStream ps ) {
+	public java.util.Vector<double[]> list() {
+		return list( begin, end, 0 ) ;
+	}
+
+	public java.util.Vector<double[]> list( double shift ) {
+		return list( begin, end, shift ) ;
+	}
+
+	public java.util.Vector<double[]> list( double begin, double end, double shift ) {
+		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+		double g ;
+
+		r.add( project( begin, shift ) ) ;
+
+		g = mapIndexToAngleOfRange( begin, end ) ;
+		for ( double az=begin+g ; begin>end?az-Math.rad360<end:az<end ; az=az+segment ) {
+			r.add( project( az, shift ) ) ;
+		}
+
+		r.add( project( end, shift ) ) ;
+
+		return r ;
+	}
+
+	public void headPS( PostscriptStream ps ) {
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
-	public boolean isParallel() {
-		return true ;
+	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
+		java.util.Vector<double[]> v ;
+		double[] xy ;
+
+		v = list() ;
+		ps.operator.mark() ;
+		for ( int c=v.size() ; c>0 ; c-- ) {
+			xy = (double[]) v.get( c-1 ) ;
+			ps.push( xy[0] ) ;
+			ps.push( xy[1] ) ;
+		}
+		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		ps.operator.stroke() ;
+
+		ApplicationHelper.emitPS( ps, getAnnotation() ) ;
 	}
 
-	public boolean isMeridian() {
-		return false ;
-	}
-
-	public boolean isClosed() {
-		double b, e ;
-
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
-
-		return e==b||e>b ;
-	}
-
-	public boolean examine( double az ) {
-		double b, e ;
-		double v ;
-
-		b = ApplicationHelper.MapTo0To360Range( begin ) ;
-		e = ApplicationHelper.MapTo0To360Range( end ) ;
-		v = ApplicationHelper.MapTo0To360Range( az ) ;
-
-		return b>e?v>=b||v<=e:v>=b&&v<=e ;
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) throws ParameterNotValidException {
@@ -193,7 +170,6 @@ public class CircleParallel implements Circle {
 		double rdGa[], rdDe ;
 		double gnGa[], gnDe ;
 		double[] rdaz, gnaz ;
-		double rad180 ;
 		double[] r ;
 
 		rdGa = new double[2] ;
@@ -203,14 +179,12 @@ public class CircleParallel implements Circle {
 
 		r = new double[4] ;
 
-		rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-
 		// i. rdST<gnST && abs( gnST-rdST )>180 is equivalent to rdST>gnST && abs ( gnST-rdST )<180
 		// ii. rdST>gnST && abs( gnST-rdST )>180 is equivalent to rdST<gnST && abs ( gnST-rdST )<180
-		if ( rad180<blGa ) {			// case i.
-			blGa = -( 2*rad180-blGa ) ;
-		} else if ( -rad180>blGa ) {	// case ii.
-			blGa = blGa+2*rad180 ;
+		if ( Math.rad180<blGa ) {			// case i.
+			blGa = -( 2*Math.rad180-blGa ) ;
+		} else if ( -Math.rad180>blGa ) {	// case ii.
+			blGa = blGa+2*Math.rad180 ;
 		}
 
 		if ( blA==0 ) {	// rdLa==90
@@ -221,18 +195,18 @@ public class CircleParallel implements Circle {
 				throw new ParameterNotValidException() ;
 			}
 
-			rdDe = rad180-astrolabe.Math.LawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
-			gnDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
+			rdDe = Math.rad180-Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
+			gnDe = Math.lawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
 
 			rdGa[0] = -( rdDe+blGa ) ;
 			rdGa[1] = rdDe-blGa ;
 			gnGa[0] = -gnDe ;
 			gnGa[1] = gnDe ;
 
-			rdaz[0] = rad180+rdGa[0] ;
-			rdaz[1] = rad180+rdGa[1] ;
-			gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-			gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+			rdaz[0] = Math.rad180+rdGa[0] ;
+			rdaz[1] = Math.rad180+rdGa[1] ;
+			gnaz[0] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[0] ) ;
+			gnaz[1] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[1] ) ;
 		} else if ( blB==0 ) {	// gnLa==90
 			blC = blA ;
 
@@ -241,18 +215,18 @@ public class CircleParallel implements Circle {
 				throw new ParameterNotValidException() ;
 			}
 
-			rdDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
-			gnDe = rad180-astrolabe.Math.LawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
+			rdDe = Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
+			gnDe = Math.rad180-Math.lawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
 
 			rdGa[0] = -rdDe ;
 			rdGa[1] = rdDe ;
 			gnGa[0] = -( gnDe-blGa ) ;
 			gnGa[1] = gnDe+blGa ;
 
-			rdaz[0] = rad180+rdGa[0] ;
-			rdaz[1] = rad180+rdGa[1] ;
-			gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-			gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+			rdaz[0] = Math.rad180+rdGa[0] ;
+			rdaz[1] = Math.rad180+rdGa[1] ;
+			gnaz[0] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[0] ) ;
+			gnaz[1] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[1] ) ;
 		} else if ( java.lang.Math.sin( blGa )==0 ) {	/* rdST==gnST,
 															rdST==gnST+180 */
 			blC = java.lang.Math.abs( blA-blB*java.lang.Math.cos( blGa ) ) ;
@@ -263,11 +237,11 @@ public class CircleParallel implements Circle {
 			}
 
 			if ( blC>0 ) {
-				rdDe = rad180-astrolabe.Math.LawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
-				gnDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
+				rdDe = Math.rad180-Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
+				gnDe = Math.lawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
 			} else {
-				rdDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
-				gnDe = rad180-astrolabe.Math.LawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
+				rdDe = Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
+				gnDe = Math.rad180-Math.lawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
 			}
 
 			rdGa[0] = -rdDe ;
@@ -275,10 +249,10 @@ public class CircleParallel implements Circle {
 			gnGa[0] = -gnDe ;
 			gnGa[1] = gnDe ;
 
-			rdaz[0] = rad180+rdGa[0] ;
-			rdaz[1] = rad180+rdGa[1] ;
-			gnaz[0] = rad180+gnGa[0] ;
-			gnaz[1] = rad180+gnGa[1] ;
+			rdaz[0] = Math.rad180+rdGa[0] ;
+			rdaz[1] = Math.rad180+rdGa[1] ;
+			gnaz[0] = Math.rad180+gnGa[0] ;
+			gnaz[1] = Math.rad180+gnGa[1] ;
 
 		} else {	/* rdST>gnST && abs( gnST-rdST )>180,
 						rdST>gnST && abs( gnST-rdST )<180,
@@ -286,65 +260,65 @@ public class CircleParallel implements Circle {
 						rdST<gnST && abs( gnST-rdST )>180,
 						rdST<gnST && abs( gnST-rdST )<180,
 						rdST<gnST && abs( gnST-rdST )<90 */
-			blC = astrolabe.Math.LawOfEdgeCosine( blA, blB, blGa ) ;
-			blAl = astrolabe.Math.LawOfEdgeCosineSolveAngle( blA, blB, blC) ;
-			blBe = astrolabe.Math.LawOfEdgeCosineSolveAngle( blB, blC, blA) ;
+			blC = Math.lawOfEdgeCosine( blA, blB, blGa ) ;
+			blAl = Math.lawOfEdgeCosineSolveAngle( blA, blB, blC) ;
+			blBe = Math.lawOfEdgeCosineSolveAngle( blB, blC, blA) ;
 
 			// intersection test
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
 				throw new ParameterNotValidException() ;
 			}
 
-			rdDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
-			gnDe = astrolabe.Math.LawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
+			rdDe = Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
+			gnDe = Math.lawOfEdgeCosineSolveAngle( rdB, blC, gnB) ;
 
-			if ( rdDe<( rad180-blBe ) ) {	// aph	
-				gnDe = rad180-gnDe ;
+			if ( rdDe<( Math.rad180-blBe ) ) {	// aph	
+				gnDe = Math.rad180-gnDe ;
 
 				if ( blGa<0 ) {
 					rdGa[0] = blBe+rdDe ;
 					rdGa[1] = blBe-rdDe ;
-					gnGa[0] = rad180-blAl+gnDe ;
-					gnGa[1] = rad180-blAl-gnDe ;
+					gnGa[0] = Math.rad180-blAl+gnDe ;
+					gnGa[1] = Math.rad180-blAl-gnDe ;
 
-					rdaz[0] = rad180-rdGa[0] ;
-					rdaz[1] = rad180-rdGa[1] ;
-					gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180-gnGa[0] ) ;
-					gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180-gnGa[1] ) ;
+					rdaz[0] = Math.rad180-rdGa[0] ;
+					rdaz[1] = Math.rad180-rdGa[1] ;
+					gnaz[0] = ApplicationHelper.mapTo0To360Range( Math.rad180-gnGa[0] ) ;
+					gnaz[1] = ApplicationHelper.mapTo0To360Range( Math.rad180-gnGa[1] ) ;
 				} else {
 					rdGa[0] = blBe-rdDe ;
 					rdGa[1] = blBe+rdDe ;
-					gnGa[0] = rad180-blAl-gnDe ;
-					gnGa[1] = rad180-blAl+gnDe ;
+					gnGa[0] = Math.rad180-blAl-gnDe ;
+					gnGa[1] = Math.rad180-blAl+gnDe ;
 
-					rdaz[0] = rad180+rdGa[0] ;
-					rdaz[1] = rad180+rdGa[1] ;
-					gnaz[0] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[0] ) ;
-					gnaz[1] = ApplicationHelper.MapTo0To360Range( rad180+gnGa[1] ) ;
+					rdaz[0] = Math.rad180+rdGa[0] ;
+					rdaz[1] = Math.rad180+rdGa[1] ;
+					gnaz[0] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[0] ) ;
+					gnaz[1] = ApplicationHelper.mapTo0To360Range( Math.rad180+gnGa[1] ) ;
 				}
 			} else {						// per
-				rdDe = rad180-rdDe ;
+				rdDe = Math.rad180-rdDe ;
 
 				if ( blGa<0 ) {
-					rdGa[0] = rad180-blBe+rdDe ;
-					rdGa[1] = rad180-blBe-rdDe ;
+					rdGa[0] = Math.rad180-blBe+rdDe ;
+					rdGa[1] = Math.rad180-blBe-rdDe ;
 					gnGa[0] = blAl+gnDe ;
 					gnGa[1] = blAl-gnDe ;
 
-					rdaz[0] = rad180+rdGa[0] ;
-					rdaz[1] = rad180+rdGa[1] ;
-					gnaz[0] = rad180+gnGa[0] ;
-					gnaz[1] = rad180+gnGa[1] ;
+					rdaz[0] = Math.rad180+rdGa[0] ;
+					rdaz[1] = Math.rad180+rdGa[1] ;
+					gnaz[0] = Math.rad180+gnGa[0] ;
+					gnaz[1] = Math.rad180+gnGa[1] ;
 				} else {
-					rdGa[0] = rad180-blBe-rdDe ;
-					rdGa[1] = rad180-blBe+rdDe ;
+					rdGa[0] = Math.rad180-blBe-rdDe ;
+					rdGa[1] = Math.rad180-blBe+rdDe ;
 					gnGa[0] = blAl-gnDe ;
 					gnGa[1] = blAl+gnDe ;
 
-					rdaz[0] = rad180-rdGa[0] ;
-					rdaz[1] = rad180-rdGa[1] ;
-					gnaz[0] = rad180-gnGa[0] ;
-					gnaz[1] = rad180-gnGa[1] ;
+					rdaz[0] = Math.rad180-rdGa[0] ;
+					rdaz[1] = Math.rad180-rdGa[1] ;
+					gnaz[0] = Math.rad180-gnGa[0] ;
+					gnaz[1] = Math.rad180-gnGa[1] ;
 				}
 			}
 		}
@@ -360,27 +334,33 @@ public class CircleParallel implements Circle {
 	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
 		double blA, blB, blGa, rdB, gnB ;
 		double[] rdeqA, rdeqO, rdhoA, rdhoO, gneq, gnho ;
-		double rad90 ;
+		double rdhoC[], rdST, rdLa, gnhoC[], gnST, gnLa ;
 		double[] inaz ;
+		double gnal ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+		rdhoC = zenit() ;
+		rdST = rdhoC[0] ;
+		rdLa = rdhoC[1] ;
+		gnhoC = gn.zenit() ;
+		gnST = gnhoC[0] ;
+		gnLa = gnhoC[1] ;
 
-		rdB = rad90-al ;
-		gnB = rad90-gn.al ;
-		blA = rad90-horizon.getLa() ;
-		blB = rad90-gn.horizon.getLa() ;
-		blGa = gn.horizon.getST()-horizon.getST() ;
+		rdB = Math.rad90-al ;
+		gnB = Math.rad90-gn.al ;
+		blA = Math.rad90-rdLa ;//horizon.getLa() ;
+		blB = Math.rad90-gnLa ;//gn.dotDot().getLa() ;
+		blGa = gnST-rdST ;//gn.dotDot().getST()-horizon.getST() ;
 
 		inaz = CircleParallel.intersection( rdB, gnB, blA, blB, blGa ) ;
 
 		// unconvert local rd into actual
-		rdeqA = ApplicationHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
-		rdeqA[0] = horizon.getST()-rdeqA[0] ;
-		rdhoA = horizon.unconvert( rdeqA ) ;
+		rdeqA = ApplicationHelper.horizontal2Equatorial( inaz[0], al, rdLa/*horizon.getLa()*/ ) ;
+		rdeqA[0] = rdST-rdeqA[0] ;//horizon.getST()-rdeqA[0] ;
+		rdhoA = projector.unconvert( rdeqA ) ;
 
-		rdeqO = ApplicationHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
-		rdeqO[0] = horizon.getST()-rdeqO[0] ;
-		rdhoO = horizon.unconvert( rdeqO ) ;
+		rdeqO = ApplicationHelper.horizontal2Equatorial( inaz[1], al, rdLa/*horizon.getLa()*/ ) ;
+		rdeqO[0] = rdST-rdeqO[0] ;//horizon.getST()-rdeqO[0] ;
+		rdhoO = projector.unconvert( rdeqO ) ;
 
 		// sort associated values
 		if ( rdhoA[0]>rdhoO[0] ) {
@@ -396,11 +376,12 @@ public class CircleParallel implements Circle {
 		}
 
 		// unconvert local gn into actual
-		gneq = ApplicationHelper.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gn.al, gn.horizon.getLa() ) ;
-		gneq[0] = gn.horizon.getST()-gneq[0] ;
-		gnho = gn.horizon.unconvert( gneq ) ;
+		gnal = AstrolabeFactory.valueOf( gn.getAngle() ) ;
+		gneq = ApplicationHelper.horizontal2Equatorial( leading?inaz[3]:inaz[2], gnal, gnLa/*gn.dotDot().getLa()*/ ) ;
+		gneq[0] = gnST-gneq[0] ;//gn.dotDot().getST()-gneq[0] ;
+		gnho = gn.projector.unconvert( gneq ) ;//dotDot().unconvert( gneq ) ;
 
-		if ( ! gn.examine( gnho[0] ) ) {
+		if ( ! gn.probe( gnho[0] ) ) {
 			throw new ParameterNotValidException() ;
 		}
 
@@ -410,26 +391,28 @@ public class CircleParallel implements Circle {
 	public double intersect( CircleMeridian gn, boolean leading ) throws ParameterNotValidException {
 		double blA, blB, blGa, rdB ;
 		double[] rdeqA, rdeqO, rdhoA, rdhoO ;
-		double rad90 ;
+		double rdhoC[], rdST, rdLa ;
 		double inaz[], gnal ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+		rdhoC = zenit() ;
+		rdST = rdhoC[0] ;
+		rdLa = rdhoC[1] ;
 
-		rdB = rad90-al ;
-		blA = rad90-horizon.getLa() ;
-		blB = rad90-gn.transformParallelLa() ;
-		blGa = gn.transformParallelST()-horizon.getST() ;
+		rdB = Math.rad90-al ;
+		blA = Math.rad90-rdLa ;//horizon.getLa() ;
+		blB = Math.rad90-gn.transformParallelLa() ;
+		blGa = gn.transformParallelST()-rdST ;//horizon.getST() ;
 
-		inaz = CircleParallel.intersection( rdB, rad90, blA, blB, blGa ) ;
+		inaz = CircleParallel.intersection( rdB, Math.rad90, blA, blB, blGa ) ;
 
 		// unconvert local rd into actual
-		rdeqA = ApplicationHelper.Horizontal2Equatorial( inaz[0], al, horizon.getLa() ) ;
-		rdeqA[0] = horizon.getST()-rdeqA[0] ;
-		rdhoA = horizon.unconvert( rdeqA ) ;
+		rdeqA = ApplicationHelper.horizontal2Equatorial( inaz[0], al, rdLa/*horizon.getLa()*/ ) ;
+		rdeqA[0] = rdST-rdeqA[0] ;//horizon.getST()-rdeqA[0] ;
+		rdhoA = projector.unconvert( rdeqA ) ;
 
-		rdeqO = ApplicationHelper.Horizontal2Equatorial( inaz[1], al, horizon.getLa() ) ;
-		rdeqO[0] = horizon.getST()-rdeqO[0] ;
-		rdhoO = horizon.unconvert( rdeqO ) ;
+		rdeqO = ApplicationHelper.horizontal2Equatorial( inaz[1], al, rdLa/*horizon.getLa()*/ ) ;
+		rdeqO[0] = rdST-rdeqO[0] ;//horizon.getST()-rdeqO[0] ;
+		rdhoO = projector.unconvert( rdeqO ) ;
 
 		// sort associated values
 		if ( rdhoA[0]>rdhoO[0] ) {
@@ -446,47 +429,91 @@ public class CircleParallel implements Circle {
 
 		gnal = leading?gn.transformMeridianAl( inaz[3] ):gn.transformMeridianAl( inaz[2] ) ;
 
-		if ( ! gn.examine( gnal ) ) {
+		if ( ! gn.probe( gnal ) ) {
 			throw new ParameterNotValidException() ;
 		}
 
 		return leading?rdhoO[0]:rdhoA[0] ;
 	}
 
-	public double distance0( double span ) {
+	public boolean probe( double az ) {
+		return probe( az, begin, end ) ;
+	}
+
+	public static boolean probe( double angle, double begin, double end ) {
+		boolean r ;
+		double b, e ;
+		double a ;
+
+		b = ApplicationHelper.mapTo0To360Range( begin ) ;
+		e = ApplicationHelper.mapTo0To360Range( end ) ;
+		a = ApplicationHelper.mapTo0To360Range( angle ) ;
+
+		r = b>e?a>=b||a<=e:a>=b&&a<=e ;
+
+		return r ;
+	}
+
+	public double mapIndexToAngleOfScale( double span ) {
+		return mapIndexToAngleOfScale( 0, span, begin, end ) ;
+	}
+
+	public double mapIndexToAngleOfScale( int index, double span ) {
+		return mapIndexToAngleOfScale( index, span, begin, end ) ;
+	}
+
+	public static double mapIndexToAngleOfScale( int index, double span, double begin, double end ) {
 		double r ;
+		double s ;
 
-		try {
-			r =  distanceN( span, 0 ) ;
-		} catch ( ParameterNotValidException e ) {
-			r = 0 ;
+		if ( index<0 ) { // last
+			s = end-(int) ( end/span)*span ;
+			r = end-( end>0?s:span-s )+index*span ;
+		} else {
+			s = begin-(int) ( begin/span)*span ;
+			r = begin+( begin>0?span-s:s )+index*span ;
 		}
 
 		return r ;
 	}
 
-	public double distanceN( double span, int n ) throws ParameterNotValidException {
-		double s, r ;
+	public double[] zenit() {
+		return projector.convert( 0, Math.rad90 ) ;
+	}
 
-		s = java.lang.Math.abs( Math.remainder( begin, span ) ) ;
-		r = begin+( begin>0?span-s:s )+n*span ;
+	public boolean isParallel() {
+		return true ;
+	}
 
-		if ( r>end ) {
-			throw new ParameterNotValidException() ;
-		}
+	public boolean isMeridian() {
+		return false ;
+	}
+
+	public double mapIndexToAngleOfRange() {
+		return gap( 0, segment, begin , end ) ;
+	}
+
+	public double mapIndexToAngleOfRange( double begin, double end ) {
+		return gap( 0, segment, begin , end ) ;
+	}
+
+	public double mapIndexToAngleOfRange( int index, double begin, double end ) {
+		return gap( index, segment, begin , end ) ;
+	}
+
+	public static double gap( int index, double segment, double begin, double end ) {
+		double r ;
+		double b, e ;
+		double d, g ;
+
+		b = ApplicationHelper.mapTo0To360Range( begin ) ;
+		e = ApplicationHelper.mapTo0To360Range( end ) ;		
+
+		d = b>e?Math.rad360+e-b:e-b ;
+		g = d-(int) ( d/segment )*segment ;
+
+		r = ( ( Math.isLim0( g )?segment:g )/2 )+index*segment ;
 
 		return r ;
-	}
-
-	public double getAl() {
-		return al ;
-	}
-
-	public void setAl( double al ) {
-		this.al = al ;
-	}
-
-	public Horizon dotDot() {
-		return horizon ;
 	}
 }

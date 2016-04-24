@@ -1,9 +1,40 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public class DialDegree implements Dial {
+@SuppressWarnings("serial")
+public class DialDegree extends astrolabe.model.DialDegree implements Dial {
+
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_NONE_SPACE = .1 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_NONE_THICKNESS = 0 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_NONE_LINEWIDTH = 0 ;
+
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_LINE_SPACE = 1 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_LINE_THICKNESS = .2 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_LINE_LINEWIDTH = 0 ;
+
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_RAIL_SPACE = 1 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_RAIL_THICKNESS = 1.2 ;
+	@SuppressWarnings("unused")
+	private final static double DEFAULT_RAIL_LINEWIDTH = .01 ;
+
+	private final static double DEFAULT_RISE = 3.2 ;
+
+	private Circle circle ;
+
+	private Method headPSBaseline ;
+	private Method emitPSBaseline ;
+	private Method tailPSBaseline ;
 
 	private double rise ;
 
@@ -11,161 +42,181 @@ public class DialDegree implements Dial {
 	private double thickness ;
 	private double linewidth ;
 
-	private double span ;
-	private int division ;
+	private double unit ;
 
-	private boolean reflect ;
+	protected DialDegree () {
+	}
 
-	private boolean hasBaseNone ;
-	private boolean hasBaseLine ;
-	private boolean hasBaseRail ;
+	public DialDegree( astrolabe.model.DialDegree peer, Circle circle ) {
+		setup( peer, circle, Math.rad1 ) ;
+	}
 
-	private astrolabe.model.DialType dlT ;
-	private Circle circle ;
+	public DialDegree( astrolabe.model.DialDegree peer, Circle circle, double unit ) {
+		setup( peer, circle, unit ) ;
+	}
 
-	private Span quantity ;
+	public void setup( Object peer, Circle circle, double unit ) {
+		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 
-	public DialDegree( astrolabe.model.DialType dlT, Circle circle ) {
-		String baseline, node ;
+		this.circle = circle ;	
+		this.unit = unit ;
 
-		this.dlT = dlT ;
-		this.circle = circle ;
+		try {
+			Class c ;
+			String bl, blm, blf, node ;
+			double ds, dt, dl ;
 
-		quantity = new SpanDegree( circle ) ;
+			c = Class.forName( "astrolabe.DialDegree" ) ;
 
-		span = dlT.getGraduationSpan().getSpan() ;
+			bl = getBaseline() ;
+			blm = bl.replaceFirst( ".", bl.substring( 0, 1 ).toUpperCase() ) ;
+			headPSBaseline = c.getDeclaredMethod( "headPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
+			emitPSBaseline = c.getDeclaredMethod( "emitPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
+			tailPSBaseline = c.getDeclaredMethod( "tailPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
 
-		reflect = dlT.getReflect() ;
-		baseline = dlT.getBaseline() ;
+			blf = blm.toUpperCase() ;
+			ds = c.getDeclaredField( "DEFAULT_"+blf+"_SPACE" ).getDouble( this ) ;
+			dt = c.getDeclaredField( "DEFAULT_"+blf+"_THICKNESS" ).getDouble( this ) ;
+			dl = c.getDeclaredField( "DEFAULT_"+blf+"_LINEWIDTH" ).getDouble( this ) ;
 
-		hasBaseNone = false ;
-		hasBaseLine = false ;
-		hasBaseRail = false ;
-
-		if ( baseline.equals( ApplicationConstant.AV_DIAL_NONE) ) {
-			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_NONE ;
-			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, .1 ) ;
-			thickness = 0 ;
-
-			hasBaseNone = true ;
-		} else if ( baseline.equals( ApplicationConstant.AV_DIAL_LINE ) ) {
-			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_LINE ;
-			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, 1 ) ;
-			thickness = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, .2 ) ;
-
-			hasBaseLine = true ;
-		} else if ( baseline.equals( ApplicationConstant.AV_DIAL_RAIL ) ) {
-			division = dlT.getGraduationSpan().getDivision() ;
-
-			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+ApplicationConstant.AV_DIAL_RAIL ;
-			space = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, 1 ) ;
-			thickness = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, 1.2 ) ;
-			linewidth = ApplicationHelper.getClassNode( this, dlT.getName(), node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, .01 ) ;
-
-			hasBaseRail = true ;
+			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+blm ;
+			space = ApplicationHelper.getClassNode( this, getName(),
+					node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, ds ) ;
+			thickness = ApplicationHelper.getClassNode( this, getName(),
+					node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, dt ) ;
+			linewidth = ApplicationHelper.getClassNode( this, getName(),
+					node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
+		} catch ( ClassNotFoundException e ) {
+		} catch ( NoSuchMethodException e ) {
+			e.printStackTrace() ;
+		} catch ( NoSuchFieldException e ) {
+			e.printStackTrace() ;
+		} catch ( IllegalAccessException e ) {
+			e.printStackTrace() ;
 		}
 
-		rise = ApplicationHelper.getClassNode( this, dlT.getName(), ApplicationConstant.PN_DIAL_ANNOTATION ).getDouble( ApplicationConstant.PK_DIAL_RISE, 3.2 ) ;
+		rise = ApplicationHelper.getClassNode( this, getName(),
+				ApplicationConstant.PN_DIAL_ANNOTATION ).getDouble( ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
+	}
+
+	public void headPS( PostscriptStream ps ) {
+		try {
+			headPSBaseline.invoke( this, new Object[] { ps } ) ;
+		} catch ( IllegalAccessException e ) {
+		} catch ( InvocationTargetException e ) {
+		}
 	}
 
 	public void emitPS( PostscriptStream ps ) throws ParameterNotValidException {
-		java.util.Vector<astrolabe.Vector> vV ;
-		java.util.Vector<double[]> vD ;
+		java.util.Vector<double[]> v ;
 		double[] xy ;
 
-		if ( hasBaseNone ) {
-			emitPSBaseNone( ps ) ;
-		} else if ( hasBaseLine ) {
-			ps.operator.setlinewidth( thickness ) ;
-			emitPSBaseLine( ps ) ;
-		} else if ( hasBaseRail ) {
-			ps.operator.setlinewidth( linewidth ) ;
-			emitPSBaseRail( ps ) ;
+		try {
+			emitPSBaseline.invoke( this, new Object[] { ps } ) ;
+		} catch ( IllegalAccessException e ) {
+		} catch ( InvocationTargetException e ) {
 		}
 
-		vV = circle.cartesianList( reflect?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
-		vD = ApplicationHelper.convertCartesianVectorToDouble( vV ) ;
+		emitPSGraduation( ps ) ;
+
+		v = circle.list( getReflect()?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
 		ps.operator.mark() ;
-		for ( int c=vD.size() ; c>0 ; c-- ) {
-			xy = (double[]) vD.get( c-1 ) ;
+		for ( int c=v.size() ; c>0 ; c-- ) {
+			xy = (double[]) v.get( c-1 ) ;
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
 		ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 	}
 
-	private void emitPSBaseNone( PostscriptStream ps ) throws ParameterNotValidException {
-		graduation( ps ) ;
+	public void tailPS( PostscriptStream ps ) {
+		try {
+			tailPSBaseline.invoke( this, new Object[] { ps } ) ;
+		} catch ( IllegalAccessException e ) {
+		} catch ( InvocationTargetException e ) {
+		}
 	}
 
-	private void emitPSBaseLine( PostscriptStream ps ) throws ParameterNotValidException {
-		double b, e ;
-		int ns = 0 ;
-		java.util.Vector<astrolabe.Vector> vV ;
-		java.util.Vector<double[]> vD ;
+	@SuppressWarnings("unused")
+	private void headPSBaselineNone( PostscriptStream ps ) {
+	}
 
-		vV = new java.util.Vector<astrolabe.Vector>() ;
-		quantity.set( span ) ;
+	@SuppressWarnings("unused")
+	private void headPSBaselineLine( PostscriptStream ps ) {
+		ps.operator.setlinewidth( thickness ) ;
+	}
+
+	@SuppressWarnings("unused")
+	private void headPSBaselineRail( PostscriptStream ps ) {
+		ps.operator.setlinewidth( linewidth ) ;
+	}
+
+	@SuppressWarnings("unused")
+	private void emitPSBaselineNone( PostscriptStream ps ) {
+	}
+
+	@SuppressWarnings("unused")
+	private void emitPSBaselineLine( PostscriptStream ps ) throws ParameterNotValidException {
+		java.util.Vector<double[]> v ;
+		double b, e ;
+		int ns ;
+
+		v = new java.util.Vector<double[]>() ;
 
 		try { // baseline
-			for ( ; ; ns++ ) {
-				b = quantity.distanceN( ns ) ;
-				e = quantity.distanceN( ns+1 ) ;
+			for ( ns=0 ; ; ns++ ) {
+				b = mapIndexToAngleOfScale( ns, getGraduationSpan().getSpan() ) ;
+				e = mapIndexToAngleOfScale( ns+1, getGraduationSpan().getSpan() ) ;
 
 				// in case that quantity handles dates this happens on turn of the year
 				if ( e<b ) {
 					continue ;
 				}
 
-				vV.addAll( circle.cartesianList( b, e, reflect?-space:space ) ) ;
+				v.addAll( circle.list( b, e, getReflect()?-space:space ) ) ;
 			}
 		} catch ( ParameterNotValidException ePNV ) {
 			double[] xy ;
 
-			vD = ApplicationHelper.convertCartesianVectorToDouble( vV ) ;
 			ps.operator.mark() ;
-			for ( int c=vD.size() ; c>0 ; c-- ) {
-				xy = (double[]) vD.get( c-1 ) ;
+			for ( int c=v.size() ; c>0 ; c-- ) {
+				xy = (double[]) v.get( c-1 ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 			ps.operator.stroke() ;
 		}
-
-		graduation( ps ) ;
 	}
 
-	private void emitPSBaseRail( PostscriptStream ps ) throws ParameterNotValidException {
-		double b, e, s ;
+	@SuppressWarnings("unused")
+	private void emitPSBaselineRail( PostscriptStream ps ) throws ParameterNotValidException {
+		java.util.Vector<double[]> vDFw = null, vDRv = null ;
+		double b, e, s, span ;
 		int nss = 0 ;
-		java.util.Vector<astrolabe.Vector> vVFw, vVRv ;
-		java.util.Vector<double[]> vDFw = null ;
 
-		quantity.set( span/division ) ;
+		span = getGraduationSpan().getSpan()/getGraduationSpan().getDivision() ;
 
 		try { // baseline
 			for ( ; ; nss++ ) {
-				b = quantity.distanceN( nss ) ;
-				e = quantity.distanceN( nss+1 ) ;
+				b = mapIndexToAngleOfScale( nss, span ) ;
+				e = mapIndexToAngleOfScale( nss+1, span ) ;
 
-				// in case that quantity handles dates this happens on turn of the year
+				// happens on turn of the year
 				if ( e<b ) {
 					continue ;
 				}
 
 				s = nss%2==0?space:space+linewidth/2 ;
-				s = reflect?-s:s ;			
-				vVFw = circle.cartesianList( b, e, s ) ;
+				s = getReflect()?-s:s ;			
+				vDFw = circle.list( b, e, s ) ;
 
 				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
-				s = reflect?-s:s ;
-				vVRv = circle.cartesianList( b, e, s ) ;
+				s = getReflect()?-s:s ;
+				vDRv = circle.list( b, e, s ) ;
 
-				vVRv = ApplicationHelper.reverseVector( vVRv ) ;
-				vVFw.addAll( vVRv ) ;
-
-				vDFw = ApplicationHelper.convertCartesianVectorToDouble( vVFw ) ;
+				vDRv = ApplicationHelper.reverseVector( vDRv ) ;
+				vDFw.addAll( vDRv ) ;
 
 				if ( nss%2 == 0 ) { // subunit filled
 					double[] xy ;
@@ -221,85 +272,98 @@ public class DialDegree implements Dial {
 				ps.operator.stroke() ;
 			}
 		}
-
-		graduation( ps ) ;
 	}
 
-	private void graduation( PostscriptStream ps ) throws ParameterNotValidException {
-		double d ;
-		double rad90 ;
+	@SuppressWarnings("unused")
+	private void tailPSBaselineNone( PostscriptStream ps ) {
+	}
+
+	@SuppressWarnings("unused")
+	private void tailPSBaselineLine( PostscriptStream ps ) {
+	}
+
+	@SuppressWarnings("unused")
+	private void tailPSBaselineRail( PostscriptStream ps ) {
+	}
+
+	private void emitPSGraduation( PostscriptStream ps ) throws ParameterNotValidException {
 		int ns ;
-		Vector origin, tangent ;
+		double a ;
+		double[] o, t ;
 		Graduation g ;
-		astrolabe.model.GraduationType gdT ;
 
-		rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
 
-		origin = null ;
-		tangent = null ;
-
-		quantity.set( span ) ;
-
-		// Closed circle and dial starting at 0
-		ns = circle.isClosed()&&Math.isE0( quantity.distance0() )?1:0 ;
-
-		for ( ; ; ns++ ) {
+		for ( ns=1 ; ; ns++ ) {
 			try {
-				d = quantity.distanceN( ns ) ;
+				a = mapIndexToAngleOfScale( ns, getGraduationSpan().getSpan() ) ;
 			} catch ( ParameterNotValidException e ) {
 				break ;
 			}
 
-			try {
-				origin = circle.cartesian( d, reflect?-( space+thickness ):space+thickness ) ;
-				tangent = circle.tangentVector( d ).rotate( reflect?-rad90:rad90 ) ;
-			} catch ( ParameterNotValidException e ) {}
+			register( ns ) ;
 
-			gdT = dlT.getGraduationSpan() ;
-			g = new GraduationSpan( origin, tangent ) ;
+			o = circle.project( a, getReflect()?-( space+thickness ):space+thickness ) ;
+			t = circle.tangent( a ) ;
+			if ( getReflect() ) {
+				t[0] = -t[0] ;
+				t[1] = -t[1] ;
+			}
 
+			g = new GraduationSpan( getGraduationSpan(), o, t ) ;
 			try { // half
-				if ( quantity.isGraduationModN( dlT.getGraduationHalf().getSpan(), ns ) ) {
-					gdT = dlT.getGraduationHalf() ;
-					g = new GraduationHalf( origin, tangent ) ;
+				if ( isIndexAligned( ns, getGraduationHalf().getSpan() ) ) {
+					g = new GraduationHalf( getGraduationHalf(), o, t ) ;
 				}
 			} catch ( NullPointerException e ) {}
-
 			try { // full
-				if ( quantity.isGraduationModN( dlT.getGraduationFull().getSpan(), ns ) ) {
-					gdT = dlT.getGraduationFull() ;
-					g = new GraduationFull( origin, tangent ) ;
+				if ( isIndexAligned( ns, getGraduationFull().getSpan() ) ) {
+					g = new GraduationFull( getGraduationFull(), o, t ) ;
 				}
 			} catch ( NullPointerException e ) {}
 
 			ps.operator.gsave() ;
 
+			g.headPS( ps ) ;
 			g.emitPS( ps ) ;
-
-			quantity.register( ns ) ;
-
-			for ( int an=0 ; an<gdT.getAnnotationStraightCount() ; an++ ) {
-				astrolabe.model.AnnotationType anT ;
-				Annotation annotation ;
-
-				ps.operator.gsave() ;
-
-				anT = gdT.getAnnotationStraight( an ) ;
-				annotation = new AnnotationStraight( anT ) ;
-				annotation.emitPS( ps ) ;
-
-				ps.operator.grestore() ;
-			}
+			g.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
 		}
 	}
 
-	public void setQuantity( Span quantity ) {
-		this.quantity = quantity ;
+	public double mapIndexToAngleOfScale( int index, double span ) throws ParameterNotValidException {
+		double r ;
+
+		r = circle.mapIndexToAngleOfScale( index, span*unit ) ;
+		if ( ! circle.probe( r ) || r>Math.rad360 ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		return r ;
 	}
 
-	public Circle dotDot() {
-		return circle ;
+	public boolean isIndexAligned( int index, double span ) {
+		double a, b ;
+
+		a = circle.mapIndexToAngleOfScale( index, getGraduationSpan().getSpan()*unit ) ;
+		b = span*unit ;
+
+		return Math.isLim0( a-(int) ( a/b )*b ) ;
+	}
+
+	public void register( int index ) {
+		double a ;
+		String key ;
+
+		try {
+			a = circle.mapIndexToAngleOfScale( index, getGraduationSpan().getSpan()*unit ) ;
+
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
+			ApplicationHelper.registerDMS( key, a, 2 ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
+			ApplicationHelper.registerTime( key, a, 2 ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
+			ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/, 2 ) ;
+		} catch ( ParameterNotValidException  e ) {}
 	}
 }

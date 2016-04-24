@@ -1,13 +1,14 @@
 
 package astrolabe;
 
+@SuppressWarnings("serial")
 public class ChartEqualarea extends ChartStereographic {
 
-	public ChartEqualarea( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
-		super( chT, astrolabe ) ;
+	public ChartEqualarea( astrolabe.model.ChartEqualarea peer ) {
+		setup( peer ) ;
 	}
 
-	public Vector project( double RA, double d ) {
+	public double[] project( double RA, double d ) {
 		return null ;
 	}
 

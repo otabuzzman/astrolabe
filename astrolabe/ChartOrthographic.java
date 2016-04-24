@@ -1,13 +1,14 @@
 
 package astrolabe;
 
+@SuppressWarnings("serial")
 public class ChartOrthographic extends ChartStereographic {
 
-	public ChartOrthographic( astrolabe.model.ChartType chT, Astrolabe astrolabe ) {
-		super( chT, astrolabe ) ;
+	public ChartOrthographic( astrolabe.model.ChartOrthographic peer ) {
+		setup( peer ) ;
 	}
 
-	public Vector project( double RA, double d ) {
+	public double[] project( double RA, double d ) {
 		return null ;
 	}
 

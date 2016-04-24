@@ -1,12 +1,6 @@
 
 package astrolabe;
 
-import astrolabe.model.AnnotationType;
-import astrolabe.model.ChartType;
-import astrolabe.model.CircleType;
-import astrolabe.model.DialType;
-import astrolabe.model.HorizonType;
-
 import astrolabe.model.AngleType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
@@ -27,171 +21,122 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static ChartType getChartType( astrolabe.model.Chart ch ) {
-		ChartType chT ;
-
-		if ( ch.getChartStereographic() != null ) {
-			chT = ch.getChartStereographic() ;
-		} else if ( ch.getChartOrthographic() != null ) {
-			chT = ch.getChartOrthographic() ;
-		} else if ( ch.getChartEquidistant() != null ) {
-			chT = ch.getChartEquidistant() ;
-		} else if ( ch.getChartGnomonic() != null ) {
-			chT = ch.getChartGnomonic() ;
-		} else { // ChartEqualarea
-			chT = ch.getChartEqualarea() ;
-		}
-		return chT ;
-	}
-
-	public static Chart createChart( astrolabe.model.Chart ch, Astrolabe a ) {
-		ChartType chT ;
+	public static Chart createChart( astrolabe.model.Chart ch ) throws ParameterNotValidException {
+		astrolabe.model.ChartStereographic chS ;
+		astrolabe.model.ChartOrthographic chO ;
+		astrolabe.model.ChartEquidistant chE ;
+		astrolabe.model.ChartGnomonic chG ;
 		Chart chart ;
 
-		if ( ( chT = ch.getChartStereographic() ) != null ) {
-			chart = new ChartStereographic( chT, a ) ;
-		} else if ( ( chT = ch.getChartOrthographic() ) != null ) {
-			chart = new ChartOrthographic( chT, a ) ;
-		} else if ( ( chT = ch.getChartEquidistant() ) != null ) {
-			chart = new ChartEquidistant( chT, a ) ;
-		} else if ( ( chT = ch.getChartGnomonic() ) != null ) {
-			chart = new ChartGnomonic( chT, a ) ;
-		} else { // ChartEqualarea
-			chart = new ChartEqualarea( ch.getChartEqualarea(), a ) ;
+		if ( ch == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( chS = ch.getChartStereographic() ) != null ) {
+			chart = new ChartStereographic( chS ) ;
+		} else if ( ( chO = ch.getChartOrthographic() ) != null ) {
+			chart = new ChartOrthographic( chO ) ;
+		} else if ( ( chE = ch.getChartEquidistant() ) != null ) {
+			chart = new ChartEquidistant( chE ) ;
+		} else if ( ( chG = ch.getChartGnomonic() ) != null ) {
+			chart = new ChartGnomonic( chG ) ;
+		} else { // ch.getChartEqualarea() != null
+			chart = new ChartEqualarea( ch.getChartEqualarea() ) ;
 		}
 		return chart ;
 	}
 
-	public static HorizonType getHorizonType( astrolabe.model.Horizon ho ) {
-		HorizonType hoT ;
-
-		if ( ( hoT = ho.getHorizonLocal() ) != null  ) {
-			hoT = ho.getHorizonLocal() ;
-		} else if ( ( hoT = ho.getHorizonEquatorial() ) != null  ) {
-			hoT = ho.getHorizonEquatorial() ;
-		} else if ( ( hoT = ho.getHorizonEcliptical() ) != null  ) {
-			hoT = ho.getHorizonEcliptical() ;
-		} else { // HorizonGalactic
-			hoT = ho.getHorizonGalactic() ;
-		}
-
-		return hoT ;
-	}
-
-	public static Horizon createHorizon( astrolabe.model.Horizon ho, Chart ch ) {
-		HorizonType hoT ;
+	public static Horizon createHorizon( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
+		astrolabe.model.HorizonLocal hoLo ;
+		astrolabe.model.HorizonEquatorial hoEq ;
+		astrolabe.model.HorizonEcliptical hoEc ;
 		Horizon horizon ;
 
-		if ( ( hoT = ho.getHorizonLocal() ) != null  ) {
-			horizon = new HorizonLocal( hoT, ch ) ;
-		} else if ( ( hoT = ho.getHorizonEquatorial() ) != null  ) {
-			horizon = new HorizonEquatorial( hoT, ch ) ;
-		} else if ( ( hoT = ho.getHorizonEcliptical() ) != null  ) {
-			horizon = new HorizonEcliptical( hoT, ch ) ;
-		} else { // HorizonGalactic
-			horizon = new HorizonGalactic( ho.getHorizonGalactic(), ch ) ;
+		if ( ho == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( hoLo = ho.getHorizonLocal() ) != null  ) {
+			horizon = new HorizonLocal( hoLo, epoch, p ) ;
+		} else if ( ( hoEq = ho.getHorizonEquatorial() ) != null  ) {
+			horizon = new HorizonEquatorial( hoEq, p ) ;
+		} else if ( ( hoEc = ho.getHorizonEcliptical() ) != null  ) {
+			horizon = new HorizonEcliptical( hoEc, epoch, p ) ;
+		} else { // ho.getHorizonGalactic() != null
+			horizon = new HorizonGalactic( ho.getHorizonGalactic(), p ) ;
 		}
 
 		return horizon ;
 	}
 
-	public static CircleType getCircleType( astrolabe.model.Circle cl ) {
-		CircleType clT ;
-
-		if ( cl.getCircleParallel() != null ) {
-			clT = cl.getCircleParallel() ;
-		} else if ( cl.getCircleMeridian() != null ) {
-			clT = cl.getCircleMeridian() ;
-		} else if ( cl.getCircleSouthernPolar() != null ) {
-			clT = cl.getCircleSouthernPolar() ;
-		} else if ( cl.getCircleNorthernPolar() != null ) {
-			clT = cl.getCircleNorthernPolar() ;
-		} else if ( cl.getCircleSouthernTropic() != null ) {
-			clT = cl.getCircleSouthernTropic() ;
-		} else { // CircleNorthernTropic
-			clT = cl.getCircleNorthernTropic() ;
-		}
-
-		return clT ;
-	}
-
-	public static Circle createCircle( astrolabe.model.Circle cl, Horizon horizon ) throws ParameterNotValidException {
-		CircleType clT ;
+	public static Circle createCircle( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
+		astrolabe.model.CircleParallel clP ;
+		astrolabe.model.CircleMeridian clM ;
+		astrolabe.model.CircleSouthernPolar clSP ;
+		astrolabe.model.CircleNorthernPolar clNP ;
+		astrolabe.model.CircleSouthernTropic clST ;
 		Circle circle ;
 
-		if ( ( clT = cl.getCircleParallel() ) != null ) {
-			circle = new CircleParallel( clT, horizon ) ;
-		} else if ( ( clT = cl.getCircleMeridian() ) != null ) {
-			circle = new CircleMeridian( clT, horizon ) ;
-		} else if ( ( clT = cl.getCircleSouthernPolar() ) != null ) {
-			circle = new CircleSouthernPolar( clT, horizon ) ;
-		} else if ( ( clT = cl.getCircleNorthernPolar() ) != null ) {
-			circle = new CircleNorthernPolar( clT, horizon ) ;
-		} else if ( ( clT = cl.getCircleSouthernTropic() ) != null ) {
-			circle = new CircleSouthernTropic( clT, horizon ) ;
-		} else { // CircleNorthernTropic
-			circle = new CircleNorthernTropic( cl.getCircleNorthernTropic(), horizon ) ;
+		if ( cl == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( clP = cl.getCircleParallel() ) != null ) {
+			circle = new CircleParallel( clP, p ) ;
+		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
+			circle = new CircleMeridian( clM, p ) ;
+		} else if ( ( clSP = cl.getCircleSouthernPolar() ) != null ) {
+			circle = new CircleSouthernPolar( clSP, epoch, p ) ;
+		} else if ( ( clNP = cl.getCircleNorthernPolar() ) != null ) {
+			circle = new CircleNorthernPolar( clNP, epoch, p ) ;
+		} else if ( ( clST = cl.getCircleSouthernTropic() ) != null ) {
+			circle = new CircleSouthernTropic( clST, epoch, p ) ;
+		} else { // cl.getCircleNorthernTropic() != null
+			circle = new CircleNorthernTropic( cl.getCircleNorthernTropic(), epoch, p ) ;
 		}
 
 		return circle ;
 	}
 
-	public static DialType getDialType( astrolabe.model.Dial dl ) {
-		DialType dlT ;
-
-		if ( dl.getDialDegree() != null ) {
-			dlT = dl.getDialDegree() ;
-		} else if ( dl.getDialHour() != null ) {
-			dlT = dl.getDialHour() ;
-		} else { // DialDay
-			dlT = dl.getDialDay() ;
-		}
-
-		return dlT ;
-	}
-
-	public static Dial createDial( astrolabe.model.Dial dl, Circle circle ) throws ParameterNotValidException {
-		DialType dlT ;
+	public static Dial createDial( astrolabe.model.Dial dl, double epoch, Circle circle ) throws ParameterNotValidException {
+		astrolabe.model.DialDegree dlD ;
+		astrolabe.model.DialHour dlH ;
 		Dial dial ;
 
-		if ( ( dlT = dl.getDialDegree() ) != null ) {
-			dial = new DialDegree( dlT, circle ) ;
-		} else if ( ( dlT = dl.getDialHour() ) != null ) {
-			dial = new DialHour( dlT, circle ) ;
-		} else { // DialDay
-			dial = new DialDay( dl.getDialDay(), circle ) ;
+		if ( dl == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( dlD = dl.getDialDegree() ) != null ) {
+			dial = new DialDegree( dlD, circle ) ;
+		} else if ( ( dlH = dl.getDialHour() ) != null ) {
+			dial = new DialHour( dlH, circle ) ;
+		} else { // dl.getDialDay() != null
+			dial = new DialDay( dl.getDialDay(), epoch, circle ) ;
 		}
 
 		return dial ;
 	}
 
-	public static AnnotationType getAnnotationType( astrolabe.model.Annotation an ) {
-		AnnotationType anT ;
-
-		if ( an.getAnnotationStraight() != null ) {
-			anT = an.getAnnotationStraight() ;
-		} else { // AnnotationCurved
-			anT = an.getAnnotationCurved() ;
-		}
-
-		return anT ;
-	}
-
-	public static Annotation createAnnotation( astrolabe.model.Annotation an ) {
-		AnnotationType anT ;
+	public static Annotation createAnnotation( astrolabe.model.Annotation an ) throws ParameterNotValidException {
+		astrolabe.model.AnnotationStraight anS ;
 		Annotation annotation ;
 
-		if ( ( anT = an.getAnnotationStraight() ) != null ) {
-			annotation = new AnnotationStraight( anT ) ;
-		} else { // AnnotationCurved
+		if ( an == null ) {
+			throw new ParameterNotValidException() ;
+		}
+
+		if ( ( anS = an.getAnnotationStraight() ) != null ) {
+			annotation = new AnnotationStraight( anS ) ;
+		} else { // an.getAnnotationCurved() != null
 			annotation = new AnnotationCurved( an.getAnnotationCurved() ) ;
 		}
 
 		return annotation ;
 	}
 
-	public static CAADate valueOf( DateType date ) throws ParameterNotValidException {
-		CAADate r ;
+	public static double valueOf( DateType date ) throws ParameterNotValidException {
+		double r ;
 
 		if ( date == null ) {
 			throw new ParameterNotValidException() ;
@@ -200,26 +145,23 @@ public final class AstrolabeFactory {
 		if ( date.getJD() == null ) {
 			r = AstrolabeFactory.valueOf( date.getCalendar() ) ;
 		} else {
-			double jd ;
-
-			jd = AstrolabeFactory.valueOf( date.getJD() ) ;
-
-			r = new CAADate( jd, true ) ;
+			r = AstrolabeFactory.valueOf( date.getJD() ) ;
 		}
 
 		return r ;
 	}
 
-	public static CAADate valueOf( CalendarType calendar ) throws ParameterNotValidException {
-		CAADate r ;
-		long[] d ;
+	public static double valueOf( CalendarType calendar ) throws ParameterNotValidException {
+		double r ;
+		CAADate d ;
+		long[] c ;
 		double t ;
 
 		if ( calendar == null ) {
 			throw new ParameterNotValidException() ;
 		}
 
-		d = AstrolabeFactory.valueOf( calendar.getYMD() ) ;
+		c = AstrolabeFactory.valueOf( calendar.getYMD() ) ;
 
 		if ( calendar.getTime() == null ) {
 			t = 0 ;
@@ -227,7 +169,9 @@ public final class AstrolabeFactory {
 			t = CAACoordinateTransformation.RadiansToHours( AstrolabeFactory.valueOf( calendar.getTime() ) ) ;
 		}
 
-		r = new CAADate( d[0], d[1], d[2]+t/24, true ) ;
+		d = new CAADate( c[0], c[1], c[2]+t/24, true ) ;
+		r = d.Julian() ;
+		d.delete() ;
 
 		return r ;
 	}
