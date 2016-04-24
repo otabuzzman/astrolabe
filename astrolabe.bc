@@ -1,0 +1,417 @@
+/*************************************************************
+ * Quellen.
+ *   [1]  Jean Meeus, Astronomische Algorithmen, 2. Auflage.
+ *************************************************************/
+ 
+/*************************************************************
+ * Allgemeine Parameter.
+ *************************************************************/
+
+/* Rechengenauigkeit als Anzahl der Nachkommastellen.
+ */
+scale = 16 ;
+
+true  = 1 ;
+false = 0 ;
+
+pi    = 4*a(1) ;
+
+/*************************************************************
+ *!! Allgemeine Parameter.
+ *************************************************************/
+
+/*************************************************************
+ * Allgemeine Funktionen.
+ *************************************************************/
+
+/* Anzahl der Nachkommastellen eines Wertes einstellen
+ * (number of decimal places).
+ */
+define ndp( x, n ) {
+	auto s ;
+
+	s = scale ;
+
+	scale = n ;
+	x = x/1 ;
+	scale = s ;
+
+	return(x) ;
+}
+
+/* Ganzzahliger Anteil von x.
+ */
+define int( x ) {
+	return(ndp(x, 0)) ;
+}
+
+/* Absoluter Wert des Arguments.
+ */
+define abs( x ) {
+
+	if ( x<0 ) { return(-x) }
+
+	return(x) ;
+}
+
+/* Divisionsrest von x/d bestimmen (remainder).
+ */
+define rmd( x, d ) {
+	return(x-int(x/d)*d) ;
+}
+
+/* Dezimalteil von x (fraction).
+ */
+define frc( x ) {
+	return(x-int(x)) ;
+}
+
+/* Winkelfunktionen und Umkehrfunktionen für Argumente in Grad.
+ */
+define sin( x ) {
+	return(s(x*pi/180)) ;
+}
+define cos( x ) {
+	return(c(x*pi/180)) ;
+}
+define tan( x ) {
+	return(sin(x)/cos(x)) ;
+}
+define asin( x ) {
+	return(atan(x/sqrt(1-x*x))) ;
+}
+define acos( x ) {
+	return(90-asin(x)) ;
+}
+define atan( x ) {
+	return(a(x)*180/pi) ;
+}
+define atan2( a, b ) {
+	auto x ;
+
+	x = atan(a/b) ;
+
+	if ( b<0 ) { x = x+180 }
+	if ( a<0&&b>0 ) { x = x+360 }
+	
+	return(x) ;
+}
+
+/*************************************************************
+ *!! Allgemeine Funktionen.
+ *************************************************************/
+
+/*************************************************************
+ * Anwendungsspezifische Parameter.
+ *************************************************************/
+
+/* Schritte pro Einheit auf der Feinskala der mittleren Tage,
+ * geradzahlig.
+ */
+scaledaysdict_finescalesteps = 4 ;
+
+/* Schritte pro Einheit auf der Feinskala der wahren Tage,
+ * geradzahlig.
+ */
+scaledaystrdict_finescalesteps = 4 ;
+
+/*************************************************************
+ *!! Anwendungsspezifische Parameter.
+ *************************************************************/
+
+/*************************************************************
+ * Anwendungsspezifische Funktionen.
+ *************************************************************/
+
+/* Diskrete Werte für Grad/Stunden, Minuten und Sekunden
+ * in Dezimalbruch umrechnen. Dabei Stunden in Grad umwandeln.
+ *
+ * Syntax:
+ *   d = convddv2d(d, m, s)
+ *   d = convtdv2d(h, m, s)
+ */
+define convddv2d( deg, min, sec ) {
+	return(sec/3600+min/60+deg) ;
+}
+
+define convtdv2d( hrs, min, sec ) {
+	return((hrs/3600+min/60+deg)*15) ;
+}
+
+/* Kalendertag in Julianischen Tag umrechnen ([1], Kap. 7).
+ *
+ * Syntax:
+ *   jd = convcd2jd(d, m, y)
+ *
+ * Beispiel:
+ *   convcd2jd( 1.5, 1,  2000)  # =2451545
+ *   convcd2jd(27,   1,  1987)  # =2446822.5
+ *   convcd2jd(19.5, 6,  1987)  # =2446966
+ *   convcd2jd(27,   1,  1988)  # =2447187.5
+ *   convcd2jd(19.5, 6,  1988)  # =2447332
+ *   convcd2jd( 1,   1,  1900)  # =2415020.5
+ *   convcd2jd( 1,   1,  1600)  # =2305447.5
+ *   convcd2jd(31,  12,  1600)  # =2305812.5
+ *   convcd2jd(10.3, 4,   837)  # =2026871.8
+ *   convcd2jd(12.5, 7, -1000)  # =1356001
+ *   convcd2jd(29,   2, -1000)  # =1355886.5
+ *   convcd2jd(17.9, 8, -1001)  # =1355671.4
+ *   convcd2jd( 1.5, 1, -4712)  # =0
+ */
+define convcd2jd( day, month, year ) {
+	auto m, y, b ;
+
+	if ( month>2 ) {
+		m = month ;
+		y = year ;
+	} else {
+		m = month+12 ;
+		y = year-1 ;
+	}
+
+	if ( y>1582 || y==1582 && ( m>10 || ( m==10 && day>14 ) ) ) {
+		b = 2-int(y/100)+int((y/100)/4) ;
+	} else {
+		b = 0 ;
+	}
+
+	return(int(365.25*(y+4716))+int(30.6001*(m+1))+day+b-1524.5) ;
+}
+
+/* Diskrete Werte für Tag, Monat und Jahr aus Julianischem
+ * Tag ermitteln ([1], Kap. 7).
+ *
+ * Syntax:
+ *   d = finddvjd(0, jd)
+ *   m = finddvjd(1, jd)
+ *   y = finddvjd(2, jd)
+ *
+ * Beispiel:
+ *   finddvjd(0, 2436116.31)  # =4.81
+ *   finddvjd(1, 2436116.31)  # =10
+ *   finddvjd(2, 2436116.31)  # =1957
+ *   finddvjd(0, 1842713)     # =27.5
+ *   finddvjd(1, 1842713)     # =1
+ *   finddvjd(2, 1842713)     # =333
+ *   finddvjd(0, 1507900.13)  # =28.63
+ *   finddvjd(1, 1507900.13)  # =5
+ *   finddvjd(2, 1507900.13)  # =-584
+ */
+define finddvjd ( dmy, julianday ) {
+	auto a, b, c, d, e, f, m, y, z ;
+
+	z = int(julianday+.5) ;
+	f = frc(julianday+.5) ;
+
+	if ( z < 2299161 ) {
+		a = z ;
+	} else {
+		a = z+1+int((z-1867216.25)/36524.25)-int(int((z-1867216.25)/36524.25)/4) ;
+	}
+
+	b = a+1524 ;
+	c = int((b-122.1)/365.25) ;
+	d = int(365.25*c) ;
+	e = int((b-d)/30.6001) ;
+
+	if ( e<14 ) {
+		m = e-1 ;
+	} else {
+		m = e-13 ;
+	}
+
+	if ( m>2 ) {
+		y = c-4716 ;
+	} else {
+		y = c-4715 ;
+	}
+
+	if ( dmy == 0 ) {
+		return(b-d-int(30.6001*e)+f) ;
+	}
+	if ( dmy == 1 ) {
+		return(m) ;
+	}
+	return(y) ;
+}
+
+/* Bestimmung des Wochentags eines Zeitpunkts ([1], Kap. 7).
+ *
+ * Syntax:
+ *   wd = findwd(jd)
+ *
+ * Beispiel:
+ *   findwd(convcd2jd(30, 6, 1954))  # =3
+ *   findwd(convcd2jd(25, 4, 1963))  # =4
+ *   findwd(convcd2jd(20, 9, 1965))  # =1
+ */
+define findwd( julianday ) {
+	auto s, d, jd ;
+
+	s = scale ;
+
+	scale = 0 ;
+	jd = int(julianday+.5)-.5 ; /* Auf 0h des Datums abrunden. */
+	d = (jd+1.5)%7 ;
+	scale = s ;
+
+	return(int(d)) ;
+}
+
+/* Bestimmung der Julianischen Jahrhunderte seit
+ * einer Epoche ([1], Kap. 21).
+ *
+ * Syntax:
+ *   jc = findjc(jd, ep)
+ *
+ * Beispiel:
+ *   findjc(convcd2jd(10, 4, 1987), convcd2jd(1.5, 1, 2000))  # =-.127296372348
+ */
+define findjc( julianday, epoch ) {
+	return((julianday-epoch)/36525) ;
+}
+
+/* Bestimmung der mittleren Schiefe der Ekliptik
+ * zu einem Zeitpunkt ([1], Kap. 21).
+ *
+ * Syntax:
+ *   e0 = finde0(jd)
+ *
+ * Beispiel:
+ *   finde0(convcd2jd(10, 4, 1987))  # =convddv2d(23, 26, 27.40735) =23.44094649
+ */
+define finde0( julianday ) {
+	auto t ;
+
+	t = findjc(julianday, convcd2jd(1.5, 1, 2000)) ;
+
+	return(convddv2d(23, 26, 21.448)        \
+		-convddv2d(0, 0, 46.8150)*t     \
+		-convddv2d(0, 0, 0.00059)*t^2   \
+		+convddv2d(0, 0, 0.001813)*t^3) ;
+}
+
+/* Bestimmung der mittleren (also äquatorialen) geometrischen
+ * Länge der Sonne zu einem Zeitpunkt ([1], Kap. 24).
+ *
+ * Syntax:
+ *   lo0 = findlo0sun(jd)
+ *
+ * Beispiel:
+ *   findlo0sun(convcd2jd(13, 10, 1992))  # =-2318.19281 =201.80719
+ */
+define findlo0sun( julianday ) {
+	auto t ;
+
+	t = findjc(julianday, convcd2jd(1.5, 1, 2000)) ;
+
+	/*         rmd: Ergebnis >=360 in [0,360) umwandeln. */
+	/*     rmd: Negatives Vorzeichen umkehren.           */
+	return(rmd(rmd(280.46645+36000.76983*t+0.0003032*t^2, 360)+360, 360)) ;
+}
+
+/* Bestimmung der wahren (also ekliptikalen)
+ * Länge der Sonne zu einem Zeitpunkt ([1], Kap. 24).
+ *
+ * Syntax:
+ *   lotr = findlotrsun(jd)
+ *
+ * Beispiel:
+ *   findlotrsun(convcd2jd(13, 10, 1992))  # =-2320.09013 =199.90987 
+ */
+define findlotrsun( julianday ) {
+	auto t, m ;
+
+	t = findjc(julianday, convcd2jd(1.5, 1, 2000)) ;
+	m = 357.52910+35999.05030*t-0.0001559*t^2-0.00000048*t^3 ;
+
+	/*         rmd: Ergebnis >=360 in [0,360) umwandeln. */
+	/*     rmd: Negatives Vorzeichne umkehren.           */
+	return(rmd(rmd(findlo0sun(julianday)                  \
+		+abs(1.914600-0.004817*t-0.000014*t^2)*sin(m) \
+		+abs(0.019993-0.000101*t)*sin(2*m)            \
+		+0.000290*sin(3*m), 360)+360, 360)) ;
+}
+
+/* Bestimmung der wahren Rektaszension
+ * der Sonne zu einem Zeitpunkt ([1], Kap. 24).
+ *
+ * Syntax:
+ *   ratr = findratrsun(jd)
+ *
+ * Beispiel:
+ *   findratrsun(convcd2jd(13, 10, 1992))  # =198.38166 
+ */
+define findratrsun( julianday ) {
+	auto e0, lotr ;
+
+	e0 = finde0(julianday) ;
+	lotr = findlotrsun(julianday);
+
+	return(atan2(cos(e0)*sin(lotr), cos(lotr))) ;
+}
+
+/* Mittlere Äquinoktien und Solstitien einer Epoche zwischen
+ * den Jahren 1000 und 3000 bestimmen ([1], Kap. 26).
+ *
+ * Syntax:
+ *   jd = findeqsl(0, jd)  # Märzäquinoktium.
+ *   jd = findeqsl(1, jd)  # Junisolstitium.
+ *   jd = findeqsl(2, jd)  # Septemberäquinoktium.
+ *   jd = findeqsl(3, jd)  # Dezembersolstitium.
+ *
+ * Beispiel:
+ *   findeqsl(1, convcd2jd(1, 1, 1962))  # =2437837.38589
+ */
+define findeqsl( es, julianday ) {
+	auto y ;
+
+	y = (finddvjd(2, julianday)-2000)/1000 ;
+
+	if ( es==0 ) {
+		return(2451623.80984+365242.37404*y+.05169*y^2-.00411*y^3-.00057*y^4) ;
+	}
+	if ( es==1 ) {
+		return(2451716.56767+365241.62603*y+.00325*y^2+.00888*y^3-.00030*y^4) ;
+	}
+	if ( es==2 ) {
+		return(2451810.21715+365242.01767*y-.11575*y^2+.00337*y^3+.00078*y^4) ;
+	}
+	return(2451900.05952+365242.74049*y-.06223*y^2-.00823*y^3+.00032*y^4) ;
+}
+
+/* Länge (dy) und Breite (de) der Nutuation
+ * in Gradsekunden bestimmen ([1], Kap. 21).
+ *
+ * Syntax:
+ *   dy = finddy(jd)
+ *   de = findde(jd)
+ *
+ * Beispiel:
+ *   finddy(convcd2jd(10, 4, 1987))  # =-3.863 (-3.788 n. gen. Meth.)
+ *   findde(convcd2jd(10, 4, 1987))  # =9.468 (9.443 n. gen. Meth.)
+ */
+define finddy( julianday ) {
+	auto t, l, l2, w ;
+
+	t = findjc(julianday, convcd2jd(1.5, 1, 2000)) ;
+	l = 280.4665+36000.7698*t ;
+	l2 = 218.3165+481267.8813*t ;
+	w = 125.04452-1934.136261*t ;
+
+	return(-17.20*sin(w)-1.32*sin(2*l)-.23*sin(2*l2)+.21*sin(2*w)) ;
+}
+define findde( julianday ) {
+	auto t, l, l2, w ;
+
+	t = findjc(julianday, convcd2jd(1.5, 1, 2000)) ;
+	l = 280.4665+36000.7698*t ;
+	l2 = 218.3165+481267.8813*t ;
+	w = 125.04452-1934.136261*t ;
+
+	return(9.20*cos(w)+.57*cos(2*l)+.10*cos(2*l2)-.09*cos(2*w)) ;
+}
+
+/*************************************************************
+ *!! Anwendungsspezifische Funktionen.
+ *************************************************************/
