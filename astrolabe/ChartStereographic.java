@@ -6,10 +6,10 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class ChartStereographic extends astrolabe.model.ChartStereographic implements Chart {
 
-	private final static String DEFAULT_PAGESIZE = "210x298" ;
+	private final static String DEFAULT_PAGESIZE = "210x297" ;
 	private final static double DEFAULT_UNIT = 2.834646 ;
 	private final static double DEFAULT_HALO = 4 ;
-	private final static double DEFAULT_HALOMIN = .04 ;
+	private final static double DEFAULT_HALOMIN = .08 ;
 	private final static double DEFAULT_HALOMAX = .4 ;
 
 	private double unit ;
@@ -73,12 +73,12 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 			y = -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ;
 			vp0 = new Vector( x, y ) ;
 		} else { // southern
-			x = java.lang.Math.tan( ( -origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
-			y = -java.lang.Math.tan( ( origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
+			x = -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
+			y = -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
 			vo = new Vector( x, y ) ;
 
-			x = java.lang.Math.tan( ( -d )/2 )*java.lang.Math.cos( RA ) ;
-			y = -java.lang.Math.tan( ( -d )/2 )*java.lang.Math.sin( RA ) ;
+			x = -java.lang.Math.tan( ( Math.rad90+d )/2 )*java.lang.Math.cos( RA ) ;
+			y = -java.lang.Math.tan( ( Math.rad90+d )/2 )*java.lang.Math.sin( RA ) ;
 			vp0 = new Vector( x, y ) ;
 		}
 
@@ -114,8 +114,8 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 			vo = new Vector( java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
 					-java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
 		} else { // southern
-			vo = new Vector( java.lang.Math.tan( ( -origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
-					-java.lang.Math.tan( ( origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
+			vo = new Vector( -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
+					-java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
 		}
 
 		vp0 = new Vector( x, y ) ;
@@ -132,12 +132,12 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 			vp = new Vector( vp0 ) ;
 		}
 
-		r[0] = java.lang.Math.atan2( -vp.y, vp.x ) ;
-
 		if ( northern ) {
+			r[0] = java.lang.Math.atan2( -vp.y, vp.x ) ;
 			r[1] = Math.rad90-java.lang.Math.atan( vp.x/java.lang.Math.cos( r[0] ) )*2 ;
 		} else { // southern
-			r[1] = -java.lang.Math.atan( vp.x/java.lang.Math.cos( r[0] ) )*2 ;
+			r[0] = java.lang.Math.atan2( -vp.y, -vp.x ) ;
+			r[1] = -Math.rad90+java.lang.Math.atan( -vp.x/java.lang.Math.cos( r[0] ) )*2 ;
 		}
 
 		return r ;

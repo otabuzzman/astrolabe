@@ -18,6 +18,7 @@ import caa.CAADate;
 import caa.CAAJupiter;
 import caa.CAAMars;
 import caa.CAAMercury;
+import caa.CAAMoon;
 import caa.CAANeptune;
 import caa.CAANutation;
 import caa.CAASaturn;
@@ -300,6 +301,14 @@ public final class ApplicationHelper {
 		return CAACoordinateTransformation.DegreesToRadians( CAASun.GeometricEclipticLatitude( JD ) ) ;
 	}
 
+	public static double moonEclipticLongitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAAMoon.EclipticLongitude( JD ) ) ;
+	}
+
+	public static double moonEclipticLatitude( double JD ) {
+		return CAACoordinateTransformation.DegreesToRadians( CAAMoon.EclipticLatitude( JD ) ) ;
+	}
+
 	public static double mercuryEclipticLongitude( double JD ) {
 		return CAACoordinateTransformation.DegreesToRadians( CAAMercury.EclipticLongitude( JD ) ) ;
 	}
@@ -484,6 +493,28 @@ public final class ApplicationHelper {
 		return r ;
 	} 
 
+	public static Preferences getForeignClassNode( String clazz, String instance, String qualifier ) {        
+		String i = instance != null ? "/"+instance : "" ;
+		String q = qualifier != null ? "/"+qualifier : "" ;
+		String d = "/"+clazz.replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
+		String n = d+i+q ;
+		Preferences r = null ;
+
+		try {
+			if ( ! Preferences.systemRoot().nodeExists( n ) ) {
+				n = d+q ;
+			}
+
+			r = Preferences.systemRoot().node( n ) ;
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalArgumentException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		return r ;
+	} 
+
 	public static Preferences getNestedClassNode( Object clazz, String instance, String qualifier ) {        
 		String q = qualifier != null ? "/"+qualifier : "" ;
 		String c[] = clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 ) ;
@@ -625,5 +656,30 @@ public final class ApplicationHelper {
 
 			ps.operator.grestore() ;
 		}
+	}
+
+	public static void emitPSPracticality( PostscriptStream ps, String practicality ) {
+		double r, g, b ;
+		String[] p ;
+
+		p = practicality.split( ":" ) ;
+
+		if ( p.length>1 ) {
+			r = new Double( p[0] ).doubleValue() ;
+			g = new Double( p[1] ).doubleValue() ;
+			b = new Double( p[2] ).doubleValue() ;
+			ps.operator.setrgbcolor( r, g, b ) ;
+		} else { // setgray
+			ps.operator.setgray( new Double( p[0] ).doubleValue() ) ;
+		}
+	}
+
+	public static void emitPSImportance( PostscriptStream ps, String importance ) {
+		String[] i ;
+
+		i = importance.split( ":" ) ;
+
+		ps.operator.setlinewidth( new Double( i[0] ).doubleValue() ) ;
+		ps.operator.setdash( new Double( i[1] ).doubleValue() ) ;
 	}
 }

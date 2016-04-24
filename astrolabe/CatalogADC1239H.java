@@ -57,7 +57,6 @@ public class CatalogADC1239H extends CatalogType {
 		astrolabe.model.BodyAreal model ;
 		HashSet<String> headline ;
 		String[] sv, hv, bv ;
-		boolean ok = true ;
 		CatalogRecord cr ;
 		BodyAreal body ;
 
@@ -73,58 +72,57 @@ public class CatalogADC1239H extends CatalogType {
 			}
 
 			sv = peer.getSign( s ).getValue().split( "," ) ;
-			notok:
-				if ( ok ) {
-					for ( int b=0 ; b<sv.length ; b++ ) {
-						model = new astrolabe.model.BodyAreal() ;
-						model.setType( ApplicationConstant.AV_BODY_SIGN ) ;
+			for ( int b=0 ; b<sv.length ; b++ ) {
+				model = new astrolabe.model.BodyAreal() ;
+				model.setType( ApplicationConstant.AV_BODY_SIGN ) ;
 
-						bv = sv[b].split( ":" ) ;
-						for ( int p=0 ; p<bv.length ; p++ ) {
-							if ( ( cr = entry( bv[p] ) ) == null ) {
-								ok = false ;
-								break notok ;
-							}
-							try {
-								model.addPosition( cr.toBody( epoch ).getBodyStellar().getPosition() ) ;
-							} catch ( ParameterNotValidException e ) {
-								throw new RuntimeException( e.toString() ) ;
-							}
-						}
-						try {
-							body = new BodyAreal( model, projector ) ;
-						} catch ( ParameterNotValidException e ) {
-							throw new RuntimeException( e.toString() ) ;
-						}
-
-						if ( peer.getSign( s ).getAnnotationCount()>0 ) {
-							if ( headline.size()==0 ) {
-								if ( b==0 ) {
-									body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
-								}
-							} else {
-								if ( headline.contains( new Integer( b+1 ).toString() ) ) {
-									body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
-								}
-							}
-						}
-
-						sign.add( body ) ;
+				bv = sv[b].split( ":" ) ;
+				for ( int p=0 ; p<bv.length ; p++ ) {
+					if ( ( cr = entry( bv[p] ) ) == null ) {
+						break ; // element missing in catalog
 					}
-					for ( int b=0 ; b<sign.size() ; b++ ) {
-						body = sign.get( b ) ;
-
-						ps.operator.gsave() ;
-
-						body.headPS( ps ) ;
-						body.emitPS( ps ) ;
-						body.tailPS( ps ) ;
-
-						ps.operator.grestore() ;
+					try {
+						model.addPosition( cr.toBody( epoch ).getBodyStellar().getPosition() ) ;
+					} catch ( ParameterNotValidException e ) {
+						throw new RuntimeException( e.toString() ) ;
 					}
-				} else {
-					ok = true ;
 				}
+				
+				if ( model.getPositionCount()<bv.length ) { // element(s) missing in catalog
+					break ;
+				}
+				
+				try {
+					body = new BodyAreal( model, projector ) ;
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+
+				if ( peer.getSign( s ).getAnnotationCount()>0 ) {
+					if ( headline.size()==0 ) {
+						if ( b==0 ) {
+							body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+						}
+					} else {
+						if ( headline.contains( new Integer( b+1 ).toString() ) ) {
+							body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+						}
+					}
+				}
+
+				sign.add( body ) ;
+			}
+			for ( int b=0 ; b<sign.size() ; b++ ) {
+				body = sign.get( b ) ;
+
+				ps.operator.gsave() ;
+
+				body.headPS( ps ) ;
+				body.emitPS( ps ) ;
+				body.tailPS( ps ) ;
+
+				ps.operator.grestore() ;
+			}
 		}
 
 		super.emitPS( ps ) ;

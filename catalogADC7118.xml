@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
 astrolabe.xsd">
 	<Epoch>
 		<Calendar>
@@ -800,8 +800,8 @@ astrolabe.xsd">
 					<!--ADC7118-->
 					<Catalog>
 						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/7/7118/catalog.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/7118/ngc2000.dat.gz-->
-						<CatalogADC7118 url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/7118/ngc2000.dat.gz" fov="chart" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
+						<CatalogADC7118 url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/7118/ngc2000.dat.gz" fov="chart" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
 </CatalogADC7118>
 					</Catalog>
 				</HorizonEquatorial>

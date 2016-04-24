@@ -116,9 +116,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 			// preserve length of d/2*goldensection
 			ps.operator.copy( 2 ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_VABS ) ;
-			ps.operator.dup() ;
-			ps.operator.div( Math.goldensection ) ;
-			ps.operator.add() ;
+			ps.operator.mul( Math.goldensection ) ;
 			ps.operator.roll( 10, 1 ) ;							// p, l, text, p, ll, ur, d/2
 
 			ps.custom( ApplicationConstant.PS_PROLOG_VADD ) ;	// p, l, text, p, ll, gc

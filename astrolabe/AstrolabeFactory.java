@@ -116,6 +116,7 @@ public final class AstrolabeFactory {
 		astrolabe.model.BodyStellar bdS ;
 		astrolabe.model.BodyAreal bdA ;
 		astrolabe.model.BodyPlanet bdP ;
+		astrolabe.model.BodyMoon bdM ;
 		astrolabe.model.BodySun bdH ;
 		astrolabe.model.BodyElliptical bdE ;
 		Body body ;
@@ -126,6 +127,8 @@ public final class AstrolabeFactory {
 			body = new BodyAreal( bdA, p ) ;
 		} else if ( ( bdP = bd.getBodyPlanet() ) != null ) {
 			body = new BodyPlanet( bdP, epoch, p ) ;
+		} else if ( ( bdM = bd.getBodyMoon() ) != null ) {
+			body = new BodyMoon( bdM, epoch, p ) ;
 		} else if ( ( bdH = bd.getBodySun() ) != null ) {
 			body = new BodySun( bdH, epoch, p ) ;
 		} else if ( ( bdE = bd.getBodyElliptical() ) != null ) {

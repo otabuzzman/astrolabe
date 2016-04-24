@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
-<xs:schema xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.cartacelestis.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartaecaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
 			<xs:element ref="Epoch"/>
@@ -404,6 +404,7 @@
 				<xs:element ref="BodyStellar"/>
 				<xs:element ref="BodyAreal"/>
 				<xs:element ref="BodyPlanet"/>
+				<xs:element ref="BodyMoon"/>
 				<xs:element ref="BodySun"/>
 				<xs:element ref="BodyElliptical"/>
 				<xs:element ref="BodyParabolic"/>
@@ -456,6 +457,13 @@
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BodyMoon">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyOrbitalType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>

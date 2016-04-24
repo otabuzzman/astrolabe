@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
 astrolabe.xsd">
 	<Epoch>
 		<Calendar>
@@ -1573,7 +1573,7 @@ astrolabe.xsd">
 								<Rational value="135"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1588,7 +1588,7 @@ astrolabe.xsd">
 								<Rational value="150"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1603,7 +1603,7 @@ astrolabe.xsd">
 								<Rational value="165"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1618,7 +1618,7 @@ astrolabe.xsd">
 								<Rational value="180"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1633,7 +1633,7 @@ astrolabe.xsd">
 								<Rational value="195"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1648,7 +1648,7 @@ astrolabe.xsd">
 								<Rational value="210"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -1663,7 +1663,7 @@ astrolabe.xsd">
 								<Rational value="225"/>
 							</Angle>
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
@@ -2690,6 +2690,61 @@ astrolabe.xsd">
 							</End>
 						</CircleMeridian>
 					</Circle>
+					<!--ADC6049-->
+					<Catalog>
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_18.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_20.dat.gz-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_18.dat-->
+						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_20.dat-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
+						<CatalogADC6049 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz">
+							<Annotation>
+								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomleft" radiant="false">
+									<Text value="@{abk&#x00fc;rzung}@"/>
+								</AnnotationStraight>
+							</Annotation>
+							<Select value="CMI,CNC,MON">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topleft" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomright" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+							<Select value="LAC,SCT,SER2">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topright" radiant="false">
+										<Text value="@{abk&#x00fc;rzung}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+						</CatalogADC6049>
+					</Catalog>
+					<!--ADC5050-->
+					<Catalog>
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/5/5050/catalog.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
+						<CatalogADC5050 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+							<Select value="mag0,mag1,mag2">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" anchor="bottomleft" reverse="false" radiant="false">
+										<Text value="@{Name}@"/>
+									</AnnotationStraight>
+								</Annotation>
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" anchor="topleft" reverse="false" radiant="false">
+										<Text value="@{HR}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+						</CatalogADC5050>
+					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>
 		</ChartStereographic>

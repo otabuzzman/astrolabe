@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
 astrolabe.xsd">
 	<Epoch>
 		<Calendar>
@@ -803,8 +803,8 @@ astrolabe.xsd">
 						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_20.dat.gz-->
 						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_18.dat-->
 						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_20.dat-->
-						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz-->
-						<CatalogADC6049 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz">
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
+						<CatalogADC6049 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz">
 							<Annotation>
 								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomleft" radiant="false">
 									<Text value="@{abk&#x00fc;rzung}@"/>

@@ -3,6 +3,31 @@
 <preferences>
 	<root type="system">
 		<map/>
+		<node name="AtlasStereographic">
+			<map>
+				<entry key="pagesize" value="a4"/>
+				<entry key="startRA" value=".4"/>
+				<entry key="shiftRA" value=".4"/>
+				<entry key="startDE" value="0"/>
+				<entry key="shiftDE" value="10"/>
+				<entry key="overlappingX" value="10"/>
+				<entry key="overlappingY" value="10"/>
+				<entry key="practicality" value=".8:0:0"/>
+				<entry key="importance" value=".12:0"/>
+			</map>
+			<node name="chartaecaeli-pick-northern">
+				<map>
+					<entry key="startDE" value="-25"/>
+					<entry key="shiftDE" value="25"/>
+				</map>
+			</node>
+			<node name="chartaecaeli-pick-southern">
+				<map>
+					<entry key="startDE" value="25"/>
+					<entry key="shiftDE" value="25"/>
+				</map>
+			</node>
+		</node>
 		<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 		<node name="astrolabe">
 			<map/>
@@ -27,7 +52,7 @@
 							<entry key="/.notdef" value="{}"/>
 							<!--char procedures-->
 							<entry key="/sight" value="{1000 0 0 0 1000 1000 setcachedevice 500 0 moveto 500 1000 lineto stroke 0 500 moveto 1000 500 lineto stroke 500 500 309 0 360 arc closepath stroke} bind"/>
-							<entry key="/object" value="{1000 0 setcharwidth 1 setgray 500 500 500 0 360 arc closepath fill 0 setgray 500 500 460 0 360 arc closepath fill} bind"/>
+							<entry key="/object" value="{1000 0 setcharwidth 1 setgray 500 500 500 0 360 arc closepath fill 0 setgray 500 500 420 0 360 arc closepath fill} bind"/>
 						</map>
 					</node>
 				</node>
@@ -101,10 +126,10 @@
 				<map>
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
-					<!--percent of linewidth or stringheight respectively-->
+					<!--percent of linewidth or fontsize respectively-->
 					<entry key="halo" value="4"/>
 					<!--astrolabe units-->
-					<entry key="halomin" value=".04"/>
+					<entry key="halomin" value=".08"/>
 					<entry key="halomax" value=".4"/>
 				</map>
 				<node name="pagesize">
@@ -496,6 +521,13 @@
 						<entry key="linewidth" value=".72"/>
 					</map>
 				</node>
+			</node>
+			<node name="BodyMoon">
+				<map>
+					<entry key="segment" value=".02"/>
+					<entry key="stretch" value=".012"/>
+					<entry key="linewidth" value=".04"/>
+				</map>
 			</node>
 			<node name="BodySun">
 				<map/>

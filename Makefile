@@ -64,9 +64,16 @@ clean:
 tidy: clean
 	rm -rf *.pdf
 
+
+
 astrolabe.pdf: astrolabe.xml
+
 catalogADC1239H.pdf: catalogADC1239H.xml
 catalogADC1239T.pdf: catalogADC1239T.xml
 catalogADC5050.pdf: catalogADC5050.xml
 catalogADC6049.pdf: catalogADC6049.xml
 catalogADC7118.pdf: catalogADC7118.xml
+
+chartaecaeli-pick.pdf: chartaecaeli-pick.xml
+chartaecaeli-full.pdf: chartaecaeli-full.xml
+chartaecaeli-grid.pdf: chartaecaeli-grid.xml

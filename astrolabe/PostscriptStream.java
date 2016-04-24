@@ -340,6 +340,10 @@ public class PostscriptStream extends PrintStream {
 		this.array( false ) ;
 	}
 
+	public void comment( String def ) {
+		print( "%"+def+"\n" ) ;
+	}
+
 	public void custom( String def ) throws ParameterNotValidException {
 		if ( ! this.prolog.containsKey( "/"+def ) ) {
 			throw new ParameterNotValidException( "/"+def ) ;
@@ -606,6 +610,17 @@ public class PostscriptStream extends PrintStream {
 		public void setlinewidth( double num ) {        
 			push( num ) ;
 			print( "setlinewidth\n" ) ;
+		}
+
+		public void setrgbcolor( double r, double g, double b ) {
+			push( r ) ;
+			push( g ) ;
+			push( b ) ;
+			setrgbcolor() ;
+		}
+
+		public void setrgbcolor() {        
+			print( "setrgbcolor\n" ) ;
 		}
 
 		public void show() {        

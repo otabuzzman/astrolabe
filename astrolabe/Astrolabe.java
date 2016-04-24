@@ -1,8 +1,10 @@
 
 package astrolabe;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
@@ -169,6 +171,32 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 		ps.emitDSCTrailer() ;
 	}
+
+	public static void main( String[] argv ) {
+		File f ;
+		FileReader m ;
+		Astrolabe a ;
+		PostscriptStream ps ;
+
+		try {
+			f = new File( argv[0] ) ;
+			m = new FileReader( f ) ;
+			a = new AstrolabeReader().read( m ) ;
+
+			ps = Astrolabe.initPS() ;
+
+			a.emitPS( ps ) ;
+
+			ps.close() ;
+
+			Registry.remove() ;
+		} catch ( Exception e ) {
+			e.printStackTrace() ;
+			System.exit( 1 ) ;
+		}
+
+		System.exit( 0 ) ;
+	} 
 
 	static {
 		System.loadLibrary( ApplicationConstant.GC_NATLIB_CAA ) ;
