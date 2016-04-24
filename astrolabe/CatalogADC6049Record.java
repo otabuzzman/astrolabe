@@ -10,7 +10,9 @@ import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
+import caa.CAAPrecession;
 
 public class CatalogADC6049Record implements CatalogRecord {
 
@@ -51,17 +53,21 @@ public class CatalogADC6049Record implements CatalogRecord {
 		}
 	}
 
-	public astrolabe.model.Body toBody() throws ParameterNotValidException {
+	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		CAA2DCoordinate ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
-		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_CONSTELLATION ) ;
+		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_AREA ) ;
 		for ( int position=0 ; position<RAhr.size() ; position++ ) {
+			ceq = CAAPrecession.PrecessEquatorial( RAhr( position ), DEdeg( position ), 2451545./*J2000*/, epoch ) ;
 			model.getBodyAreal().addPosition( AstrolabeFactory.modelPosition(
-					CAACoordinateTransformation.HoursToDegrees( RAhr( position ) ), DEdeg( position ) ) ) ;
+					CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+			ceq.delete() ;
 		}
+
 		try {
 			model.validate() ;
 		} catch ( ValidationException e ) {
@@ -82,13 +88,25 @@ public class CatalogADC6049Record implements CatalogRecord {
 	public Set<String> matchSet( Set<String> list ) {
 		HashSet<String> r = new HashSet<String>() ;
 
-		for ( String k : new String[] { con } ) {
-			if ( list.contains( k ) ) {
-				r.add( k ) ;
+		for ( String ident : identSet() ) {
+			if ( list.contains( ident ) ) {
+				r.add( ident ) ;
 			}
 		}
 
 		return r ;
+	}
+
+	public Set<String> identSet() {
+		HashSet<String> r = new HashSet<String>() ;
+
+		r.add( ident() ) ;
+
+		return r ;
+	}
+
+	public String ident() {
+		return con ;
 	}
 
 	public java.util.Vector<double[]> list( Projector projector ) {

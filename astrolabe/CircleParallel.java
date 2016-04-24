@@ -17,7 +17,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 	private final static double DEFAULT_SEGMENT = 1 ;
 	private final static double DEFAULT_IMPORTANCE = .1 ;
 
-	private double epoch ;
 	private Projector projector ;
 
 	private double segment ;
@@ -31,11 +30,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 	public CircleParallel() {
 	}
 
-	public CircleParallel( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
-		setup( peer, epoch, projector ) ;
+	public CircleParallel( Object peer, Projector projector ) throws ParameterNotValidException {
+		setup( peer, projector ) ;
 	}
 
-	public void setup( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
+	public void setup( Object peer, Projector projector ) throws ParameterNotValidException {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
@@ -45,7 +44,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		this.epoch = epoch ;
 		this.projector = projector ;
 
 		segment = CAACoordinateTransformation.DegreesToRadians(
@@ -197,10 +195,17 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+
+			ps.operator.gsave() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.grestore() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+		ps.operator.gsave() ;
 		ps.operator.stroke() ;
+		ps.operator.grestore() ;
 
 		// Dial processing.
 		if ( getDial() != null ) {
@@ -209,7 +214,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Ci
 
 				ps.operator.gsave() ;
 
-				dial = AstrolabeFactory.companionOf( getDial(), epoch, this ) ;
+				dial = AstrolabeFactory.companionOf( getDial(), this ) ;
 				dial.headPS( ps ) ;
 				dial.emitPS( ps ) ;
 				dial.tailPS( ps ) ;

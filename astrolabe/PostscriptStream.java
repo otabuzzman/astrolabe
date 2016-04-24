@@ -598,6 +598,11 @@ public class PostscriptStream extends PrintStream {
 			print( "setgray\n" ) ;
 		} 
 
+		public void setlinecap( int num ) {        
+			push( num%3 ) ;
+			print( "setlinecap\n" ) ;
+		}
+
 		public void setlinewidth( double num ) {        
 			push( num ) ;
 			print( "setlinewidth\n" ) ;
@@ -616,9 +621,7 @@ public class PostscriptStream extends PrintStream {
 		}
 
 		public void stroke() {        
-			gsave() ;
 			print( "stroke\n" ) ;
-			grestore() ;
 		}
 
 		public void sub() {        

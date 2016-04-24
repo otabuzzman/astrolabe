@@ -12,7 +12,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 	private Projector projector ;
 
 	private final static double DEFAULT_SIZE = 2.2 ;
-	private final static String DEFAULT_CLUE = "\uf812" ;
+	private final static String DEFAULT_STAR = "\uf811" ;
 
 	private double size ;
 
@@ -38,7 +38,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 		size = ApplicationHelper.getClassNode( this, getName(), null ).getDouble( getType(), 0 ) ;
 		if ( ! ( size>0 ) ) {
 			size = DEFAULT_SIZE ;
-			setGlyph( DEFAULT_CLUE ) ;
+			setGlyph( DEFAULT_STAR ) ;
 		}
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;

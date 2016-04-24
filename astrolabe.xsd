@@ -25,6 +25,7 @@
 	</xs:element>
 	<xs:complexType name="ChartType">
 		<xs:sequence>
+			<xs:element ref="Origin"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -61,6 +62,7 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="Origin" type="SphericalType"/>
 	<xs:element name="ChartStereographic">
 		<xs:complexType>
 			<xs:complexContent>
@@ -337,7 +339,14 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AnnotationType">
-					<xs:attribute name="distance" type="xs:double" use="required"/>
+					<xs:attribute name="distance" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0"/>
+								<xs:maxInclusive value="100"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -402,17 +411,23 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="BodyStellar" type="BodyStellarType"/>
-	<xs:element name="Position" type="SphericalType"/>
+	<xs:element name="Position">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="SphericalType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
-			<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
+			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="type" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="constellation"/>
+					<xs:pattern value="area|sign"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -541,6 +556,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -559,6 +577,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -577,6 +598,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -590,7 +614,7 @@
 	</xs:element>
 	<xs:element name="CatalogADC6049">
 		<xs:annotation>
-			<xs:documentation>Constellation Boundary Data.</xs:documentation>
+			<xs:documentation>Constellation Boundary Data. Equinox 2000.</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
@@ -613,6 +637,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -624,6 +651,26 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="SignType">
+		<xs:sequence>
+			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="value" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^:,]+:[^:,]+(:[^:,]+)*(,[^:,]+:[^:,]+(:[^:,]+)*)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="headline" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[1-9][0-9]*(,[1-9][0-9]*)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="Sign" type="SignType"/>
 	<!--Basistypen und -elemente-->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" use="required">

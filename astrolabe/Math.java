@@ -5,15 +5,15 @@ import caa.CAACoordinateTransformation;
 
 public final class Math {
 
-	public static final double lim0 = .000000000001 ;
+	public final static double lim0 = .000000000001 ;
 
-	public static final double rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-	public static final double rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-	public static final double rad270 = CAACoordinateTransformation.DegreesToRadians( 270 ) ;
-	public static final double rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
+	public final static double rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
+	public final static double rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
+	public final static double rad270 = CAACoordinateTransformation.DegreesToRadians( 270 ) ;
+	public final static double rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
 
 	// approximate value of golden section
-	public static final double goldensection = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
+	public final static double goldensection = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
 
 	private Math() {        
 	} 

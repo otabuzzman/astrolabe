@@ -24,6 +24,6 @@ public class CircleSouthernTropic extends CircleParallel {
 			( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getRational().setValue( degal ) ;
 		}
 
-		setup( peer, epoch, projector ) ;
+		setup( peer, projector ) ;
 	}
 }

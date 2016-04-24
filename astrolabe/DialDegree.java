@@ -202,7 +202,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 				ps.push( xy[1] ) ;
 			}
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+
+			ps.operator.gsave() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.grestore() ;
+
+			ps.operator.gsave() ;
 			ps.operator.stroke() ;
+			ps.operator.grestore() ;
 		}
 	}
 
@@ -222,10 +230,26 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 				s = nss%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
 				vDFw = baseline.list( b, e, s ) ;
+				ps.operator.mark() ;
+				for ( int n=vDFw.size() ; n>0 ; n-- ) {
+					double[] xy = (double[]) vDFw.get( n-1 ) ;
+					ps.push( xy[0] ) ;
+					ps.push( xy[1] ) ;
+				}
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
 
 				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
 				vDRv = baseline.list( b, e, s ) ;
+				ps.operator.mark() ;
+				for ( int n=vDRv.size() ; n>0 ; n-- ) {
+					double[] xy = (double[]) vDRv.get( n-1 ) ;
+					ps.push( xy[0] ) ;
+					ps.push( xy[1] ) ;
+				}
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
 
 				vDRv = ApplicationHelper.reverseVector( vDRv ) ;
 				vDFw.addAll( vDRv ) ;
@@ -256,7 +280,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 						ps.push( xy[1] ) ;
 					}
 					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+					ps.operator.gsave() ;
 					ps.operator.stroke() ;
+					ps.operator.grestore() ;
 					ps.operator.mark() ;
 					for ( int n=rv.size() ; n>0 ; n-- ) {
 						xy = (double[]) rv.get( n-1 ) ;
@@ -264,7 +290,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 						ps.push( xy[1] ) ;
 					}
 					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+					ps.operator.gsave() ;
 					ps.operator.stroke() ;
+					ps.operator.grestore() ;
 				}
 			}
 		} catch ( ParameterNotValidException ee ) {
@@ -281,7 +309,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_LINE ) ;
+
+				ps.operator.gsave() ;
+				ps.operator.setlinecap( 2 ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+				ps.operator.grestore() ;
+
+				ps.operator.gsave() ;
 				ps.operator.stroke() ;
+				ps.operator.grestore() ;
 			}
 		}
 	}

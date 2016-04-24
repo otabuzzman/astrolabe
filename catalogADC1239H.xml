@@ -7,7 +7,15 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a0" scale="10000" hemisphere="northern">
+			<Origin>
+				<phi>
+					<Rational value="45"/>
+				</phi>
+				<theta>
+					<Rational value="0"/>
+				</theta>
+			</Origin>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
@@ -793,7 +801,22 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/hip_main.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz-->
-						<CatalogADC1239H fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6"/>
+						<CatalogADC1239H fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
+							<Select value="mag0,mag1,mag2,mag3">
+								<Annotation>
+									<AnnotationStraight purpose="bodylettering0" anchor="bottomleft" reverse="false" radiant="false">
+										<Text value="@{HIP}@"/>
+									</AnnotationStraight>
+								</Annotation>
+							</Select>
+							<Sign value="67301:65378:62956,62956:59774:54061,54061:53910:58001:59774" headline="3">
+								<Annotation>
+									<AnnotationCurved purpose="guidance" anchor="bottommiddle" reverse="false" distance="50">
+										<Text value="Aql"/>
+									</AnnotationCurved>
+								</Annotation>
+							</Sign>
+						</CatalogADC1239H>
 					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>

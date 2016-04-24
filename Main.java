@@ -8,7 +8,7 @@ import java.io.FileReader;
 
 public class Main {
 
-	public Main() {
+	public Main() { 
 	}
 
 	public static void main( String[] argv ) {
@@ -24,7 +24,7 @@ public class Main {
 
 			a.emitPS( ps ) ;
 
-			ps.close();
+			ps.close() ;
 
 			Registry.remove() ;
 		} catch ( Exception e ) {

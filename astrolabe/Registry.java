@@ -7,8 +7,8 @@ import java.util.Hashtable;
 
 public class Registry {
 
-	private static final Hashtable<String, Object> global = new Hashtable<String, Object>() ;
-	private static final Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
+	private final static Hashtable<String, Object> global = new Hashtable<String, Object>() ;
+	private final static Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
 
 	private Registry() {
 	}

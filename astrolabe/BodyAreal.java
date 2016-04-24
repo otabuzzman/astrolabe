@@ -10,9 +10,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 	private Projector projector ;
 
-	private final static double DEFAULT_LINEWIDTH = 0.36 ;
+	private final static double DEFAULT_LINECRACK = .36 ;
+	private final static double DEFAULT_LINEWIDTH = .36 ;
 	private final static double DEFAULT_LINEDASH = 0 ;
 
+	private double linecrack ;
 	private double linewidth ;
 	private double linedash ;
 
@@ -32,19 +34,25 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 		this.projector = projector ;
 
+		linecrack = ApplicationHelper.getClassNode( this,
+				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINECRACK, DEFAULT_LINECRACK ) ;
 		linewidth = ApplicationHelper.getClassNode( this,
 				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
 		linedash = ApplicationHelper.getClassNode( this,
 				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEDASH, DEFAULT_LINEDASH ) ;
 
 		outline = AstrolabeFactory.valueOf( getPosition() ) ;
-		polygon = new PolygonSpherical( outline ) ;
+		if ( outline.size()>2 ) {
+			polygon = new PolygonSpherical( outline ) ;
+		} else {
+			polygon = null ;
+		}
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
-		ApplicationHelper.registerDMS( key, polygon.area(), 2 ) ;
+		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area(), 2 ) ;
 		rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		ApplicationHelper.registerDMS( key, polygon.area()/( rad1*rad1 ), 2 ) ;		
+		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area()/( rad1*rad1 ), 2 ) ;		
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -76,12 +84,21 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 			ps.custom( ApplicationConstant.PS_PROLOG_LISTREDUCE ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-			polygon = new PolygonPlane( outline ) ;
+			if ( outline.size()>2 ) {
+				polygon = new PolygonPlane( outline ) ;
+				ps.push( polygon.sign()*( linewidth+linecrack )/2 ) ;
+				ps.push( true ) ; // parallel edges
+				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+			}
 
-			ps.push( polygon.sign()*linewidth/2 ) ;
-			ps.push( true ) ; // parallel edges
-			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+			ps.operator.gsave() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.grestore() ;
+
+			ps.operator.gsave() ;
 			ps.operator.stroke() ;
+			ps.operator.grestore() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;			
 		}

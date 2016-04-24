@@ -6,7 +6,9 @@ import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
+import caa.CAAPrecession;
 
 public class CatalogADC7118Record implements CatalogRecord {
 
@@ -55,8 +57,9 @@ public class CatalogADC7118Record implements CatalogRecord {
 		}
 	}
 
-	public astrolabe.model.Body toBody() throws ParameterNotValidException {
+	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		CAA2DCoordinate ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
@@ -65,8 +68,12 @@ public class CatalogADC7118Record implements CatalogRecord {
 		model.getBodyStellar().setType( "mag"+( (int) ( mag()+100.5 )-100 ) ) ;
 		model.getBodyStellar().setTurn( 0 ) ;
 		model.getBodyStellar().setSpin( 0 ) ;
+
+		ceq = CAAPrecession.PrecessEquatorial( RAh()+RAm()/60., DEd()+DEm()/60., 2451545./*J2000*/, epoch ) ;
 		model.getBodyStellar().setPosition( AstrolabeFactory.modelPosition(
-				CAACoordinateTransformation.HoursToDegrees( RAh()+RAm()/60. ), DEd()+DEm()/60. ) ) ;
+				CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+		ceq.delete() ;
+
 		try {
 			model.validate() ;
 		} catch ( ValidationException e ) {
@@ -87,13 +94,26 @@ public class CatalogADC7118Record implements CatalogRecord {
 	public Set<String> matchSet( Set<String> list ) {
 		HashSet<String> r = new HashSet<String>() ;
 
-		for ( String k : new String[] { Name, "mag"+( (int) ( mag()+100.5 )-100 ) } ) {
-			if ( list.contains( k ) ) {
-				r.add( k ) ;
+		for ( String ident : identSet() ) {
+			if ( list.contains( ident ) ) {
+				r.add( ident ) ;
 			}
 		}
 
 		return r ;
+	}
+
+	public Set<String> identSet() {
+		HashSet<String> r = new HashSet<String>() ;
+
+		r.add( ident() ) ;
+		r.add( "mag"+( (int) ( mag()+100.5 )-100 ) ) ;
+
+		return r ;
+	}
+
+	public String ident() {
+		return Name ;
 	}
 
 	public java.util.Vector<double[]> list( Projector projector ) {

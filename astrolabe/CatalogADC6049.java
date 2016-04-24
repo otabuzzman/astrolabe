@@ -4,6 +4,7 @@ package astrolabe;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 @SuppressWarnings("serial")
 public class CatalogADC6049 extends CatalogType {
 
-	private static final int C_CHUNK = 29+1/*0x0a*/ ;
+	private final static int C_CHUNK = 29+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC6049.class ) ;
 
@@ -19,8 +20,8 @@ public class CatalogADC6049 extends CatalogType {
 
 	private String memory ;
 
-	public CatalogADC6049( Object peer, Projector projector ) throws ParameterNotValidException {
-		super( peer, projector ) ;
+	public CatalogADC6049( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
+		super( peer, projector, epoch ) ;
 
 		String[] rv ;
 
@@ -90,5 +91,11 @@ public class CatalogADC6049 extends CatalogType {
 		}
 
 		return r ;
+	}
+
+	public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) {
+		CatalogRecord[] r = new CatalogRecord[catalog.size()] ;
+
+		return catalog.values().toArray( r ) ;
 	}
 }

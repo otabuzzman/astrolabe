@@ -17,17 +17,19 @@ import org.exolab.castor.xml.ValidationException;
 abstract public class CatalogType extends astrolabe.model.CatalogType implements Catalog {
 
 	private Projector projector ;
+	private double epoch ;
 
 	private FOV fov ;
 
-	private java.util.Vector<CatalogRecord> catalog ;
+	private Hashtable<String, CatalogRecord> catalog ;
 
 	private Hashtable<String, astrolabe.model.Annotation[]> select ;
 
-	public CatalogType( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogType( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
 		String[] fov, sv ;
 
 		this.projector = projector ;
+		this.epoch = epoch ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
@@ -56,27 +58,24 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		}
 	}
 
-	public void headPS(PostscriptStream ps) {
+	public void headPS( PostscriptStream ps ) {
 	}
 
-	public void emitPS(PostscriptStream ps) {
-		CatalogRecord catalogRecord ;
-		Body body ;
+	public void emitPS( PostscriptStream ps ) {
 		astrolabe.model.Annotation[] annotation ;
-		Set matchSet ;
+		Set<String> matchSet ;
+		Body body ;
 
-		for ( int r=0 ; r<catalog.size() ; r++ ) {
-			catalogRecord = catalog.get( r ) ;
-
+		for ( CatalogRecord record : arrange( catalog ) ) {
 			try {
-				body = AstrolabeFactory.companionOf( catalogRecord.toBody(), projector, 0 ) ;
+				body = AstrolabeFactory.companionOf( record.toBody( epoch ), projector, 0 ) ;
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
 			annotation = getAnnotation() ;
 
-			matchSet = catalogRecord.matchSet( select.keySet() ) ;
+			matchSet = record.matchSet( select.keySet() ) ;
 			if ( matchSet.size()>0 ) {
 				annotation = select.get( matchSet.iterator().next() ) ;
 			}
@@ -84,7 +83,7 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 			if ( annotation != null ) {
 				body.setAnnotation( annotation ) ;
 
-				catalogRecord.register() ;
+				record.register() ;
 			}
 
 			ps.operator.gsave() ;
@@ -97,7 +96,7 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		}
 	}
 
-	public void tailPS(PostscriptStream ps) {
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public void read() throws ParameterNotValidException {
@@ -112,11 +111,10 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		this.catalog = read( url ) ;
 	}
 
-	public java.util.Vector<CatalogRecord> read( URL catalog ) {
-		java.util.Vector<CatalogRecord> r ;
+	public Hashtable<String, CatalogRecord> read( URL catalog ) {
+		Hashtable<String, CatalogRecord> r ;
 		InputStreamReader reader ;
 		GZIPInputStream filter ;
-
 
 		try {
 			try {
@@ -132,14 +130,14 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 				reader.close() ;
 			}
 		} catch ( IOException e ) {
-			r = new java.util.Vector<CatalogRecord>() ;
+			r = new Hashtable<String, CatalogRecord>() ;
 		}
 
 		return r ;
 	}
 
-	public java.util.Vector<CatalogRecord> read( String catalog ) {
-		java.util.Vector<CatalogRecord> r ;
+	public Hashtable<String, CatalogRecord> read( String catalog ) {
+		Hashtable<String, CatalogRecord> r ;
 		StringReader reader ;
 
 		reader = new StringReader( catalog ) ;
@@ -153,8 +151,8 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		return r ;
 	}
 
-	public java.util.Vector<CatalogRecord> read( Reader catalog ) {
-		java.util.Vector<CatalogRecord> r = new java.util.Vector<CatalogRecord>() ;
+	public Hashtable<String, CatalogRecord> read( Reader catalog ) {
+		Hashtable<String, CatalogRecord> r = new Hashtable<String, CatalogRecord>() ;
 		java.util.Vector<double[]> l ;
 		CatalogRecord record ;
 		boolean ok ;
@@ -172,11 +170,16 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 				}
 			}					
 
-			r.add( record ) ;
+			r.put( record.ident(), record ) ;
 		}
 
 		return r ;
 	}
 
+	public CatalogRecord entry( String ident ) {
+		return catalog.get( ident ) ;
+	}
+
 	abstract public CatalogRecord record( java.io.Reader catalog ) ;
+	abstract public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) ;
 }

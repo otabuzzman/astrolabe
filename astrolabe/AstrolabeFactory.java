@@ -70,9 +70,9 @@ public final class AstrolabeFactory {
 		Circle circle ;
 
 		if ( ( clP = cl.getCircleParallel() ) != null ) {
-			circle = new CircleParallel( clP, epoch, p ) ;
+			circle = new CircleParallel( clP, p ) ;
 		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
-			circle = new CircleMeridian( clM, epoch, p ) ;
+			circle = new CircleMeridian( clM, p ) ;
 		} else if ( ( clSP = cl.getCircleSouthernPolar() ) != null ) {
 			circle = new CircleSouthernPolar( clSP, epoch, p ) ;
 		} else if ( ( clNP = cl.getCircleNorthernPolar() ) != null ) {
@@ -86,7 +86,7 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
-	public static Dial companionOf( astrolabe.model.Dial dl, double epoch, Baseline baseline ) throws ParameterNotValidException {
+	public static Dial companionOf( astrolabe.model.Dial dl, Baseline baseline ) throws ParameterNotValidException {
 		astrolabe.model.DialDegree dlD ;
 		Dial dial ;
 
@@ -137,7 +137,7 @@ public final class AstrolabeFactory {
 		return body ;
 	}
 
-	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
+	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p, double epoch ) throws ParameterNotValidException {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
@@ -145,15 +145,15 @@ public final class AstrolabeFactory {
 		Catalog catalog ;
 
 		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
-			catalog = new CatalogADC1239H( ct1239h, p ) ;
+			catalog = new CatalogADC1239H( ct1239h, p, epoch ) ;
 		} else if ( ( ct1239t = ct.getCatalogADC1239T() ) != null ) {
-			catalog = new CatalogADC1239T( ct1239t, p ) ;
+			catalog = new CatalogADC1239T( ct1239t, p, epoch ) ;
 		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
-			catalog = new CatalogADC5050( ct5050, p ) ;
+			catalog = new CatalogADC5050( ct5050, p, epoch ) ;
 		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
-			catalog = new CatalogADC6049( ct6049, p ) ;
+			catalog = new CatalogADC6049( ct6049, p, epoch ) ;
 		} else { // // ct.getCatalogADC7118() != null
-			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p ) ;
+			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p, epoch ) ;
 		}
 
 		return catalog ;

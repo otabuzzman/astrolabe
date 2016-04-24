@@ -8,6 +8,14 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+			<Origin>
+				<phi>
+					<Rational value="0"/>
+				</phi>
+				<theta>
+					<Rational value="90.0"/>
+				</theta>
+			</Origin>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">

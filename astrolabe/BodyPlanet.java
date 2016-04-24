@@ -86,10 +86,18 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+
+			ps.operator.gsave() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.grestore() ;
+
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+		ps.operator.gsave() ;
 		ps.operator.stroke() ;
+		ps.operator.grestore() ;
 
 		// Dial processing.
 		if ( getDialDay() != null ) {

@@ -8,12 +8,21 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 
 	private final static String DEFAULT_PAGESIZE = "210x298" ;
 	private final static double DEFAULT_UNIT = 2.834646 ;
+	private final static double DEFAULT_HALO = 4 ;
+	private final static double DEFAULT_HALOMIN = .04 ;
+	private final static double DEFAULT_HALOMAX = .4 ;
 
 	private double unit ;
 	private boolean northern ;
 
 	private double[] pagesize = new double[2] ;
 	private double scale ;
+
+	private double[] origin ;
+
+	private double halo ;
+	private double halomin ;
+	private double halomax ;
 
 	public ChartStereographic( Object peer ) throws ParameterNotValidException {
 		String[] pagesize ;
@@ -36,6 +45,15 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		scale = scale*getScale()/100 ;
 
 		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
+
+		origin = AstrolabeFactory.valueOf( getOrigin() ) ;
+
+		halo = ApplicationHelper.getClassNode( this, getName(),
+				null ).getDouble( ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
+		halomin = ApplicationHelper.getClassNode( this, getName(),
+				null ).getDouble( ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
+		halomax = ApplicationHelper.getClassNode( this, getName(),
+				null ).getDouble( ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
 	}
 
 	public double[] project( double[] eq ) {
@@ -43,21 +61,45 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	}
 
 	public double[] project( double RA, double d ) {
-		Vector v ;
-		double x, y ;
+		Vector vo, vp0 ;
+		double x, y, px, py ;
 
 		if ( northern ) {
+			x = java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
+			y = -java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
+			vo = new Vector( x, y ) ;
+
 			x = java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.cos( RA ) ;
 			y = -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ;
+			vp0 = new Vector( x, y ) ;
 		} else { // southern
+			x = java.lang.Math.tan( ( -origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
+			y = -java.lang.Math.tan( ( origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
+			vo = new Vector( x, y ) ;
+
 			x = java.lang.Math.tan( ( -d )/2 )*java.lang.Math.cos( RA ) ;
 			y = -java.lang.Math.tan( ( -d )/2 )*java.lang.Math.sin( RA ) ;
+			vp0 = new Vector( x, y ) ;
 		}
 
-		v = new Vector( x, y ) ;
-		v.mul( scale ) ;
+		vo.mul( scale ) ;
+		vp0.mul( scale ) ;
 
-		return new double[] { v.x, v.y } ;
+		if ( vo.abs()>0 ) {
+			Vector vp, vux, vuy ;
+
+			vp = new Vector( vp0 ).sub( vo ) ;
+			vuy = new Vector( vo ).mul( -1 ).scale( 1 ) ;
+			vux = new Vector( vuy ).apply( new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ) ;
+
+			px = vp.dot( vux ) ;
+			py = vp.dot( vuy ) ;
+		} else {
+			px = vp0.x ;
+			py = vp0.y ;
+		}
+
+		return new double[] { px, py } ;
 	}
 
 	public double[] unproject( double[] xy ) {
@@ -66,17 +108,36 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 
 	public double[] unproject( double x, double y ) {
 		double[] r = new double[2] ;
-		Vector v ;
-
-		v = new Vector( x, -y ) ;
-		v.mul( 1/scale ) ;
-
-		r[0] = java.lang.Math.atan2( v.y, v.x ) ;
+		Vector vo, vp0, vp ;
 
 		if ( northern ) {
-			r[1] = Math.rad90-java.lang.Math.atan( v.x/java.lang.Math.cos( r[0] ) )*2 ;
+			vo = new Vector( java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
+					-java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
 		} else { // southern
-			r[1] = -java.lang.Math.atan( v.x/java.lang.Math.cos( r[0] ) )*2 ;
+			vo = new Vector( java.lang.Math.tan( ( -origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
+					-java.lang.Math.tan( ( origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
+		}
+
+		vp0 = new Vector( x, y ) ;
+		vp0.mul( 1/scale ) ;
+
+		if ( vo.abs()>0 ) {
+			vo = new Vector( 0, vo.abs() ) ;
+			vp = new Vector( vp0 ).sub( vo ) ;
+			vp = new Vector( -vp.y, vp.x ).apply( new double[] {
+					java.lang.Math.cos( origin[1] ), java.lang.Math.sin( origin[1] ), 0,
+					-java.lang.Math.sin( origin[1] ), java.lang.Math.cos( origin[1] ), 0,
+					0, 0, 1 } ) ;
+		} else {
+			vp = new Vector( vp0 ) ;
+		}
+
+		r[0] = java.lang.Math.atan2( -vp.y, vp.x ) ;
+
+		if ( northern ) {
+			r[1] = Math.rad90-java.lang.Math.atan( vp.x/java.lang.Math.cos( r[0] ) )*2 ;
+		} else { // southern
+			r[1] = -java.lang.Math.atan( vp.x/java.lang.Math.cos( r[0] ) )*2 ;
 		}
 
 		return r ;
@@ -118,6 +179,20 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		ps.dsc.endPageSetup() ;
 
 		ps.dsc.page( getName(), 1 ) ;
+
+		try {
+			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALO ) ;
+			ps.push( halo ) ;
+			ps.operator.def() ;
+			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALOMIN ) ;
+			ps.push( halomin ) ;
+			ps.operator.def() ;
+			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALOMAX ) ;
+			ps.push( halomax ) ;
+			ps.operator.def() ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {

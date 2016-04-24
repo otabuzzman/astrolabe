@@ -1,5 +1,7 @@
 *.bmp	binary
 *.jpg	binary
 *.pdf	binary
+*.png	binary
 *.ppt	binary
+*.xcf	binary
 *.xls	binary

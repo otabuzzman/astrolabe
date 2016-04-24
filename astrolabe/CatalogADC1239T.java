@@ -3,7 +3,12 @@ package astrolabe;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,14 +16,22 @@ import org.apache.commons.logging.LogFactory;
 @SuppressWarnings("serial")
 public class CatalogADC1239T extends CatalogType {
 
-	private static final int C_CHUNK = 350+1/*0x0a*/ ;
+	private final static int C_CHUNK = 350+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC1239T.class ) ;
 
 	private HashSet<String> restrict ;
 
-	public CatalogADC1239T( Object peer, Projector projector ) throws ParameterNotValidException {
-		super( peer, projector ) ;
+	private final static Comparator<CatalogRecord> comparator = new Comparator<CatalogRecord>() {
+
+		public int compare( CatalogRecord a, CatalogRecord b ) {
+			return ( (CatalogADC1239TRecord) a ).Vmag()<( (CatalogADC1239TRecord) b ).Vmag()?-1:
+				( (CatalogADC1239TRecord) a ).Vmag()>( (CatalogADC1239TRecord) b ).Vmag()?1:0 ;
+		}
+	} ;
+
+	public CatalogADC1239T( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
+		super( peer, projector, epoch ) ;
 
 		String[] rv ;
 
@@ -66,5 +79,17 @@ public class CatalogADC1239T extends CatalogType {
 		}
 
 		return r ;
+	}
+
+	public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) {
+		CatalogRecord[] r ;
+		List<CatalogRecord> l ;
+
+		l = new ArrayList<CatalogRecord>( catalog.values() ) ;
+		Collections.sort( l, comparator ) ;
+
+		r = new CatalogRecord[l.size()] ;
+
+		return l.toArray( r ) ;
 	}
 }

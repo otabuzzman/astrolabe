@@ -6,24 +6,26 @@ import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
+import caa.CAAPrecession;
 
 public class CatalogADC1239HRecord implements CatalogRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
-	public static final int CR_TOKEN = 78 ;
+	public final static int CR_TOKEN = 78 ;
 
-	public String   Catalog   ; //  [H] Catalogue
-	public String   HIP       ; //  Identifier
+	public String   Catalog   ; //  [H] Catalogue (H=Hipparcos)
+	public String   HIP       ; //  Identifier (HIP number)
 	public String   Proxy     ; //  [HT] Proximity flag
-	public String   RAhms     ; // *Right ascension in h m s, ICRS
-	public String   DEdms     ; // *Declination in deg ' ", ICRS
+	public String   RAhms     ; // *Right ascension in h m s, ICRS (Eq=J2000)
+	public String   DEdms     ; // *Declination in deg ' ", ICRS (Eq=J2000)
 	public String   Vmag      ; //  ? Magnitude in Johnson V
 	public String   VarFlag   ; // *[1,3]? Coarse variability flag
 	public String r_Vmag      ; // *[GHT] Source of magnitude
-	public String   RAdeg     ; // *? alpha, degrees
-	public String   DEdeg     ; // *? delta, degrees
+	public String   RAdeg     ; // *? alpha, degrees (ICRS, Eq=J2000)
+	public String   DEdeg     ; // *? delta, degrees (ICRS, Eq=J2000)
 	public String   AstroRef  ; // *[*+A-Z] Reference flag for astrometry
 	public String   Plx       ; //  ? Trigonometric parallax
 	public String   pmRA      ; //  ? Proper motion mu_alpha.cos(delta), ICRS(H12)
@@ -184,14 +186,17 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		try {
 			RAhms() ;
 			DEdms() ;
-			Vmag() ; // continue new methods
+			Vmag() ; 
+			pmRA() ;
+			pmDE() ; // continue new methods
 		} catch ( NumberFormatException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Body toBody() throws ParameterNotValidException {
+	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		CAA2DCoordinate cpm, ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
@@ -200,8 +205,15 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		model.getBodyStellar().setType( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
 		model.getBodyStellar().setTurn( 0 ) ;
 		model.getBodyStellar().setSpin( 0 ) ;
+
+		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
+				epoch-2451545., RAhms(), DEdms(), pmRA()/1000., pmDE()/1000. ) ;
+		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 		model.getBodyStellar().setPosition( AstrolabeFactory.modelPosition(
-				CAACoordinateTransformation.HoursToDegrees( RAhms() ), DEdms() ) ) ;
+				CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+		cpm.delete() ;
+		ceq.delete() ;
+
 		try {
 			model.validate() ;
 		} catch ( ValidationException e ) {
@@ -222,13 +234,26 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 	public Set<String> matchSet( Set<String> list ) {
 		HashSet<String> r = new HashSet<String>() ;
 
-		for ( String k : new String[] { HIP, "mag"+( (int) ( Vmag()+100.5 )-100 ) } ) {
-			if ( list.contains( k ) ) {
-				r.add( k ) ;
+		for ( String ident : identSet() ) {
+			if ( list.contains( ident ) ) {
+				r.add( ident ) ;
 			}
 		}
 
 		return r ;
+	}
+
+	public Set<String> identSet() {
+		HashSet<String> r = new HashSet<String>() ;
+
+		r.add( ident() ) ;
+		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+
+		return r ;
+	}
+
+	public String ident() {
+		return HIP ;
 	}
 
 	public java.util.Vector<double[]> list( Projector projector ) {
@@ -427,5 +452,13 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 
 	public double Vmag() {
 		return new Double( Vmag ).doubleValue() ;
+	}
+
+	public double pmRA() {
+		return new Double( pmRA ).doubleValue() ;
+	}
+
+	public double pmDE() {
+		return new Double( pmDE ).doubleValue() ;
 	}
 }

@@ -20,24 +20,27 @@
 							<!--font program-->
 							<entry key="/FontType" value="3"/>
 							<entry key="/FontMatrix" value="[.001 0 0 .001 0 0]"/>
-							<entry key="/FontBox" value="[0 0 1000 1000]"/>
-							<entry key="/Encoding" value="256 array"/>
-							<entry key="/BuildGlyph" value="{1000 0 0 0 1000 1000 setcachedevice 2 copy known not {pop /.notdef} if get exec} bind"/>
+							<entry key="/FontBBox" value="[0 0 1000 1000]"/>
+							<entry key="/Encoding" value="[0 1 255 {/.notdef} for] dup 16 /sight put dup 17 /object put"/>
+							<entry key="/BuildGlyph" value="{[] 0 setdash 1 setlinecap 1 setlinejoin 10 setlinewidth 10 setmiterlimit 2 copy known not {pop /.notdef} if get exec} bind"/>
 							<entry key="/BuildChar" value="{1 index /Encoding get exch get 1 index /BuildGlyph get exec} bind"/>
 							<entry key="/.notdef" value="{}"/>
 							<!--char procedures-->
-							<entry key="/target" value="{.01 setlinewidth 500 0 moveto 500 1000 lineto stroke 0 500 moveto 1000 500 lineto stroke 500 500 309 0 360 arc closepath stroke} bind"/>
-							<entry key="/object" value="{500 500 500 0 360 arc closepath fill} bind"/>
-							<entry key="/clue" value="{.01 setlinewidth 500 500 500 0 360 arc closepath stroke} bind"/>
+							<entry key="/sight" value="{1000 0 0 0 1000 1000 setcachedevice 500 0 moveto 500 1000 lineto stroke 0 500 moveto 1000 500 lineto stroke 500 500 309 0 360 arc closepath stroke} bind"/>
+							<entry key="/object" value="{1000 0 setcharwidth 1 setgray 500 500 500 0 360 arc closepath fill 0 setgray 500 500 460 0 360 arc closepath fill} bind"/>
 						</map>
 					</node>
 				</node>
 				<!--octal representations instead of blank characters in strings-->
 				<node name="prolog">
 					<map>
+						<entry key="/HALO" value="0"/>
+						<entry key="/HALOMIN" value="0"/>
+						<entry key="/HALOMAX" value="0"/>
+						<entry key="/LIM0" value=".00001"/>
 						<entry key="/acos" value="{dup dup mul 1 exch sub sqrt exch atan}"/>
 						<entry key="/asin" value="{dup dup mul 1 exch sub sqrt atan}"/>
-						<entry key="/lim0" value=".000001"/>
+						<entry key="/halostroke" value="{HALO 0 gt {gsave currentlinewidth dup HALO mul 100 div HALOMIN 0 gt {HALOMIN max} if HALOMAX 0 gt {HALOMAX min} if 2 mul add setlinewidth 1 setgray stroke grestore} if}"/>
 						<entry key="/line" value="{newpath moveto lineto}"/>
 						<entry key="/listreduce" value="{counttomark dup /n exch 1 add def 2 div cvi 1 sub {4 copy vsub vabs truncatef 0. eq {pop pop /n n 2 sub def} {n 2 roll} ifelse} repeat n 3 roll}"/>
 						<entry key="/mod" value="{exch dup type /integertype eq {systemdict begin exch mod end} {dup dup cvi sub exch cvi 3 2 roll systemdict begin mod end add} ifelse}"/>
@@ -60,7 +63,7 @@
 						<entry key="/show" value="{dup type /stringtype eq {systemdict begin show end} {{dup dup dup dup 0 get exch 1 get setencoding 0 get findfont exch 2 get scalefont setfont [currentpoint] exch dup 3 get 0 exch rmoveto dup dup 6 get exch 5 get {systemdict begin show end} {stringwidth pop 0 rmoveto} ifelse dup 4 get {3 get neg 0 exch rmoveto pop} {pop aload pop moveto} ifelse} forall} ifelse}"/>
 						<entry key="/sqrt" value="{dup truncatef 0 ne {systemdict begin sqrt end} if}"/>
 						<entry key="/stringwidth" value="{dup type /stringtype eq {systemdict begin stringwidth end} {0 exch {dup 4 get {dup dup 0 get findfont exch 2 get scalefont setfont 6 get systemdict begin stringwidth end pop add} {pop} ifelse} forall 0.} ifelse}"/>
-						<entry key="/truncatef" value="{1 lim0 div cvi 2 copy mul truncate exch div exch pop}"/>
+						<entry key="/truncatef" value="{1 LIM0 div cvi 2 copy mul truncate exch div exch pop}"/>
 						<entry key="/vabs" value="{dup mul exch dup mul add sqrt abs}"/>
 						<entry key="/vadd" value="{3 2 roll add 3 1 roll add exch}"/>
 						<entry key="/vangle" value="{4 copy vdot truncatef 5 1 roll vabs 3 1 roll vabs mul truncatef div acos}"/>
@@ -87,10 +90,9 @@
 						<entry key="2200..22FF-0" value="/Symbol:/universal /.notdef /partialdiff /existential /.notdef /emptyset /Delta /gradient /element /notelement /.notdef /suchthat /.notdef /.notdef /.notdef /product /.notdef /summation /minus /.notdef /.notdef /fraction /.notdef /asteriskmath /.notdef /bullet /radical /.notdef /.notdef /proportional /infinity /.notdef /angle /.notdef /.notdef /bar /.notdef /.notdef /.notdef /logicaland /logicalor /intersection /union /integral /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /therefore /.notdef /colon /.notdef /.notdef /.notdef /.notdef /.notdef /similar /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /congruent /.notdef /.notdef /approxequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /notequal /equivalence /.notdef /.notdef /lessequal /greaterequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /propersubset /propersuperset /notsubset /.notdef /reflexsubset /reflexsuperset /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /circleplus /.notdef /circlemultiply /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /perpendicular /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /dotmath /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="2300..23FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /angleleft /angleright /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /parenlefttp /parenleftex /parenleftbt /parenrighttp /parenrightex /parenrightbt /bracketlefttp /bracketleftex /bracketleftbt /bracketrighttp /bracketrightex /bracketrightbt /bracelefttp /braceleftmid /braceleftbt /braceex /bracerighttp /bracerightmid /bracerightbt /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="2600..26FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /spade /.notdef /.notdef /club /.notdef /heart /diamond /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
-						<!--0xf810: /target-->
+						<!--0xf810: /sight-->
 						<!--0xf811: /object-->
-						<!--0xf812: /clue-->
-						<entry key="E000..F8FF-24" value="/Astrolabe:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /target /object /clue /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+						<entry key="E000..F8FF-24" value="/Astrolabe:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /sight /object /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="FB00..FB4F-0" value="/Times-Roman:/.notdef /fi /fl /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 					</map>
 				</node>
@@ -99,6 +101,11 @@
 				<map>
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
+					<!--percent of linewidth or stringheight respectively-->
+					<entry key="halo" value="4"/>
+					<!--astrolabe units-->
+					<entry key="halomin" value=".04"/>
+					<entry key="halomax" value=".4"/>
 				</map>
 				<node name="pagesize">
 					<map>
@@ -422,10 +429,19 @@
 			</node>
 			<node name="BodyAreal">
 				<map/>
-				<node name="constellation">
+				<!--node names on this level must equal to values of type atttribue in XSD.-->
+				<node name="area">
 					<map>
+						<entry key="linecrack" value=".36"/>
 						<entry key="linewidth" value=".36"/>
 						<entry key="linedash" value="2.4"/>
+					</map>
+				</node>
+				<node name="sign">
+					<map>
+						<entry key="linecrack" value="-0.28"/>
+						<entry key="linewidth" value=".28"/>
+						<entry key="linedash" value="0"/>
 					</map>
 				</node>
 			</node>

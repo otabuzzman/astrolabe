@@ -6,13 +6,15 @@ import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
+import caa.CAAPrecession;
 
 public class CatalogADC1239TRecord implements CatalogRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
-	public static final int CR_TOKEN = 58 ;
+	public final static int CR_TOKEN = 58 ;
 
 	public String   Catalog   ; //  [T] Catalogue (T = Tycho)
 	public String   TYC       ; // *TYC1-3 (TYC number)
@@ -145,14 +147,17 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 			TYC() ;
 			RAhms() ;
 			DEdms() ;
-			Vmag() ; // continue new methods
+			Vmag() ; 
+			pmRA() ;
+			pmDE() ; // continue new methods
 		} catch ( NumberFormatException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Body toBody() throws ParameterNotValidException {
+	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		CAA2DCoordinate cpm, ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
@@ -161,8 +166,15 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		model.getBodyStellar().setType( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
 		model.getBodyStellar().setTurn( 0 ) ;
 		model.getBodyStellar().setSpin( 0 ) ;
+
+		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
+				epoch-2451545., RAhms(), DEdms(), pmRA()/1000., pmDE()/1000. ) ;
+		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 		model.getBodyStellar().setPosition( AstrolabeFactory.modelPosition(
-				CAACoordinateTransformation.HoursToDegrees( RAhms() ), DEdms() ) ) ;
+				CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+		cpm.delete() ;
+		ceq.delete() ;
+
 		try {
 			model.validate() ;
 		} catch ( ValidationException e ) {
@@ -183,13 +195,26 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 	public Set<String> matchSet( Set<String> list ) {
 		HashSet<String> r = new HashSet<String>() ;
 
-		for ( String k : new String[] { TYC(), "mag"+( (int) ( Vmag()+100.5 )-100 ) } ) {
-			if ( list.contains( k ) ) {
-				r.add( k ) ;
+		for ( String ident : identSet() ) {
+			if ( list.contains( ident ) ) {
+				r.add( ident ) ;
 			}
 		}
 
 		return r ;
+	}
+
+	public Set<String> identSet() {
+		HashSet<String> r = new HashSet<String>() ;
+
+		r.add( ident() ) ;
+		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+
+		return r ;
+	}
+
+	public String ident() {
+		return TYC() ;
 	}
 
 	public java.util.Vector<double[]> list( Projector projector ) {
@@ -351,5 +376,13 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 
 	public double Vmag() {
 		return new Double( Vmag ).doubleValue() ;
+	}
+
+	public double pmRA() {
+		return new Double( pmRA ).doubleValue() ;
+	}
+
+	public double pmDE() {
+		return new Double( pmDE ).doubleValue() ;
 	}
 }
