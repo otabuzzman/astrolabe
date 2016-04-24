@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements Horizon {
 
@@ -13,11 +15,16 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	private double la ;
 	private double ST ;
 
-	public HorizonGalactic( Object peer, Projector projector ) {
+	public HorizonGalactic( Object peer, Projector projector ) throws ParameterNotValidException {
 		double[] eq ;
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
@@ -28,12 +35,10 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		la = eq[1] ;
 		ST = eq[0] ;
 
-		try {
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-			ApplicationHelper.registerDMS( key, la, 2 ) ;		
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-			ApplicationHelper.registerHMS( key, ST, 2 ) ;
-		} catch ( ParameterNotValidException e ) {}
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		ApplicationHelper.registerDMS( key, la, 2 ) ;		
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+		ApplicationHelper.registerHMS( key, ST, 2 ) ;
 	}
 
 	public double[] project( double[] ga ) {

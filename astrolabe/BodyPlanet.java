@@ -4,6 +4,8 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAADate;
 
 @SuppressWarnings("serial")
@@ -30,6 +32,11 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 		long y ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		try {
 			Class c ;
@@ -39,7 +46,9 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 			eclipticLongitude = c.getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
 			eclipticLatitude = c.getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
 		} catch ( ClassNotFoundException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		d.Set( epoch, true ) ;
@@ -77,7 +86,9 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		ps.operator.stroke() ;
 
 		// Dial processing.
@@ -86,17 +97,23 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 
 			ps.operator.gsave() ;
 
-			dial = new DialDay( getDialDay(), this ) ;
-			dial.headPS( ps ) ;
-			dial.emitPS( ps ) ;
-			dial.tailPS( ps ) ;
+			try {
+				dial = new DialDay( getDialDay(), this ) ;
+				dial.headPS( ps ) ;
+				dial.emitPS( ps ) ;
+				dial.tailPS( ps ) ;
+			} catch ( ParameterNotValidException e ) {} // DialDay validated in constructor
 
 			ps.operator.grestore() ;
 		}
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		if ( getAnnotation() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -153,7 +170,9 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Body, Base
 			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		r[0] = l ;

@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.cartacelestis.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cartacelestis.eu/astrolabe/model
+astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2000" m="1" d="1"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+			<!--fov sternkarte-->
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<Latitude>
+						<Rational value="0.0"/>
+					</Latitude>
+					<!--eqp-24.5-->
+					<Circle>
+						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<!--äquatorial-->
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<Latitude>
+						<Rational value="0.0"/>
+					</Latitude>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="-25"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+							<Dial>
+								<DialHour baseline="rail" reflect="false">
+									<GraduationSpan span=".5" division="3">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
+											<Text value="30">
+												<Superscript value="m"/>
+											</Text>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<GraduationHalf span="1">
+										<AnnotationStraight purpose="dialcardinal" anchor="middleleft" radiant="false" reverse="false">
+											<Text value="@{wertstd}@">
+												<Superscript value="h"/>
+											</Text>
+										</AnnotationStraight>
+									</GraduationHalf>
+									<Annotation>
+										<AnnotationCurved purpose="diallettering" anchor="bottommiddle" reverse="false" distance="1.04">
+											<Text value="Rektaszension (&#x0394;&#x03b1; 10">
+												<Superscript value="m"/>
+											</Text>
+											<Text value=")"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialHour>
+							</Dial>
+							<Annotation>
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="12.5">
+									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								</AnnotationCurved>
+							</Annotation>
+							<Annotation>
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="50">
+									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								</AnnotationCurved>
+							</Annotation>
+							<Annotation>
+								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="87.5">
+									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								</AnnotationCurved>
+							</Annotation>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="-10"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<!--equator-->
+					<Circle>
+						<CircleParallel importance="cardinal">
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+							<Annotation>
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26">
+									<Text value="&#x00c4;quator"/>
+								</AnnotationCurved>
+							</Annotation>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="10"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="20"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="30"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="40"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="50"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="60"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="70"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="80"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleParallel>
+					</Circle>
+					<!--southern tropic-->
+					<Circle>
+						<CircleSouthernTropic importance="cardinal">
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+							<Annotation>
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26.5">
+									<Text value="S&#x00fc;dlicher Sonnenwendekreis"/>
+								</AnnotationCurved>
+							</Annotation>
+						</CircleSouthernTropic>
+					</Circle>
+					<!--northern tropic-->
+					<Circle>
+						<CircleNorthernTropic importance="cardinal">
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+							<Annotation>
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="27">
+									<Text value="N&#x00f6;rdlicher Sonnenwendekreis"/>
+								</AnnotationCurved>
+							</Annotation>
+						</CircleNorthernTropic>
+					</Circle>
+					<!--northern polar-->
+					<Circle>
+						<CircleNorthernPolar importance="cardinal">
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
+						</CircleNorthernPolar>
+					</Circle>
+					<!--meridians-->
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="15"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="30"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="45"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="60"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
+											<Text value="@{wertgrd}@&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
+											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="75"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="90"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="105"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="120"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="135"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="150"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="165"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="180"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
+											<Text value="@{wertgrd}@&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
+											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="195"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="210"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="225"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="240"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="255"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="270"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="285"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="300"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
+											<Text value="@{wertgrd}@&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
+											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="315"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="330"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="345"/>
+							</Angle>
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
+						</CircleMeridian>
+					</Circle>
+					<!--ADC5050-->
+					<Catalog>
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/5/5050/catalog.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/5050/catalog.dat.gz-->
+						<CatalogADC5050 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/5050/catalog.dat.gz" random="1000">
+							<Annotation>
+								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="middleleft" radiant="false">
+									<Text value="@{bayerzeichen}@">
+										<Subscript value="@{bayerindex}@"/>
+									</Text>
+								</AnnotationStraight>
+							</Annotation>
+						</CatalogADC5050>
+					</Catalog>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>

@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import astrolabe.model.AngleType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
@@ -28,10 +30,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.ChartGnomonic chG ;
 		Chart chart ;
 
-		if ( ch == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		if ( ( chS = ch.getChartStereographic() ) != null ) {
 			chart = new ChartStereographic( chS ) ;
 		} else if ( ( chO = ch.getChartOrthographic() ) != null ) {
@@ -51,10 +49,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.HorizonEquatorial hoEq ;
 		astrolabe.model.HorizonEcliptical hoEc ;
 		Horizon horizon ;
-
-		if ( ho == null ) {
-			throw new ParameterNotValidException() ;
-		}
 
 		if ( ( hoLo = ho.getHorizonLocal() ) != null  ) {
 			horizon = new HorizonLocal( hoLo, epoch, p ) ;
@@ -77,10 +71,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.CircleSouthernTropic clST ;
 		Circle circle ;
 
-		if ( cl == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		if ( ( clP = cl.getCircleParallel() ) != null ) {
 			circle = new CircleParallel( clP, epoch, p ) ;
 		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
@@ -102,10 +92,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.DialDegree dlD ;
 		Dial dial ;
 
-		if ( dl == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		if ( ( dlD = dl.getDialDegree() ) != null ) {
 			dial = new DialDegree( dlD, baseline ) ;
 		} else { // dl.getDialHour() != null
@@ -118,10 +104,6 @@ public final class AstrolabeFactory {
 	public static Annotation companionOf( astrolabe.model.Annotation an ) throws ParameterNotValidException {
 		astrolabe.model.AnnotationStraight anS ;
 		Annotation annotation ;
-
-		if ( an == null ) {
-			throw new ParameterNotValidException() ;
-		}
 
 		if ( ( anS = an.getAnnotationStraight() ) != null ) {
 			annotation = new AnnotationStraight( anS ) ;
@@ -139,10 +121,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.BodySun bdH ;
 		astrolabe.model.BodyElliptical bdE ;
 		Body body ;
-
-		if ( bd == null ) {
-			throw new ParameterNotValidException() ;
-		}
 
 		if ( ( bdS = bd.getBodyStellar() ) != null ) {
 			body = new BodyStellar( bdS, p ) ;
@@ -163,15 +141,14 @@ public final class AstrolabeFactory {
 
 	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.CatalogADC1239 ct1239 ;
+		astrolabe.model.CatalogADC5050 ct5050 ;
 		astrolabe.model.CatalogADC6049 ct6049 ;
 		Catalog catalog ;
 
-		if ( ct == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		if ( ( ct1239 = ct.getCatalogADC1239() ) != null ) {
 			catalog = new CatalogADC1239( ct1239, p ) ;
+		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
+			catalog = new CatalogADC5050( ct5050, p ) ;
 		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
 			catalog = new CatalogADC6049( ct6049, p ) ;
 		} else { // // ct.getCatalogADC7118() != null
@@ -181,7 +158,7 @@ public final class AstrolabeFactory {
 		return catalog ;
 	}
 
-	public static astrolabe.model.Position modelPosition( double phi, double theta ) {
+	public static astrolabe.model.Position modelPosition( double phi, double theta ) throws ParameterNotValidException {
 		astrolabe.model.Position p = new astrolabe.model.Position() ;
 
 		modelSphericalType( p, 1, phi, theta ) ;
@@ -189,7 +166,7 @@ public final class AstrolabeFactory {
 		return p ;
 	}
 
-	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) {
+	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) throws ParameterNotValidException {
 		astrolabe.model.SphericalType sT = new astrolabe.model.SphericalType() ;
 
 		modelSphericalType( sT, r, phi, theta ) ;
@@ -197,7 +174,7 @@ public final class AstrolabeFactory {
 		return sT ;
 	}
 
-	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) {
+	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) throws ParameterNotValidException {
 		sT.setR( new astrolabe.model.R() ) ;
 		sT.getR().setValue( r ) ;
 		sT.setPhi( new astrolabe.model.Phi() ) ;
@@ -206,13 +183,19 @@ public final class AstrolabeFactory {
 		sT.setTheta( new astrolabe.model.Theta() ) ;
 		sT.getTheta().setRational( new astrolabe.model.Rational() ) ;
 		sT.getTheta().getRational().setValue( theta ) ;
+
+		try {
+			sT.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 	}
 
 	public static double valueOf( DateType date ) throws ParameterNotValidException {
 		double r ;
 
 		if ( date == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( DateType.class.toString()+":"+null ) ;
 		}
 
 		if ( date.getJD() == null ) {
@@ -231,7 +214,7 @@ public final class AstrolabeFactory {
 		double t ;
 
 		if ( calendar == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( CalendarType.class.toString()+":"+null ) ;
 		}
 
 		c = AstrolabeFactory.valueOf( calendar.getYMD() ) ;
@@ -253,7 +236,7 @@ public final class AstrolabeFactory {
 		double r = 0 ;
 
 		if ( time == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( TimeType.class.toString()+":"+null ) ;
 		}
 
 		try {
@@ -269,7 +252,7 @@ public final class AstrolabeFactory {
 		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
 
 		if ( spherical == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( SphericalType[].class.toString()+":"+null ) ;
 		}
 
 		for ( int n=0 ; n<spherical.length ; n++ ) {
@@ -283,7 +266,7 @@ public final class AstrolabeFactory {
 		double[] r = { 1, 0, 0 } ;
 
 		if ( spherical == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( SphericalType.class.toString()+":"+null ) ;
 		}
 
 		r[1] = AstrolabeFactory.valueOf( spherical.getPhi() ) ;
@@ -291,7 +274,7 @@ public final class AstrolabeFactory {
 
 		try {
 			r[0] = valueOf( spherical.getR() ) ;
-		} catch ( ParameterNotValidException e ) {}
+		} catch ( ParameterNotValidException e ) {} // optional
 
 		return r ;
 	}
@@ -300,21 +283,21 @@ public final class AstrolabeFactory {
 		double[] r = { 1, 0 } ;
 
 		if ( polar == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( PolarType.class.toString()+":"+null ) ;
 		}
 
 		r[1] = AstrolabeFactory.valueOf( polar.getPhi() ) ;
 
 		try {
 			r[0] = AstrolabeFactory.valueOf( polar.getR() ) ;
-		} catch ( ParameterNotValidException e ) {}
+		} catch ( ParameterNotValidException e ) {} // optional
 
 		return r ;
 	}
 
 	public static double[] valueOf( CartesianType cartesian ) throws ParameterNotValidException {
 		if ( cartesian == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( CartesianType.class.toString()+":"+null ) ;
 		}
 
 		return new double[] { cartesian.getX(), cartesian.getY(), cartesian.hasZ()?cartesian.getZ():0 } ;
@@ -324,7 +307,7 @@ public final class AstrolabeFactory {
 		double r ;
 
 		if ( angle == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( AngleType.class.toString()+":"+null ) ;
 		}
 
 		try {
@@ -338,7 +321,7 @@ public final class AstrolabeFactory {
 
 	public static long[] valueOf( YMDType ymd ) throws ParameterNotValidException {
 		if ( ymd == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( YMDType.class.toString()+":"+null ) ;
 		}
 
 		return new long[] { ymd.getY(), ymd.getM(), ymd.getD() } ;
@@ -346,7 +329,7 @@ public final class AstrolabeFactory {
 
 	public static double valueOf( DMSType dms ) throws ParameterNotValidException {
 		if ( dms == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( DMSType.class.toString()+":"+null ) ;
 		}
 
 		return CAACoordinateTransformation.DegreesToRadians( dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ) ;
@@ -354,7 +337,7 @@ public final class AstrolabeFactory {
 
 	public static double valueOf( HMSType hms ) throws ParameterNotValidException {
 		if ( hms == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( HMSType.class.toString()+":"+null ) ;
 		}
 
 		return CAACoordinateTransformation.HoursToRadians( hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ) ;
@@ -362,7 +345,7 @@ public final class AstrolabeFactory {
 
 	public static double valueOf( RationalType rational ) throws ParameterNotValidException {
 		if ( rational == null ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( RationalType.class.toString()+":"+null ) ;
 		}
 
 		return rational.getValue() ;

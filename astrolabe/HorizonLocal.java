@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAACoordinateTransformation ;
 import caa.CAADate;
 
@@ -17,21 +19,25 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizo
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( Object peer, double epoch, Projector projector ) {
+	public HorizonLocal( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
 		grayscale = ApplicationHelper.getClassNode( this,
 				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
 
-		try {
-			la = AstrolabeFactory.valueOf( getLatitude() ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-			ApplicationHelper.registerDMS( key, la, 2 ) ;
-		} catch ( ParameterNotValidException e ) {}
+		la = AstrolabeFactory.valueOf( getLatitude() ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		ApplicationHelper.registerDMS( key, la, 2 ) ;
+
 		try {			
 			lo = AstrolabeFactory.valueOf( getLongitude() ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;

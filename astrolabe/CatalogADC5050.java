@@ -16,7 +16,7 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Catalog {
+public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Catalog {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
@@ -29,7 +29,17 @@ public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Ca
 	private Hashtable<String, Object> restrict ;
 	private int random ;
 
-	public CatalogADC1239( Object peer, Projector projector ) throws ParameterNotValidException {
+	private class Designation {
+		public int flamsteed ;
+		public String bayer ;
+		public int bayerindex ;
+		public String constellation ;
+	}
+
+	private static Hashtable<String, String> bayer ;
+	private Hashtable<String, Designation> designation = new Hashtable<String, Designation>() ;
+
+	public CatalogADC5050( Object peer, Projector projector ) throws ParameterNotValidException {
 		String[] fov, rv, sv ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
@@ -50,14 +60,13 @@ public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Ca
 			}
 		}
 
+		restrict = new Hashtable<String, Object>() ;
 		if ( getRestrict() != null ) {
 			restrict = new Hashtable<String, Object>() ;
 			rv = getRestrict().split( "," ) ;
 			for ( int v=0 ; v<rv.length ; v++ ) {
 				restrict.put( rv[v], "" ) ;
 			}
-		} else {
-			restrict = null ;
 		}
 		random = getRandom() ;
 
@@ -81,23 +90,46 @@ public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Ca
 		java.util.Enumeration<String> ckl ; // key list
 		BodyStellar cr ; // record
 		astrolabe.model.BodyStellar cmr ;
+		Designation d ;
+		String key ;
 
 		ckl = catalog.keys();
 
-		try {
 		while ( ckl.hasMoreElements() ) {
-			cmr = catalog.get( ckl.nextElement() ) ;
-			cr = new BodyStellar( cmr, projector ) ;
+			cmr = catalog.get( ckl.nextElement() ) ; 
+
+			if ( designation.containsKey( cmr.getName() ) ) {
+				d = designation.get( cmr.getName() ) ;
+
+				if ( d.flamsteed>0 ) {
+					key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC5050_FLAMSTEED ) ;
+					ApplicationHelper.registerNumber( key, d.flamsteed ) ;
+				}
+				if ( d.bayer != null ) {
+					key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC5050_BAYER ) ;
+					ApplicationHelper.registerName( key, d.bayer ) ;
+				}
+				if ( d.bayerindex>0 ) {
+					key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC5050_BAYERINDEX ) ;
+					ApplicationHelper.registerNumber( key, d.bayerindex ) ;
+				}
+				if ( d.constellation != null ) {
+					key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC5050_CONSTELLATION ) ;
+					ApplicationHelper.registerName( key, d.constellation ) ;
+				}
+			}
 
 			ps.operator.gsave() ;
 
-			cr.headPS( ps ) ;
-			cr.emitPS( ps ) ;
-			cr.tailPS( ps ) ;
+			try {
+				cr = new BodyStellar( cmr, projector ) ;
+				cr.headPS( ps ) ;
+				cr.emitPS( ps ) ;
+				cr.tailPS( ps ) ;
+			} catch ( ParameterNotValidException e ) {} // BodyStellar validated in read() 
 
 			ps.operator.grestore() ;
 		}
-		} catch ( ParameterNotValidException e ) {} // BodyStellar validated in read() 
 	}
 
 	public void tailPS(PostscriptStream ps) {
@@ -161,51 +193,55 @@ public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Ca
 		BufferedReader br ;
 		astrolabe.model.BodyStellar crm ;
 		astrolabe.model.Annotation[] an ;
-		String cl, lv[] ;
-		String rams[], dems[] ;
-		String id, iv[], mag ;
-		double ra, de, xy[], M, m ;
-		int tyc1, tyc2, tyc3 ;
+		String cl, dv ;
+		String id, mag ;
+		double ra, de, xy[], m ;
+		Designation d ;
 
 		try {
 			br = new BufferedReader( catalog ) ;
 			while ( ( cl = br.readLine() ) != null ) {
-				lv = cl.split( "\\|" ) ;
-
-				rams = lv[3].split( " " ) ;
-				ra = new Double( rams[0] ).doubleValue()
-				+new Double( rams[1] ).doubleValue()/60.
-				+new Double( rams[2] ).doubleValue()/3600. ;
-				dems = lv[4].split( " " ) ;
-				de = new Double( dems[0] ).doubleValue()
-				+new Double( dems[1] ).doubleValue()/60.
-				+new Double( dems[2] ).doubleValue()/3600. ;
+				if ( cl.substring( 75, 83 ).trim().equals( "" ) ) { // record removed from BSC
+					continue ;
+				}
+				ra = new Double( cl.substring( 75, 77 ) ).doubleValue()
+				+new Double( cl.substring( 77, 79 ) ).doubleValue()/60.
+				+new Double( cl.substring( 79, 83 ) ).doubleValue()/3600. ;
+				de = new Double( cl.substring( 83, 86 ) ).doubleValue()
+				+new Double( cl.substring( 86, 88 ) ).doubleValue()/60.
+				+new Double( cl.substring( 88, 90 ) ).doubleValue()/3600. ;
 				xy = projector.project( CAACoordinateTransformation.HoursToRadians( ra ),
 						CAACoordinateTransformation.DegreesToRadians( de ) ) ;
 				if ( ! fov.covers( xy ) ) {
 					continue ;
 				}
 
-				M = new Double( lv[5] ).doubleValue() ;
-				if ( lv[0].equals( "H" ) ) { // hipparch
-					id = ( lv[0]+lv[1].trim() ) ;
-					if ( lv[44].trim().equals( "" ) ) { // magnitude unavailable
-						m = M ;
-					} else {
-						m = new Double( lv[44] ).doubleValue() ;
+				id = "BSC"+cl.substring( 0, 4 ).trim() ;
+				m = new Double( cl.substring( 102, 107 ) ).doubleValue() ;
+				mag = "mag"+( (int) ( m+100.5 )-100 ) ;
+				if ( ! cl.substring( 4, 14 ).trim().equals( "" ) ) {
+					d = new Designation() ;
+					dv = cl.substring( 4, 7 ).trim() ;
+					if ( ! dv.equals( "" ) ) {
+						d.flamsteed = new Integer( dv ).intValue() ;
 					}
-					mag = "mag"+( (int) ( m+100.5 )-100 ) ;
-				} else { // tycho
-					iv = lv[1].trim().split( "[ ]+" ) ;
-					tyc1 = new Integer( iv[0] ).intValue() ; // GSC region number 1-9537
-					tyc2 = new Integer( iv[1] ).intValue() ; // number in region 1-12119
-					tyc3 = new Integer( iv[2] ).intValue() ; // component number 1-4
-					id = ( lv[0]+tyc1+"-"+tyc2+"-"+tyc3 ) ;
-					mag = "mag"+( (int) ( M+100.5 )-100 ) ;
+					dv = cl.substring( 7, 10 ).trim() ;
+					if ( ! dv.equals( "" ) ) {
+						d.bayer = bayer.get( dv ) ;
+					}
+					dv = cl.substring( 10, 11 ).trim() ;
+					if ( ! dv.equals( "" ) ) {
+						d.bayerindex = new Integer( dv ).intValue() ;
+					}
+					dv = cl.substring( 11, 14 ).trim() ;
+					if ( ! dv.equals( "" ) ) {
+						d.constellation = cl.substring( 11, 14 ).trim() ;
+					}
+					designation.put( id, d ) ;
 				}
-				if ( ! ( restrict == null ) &&
-						! restrict.containsKey( id ) &&
-						! restrict.containsKey( mag ) )  {
+				if ( ! restrict.containsKey( id ) &&
+						! restrict.containsKey( mag ) &&
+						! designation.containsKey( id ) ) {
 					continue ;
 				}
 
@@ -244,5 +280,34 @@ public class CatalogADC1239 extends astrolabe.model.CatalogADC1239 implements Ca
 		}
 
 		return r ;
+	}
+
+	static {
+		bayer = new Hashtable<String, String>() ;
+
+		bayer.put( "Alp", "\u03b1" ) ;
+		bayer.put( "Bet", "\u03b2" ) ;
+		bayer.put( "Chi", "\u03c7" ) ;
+		bayer.put( "Del", "\u03b4" ) ;
+		bayer.put( "Eps", "\u03b5" ) ;
+		bayer.put( "Eta", "\u03b7" ) ;
+		bayer.put( "Gam", "\u03b3" ) ;
+		bayer.put( "Iot", "\u03b9" ) ;
+		bayer.put( "Kap", "\u03ba" ) ;
+		bayer.put( "Lam", "\u03bb" ) ;
+		bayer.put( "Mu", "\u03bc" ) ;
+		bayer.put( "Nu", "\u03bd" ) ;
+		bayer.put( "Ome", "\u03c9" ) ;
+		bayer.put( "Omi", "\u03bf" ) ;
+		bayer.put( "Phi", "\u03c6" ) ;
+		bayer.put( "Pi", "\u03c0" ) ;
+		bayer.put( "Psi", "\u03c8" ) ;
+		bayer.put( "Rho", "\u03c1" ) ;
+		bayer.put( "Sig", "\u03c3" ) ;
+		bayer.put( "Tau", "\u03c4" ) ;
+		bayer.put( "The", "\u03b8" ) ;
+		bayer.put( "Ups", "\u03c5" ) ;
+		bayer.put( "Xi", "\u03be" ) ;
+		bayer.put( "Zet", "\u03b6" ) ;
 	}
 }

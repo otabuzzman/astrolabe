@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartGnomonic extends ChartStereographic {
 
-	public ChartGnomonic( Object peer ) {
+	public ChartGnomonic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 

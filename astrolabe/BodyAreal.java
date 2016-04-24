@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -16,12 +18,17 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 	private java.util.Vector<double[]> outline ;
 
-	public BodyAreal( Object peer, Projector projector ) {
+	public BodyAreal( Object peer, Projector projector ) throws ParameterNotValidException {
 		PolygonSpherical polygon ;
 		String key ;
 		double rad1 ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
@@ -30,17 +37,14 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 		linedash = ApplicationHelper.getClassNode( this,
 				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEDASH, DEFAULT_LINEDASH ) ;
 
-		try {
-			outline = AstrolabeFactory.valueOf( getPosition() ) ;
-		} catch ( ParameterNotValidException e ) {}
+		outline = AstrolabeFactory.valueOf( getPosition() ) ;
 		polygon = new PolygonSpherical( outline ) ;
-		try {
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
-			ApplicationHelper.registerDMS( key, polygon.area(), 2 ) ;
-			rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-			ApplicationHelper.registerDMS( key, polygon.area()/( rad1*rad1 ), 2 ) ;		
-		} catch ( ParameterNotValidException e ) {}
+
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
+		ApplicationHelper.registerDMS( key, polygon.area(), 2 ) ;
+		rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
+		ApplicationHelper.registerDMS( key, polygon.area()/( rad1*rad1 ), 2 ) ;		
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -71,17 +75,16 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_LISTREDUCE ) ;
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {}
-		// listreduce, polyline are considered well-defined
 
-		polygon = new PolygonPlane( outline ) ;
-		try {
+			polygon = new PolygonPlane( outline ) ;
+
 			ps.push( polygon.sign()*linewidth/2 ) ;
 			ps.push( true ) ; // parallel edges
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
 			ps.operator.stroke() ;
-		} catch ( ParameterNotValidException e ) {}
-		// polyline is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;			
+		}
 
 		p = new Vector( xy[0], xy[1] ) ;
 		xy = projector.project( 0, Math.rad90 ) ;
@@ -94,9 +97,13 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 		ps.operator.rotate( a ) ;
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		if ( getAnnotation() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {

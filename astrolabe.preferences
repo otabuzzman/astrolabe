@@ -53,7 +53,7 @@
 						<entry key="/pagesize" value="{currentpagedevice {exch /PageSize ne {pop} {dup 0 get exch 1 get} ifelse} forall}"/>
 						<entry key="/pathlength" value="{8 dict begin flattenpath {/ny exch def /nx exch def 0} {/px nx def /py ny def /ny exch def /nx exch def nx px sub dup mul ny py sub dup mul add sqrt add} {} {} pathforall end}"/>
 						<entry key="/pathreverse" value="{mark flattenpath {} {} {} {} pathforall polyline}"/>
-						<entry key="/pathshift" value="{16 dict begin /e exch def /o exch def mark mark flattenpath {} {} {} {} pathforall 4 copy vsub /B0y exch def /B0x exch def B0x B0y o vscale e {matrot90c vapply} {matrot180c vapply} ifelse vadd /A0y exch def /A0x exch def counttomark dup /n exch 1 add def 2 div cvi 1 sub {/Ay exch def /Ax exch def 2 copy Ax Ay vsub /B1y exch def /B1x exch def B0x B0y B1x B1y vangle dup dup o exch 90 sub cos dup 0 ne {div} {pop} ifelse B1x B1y B0y B0x atan -1 mul matrotarb vapply exch atan 180 lt {B1x exch B1y exch vscale 3 2 roll -1 mul matrotarb vapply 2 copy 5 4 roll 180 exch sub -1 mul matrotarb vapply vadd} {B1x exch B1y exch vscale 2 copy 6 4 roll pop 180 exch sub -1 mul matrotarb vapply vadd} ifelse e not {o vscale} if Ax Ay vadd /B0x B1x def /B0y B1y def n 2 roll} repeat B1x B1y o vscale e {matrot90c vapply} if vadd n 2 roll pop A0x A0y polyline pathreverse end}"/>
+						<entry key="/pathshift" value="{16 dict begin /e exch def /o exch def mark mark flattenpath {} {} {} {} pathforall 4 copy vsub /B0y exch def /B0x exch def B0x B0y o vscale e {matrot90c vapply} {matrot180c vapply} ifelse vadd /A0y exch def /A0x exch def counttomark dup /n exch 1 add def 2 div cvi 1 sub {/Ay exch def /Ax exch def 2 copy Ax Ay vsub /B1y exch def /B1x exch def B0x B0y B1x B1y vangle dup dup 0. eq exch 180 mod .0001 lt or {pop .0001} if dup dup o exch 90 sub cos dup 0 ne {div} {pop} ifelse B1x B1y B0y B0x atan -1 mul matrotarb vapply exch atan 180 lt {B1x exch B1y exch vscale 3 2 roll -1 mul matrotarb vapply 2 copy 5 4 roll 180 exch sub -1 mul matrotarb vapply vadd} {B1x exch B1y exch vscale 2 copy 6 4 roll pop 180 exch sub -1 mul matrotarb vapply vadd} ifelse e not {o vscale} if Ax Ay vadd /B0x B1x def /B0y B1y def n 2 roll} repeat B1x B1y o vscale e {matrot90c vapply} if vadd n 2 roll pop A0x A0y polyline pathreverse end}"/>
 						<entry key="/pathshow" value="{32 dict begin /td exch def /t exch def /pd 0 def /nc 0 def gsave flattenpath {/fy exch def /fx exch def /nx fx def /ny fy def /os 0 def fx fy transform /cy exch def /cy exch def} {/px nx def /py ny def /ny exch def /nx exch def /dx nx px sub def /dy ny py sub def /rpl dx dup mul dy dup mul add sqrt def rpl 0 ne {/osx dx rpl div os mul def /osy dy rpl div os mul def px osx add py osy add transform /cy exch def /cx exch def /pd pd rpl add def {td pd le {nc t 0 exch {6 get length add} forall lt {t nc 1 add exch 0 exch 0 exch {6 get length dup 3 1 roll add dup 4 index ge {exch sub 2 index exch sub 1 sub exit} {exch pop exch 1 add exch} ifelse} forall 3 2 roll pop /ci exch def /ti exch def /c t ti get 6 get ci 1 getinterval def /nc nc 1 add def gsave t ti get dup 0 get exch 1 get setencoding t ti get 0 get findfont t ti get 2 get scalefont setfont /cw c stringwidth pop def cx cy itransform translate dy dx atan rotate 0 t ti get 3 get moveto c show currentpoint t ti get 3 get sub transform /cy exch def /cx exch def grestore /td td cw add def} {exit} ifelse} {/os td pd sub def exit} ifelse} loop} if} {} {fx fy lineto fx fy moveto} pathforall grestore end}"/>
 						<entry key="/polyline" value="{newpath moveto counttomark 2 sub 0 exch 2 exch {pop lineto} for pop}"/>
 						<entry key="/setencoding" value="{2 dict begin exch dup findfont dup length dict begin {1 index /FID ne {def} {pop pop} ifelse} forall exch /Encoding exch def currentdict end definefont pop end}"/>
@@ -361,12 +361,12 @@
 				<node name="purpose">
 					<map>
 						<!--must equal to values of purpose atttribue in XSD.-->
-						<entry key="bodydescription" value="1.4"/>
-						<entry key="circledescription" value="3.8"/>
-						<entry key="constellationdescription" value="3.0"/>
-						<entry key="dialdescription" value="2.4"/>
-						<entry key="dialnumber" value="3.8"/>
-						<entry key="dialsubnumber" value="2.6"/>
+						<entry key="bodylettering0" value="3.0"/>
+						<entry key="bodylettering7" value="1.4"/>
+						<entry key="circlelettering" value="3.8"/>
+						<entry key="diallettering" value="2.4"/>
+						<entry key="dialcardinal" value="3.8"/>
+						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
 					</map>
@@ -384,12 +384,12 @@
 				<node name="purpose">
 					<map>
 						<!--must equal to values of purpose atttribue in XSD.-->
-						<entry key="bodydescription" value="1.4"/>
-						<entry key="circledescription" value="3.8"/>
-						<entry key="constellationdescription" value="3.0"/>
-						<entry key="dialdescription" value="2.4"/>
-						<entry key="dialnumber" value="3.8"/>
-						<entry key="dialsubnumber" value="2.6"/>
+						<entry key="bodylettering0" value="3.0"/>
+						<entry key="bodylettering7" value="1.4"/>
+						<entry key="circlelettering" value="3.8"/>
+						<entry key="diallettering" value="2.4"/>
+						<entry key="dialcardinal" value="3.8"/>
+						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
 					</map>

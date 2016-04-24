@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements Annotation {
@@ -31,9 +32,13 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 	private double size ;
 
-	public AnnotationStraight( Object peer ) {
+	public AnnotationStraight( Object peer ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
-
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		subscriptshrink = ApplicationHelper.getClassNode( this,
 				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
@@ -57,14 +62,26 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public void emitPS( PostscriptStream ps ) {
+		int nt, ne ;
+
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
-		for ( int t=0 ; t<getTextCount() ; t++ ) {
-			emitPS( ps, getText( t ), size, 0,
-					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
+		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
+			try {
+				emitPS( ps, getText( nt ), size, 0,
+						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
+			} catch ( ParameterNotValidException e ) {
+				ne++ ;
+			}
 		}
 		ps.array( false ) ;
+		if ( ne==nt ) {
+			ps.operator.pop() ; // array
+			ps.operator.grestore() ;
+
+			return ;
+		}
 
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
@@ -137,10 +154,20 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,
-			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) {
+			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
 		java.util.Vector FET, fet ;
+		String t ;
 
-		FET = ps.ucFET( substitute( text.getValue() ) ) ;
+		t = substitute( text.getValue() ) ;
+		if ( t.length()==0 ) {
+			String msg ;
+
+			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "\"\"", text.getValue() } ) ;
+			throw new ParameterNotValidException( msg ) ;
+		}
+
+		FET = ps.ucFET( t ) ;
 		try {
 			for ( int e=0 ; e<FET.size() ; e++ ) {
 				fet = (java.util.Vector) FET.get( e ) ;
@@ -154,8 +181,9 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 				ps.push( (String) fet.get( 2 ) ) ;
 				ps.array( false ) ;
 			}
-		} catch ( ParameterNotValidException e ) {}
-		// concern push(FET) invoke. FET chars and strings are considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
 			emitPS( ps, text.getSubscript( d ),
@@ -185,19 +213,16 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			k = s.substring( 2, s.length()-2 ) ;
 			try {
 				v = (String) Registry.retrieve( k ) ;
+				t = m.replaceFirst( v ) ;
 			} catch ( ParameterNotValidException e ) {
-				try {
-					String msg ;
+				String msg ;
 
-					msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ANNOTATION_NOSUBSTITUTE ) ;
-					msg = MessageFormat.format( msg, new Object[] { k, string } ) ;
+				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { "\""+t+"\"", "\""+string+"\"" } ) ;
+				log.warn( msg ) ;
 
-					log.info( msg ) ;
-				} catch ( ParameterNotValidException ee ) {}
-
-				v = s ;
+				t = m.replaceFirst( "" ) ;
 			}
-			t = m.replaceFirst( v ) ;
 			m = p.matcher( t ) ;
 		}
 

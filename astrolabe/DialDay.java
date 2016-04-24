@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
 import caa.CAACoordinateTransformation;
 import caa.CAADate;
 import caa.CAAEquationOfTime;
@@ -20,7 +22,7 @@ public class DialDay extends DialDegree {
 			ApplicationConstant.LL_SEPTEMBER, ApplicationConstant.LL_OCTOBER, ApplicationConstant.LL_NOVEMBER, ApplicationConstant.LL_DECEMBER
 	} ;
 
-	public DialDay( Object peer, Baseline baseline ) {
+	public DialDay( Object peer, Baseline baseline ) throws ParameterNotValidException {
 		super( peer, baseline, 0 ) ;
 
 		this.baseline = baseline ;
@@ -31,7 +33,11 @@ public class DialDay extends DialDegree {
 
 		r = baseline.mapIndexToScale( index, span ) ;
 		if ( ! baseline.probe( r ) ) {
-			throw new ParameterNotValidException() ;
+			String msg ;
+
+			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { r, index+","+span } ) ;
+			throw new ParameterNotValidException( msg ) ;
 		}
 
 		return r ;
@@ -43,7 +49,7 @@ public class DialDay extends DialDegree {
 		double s, jd0, jd ;
 
 		s = getGraduationSpan().getSpan() ;
-		
+
 		jd0 = baseline.mapIndexToScale( 0, s ) ;
 		jd = baseline.mapIndexToScale( index, s ) ;
 

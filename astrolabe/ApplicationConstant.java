@@ -40,6 +40,11 @@ public final class ApplicationConstant {
 	public static final String LK_DIAL_JULIANDAY		= "substitute.dial.day.julianday" ;
 	public static final String LK_DIAL_EQUATIONOFTIME	= "substitute.dial.day.equationoftime" ;
 
+	public static final String LK_ADC5050_FLAMSTEED		= "substitute.adc5050.flamsteed" ;
+	public static final String LK_ADC5050_BAYER			= "substitute.adc5050.bayer" ;
+	public static final String LK_ADC5050_BAYERINDEX	= "substitute.adc5050.bayerindex" ;
+	public static final String LK_ADC5050_CONSTELLATION	= "substitute.adc5050.constellation" ;
+
 	public static final String LK_ADC6049_CONSTELLATION	= "substitute.adc6049.constellation" ;
 	public static final String LK_ADC6049_ABBREVIATION	= "substitute.adc6049.abbreviation" ;
 	public static final String LK_ADC6049_NOMINATIVE	= "substitute.adc6049.nominative" ;
@@ -87,10 +92,8 @@ public final class ApplicationConstant {
 	public static final String LK_MS_SECONDS	= "substitute.indicator.ms.seconds" ;
 	public static final String LK_MS_FRACTION	= "substitute.indicator.ms.fraction" ;
 
-	public static final String LK_ANNOTATION_NOSUBSTITUTE = "message.annotation.nosubstitute" ;
-
-	public static final String LK_POSTSCRIPT_NOLITERALORSTRING	= "message.postscript.noliteralorstring" ;
-	public static final String LK_POSTSCRIPT_NOSUCHDEFINTION	= "message.postscript.nosuchdefinition" ;
+	// messages
+	public static final String LK_MESSAGE_PARAMETERNOTAVLID = "message.parameternotvalid" ;
 
 	// model values (AV_), patterns (AP_)
 	public static final String AV_CHART_NORTHERN = "northern" ;

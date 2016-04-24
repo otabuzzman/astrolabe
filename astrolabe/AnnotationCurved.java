@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements Annotation {
 
@@ -26,8 +28,13 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 
 	private double distance ;
 
-	public AnnotationCurved( Object peer ) {
+	public AnnotationCurved( Object peer ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		subscriptshrink = ApplicationHelper.getClassNode( this,
 				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
@@ -53,19 +60,31 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	}
 
 	public void emitPS( PostscriptStream ps ) {
+		int nt, ne ;
+
 		ps.operator.gsave() ;
 
-		try {
-			ps.array( true ) ;
-			for ( int t=0 ; t<getTextCount() ; t++ ) {
-				AnnotationStraight.emitPS( ps, getText( t ), size, 0,
+		ps.array( true ) ;
+		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
+			try {
+				AnnotationStraight.emitPS( ps, getText( nt ), size, 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
+			} catch ( ParameterNotValidException e ) {
+				ne++ ;
 			}
-			ps.array( false ) ;
+		}
+		ps.array( false ) ;
+		if ( ne==nt ) {
+			ps.operator.pop() ; // array
+			ps.operator.grestore() ;
 
-			ps.operator.currentpoint() ;
-			ps.operator.translate() ;
+			return ;
+		}
 
+		ps.operator.currentpoint() ;
+		ps.operator.translate() ;
+
+		try {
 			if ( getReverse() ) {
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
 			}
@@ -178,8 +197,9 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			}
 
 			ps.custom( ApplicationConstant.PS_PROLOG_PATHSHOW ) ;
-		} catch ( ParameterNotValidException e ) {}
-		// concern custom(PS_PROLOG) invoke. prolog definitions are considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		ps.operator.grestore() ;
 	}

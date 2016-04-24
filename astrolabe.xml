@@ -107,12 +107,12 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="10" division="1">
-										<AnnotationStraight purpose="dialsubnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" reverse="false" distance="18.5">
+										<AnnotationCurved purpose="diallettering" anchor="bottomleft" reverse="false" distance="18.5">
 											<Text value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -396,17 +396,17 @@ astrolabe.xsd">
 								</theta>
 							</Position>
 							<Annotation>
-								<AnnotationStraight purpose="bodydescription" anchor="bottomleft" radiant="false" reverse="false">
+								<AnnotationStraight purpose="bodylettering7" anchor="bottomleft" radiant="false" reverse="false">
 									<Text value="@{azimutgrd}@&#x00b0;@{azimutgmin}@', @{h&#x00f6;hegrd}@&#x00b0;@{h&#x00f6;hegmin}@' (l,b)"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Annotation>
-								<AnnotationStraight purpose="bodydescription" anchor="middleleft" radiant="false" reverse="false">
+								<AnnotationStraight purpose="bodylettering7" anchor="middleleft" radiant="false" reverse="false">
 									<Text value="@{rektaszensiongrd}@&#x00b0;@{rektaszensiongmin}@', @{deklinationgrd}@&#x00b0;@{deklinationgmin}@' (RA,d)"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
+								<AnnotationCurved purpose="bodylettering7" anchor="bottommiddle" reverse="false" distance="50">
 									<Text value="Galaktischer NP"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -505,7 +505,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="true" distance="71.5">
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="true" distance="71.5">
 									<Text value="Ekliptik">
 										<Subscript value="J@{epochej}@"/>
 									</Text>
@@ -532,12 +532,12 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="10" division="1">
-										<AnnotationStraight purpose="dialsubnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottomleft" reverse="false" distance=".4">
+										<AnnotationCurved purpose="diallettering" anchor="bottomleft" reverse="false" distance=".4">
 											<Text value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -982,7 +982,7 @@ astrolabe.xsd">
 								</GraduationSpan>
 							</DialDay>
 							<Annotation>
-								<AnnotationCurved purpose="dialdescription" reverse="true" anchor="bottommiddle" distance="97.8">
+								<AnnotationCurved purpose="diallettering" reverse="true" anchor="bottommiddle" distance="97.8">
 									<Text value="Mars"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -998,7 +998,7 @@ astrolabe.xsd">
 								</GraduationSpan>
 							</DialDay>
 							<Annotation>
-								<AnnotationCurved purpose="dialdescription" reverse="false" anchor="bottommiddle" distance="12.5">
+								<AnnotationCurved purpose="diallettering" reverse="false" anchor="bottommiddle" distance="12.5">
 									<Text value="Jupiter"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1014,7 +1014,7 @@ astrolabe.xsd">
 								</GraduationSpan>
 							</DialDay>
 							<Annotation>
-								<AnnotationCurved purpose="dialdescription" reverse="false" anchor="bottommiddle" distance="12.5">
+								<AnnotationCurved purpose="diallettering" reverse="false" anchor="bottommiddle" distance="12.5">
 									<Text value="Saturn"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1086,7 +1086,7 @@ astrolabe.xsd">
 									</AnnotationStraight>
 								</GraduationHalf>
 								<GraduationFull span="30">
-									<AnnotationStraight purpose="dialnumber" anchor="bottommiddle" radiant="false" reverse="false">
+									<AnnotationStraight purpose="dialcardinal" anchor="bottommiddle" radiant="false" reverse="false">
 										<Text value="@{monat}@"/>
 									</AnnotationStraight>
 									<AnnotationStraight purpose="guidance" anchor="middleleft" radiant="false" reverse="false">
@@ -1102,7 +1102,7 @@ astrolabe.xsd">
 									</AnnotationStraight>
 								</GraduationFull>
 								<Annotation>
-									<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="99.06">
+									<AnnotationCurved purpose="diallettering" anchor="bottommiddle" reverse="false" distance="99.06">
 										<Text value="Wahre Sonne (&#x0394;T 6">
 											<Superscript value="h"/>
 										</Text>
@@ -1127,7 +1127,7 @@ astrolabe.xsd">
 									</AnnotationStraight>
 								</GraduationHalf>
 								<Annotation>
-									<AnnotationCurved purpose="dialdescription" anchor="topmiddle" reverse="false" distance="99.06">
+									<AnnotationCurved purpose="diallettering" anchor="topmiddle" reverse="false" distance="99.06">
 										<Text value="Mittlere Sonne @{epochej}@ (&#x0394;T 6">
 											<Superscript value="h"/>
 										</Text>
@@ -1166,7 +1166,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="23.5">
+								<AnnotationCurved purpose="circlelettering" anchor="topright" reverse="false" distance="23.5">
 									<Text value="Astronomische D&#x00e4;mmerung -18&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1185,7 +1185,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22.5">
+								<AnnotationCurved purpose="circlelettering" anchor="topright" reverse="false" distance="22.5">
 									<Text value="Nautische D&#x00e4;mmerung -12&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1204,7 +1204,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22">
+								<AnnotationCurved purpose="circlelettering" anchor="topright" reverse="false" distance="22">
 									<Text value="B&#x00fc;rgerliche D&#x00e4;mmerung -6&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1223,12 +1223,12 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topright" reverse="false" distance="22">
+								<AnnotationCurved purpose="circlelettering" anchor="topright" reverse="false" distance="22">
 									<Text value="Sonnenaufgang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topleft" reverse="false" distance="78">
+								<AnnotationCurved purpose="circlelettering" anchor="topleft" reverse="false" distance="78">
 									<Text value="Sonnenuntergang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1247,7 +1247,7 @@ astrolabe.xsd">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="bottomleft" reverse="false" distance="10">
+								<AnnotationCurved purpose="circlelettering" anchor="bottomleft" reverse="false" distance="10">
 									<Text value="Horizont @{breitegrd}@&#x00b0;@{breitegmin}@'@{breitegsek}@.@{breitegfrk}@'' geografische Breite (&#x03c6;)"/>
 									<Text value=", Sternzeit @{sternzeitstd}@">
 										<Superscript value="h"/>
@@ -1311,12 +1311,12 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="rail" reflect="false">
 									<GraduationSpan division="4" span="10">
-										<AnnotationStraight purpose="dialsubnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="middleleft" reverse="false" distance=".45">
+										<AnnotationCurved purpose="diallettering" anchor="middleleft" reverse="false" distance=".45">
 											<Text value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
@@ -1809,7 +1809,7 @@ astrolabe.xsd">
 								</theta>
 							</Position>
 							<Annotation>
-								<AnnotationCurved purpose="bodydescription" anchor="bottommiddle" reverse="false" distance="50">
+								<AnnotationCurved purpose="bodylettering7" anchor="bottommiddle" reverse="false" distance="50">
 									<Text value="Zenit"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1860,7 +1860,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" reverse="false" anchor="topmiddle" distance="52">
+								<AnnotationCurved purpose="circlelettering" reverse="false" anchor="topmiddle" distance="52">
 									<Text value="Zirkumpolarkreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -1900,21 +1900,21 @@ astrolabe.xsd">
 							<Dial>
 								<DialHour baseline="rail" reflect="true">
 									<GraduationSpan span=".5" division="4">
-										<AnnotationStraight purpose="dialsubnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="30">
 												<Superscript value="m"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<GraduationHalf span="1">
-										<AnnotationStraight purpose="dialnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialcardinal" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{azimutzeitstd}@">
 												<Superscript value="h"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="middle" reverse="true" distance="1.04">
+										<AnnotationCurved purpose="diallettering" anchor="middle" reverse="true" distance="1.04">
 											<Text value="Lokalzeit (&#x0394;t 7.5">
 												<Superscript value="m"/>
 											</Text>
@@ -1951,21 +1951,21 @@ astrolabe.xsd">
 							<Dial>
 								<DialHour baseline="rail" reflect="false">
 									<GraduationSpan span=".5" division="3">
-										<AnnotationStraight purpose="dialsubnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="30">
 												<Superscript value="m"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<GraduationHalf span="1">
-										<AnnotationStraight purpose="dialnumber" anchor="middleleft" radiant="false" reverse="false">
+										<AnnotationStraight purpose="dialcardinal" anchor="middleleft" radiant="false" reverse="false">
 											<Text value="@{wertstd}@">
 												<Superscript value="h"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="dialdescription" anchor="bottommiddle" reverse="false" distance="1.04">
+										<AnnotationCurved purpose="diallettering" anchor="bottommiddle" reverse="false" distance="1.04">
 											<Text value="Rektaszension (&#x0394;&#x03b1; 10">
 												<Superscript value="m"/>
 											</Text>
@@ -2025,7 +2025,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="26">
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26">
 									<Text value="&#x00c4;quator"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2184,7 +2184,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="26.5">
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26.5">
 									<Text value="S&#x00fc;dlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2207,7 +2207,7 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circledescription" anchor="topmiddle" reverse="false" distance="27">
+								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="27">
 									<Text value="N&#x00f6;rdlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
@@ -2684,27 +2684,27 @@ astrolabe.xsd">
 					</Circle>
 					<!--hipparch und tycho-->
 					<Catalog>
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/hip_main.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_00.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_01.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_02.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_03.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_04.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_05.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_06.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_07.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_08.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_09.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_10.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_11.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_12.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_13.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_14.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_15.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_16.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_17.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_18.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/xml_archives/catalogs/1/1239/public/tyc_19.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/hip_main.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_00.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_01.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_02.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_03.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_04.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_05.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_06.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_07.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_08.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_09.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_10.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_11.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_12.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_13.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_14.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_15.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_16.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_17.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_18.dat.gz-->
+						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/tyc_19.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/hip_main.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_00.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/1239/tyc_01.dat.gz-->
@@ -2737,27 +2737,27 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz-->
 						<CatalogADC6049 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/doc/6049/bound_20.dat.gz">
 							<Annotation>
-								<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomleft" radiant="false">
+								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomleft" radiant="false">
 									<Text value="@{abk&#x00fc;rzung}@"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Select value="CMI,CNC,MON">
 								<Annotation>
-									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topleft" radiant="false">
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topleft" radiant="false">
 										<Text value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
 								<Annotation>
-									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="bottomright" radiant="false">
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomright" radiant="false">
 										<Text value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="LAC,SCT,SER2">
 								<Annotation>
-									<AnnotationStraight purpose="constellationdescription" reverse="false" anchor="topright" radiant="false">
+									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topright" radiant="false">
 										<Text value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>

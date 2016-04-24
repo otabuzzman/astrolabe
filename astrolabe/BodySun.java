@@ -1,8 +1,15 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 @SuppressWarnings("serial")
 public class BodySun extends BodyPlanet {
+
+	private final static Log log = LogFactory.getLog( BodySun.class ) ;
 
 	private Projector projector ;
 
@@ -19,7 +26,15 @@ public class BodySun extends BodyPlanet {
 		if ( circle != null ) {
 			try {
 				this.circle = (Circle) Registry.retrieve( circle ) ;
-			} catch ( ParameterNotValidException e ) {}
+			} catch ( ParameterNotValidException e ) {
+				String msg ;
+
+				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { null, "\""+circle+"\"" } ) ;
+				log.warn( msg ) ;
+
+				this.circle = null ;
+			}
 		}
 	}
 
@@ -31,18 +46,23 @@ public class BodySun extends BodyPlanet {
 				Dial dial ;
 
 				ps.operator.gsave() ;
-
-				dial = new DialDay( getDialDay(), this ) ;
-				dial.headPS( ps ) ;
-				dial.emitPS( ps ) ;
-				dial.tailPS( ps ) ;
+				try {
+					dial = new DialDay( getDialDay(), this ) ;
+					dial.headPS( ps ) ;
+					dial.emitPS( ps ) ;
+					dial.tailPS( ps ) ;
+				} catch ( ParameterNotValidException e ) {} // DialDay validated in constructor
 
 				ps.operator.grestore() ;
 			}
 
-			try {
-				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-			} catch ( ParameterNotValidException e ) {} // optional
+			if ( getAnnotation() != null ) {
+				try {
+					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+			}
 		}
 	}
 

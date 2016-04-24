@@ -8,13 +8,20 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.zip.GZIPInputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
 public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Catalog {
+
+	private final static Log log = LogFactory.getLog( CatalogADC6049.class ) ;
 
 	private Projector projector ;
 
@@ -32,14 +39,19 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		public double de ;
 	}
 
-	private Hashtable<String, String> abbreviation ;
-	private Hashtable<String, String> nominative ;
-	private Hashtable<String, String> genitive ;
+	private static Hashtable<String, String> abbreviation ;
+	private static Hashtable<String, String> nominative ;
+	private static Hashtable<String, String> genitive ;
 
 	public CatalogADC6049( Object peer, Projector projector ) throws ParameterNotValidException {
 		String[] fov, rv, sv ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
@@ -70,7 +82,11 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 					if ( abbreviation.containsKey( sv[v] ) ) { // validate
 						select.put( sv[v], getSelect( s ).getAnnotation() ) ;
 					} else {
-						throw new ParameterNotValidException() ;
+						String msg ;
+
+						msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+						msg = MessageFormat.format( msg, new Object[] { "\""+sv[v]+"\"", "\""+getSelect( s ).getValue()+"\"" } ) ;
+						log.warn( msg ) ;
 					}
 				}
 			}
@@ -93,19 +109,21 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		while ( ckl.hasMoreElements() ) {
 			ck = ckl.nextElement() ;
 
-			try {
-				key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
-				name = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_ADC6049+"."+ck ) ;
-				ApplicationHelper.registerName( key, name ) ;
-				key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
-				ApplicationHelper.registerName( key, abbreviation.get( ck ) ) ;
-				key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
-				ApplicationHelper.registerName( key, nominative.get( ck ) ) ;
-				key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
-				ApplicationHelper.registerName( key, genitive.get( ck ) ) ;
-			} catch ( ParameterNotValidException e ) {}
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
+			name = ApplicationHelper.getLocalizedString( ApplicationConstant.LN_ADC6049+"."+ck ) ;
+			ApplicationHelper.registerName( key, name ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
+			ApplicationHelper.registerName( key, abbreviation.get( ck ) ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
+			ApplicationHelper.registerName( key, nominative.get( ck ) ) ;
+			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
+			ApplicationHelper.registerName( key, genitive.get( ck ) ) ;
 
-			cr = new BodyAreal( catalog.get( ck ), projector ) ;
+			try {
+				cr = new BodyAreal( catalog.get( ck ), projector ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
 
 			ps.operator.gsave() ;
 
@@ -126,13 +144,13 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		try {
 			url = new URL( getUrl() ) ;
 		} catch ( MalformedURLException e ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
 		return read( url ) ;
 	}
 
-	public Hashtable<String, astrolabe.model.BodyAreal> read( URL catalog ) throws ParameterNotValidException {
+	public Hashtable<String, astrolabe.model.BodyAreal> read( URL catalog ) {
 		Hashtable<String, astrolabe.model.BodyAreal> r ;
 		InputStreamReader reader ;
 		GZIPInputStream filter ;
@@ -158,7 +176,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		return r ;
 	}
 
-	public Hashtable<String, astrolabe.model.BodyAreal> read( String catalog ) throws ParameterNotValidException {
+	public Hashtable<String, astrolabe.model.BodyAreal> read( String catalog ) {
 		Hashtable<String, astrolabe.model.BodyAreal> r ;
 		StringReader reader ;
 
@@ -173,7 +191,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		return r ;
 	}
 
-	public Hashtable<String, astrolabe.model.BodyAreal> read( Reader catalog ) throws ParameterNotValidException {
+	public Hashtable<String, astrolabe.model.BodyAreal> read( Reader catalog ) {
 		Hashtable<String, astrolabe.model.BodyAreal> r = new Hashtable<String, astrolabe.model.BodyAreal>() ; // catalog record list
 		java.util.Vector<astrolabe.model.Position> pl ; // position list
 		astrolabe.model.BodyAreal crm = null ;	// catalog record model
@@ -183,36 +201,36 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 
 		clp = clt = readCatalogLine() ;
 
-		// init position list
-		pl = new java.util.Vector<astrolabe.model.Position>() ;
-		pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
+		try {
+			// init position list
+			pl = new java.util.Vector<astrolabe.model.Position>() ;
+			pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
 
-		while ( ( clt = readCatalogLine() ) != null ) {
-			if ( clt.id.equals( clp.id ) ) { // this record
-				pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
-			} else { // next record
-				crm = modelBodyAreal( clp.id, pl ) ;
-				if ( fov.covers( new BodyAreal( crm, projector ).list() ) ) {
-					if ( restrict == null ) {
-						r.put( clp.id, crm ) ;
-					} else if ( restrict.containsKey( clp.id ) ) {
-						r.put( clp.id, crm ) ;
+			while ( ( clt = readCatalogLine() ) != null ) {
+				if ( clt.id.equals( clp.id ) ) { // this record
+					pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
+				} else { // next record
+					crm = modelBodyAreal( clp.id, pl ) ;
+					if ( fov == null || fov.covers( new BodyAreal( crm, projector ).list() ) ) {
+						if ( restrict == null || restrict.containsKey( clp.id ) ) {
+							r.put( clp.id, crm ) ;
+						}
 					}
+
+					pl = new java.util.Vector<astrolabe.model.Position>() ;
+					pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
+
+					clp = clt ;
 				}
-
-				pl = new java.util.Vector<astrolabe.model.Position>() ;
-				pl.add( AstrolabeFactory.modelPosition( clt.ra, clt.de ) ) ;
-
-				clp = clt ;
 			}
-		}
-		crm = modelBodyAreal( clp.id, pl ) ;
-		if ( fov.covers( new BodyAreal( crm, projector ).list() ) ) {
-			if ( restrict == null ) {
-				r.put( clp.id, crm ) ;
-			} else if ( restrict.containsKey( clp.id ) ) {
-				r.put( clp.id, crm ) ;
+			crm = modelBodyAreal( clp.id, pl ) ;
+			if ( fov == null || fov.covers( new BodyAreal( crm, projector ).list() ) ) {
+				if ( restrict == null || restrict.containsKey( clp.id ) ) {
+					r.put( clp.id, crm ) ;
+				}
 			}
+		} catch ( ParameterNotValidException e ) { // valdation failed for BodyAreal or Position
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		return r ;
@@ -235,7 +253,9 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 			tokenizer.nextToken() ;
 			r.id = new String( tokenizer.sval ) ;
 			tokenizer.nextToken() ; // skip
-		} catch ( IOException e ) {}
+		} catch ( IOException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		return r ;
 	}
@@ -261,10 +281,16 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 			bA.setAnnotation( a ) ;
 		}
 
+		try {
+			bA.validate() ;
+		} catch ( ValidationException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
 		return bA ;
 	}
 
-	{
+	static {
 		abbreviation = new Hashtable<String, String>() ;
 
 		abbreviation.put( "AND", "And" ) ;

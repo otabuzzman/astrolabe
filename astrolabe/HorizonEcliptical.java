@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical implements Horizon {
 
@@ -16,11 +18,16 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 
 	private double e ; // mean obliquity of ecliptic
 
-	public HorizonEcliptical( Object peer, double epoch, Projector projector ) {
+	public HorizonEcliptical( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
 		double[] eq ;
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
@@ -32,12 +39,10 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		la = eq[1] ;
 		ST = eq[0] ;
 
-		try {
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
-			ApplicationHelper.registerDMS( key, e, 2 ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-			ApplicationHelper.registerDMS( "latitude", la, 2 ) ;		
-		} catch ( ParameterNotValidException ePNV ) {}
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
+		ApplicationHelper.registerDMS( key, e, 2 ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		ApplicationHelper.registerDMS( "latitude", la, 2 ) ;		
 	}
 
 	public double[] project( double[] ec ) {

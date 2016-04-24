@@ -1,10 +1,18 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
 public class CircleMeridian extends astrolabe.model.CircleMeridian implements Circle {
+
+	private final static Log log = LogFactory.getLog( CircleMeridian.class ) ;
 
 	private final static double DEFAULT_SEGMENT = 1 ;
 	private final static double DEFAULT_IMPORTANCE = .1 ;
@@ -31,6 +39,11 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.epoch = epoch ;
 		this.projector = projector ;
@@ -43,11 +56,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 		fov() ;
 
-		try {
-			az = AstrolabeFactory.valueOf( getAngle() ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-			ApplicationHelper.registerDMS( key, az, 2 ) ;
-		} catch ( ParameterNotValidException e ) {}
+		az = AstrolabeFactory.valueOf( getAngle() ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
+		ApplicationHelper.registerDMS( key, az, 2 ) ;
+
 		try {
 			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
 		} catch ( ParameterNotValidException e ) {
@@ -58,9 +70,19 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
-			begin = circle.isParallel()?
-					intersect( (CircleParallel) circle, leading ):
-						intersect( (CircleMeridian) circle, leading ) ;
+			try {
+				begin = circle.isParallel()?
+						intersect( (CircleParallel) circle, leading ):
+							intersect( (CircleMeridian) circle, leading ) ;
+			} catch ( ParameterNotValidException ee ) {
+				String msg ;
+
+				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
+				log.warn( msg ) ;
+
+				begin = -Math.rad90 ;
+			}
 		}
 		try {
 			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
@@ -72,9 +94,19 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 
-			end = circle.isParallel()?
-					intersect( (CircleParallel) circle, leading ):
-						intersect( (CircleMeridian) circle, leading ) ;
+			try {
+				end = circle.isParallel()?
+						intersect( (CircleParallel) circle, leading ):
+							intersect( (CircleMeridian) circle, leading ) ;
+			} catch ( ParameterNotValidException ee ) {
+				String msg ;
+
+				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
+				log.warn( msg ) ;
+
+				end = Math.rad90 ;
+			}
 		}
 	}
 
@@ -165,26 +197,36 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		ps.operator.stroke() ;
 
 		// Dial processing.
-		try {
-			Dial dial ;
+		if ( getDial() != null ) {
+			try {
+				Dial dial ;
 
-			ps.operator.gsave() ;
+				ps.operator.gsave() ;
 
-			dial = AstrolabeFactory.companionOf( getDial(), epoch, this ) ;
-			dial.headPS( ps ) ;
-			dial.emitPS( ps ) ;
-			dial.tailPS( ps ) ;
+				dial = AstrolabeFactory.companionOf( getDial(), epoch, this ) ;
+				dial.headPS( ps ) ;
+				dial.emitPS( ps ) ;
+				dial.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
-		} catch ( ParameterNotValidException e ) {} // optional
+				ps.operator.grestore() ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		if ( getAnnotation() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -328,7 +370,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		gnaz = leading?gnhoO[0]:gnhoA[0] ;
 
 		if ( ! gn.probe( ApplicationHelper.mapToNTo360Range( gnaz ) ) ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( new Double( gnaz ).toString() ) ;
 		}
 
 		return leading?inaz[1]:inaz[0] ;
@@ -366,7 +408,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 		gnal = leading?inaz[3]:inaz[2] ;
 
 		if ( ! gn.probe( ApplicationHelper.mapToNTo360Range( gnal ) ) ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( new Double( gnal ).toString() ) ;
 		}
 
 		return leading?inaz[1]:inaz[0] ;
@@ -413,7 +455,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Ci
 	}
 
 	@SuppressWarnings("unchecked")
-	public void fov() throws ParameterNotValidException {
+	public void fov() {
 		java.util.Vector<String> fov ;
 		String[] fv ;
 

@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartOrthographic extends ChartStereographic {
 
-	public ChartOrthographic( Object peer ) {
+	public ChartOrthographic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 

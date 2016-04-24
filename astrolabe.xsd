@@ -303,7 +303,7 @@
 		<xs:attribute name="purpose" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="bodydescription|circledescription|constellationdescription|dialdescription|dialnumber|dialsubnumber|guidance|obscure"/>
+					<xs:pattern value="bodylettering[07]|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -527,6 +527,7 @@
 		<xs:complexType>
 			<xs:choice>
 				<xs:element ref="CatalogADC1239"/>
+				<xs:element ref="CatalogADC5050"/>
 				<xs:element ref="CatalogADC6049"/>
 				<xs:element ref="CatalogADC7118"/>
 			</xs:choice>
@@ -543,6 +544,29 @@
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
 								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|H[1-9][0-9]*(,H[1-9][0-9]*)*|T[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,T[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="random" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:positiveInteger"/>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC5050">
+		<xs:annotation>
+			<xs:documentation>The Bright Star Catalogue.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogType">
+					<xs:attribute name="restrict" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|BSC[1-9][0-9]{1,3}(,BSC[1-9][0-9]{1,3})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -573,10 +597,15 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="CatalogADC7118" type="CatalogType">
+	<xs:element name="CatalogADC7118">
 		<xs:annotation>
 			<xs:documentation>NGC 2000.0, The Complete New General Catalogue and Index Catalogue of Nebulae and Star Clusters.</xs:documentation>
 		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogType"/>
+			</xs:complexContent>
+		</xs:complexType>
 	</xs:element>
 	<!--Basistypen und -elemente-->
 	<xs:complexType name="RationalType">

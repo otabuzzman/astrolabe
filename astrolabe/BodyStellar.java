@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -20,11 +22,16 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 	private double x ;
 	private double y ;
 
-	public BodyStellar( Object peer, Projector projector ) {
+	public BodyStellar( Object peer, Projector projector ) throws ParameterNotValidException {
 		double[] lo, eq, xy ;
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 
@@ -146,12 +153,17 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 			ps.operator.currentpoint() ;
 			ps.operator.translate() ;
 			ps.operator.rotate( -spin ) ;
-		} catch ( ParameterNotValidException e ) {}
-		// concern custom(PS_PROLOG) invoke. prolog definitions are considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		if ( getAnnotation() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {

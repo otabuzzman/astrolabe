@@ -8,18 +8,30 @@ public class Vector {
 	public double z = 0 ;
 
 	public Vector() {
-		this( 0, 0, 0 ) ;
+		set( 0, 0, 0 ) ;
 	}
 
 	public Vector( Vector v ) {
-		this( v.x, v.y, v.z ) ;
+		set( v.x, v.y, v.z ) ;
 	}
 
 	public Vector( double x, double y ) {
-		this( x, y, 0 ) ;
+		set( x, y, 0 ) ;
 	}
 
 	public Vector( double x, double y, double z ) {
+		set ( x, y, z )	;
+	}
+
+	public void set( double[] xyz ) {
+		this.x = xyz[0] ;
+		this.y = xyz[1] ;
+		if ( xyz.length>2 ) {
+			this.z = xyz[2] ;
+		}
+	}
+
+	public void set( double x, double y, double z ) {
 		this.x = x ;
 		this.y = y ;
 		this.z = z ;

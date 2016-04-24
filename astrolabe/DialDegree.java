@@ -3,6 +3,9 @@ package astrolabe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
+
+import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
@@ -46,12 +49,17 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 	private double unit ;
 
-	public DialDegree( Object peer, Baseline baseline ) {
+	public DialDegree( Object peer, Baseline baseline ) throws ParameterNotValidException {
 		this( peer, baseline, CAACoordinateTransformation.DegreesToRadians( 1 ) ) ;
 	}
 
-	public DialDegree( Object peer, Baseline baseline, double unit ) {
+	public DialDegree( Object peer, Baseline baseline, double unit ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.baseline = baseline ;	
 		this.unit = unit ;
@@ -82,9 +90,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			linewidth = ApplicationHelper.getClassNode( this, getName(),
 					node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
 		} catch ( ClassNotFoundException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchFieldException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		rise = ApplicationHelper.getClassNode( this, getName(),
@@ -95,7 +107,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		try {
 			headPSBaseline.invoke( this, new Object[] { ps } ) ;
 		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
@@ -106,7 +120,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		try {
 			emitPSBaseline.invoke( this, new Object[] { ps } ) ;
 		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		emitPSGraduation( ps ) ;
@@ -120,18 +136,26 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {} // ployline is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		if ( getAnnotation() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
 		try {
 			tailPSBaseline.invoke( this, new Object[] { ps } ) ;
 		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
@@ -168,7 +192,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 				v.addAll( baseline.list( b, e, getReflect()?-space:space ) ) ;
 			}
-		} catch ( ParameterNotValidException ePNV ) {
+		} catch ( ParameterNotValidException ee ) {
 			double[] xy ;
 
 			ps.operator.mark() ;
@@ -243,7 +267,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					ps.operator.stroke() ;
 				}
 			}
-		} catch ( ParameterNotValidException ePNV ) {
+		} catch ( ParameterNotValidException ee ) {
 			if ( nss%2 == 0 ) { // close unfilled subunit
 				java.util.Vector<double[]> vector ;
 				double[] xy ;
@@ -318,23 +342,24 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 				t[1] = -t[1] ;
 			}
 
-			g = new GraduationSpan( getGraduationSpan(), o, t ) ;
-			try { // half
-				if ( isIndexAligned( ns, getGraduationHalf().getSpan() ) ) {
-					g = new GraduationHalf( getGraduationHalf(), o, t ) ;
-				}
-			} catch ( NullPointerException e ) {}
-			try { // full
-				if ( isIndexAligned( ns, getGraduationFull().getSpan() ) ) {
-					g = new GraduationFull( getGraduationFull(), o, t ) ;
-				}
-			} catch ( NullPointerException e ) {}
-
 			ps.operator.gsave() ;
 
-			g.headPS( ps ) ;
-			g.emitPS( ps ) ;
-			g.tailPS( ps ) ;
+			try {
+				g = new GraduationSpan( getGraduationSpan(), o, t ) ;
+				try { // half
+					if ( isIndexAligned( ns, getGraduationHalf().getSpan() ) ) {
+						g = new GraduationHalf( getGraduationHalf(), o, t ) ;
+					}
+				} catch ( NullPointerException e ) {}
+				try { // full
+					if ( isIndexAligned( ns, getGraduationFull().getSpan() ) ) {
+						g = new GraduationFull( getGraduationFull(), o, t ) ;
+					}
+				} catch ( NullPointerException e ) {}
+				g.headPS( ps ) ;
+				g.emitPS( ps ) ;
+				g.tailPS( ps ) ;
+			} catch ( ParameterNotValidException ee ) {} // GraduationSpan, GraduationSpan (if present), GraduationSpan (if present) validated in constructor
 
 			ps.operator.grestore() ;
 		}
@@ -345,7 +370,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 
 		r = baseline.mapIndexToScale( index, span*unit ) ;
 		if ( ! baseline.probe( r ) || r>Math.rad360 ) {
-			throw new ParameterNotValidException() ;
+			String msg ;
+
+			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { r, index+","+span } ) ;
+			throw new ParameterNotValidException( msg ) ;
 		}
 
 		return r ;
@@ -364,15 +393,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		double a ;
 		String key ;
 
-		try {
-			a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
+		a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
-			ApplicationHelper.registerDMS( key, a, 2 ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
-			ApplicationHelper.registerTime( key, a, 2 ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-			ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/, 2 ) ;
-		} catch ( ParameterNotValidException  e ) {}
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
+		ApplicationHelper.registerDMS( key, a, 2 ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
+		ApplicationHelper.registerTime( key, a, 2 ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
+		ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/, 2 ) ;
 	}
 }

@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartEquidistant extends ChartStereographic {
 
-	public ChartEquidistant( Object peer ) {
+	public ChartEquidistant( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 

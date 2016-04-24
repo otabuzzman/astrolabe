@@ -1,15 +1,9 @@
 
 package astrolabe;
 
-import java.text.MessageFormat;
 import java.util.prefs.BackingStoreException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class PostscriptStream extends PrintStream {
-
-	private final static Log log = LogFactory.getLog( PostscriptStream.class ) ;
 
 	private final static int DEFAULT_PRECISION = 6 ;
 	private final static int DEFAULT_SCANLINE = 254 ;
@@ -197,7 +191,9 @@ public class PostscriptStream extends PrintStream {
 					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
 				}
 			}
-		} catch ( BackingStoreException e ) {}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 	} 
 
 	private String truncate( double number ) {        
@@ -330,14 +326,7 @@ public class PostscriptStream extends PrintStream {
 
 	public void push( String string ) throws ParameterNotValidException {        
 		if ( ! ( string.matches( "^/" ) || string.matches( "^(.*)$" ) ) ) {
-			String m ;
-
-			m = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_POSTSCRIPT_NOLITERALORSTRING ) ;
-			m = MessageFormat.format( m, new Object[] { string } ) ;
-
-			log.fatal( m ) ;
-
-			throw new ParameterNotValidException( m ) ;
+			throw new ParameterNotValidException( string ) ;
 		}
 		print( string+"\n" ) ;
 	} 
@@ -352,14 +341,7 @@ public class PostscriptStream extends PrintStream {
 
 	public void custom( String def ) throws ParameterNotValidException {
 		if ( ! this.prolog.containsKey( "/"+def ) ) {
-			String m ;
-
-			m = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_POSTSCRIPT_NOSUCHDEFINTION ) ;
-			m = MessageFormat.format( m, new Object[] { def } ) ;
-
-			log.fatal( m ) ;
-
-			throw new ParameterNotValidException( m ) ;
+			throw new ParameterNotValidException( "/"+def ) ;
 		}
 
 		print( def+"\n" ) ;
@@ -369,6 +351,11 @@ public class PostscriptStream extends PrintStream {
 
 		public void add() {        
 			print( "add\n" ) ;
+		}
+
+		public void add( int num ) {        
+			push( num ) ;
+			add() ;
 		}
 
 		public void add( double num ) {        
@@ -398,6 +385,10 @@ public class PostscriptStream extends PrintStream {
 			charpath() ;
 		}
 
+		public void cleartomark() {        
+			print( "cleartomark\n" ) ;
+		}
+
 		public void clip() {        
 			print( "clip\n" ) ;
 		}
@@ -413,6 +404,10 @@ public class PostscriptStream extends PrintStream {
 		public void copy( int num ) {
 			push( num ) ;
 			copy() ;
+		}
+
+		public void counttomark() {        
+			print( "counttomark\n" ) ;
 		}
 
 		public void currentdict() {        
@@ -546,10 +541,14 @@ public class PostscriptStream extends PrintStream {
 			print( "restore\n" ) ;
 		} 
 
+		public void roll() {
+			print( "roll\n" ) ;
+		}
+
 		public void roll( int n, int j ) {        
 			push( n ) ;
 			push( j ) ;
-			print( "roll\n" ) ;
+			roll() ;
 		}
 
 		public void rotate( double angle ) {        
@@ -754,7 +753,10 @@ public class PostscriptStream extends PrintStream {
 				operator.pop() ;
 			}
 		} catch ( BackingStoreException e ) {
-		} catch ( ParameterNotValidException e ) {}
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion failed
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		prolog.clear() ;
 		try {
@@ -766,7 +768,10 @@ public class PostscriptStream extends PrintStream {
 				prolog.put( procedure[p], procedure[p] ) ;
 			}
 		} catch ( BackingStoreException e ) {
-		} catch ( ParameterNotValidException e ) {}
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion failed
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		dsc.endProlog() ;
 	}

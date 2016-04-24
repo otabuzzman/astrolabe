@@ -19,9 +19,9 @@ public class AstrolabeReader {
 		try {
 			al = (astrolabe.model.Astrolabe) astrolabe.model.Astrolabe.unmarshal( model ) ;
 		} catch ( MarshalException e ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( e.toString() ) ;
 		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
 		a = new Astrolabe( al ) ;

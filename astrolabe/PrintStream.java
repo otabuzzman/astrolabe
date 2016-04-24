@@ -22,7 +22,9 @@ public class PrintStream extends java.io.PrintStream {
 			viewer.getErrorStream().close() ;
 
 			this.ps = new java.io.PrintStream( viewer.getOutputStream() ) ;
-		} catch ( IOException e ) {}
+		} catch ( IOException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 	}
 
 	// override

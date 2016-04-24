@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class ChartStereographic extends astrolabe.model.ChartStereographic implements Chart {
 
@@ -13,10 +15,15 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	private double[] pagesize = new double[2] ;
 	private double scale ;
 
-	public ChartStereographic( Object peer ) {
+	public ChartStereographic( Object peer ) throws ParameterNotValidException {
 		String[] pagesize ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		pagesize = ApplicationHelper.getClassNode( this, getName(),
 				ApplicationConstant.PN_CHART_PAGESIZE ).get( getPagesize(), DEFAULT_PAGESIZE /*a4*/ ).split( "x" ) ;
@@ -96,7 +103,9 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		// Set origin at center of page.
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
-		} catch ( ParameterNotValidException e ) {} // pagesize is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		ps.operator.mul( .5 ) ;
 		ps.operator.exch() ;
 		ps.operator.mul( .5 ) ;

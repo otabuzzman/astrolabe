@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAADate ;
 
 @SuppressWarnings("serial")
@@ -24,6 +26,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 		String key ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		try {
 			pn = ApplicationConstant.GC_APPLICATION ;
@@ -31,11 +38,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 			pr = new FileInputStream( pn ) ;
 			Preferences.importPreferences( pr ) ;
 		} catch ( FileNotFoundException e ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( e.toString() ) ;
 		} catch ( IOException e ) {
-			throw new ParameterNotValidException() ;
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvalidPreferencesFormatException e ) {
-			throw new ParameterNotValidException() ;
+			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
 		ln = getLocale() ;
@@ -46,15 +53,13 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 			Locale.setDefault( dl ) ;
 		}
 
-		try {
-			epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
-			d = new CAADate( epoch, true ) ;
+		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
+		d = new CAADate( epoch, true ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
-			ApplicationHelper.registerYMD( key, d ) ;
+		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
+		ApplicationHelper.registerYMD( key, d ) ;
 
-			d.delete() ;
-		} catch ( ParameterNotValidException e ) {}
+		d.delete() ;
 	}
 
 	static public PostscriptStream initPS() {
@@ -78,7 +83,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 			try {
 				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
 			} catch ( ParameterNotValidException e ) {
-				break ; // if ch unequal 0 there must be a chart
+				throw new RuntimeException( e.toString() ) ;
 			}
 			chart.headPS( ps ) ;
 
@@ -91,7 +96,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 				try {
 					horizon = AstrolabeFactory.companionOf( chart.getHorizon( ho ), epoch, chart ) ;
 				} catch ( ParameterNotValidException e ) {
-					break ; // if ho unequal 0 there must be a horizon
+					throw new RuntimeException( e.toString() ) ;
 				}
 				horizon.headPS( ps ) ;
 
@@ -104,7 +109,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 					try {
 						circle = AstrolabeFactory.companionOf( horizon.getCircle( cl ), epoch, horizon ) ;
 					} catch ( ParameterNotValidException e ) {
-						break ; // if cl unequal 0 there must be a circle
+						throw new RuntimeException( e.toString() ) ;
 					}
 					circle.headPS( ps ) ;
 					circle.emitPS( ps ) ;
@@ -127,7 +132,9 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 						ps.operator.grestore() ;
 					}
-				} catch ( ParameterNotValidException e ) {} // optional
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 
 				// Catalog processing
 				try {
@@ -143,7 +150,9 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 						ps.operator.grestore() ;
 					}
-				} catch ( ParameterNotValidException e ) {} // optional
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 
 				horizon.tailPS( ps ) ;
 

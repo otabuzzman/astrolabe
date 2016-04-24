@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -17,8 +19,13 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 	private Vector tangent ;
 	private Vector origin ;
 
-	public GraduationSpan( Object peer, double[] origin, double[] tangent ) {
+	public GraduationSpan( Object peer, double[] origin, double[] tangent ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.origin = new Vector( origin[0], origin[1] ) ;
 		this.tangent = new Vector( tangent[0], tangent[1] ) ;
@@ -52,7 +59,9 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		}
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {} // polyline is considered well-defined
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		ps.operator.stroke() ;
 
 		rad = java.lang.Math.atan2( tangent.y, tangent.x ) ;
@@ -60,9 +69,13 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 
 		ps.operator.rotate( deg ) ;
 
-		try {
-			ApplicationHelper.emitPS( ps, getAnnotationStraight() ) ;
-		} catch ( ParameterNotValidException e ) {}
+		if ( getAnnotationStraight() != null ) {
+			try {
+				ApplicationHelper.emitPS( ps, getAnnotationStraight() ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {

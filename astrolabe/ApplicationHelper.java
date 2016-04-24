@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAADate;
@@ -24,10 +27,12 @@ import caa.CAAVenus;
 
 public final class ApplicationHelper {
 
+	private final static Log log = LogFactory.getLog( ApplicationHelper.class ) ;
+
 	private ApplicationHelper() {
 	}
 
-	public static void registerYMD( String key, CAADate date ) throws ParameterNotValidException {
+	public static void registerYMD( String key, CAADate date ) {
 		String ind ;
 
 		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFYEAR ) ;
@@ -38,7 +43,7 @@ public final class ApplicationHelper {
 		registerNumber( key+ind, date.Day() ) ;
 	}
 
-	public static void registerHMS( String key, double hms, double precision ) throws ParameterNotValidException {
+	public static void registerHMS( String key, double hms, double precision ) {
 		double h ;
 		String ind ;
 
@@ -50,7 +55,7 @@ public final class ApplicationHelper {
 		registerMS( key+ind, java.lang.Math.abs( hms ), precision, true ) ;
 	}
 
-	public static void registerDMS( String key, double dms, double precision ) throws ParameterNotValidException {
+	public static void registerDMS( String key, double dms, double precision ) {
 		double d ;
 		String ind ;
 
@@ -62,7 +67,7 @@ public final class ApplicationHelper {
 		registerMS( key+ind, java.lang.Math.abs( dms ), precision, false ) ;
 	}
 
-	public static void registerMS( String key, double value, double precision, boolean h ) throws ParameterNotValidException {
+	public static void registerMS( String key, double value, double precision, boolean h ) {
 		double v, p, ms ;
 		long m, s, f ;
 		String ind ;
@@ -86,12 +91,8 @@ public final class ApplicationHelper {
 		registerNumber( key+ind, java.lang.Math.abs( f ) ) ;
 	}
 
-	public static void registerNumber( String key, double value, int precision ) throws ParameterNotValidException {
+	public static void registerNumber( String key, double value, int precision ) {
 		double p, v ;
-
-		if ( precision < 0 ) {
-			throw new ParameterNotValidException() ;
-		}
 
 		p = java.lang.Math.pow( 10, precision ) ;
 		v = (long) ( ( value*p+.5 ) )/p ;
@@ -99,19 +100,19 @@ public final class ApplicationHelper {
 		registerNumber( key, v ) ;
 	}
 
-	public static void registerNumber( String key, double value ) throws ParameterNotValidException {
+	public static void registerNumber( String key, double value ) {
 		Registry.register( key, (Object) new Double( value ).toString() ) ;
 	}
 
-	public static void registerNumber( String key, long value ) throws ParameterNotValidException {
+	public static void registerNumber( String key, long value ) {
 		Registry.register( key, (Object) new Long( value ).toString() ) ;
 	}
 
-	public static void registerName( String key, String value ) throws ParameterNotValidException {
+	public static void registerName( String key, String value ) {
 		Registry.register( key, new String( value ) ) ;
 	}
 
-	public static void registerAngle( String key, double value, int precision ) throws ParameterNotValidException {
+	public static void registerAngle( String key, double value, int precision ) {
 		double a ;
 
 		a = mapTo0To360Range( value ) ;
@@ -119,7 +120,7 @@ public final class ApplicationHelper {
 		registerDMS( key, a, precision ) ;
 	}
 
-	public static void registerTime( String key, double value, int precision ) throws ParameterNotValidException {
+	public static void registerTime( String key, double value, int precision ) {
 		double t ;
 
 		t = mapTo0To24Range( value ) ;
@@ -474,7 +475,9 @@ public final class ApplicationHelper {
 			}
 
 			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		return r ;
 	} 
@@ -492,7 +495,9 @@ public final class ApplicationHelper {
 			}
 
 			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		return r ;
 	} 
@@ -520,12 +525,14 @@ public final class ApplicationHelper {
 			}
 
 			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		return r ;
 	}
 
-	public static String getLocalizedString( String key ) throws ParameterNotValidException {
+	public static String getLocalizedString( String key ) {
 		String v ;
 		ResourceBundle rb ;
 
@@ -534,7 +541,9 @@ public final class ApplicationHelper {
 		try {
 			v = rb.getString( key ) ;
 		} catch ( MissingResourceException e ) {
-			throw new ParameterNotValidException() ;
+			v = "" ;
+
+			log.warn( e.toString() ) ;
 		}
 
 		return v ;
@@ -559,17 +568,15 @@ public final class ApplicationHelper {
 				} catch ( NoSuchMethodException e ) {
 					continue ;
 				} catch ( InvocationTargetException e ) {
+					throw new RuntimeException( e.toString() ) ;
 				} catch ( IllegalAccessException e ) {
+					throw new RuntimeException( e.toString() ) ;
 				}
 			}
 		}
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
-		if ( an == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		for ( int a=0 ; a<an.length ; a++ ) {
 			Annotation annotation ;
 
@@ -585,10 +592,6 @@ public final class ApplicationHelper {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved[] an ) throws ParameterNotValidException {
-		if ( an == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		for ( int a=0 ; a<an.length ; a++ ) {
 			Annotation annotation ;
 
@@ -604,10 +607,6 @@ public final class ApplicationHelper {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight[] an ) throws ParameterNotValidException {
-		if ( an == null ) {
-			throw new ParameterNotValidException() ;
-		}
-
 		for ( int a=0 ; a<an.length ; a++ ) {
 			Annotation annotation ;
 

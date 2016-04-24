@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial implements Horizon {
 
@@ -15,8 +17,13 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	@SuppressWarnings("unused")
 	private double ST ;
 
-	public HorizonEquatorial( Object peer, Projector projector ) {
+	public HorizonEquatorial( Object peer, Projector projector ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		try {
+			validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 
 		this.projector = projector ;
 

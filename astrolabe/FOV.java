@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -64,7 +66,11 @@ public class FOV {
 
 			fov = new GeometryFactory().createPolygon( fe, fi ) ;
 		} else {
-			throw new ParameterNotValidException() ;
+			String msg ;
+
+			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { hole.toString(), "" } ) ;
+			throw new ParameterNotValidException( msg ) ;
 		}
 	}
 
