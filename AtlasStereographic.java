@@ -16,7 +16,7 @@ import astrolabe.Registry;
 import astrolabe.Vector;
 
 @SuppressWarnings("serial")
-public class AtlasStereographic extends ChartStereographic {
+public class AtlasStereographic {
 
 	private final static String DEFAULT_PAGESIZE = "210x297" ;
 	private final static String DEFAULT_PRACTICALITY	= "0" ;
@@ -64,20 +64,24 @@ public class AtlasStereographic extends ChartStereographic {
 	private double m90[] = new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ; // rotation matrix, 90 degrees counter-clockwise
 	private double m90c[] = new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ; // rotation matrix, 90 degrees clockwise
 
-	public AtlasStereographic( Object peer ) throws ParameterNotValidException {
-		super( peer ) ;
+	private ChartStereographic chart ;
 
-		String[] chartsize = ApplicationHelper.getForeignClassNode( ChartStereographic.class.getName(), getName(),
-				ApplicationConstant.PN_CHART_PAGESIZE ).get( getPagesize(), DEFAULT_PAGESIZE /*a4*/ ).split( "x" ) ;
+	public AtlasStereographic( Object peer ) throws ParameterNotValidException {
+		String[] chartsize ;
+
+		chart = new ChartStereographic( peer ) ;
+
+		chartsize = ApplicationHelper.getClassNode( chart, chart.getName(),
+				ApplicationConstant.PN_CHART_PAGESIZE ).get( chart.getPagesize(), DEFAULT_PAGESIZE /*a4*/ ).split( "x" ) ;
 		cx = new Double( chartsize[0] ).doubleValue() ;
 		cy = new Double( chartsize[1] ).doubleValue() ;
 
 		scale = java.lang.Math.min( cx, cy )/2/Math.goldensection ;
-		scale = scale*getScale()/100 ;
+		scale = scale*chart.getScale()/100 ;
 
-		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
+		northern = chart.getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
 
-		String atlassize = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).get( PK_ATLAS_PAGESIZE, null ) ;
+		String atlassize = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).get( PK_ATLAS_PAGESIZE, null ) ;
 		if ( atlassize==null ) {
 			atlassize = astrolabe.ApplicationHelper.getClassNode( this, null, null ).get( PK_ATLAS_PAGESIZE, DEFAULT_PAGESIZE ) ;
 		}
@@ -89,43 +93,43 @@ public class AtlasStereographic extends ChartStereographic {
 		this.atlassize[1] = new Double( axy[1] ).doubleValue() ;
 
 
-		practicality = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).get( PK_ATLAS_PRACTICALITY, null ) ;
+		practicality = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).get( PK_ATLAS_PRACTICALITY, null ) ;
 		if ( practicality==null ) {
 			practicality = astrolabe.ApplicationHelper.getClassNode( this, null, null ).get( PK_ATLAS_PRACTICALITY, DEFAULT_PRACTICALITY ) ;
 		}
-		importance = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).get( PK_ATLAS_IMPORTANCE, null ) ;
+		importance = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).get( PK_ATLAS_IMPORTANCE, null ) ;
 		if ( importance==null ) {
 			importance = astrolabe.ApplicationHelper.getClassNode( this, null, null ).get( PK_ATLAS_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
 		}
 
-		raA = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_STARTRA, DEFAULT_UNKNOWN ) ;
+		raA = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_STARTRA, DEFAULT_UNKNOWN ) ;
 		if ( raA==DEFAULT_UNKNOWN ) {
 			raA = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_STARTRA, 0 ) ;
 		}
-		raA = CAACoordinateTransformation.DegreesToRadians( raA ) ;
-		raS = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_SHIFTRA, DEFAULT_UNKNOWN ) ;
+		raA = CAACoordinateTransformation.HoursToRadians( raA ) ;
+		raS = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_SHIFTRA, DEFAULT_UNKNOWN ) ;
 		if ( raS==DEFAULT_UNKNOWN ) {
 			raS = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_SHIFTRA, 0 ) ;
 		}
-		raS = CAACoordinateTransformation.DegreesToRadians( raS ) ;
+		raS = CAACoordinateTransformation.HoursToRadians( raS ) ;
 
-		deA = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_STARTDE, DEFAULT_UNKNOWN ) ;
+		deA = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_STARTDE, DEFAULT_UNKNOWN ) ;
 		if ( deA==DEFAULT_UNKNOWN ) {
 			deA = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_STARTDE, 0 ) ;
 		}
 		deA = CAACoordinateTransformation.DegreesToRadians( deA ) ;
-		deS = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_SHIFTDE, DEFAULT_UNKNOWN ) ;
+		deS = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_SHIFTDE, DEFAULT_UNKNOWN ) ;
 		if ( deS==DEFAULT_UNKNOWN ) {
 			deS = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_SHIFTDE, 0 ) ;
 		}
 		deS = CAACoordinateTransformation.DegreesToRadians( deS ) ;
 		deS = northern?deS:-deS ;
 
-		ea = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_OVERLAPPINGX, DEFAULT_UNKNOWN ) ;
+		ea = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_OVERLAPPINGX, DEFAULT_UNKNOWN ) ;
 		if ( ea==DEFAULT_UNKNOWN ) {
 			ea = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_OVERLAPPINGX, 0 ) ;
 		}
-		eb = astrolabe.ApplicationHelper.getClassNode( this, getName(), null ).getDouble( PK_ATLAS_OVERLAPPINGY, DEFAULT_UNKNOWN ) ;
+		eb = astrolabe.ApplicationHelper.getClassNode( this, chart.getName(), null ).getDouble( PK_ATLAS_OVERLAPPINGY, DEFAULT_UNKNOWN ) ;
 		if ( eb==DEFAULT_UNKNOWN ) {
 			eb = astrolabe.ApplicationHelper.getClassNode( this, null, null ).getDouble( PK_ATLAS_OVERLAPPINGY, 0 ) ;
 		}
@@ -135,7 +139,7 @@ public class AtlasStereographic extends ChartStereographic {
 		ps.emitDSCHeader() ;
 		ps.emitDSCProlog() ;
 
-		super.headPS( ps ) ;
+		chart.headPS( ps ) ;
 
 		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
 		ApplicationHelper.emitPSImportance( ps, importance ) ;
@@ -156,14 +160,14 @@ public class AtlasStereographic extends ChartStereographic {
 		p2xy = new double[2] ;
 		p3xy = new double[2] ;
 
-		nde = (int) ( ( unproject( 0, 0 )[1]-deA )/deS )+1 ;
+		nde = (int) ( ( chart.unproject( 0, 0 )[1]-deA )/deS )+1 ;
 		de = deA+nde*deS ;
 
 		for ( int cde=0 ; cde<nde ; cde++ ) { 
 			de = de-deS ;
 
-			rad = project( 0, de )[0] ;
-			b = rad-project( 0, de+deS )[0] ;
+			rad = chart.project( 0, de )[0] ;
+			b = rad-chart.project( 0, de+deS )[0] ;
 			a = b*( 1+eb/100. )*( cx/cy ) ;
 
 			tan = ( a/2*( 1-ea/100. ) )/rad ;
@@ -203,22 +207,22 @@ public class AtlasStereographic extends ChartStereographic {
 				p3xy[1] = vp.y ;
 
 				// atlas page equatorial bounds
-				p0eq = unproject( p0xy ) ;
+				p0eq = chart.unproject( p0xy ) ;
 				p0eq[0] = CAACoordinateTransformation.RadiansToDegrees( p0eq[0] ) ;
 				p0eq[1] = CAACoordinateTransformation.RadiansToDegrees( p0eq[1] ) ;
-				p1eq = unproject( p1xy ) ;
+				p1eq = chart.unproject( p1xy ) ;
 				p1eq[0] = CAACoordinateTransformation.RadiansToDegrees( p1eq[0] ) ;
 				p1eq[1] = CAACoordinateTransformation.RadiansToDegrees( p1eq[1] ) ;
-				p2eq = unproject( p2xy ) ;
+				p2eq = chart.unproject( p2xy ) ;
 				p2eq[0] = CAACoordinateTransformation.RadiansToDegrees( p2eq[0] ) ;
 				p2eq[1] = CAACoordinateTransformation.RadiansToDegrees( p2eq[1] ) ;
-				p3eq = unproject( p3xy ) ;
+				p3eq = chart.unproject( p3xy ) ;
 				p3eq[0] = CAACoordinateTransformation.RadiansToDegrees( p3eq[0] ) ;
 				p3eq[1] = CAACoordinateTransformation.RadiansToDegrees( p3eq[1] ) ;
 
 				// atlas page equatorial center (origin)
 				vc = center( page ) ;
-				oeq = unproject( vc.x, vc.y ) ;
+				oeq = chart.unproject( vc.x, vc.y ) ;
 				oeq[0] = CAACoordinateTransformation.RadiansToDegrees( oeq[0] ) ;
 				oeq[1] = CAACoordinateTransformation.RadiansToDegrees( oeq[1] ) ;
 
@@ -226,7 +230,7 @@ public class AtlasStereographic extends ChartStereographic {
 				dim = edges( page ) ;
 				vb = new Vector( vc ) ;
 				vb.scale( vb.abs()+dim[1]/2 ) ;
-				beq = unproject( vb.x, vb.y ) ;
+				beq = chart.unproject( vb.x, vb.y ) ;
 				beq[0] = CAACoordinateTransformation.RadiansToDegrees( beq[0] ) ;
 				beq[1] = CAACoordinateTransformation.RadiansToDegrees( beq[1] ) ;
 
@@ -265,7 +269,7 @@ public class AtlasStereographic extends ChartStereographic {
 	}
 
 	public void tailPS( PostscriptStream ps ) {	
-		super.tailPS( ps ) ;
+		chart.tailPS( ps ) ;
 
 		ps.emitDSCTrailer() ;
 	}
@@ -276,7 +280,7 @@ public class AtlasStereographic extends ChartStereographic {
 		Vector vp0, vp1, vp2, vp3 ; // point vectors
 		double[] xy ;
 
-		xy = project( ra, de ) ;
+		xy = chart.project( ra, de ) ;
 		v0 = new Vector( xy[0], xy[1] ) ;
 
 		v1 = new Vector( v0 )

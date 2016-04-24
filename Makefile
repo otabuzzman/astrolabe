@@ -38,7 +38,7 @@ CLASSPATH = ./castor-0.9.6/castor-0.9.6.jar \
 			./astrolabe/model \
 			./caa-1.17/caa-1.17.jar \
 			$(CLASSPATH)) \
-			Main ./$< >$@ )
+			astrolabe.Astrolabe ./$< >$@ )
 
 .ps.pdf:
 	@echo "pagesize=$${pagesize:-a4}"

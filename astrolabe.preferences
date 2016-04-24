@@ -5,26 +5,31 @@
 		<map/>
 		<node name="AtlasStereographic">
 			<map>
-				<entry key="pagesize" value="a4"/>
+				<entry key="pagesize" value="a3"/>
+				<!--decimal hours-->
 				<entry key="startRA" value=".4"/>
 				<entry key="shiftRA" value=".4"/>
+				<!--decimal degrres-->
 				<entry key="startDE" value="0"/>
 				<entry key="shiftDE" value="10"/>
+				<!--percent of pagesize x-->
 				<entry key="overlappingX" value="10"/>
 				<entry key="overlappingY" value="10"/>
-				<entry key="practicality" value=".8:0:0"/>
-				<entry key="importance" value=".12:0"/>
+				<entry key="practicality" value="0"/>
+				<entry key="importance" value=".4:0"/>
 			</map>
 			<node name="chartaecaeli-pick-northern">
 				<map>
-					<entry key="startDE" value="-25"/>
-					<entry key="shiftDE" value="25"/>
+					<entry key="practicality" value="0:0:.58"/>
+					<entry key="startDE" value="-25.2"/>
+					<entry key="shiftDE" value="33"/>
 				</map>
 			</node>
 			<node name="chartaecaeli-pick-southern">
 				<map>
-					<entry key="startDE" value="25"/>
-					<entry key="shiftDE" value="25"/>
+					<entry key="practicality" value=".58:0:0"/>
+					<entry key="startDE" value="25.2"/>
+					<entry key="shiftDE" value="33"/>
 				</map>
 			</node>
 		</node>
@@ -208,8 +213,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>
@@ -220,8 +225,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>
@@ -232,8 +237,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>
@@ -244,8 +249,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>
@@ -256,8 +261,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>
@@ -268,8 +273,8 @@
 				<node name="importance">
 					<map>
 						<!--must equal to values of importance atttribue in XSD.-->
-						<entry key="canonical" value=".1"/>
-						<entry key="cardinal" value=".5"/>
+						<entry key="canonical" value=".1:0"/>
+						<entry key="cardinal" value=".5:0"/>
 					</map>
 				</node>
 			</node>

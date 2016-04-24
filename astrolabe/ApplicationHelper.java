@@ -493,28 +493,6 @@ public final class ApplicationHelper {
 		return r ;
 	} 
 
-	public static Preferences getForeignClassNode( String clazz, String instance, String qualifier ) {        
-		String i = instance != null ? "/"+instance : "" ;
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String d = "/"+clazz.replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
-		String n = d+i+q ;
-		Preferences r = null ;
-
-		try {
-			if ( ! Preferences.systemRoot().nodeExists( n ) ) {
-				n = d+q ;
-			}
-
-			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IllegalArgumentException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		return r ;
-	} 
-
 	public static Preferences getNestedClassNode( Object clazz, String instance, String qualifier ) {        
 		String q = qualifier != null ? "/"+qualifier : "" ;
 		String c[] = clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 ) ;
