@@ -143,7 +143,7 @@ public class DialDay extends DialDegree {
 			eot = CAACoordinateTransformation.HoursToRadians( eot ) ;
 
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
-			ApplicationHelper.registerMS( key, eot, 2, true ) ;
+			ApplicationHelper.registerHMS( key, eot, 2 ) ;
 		} catch ( ParameterNotValidException e ) {}
 
 		d.delete() ;

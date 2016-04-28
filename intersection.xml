@@ -126,7 +126,7 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/juergen schuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
-						<CatalogADC6049 fov="catalog" url="file:///c:/dokumente%20und%20einstellungen/juergen schuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz">
+						<CatalogADC6049 fov="catalog" url="lib/cat/6049/bound_20.dat.gz">
 							<Annotation>
 								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomleft" radiant="false">
 									<Text value="@{abk&#x00fc;rzung}@"/>

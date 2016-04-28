@@ -86,13 +86,13 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			chart.emitPS( ps ) ;
 
 			// Horizon processing.
-			for ( int ho=0 ; ho<( (astrolabe.model.ChartType) chart ).getHorizonCount() ; ho++ ) {
+			for ( int ho=0 ; ho<( (astrolabe.model.ChartAzimuthalType) chart ).getHorizonCount() ; ho++ ) {
 				PostscriptEmitter horizon ;
 
 				ps.operator.gsave() ;
 
 				try {
-					astrolabe.model.Horizon modelHorizon = ( (astrolabe.model.ChartType) chart ).getHorizon( ho ) ;
+					astrolabe.model.Horizon modelHorizon = ( (astrolabe.model.ChartAzimuthalType) chart ).getHorizon( ho ) ;
 					horizon = AstrolabeFactory.companionOf( modelHorizon, epoch, (Projector) chart ) ;
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;

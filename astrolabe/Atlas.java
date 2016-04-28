@@ -21,7 +21,7 @@ import caa.CAACoordinateTransformation;
 
 
 @SuppressWarnings("serial")
-public class Atlas extends astrolabe.model.AtlasType implements Companion {
+public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 	private final static String DEFAULT_PRACTICALITY = "0" ;
 	private final static String DEFAULT_IMPORTANCE = ".4:0" ;
@@ -104,6 +104,8 @@ public class Atlas extends astrolabe.model.AtlasType implements Companion {
 		checkerDe = new Integer( checker[1] ).intValue() ;
 
 		horizon = (astrolabe.model.HorizonType) modelWithArgs[0] ;
+		horizon.setCatalog( getCatalog() ) ;
+
 		atlasPage = (AtlasPage) modelWithArgs[1] ;
 
 		if ( checkerDe>1 ) { // CircleParallel
@@ -158,11 +160,17 @@ public class Atlas extends astrolabe.model.AtlasType implements Companion {
 	}
 
 	public void emitAUX() {
+		URI xmlu ;
 		File xmlf ;
 
 		if ( getMarshal() != null ) {
 			try {
-				xmlf = new File( new URI( getMarshal() ) ) ;	
+				xmlu = new URI( getMarshal() ) ;
+				if ( xmlu.isAbsolute() ) {
+					xmlf = new File( xmlu ) ;	
+				} else {
+					xmlf = new File( xmlu.getPath() ) ;
+				}
 				while ( ! xmlf.createNewFile() ) {
 					xmlf.delete() ;
 				}
@@ -404,46 +412,74 @@ public class Atlas extends astrolabe.model.AtlasType implements Companion {
 		astrolabe.model.Annotation a ;
 		astrolabe.model.AnnotationStraight aS ;
 		astrolabe.model.Text tGen ;
-		String desg, unit, disc, qual, tVal ;
+		String name, designator, indicator, tVal ;
+		java.util.Vector<astrolabe.model.Text> tDMS ;
+		int[] rDMS ;
+		DMS dms ;
 		double cPAng ;
 
+		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
+
 		cP = new astrolabe.model.CircleParallel() ;
-		cP.setName( getName() ) ;
+
 		c = new astrolabe.model.Circle() ;
 		c.setCircleParallel( cP ) ;
 
 		aS = new astrolabe.model.AnnotationStraight() ;
-		aS.setName( getName() ) ;
+		if ( getName() != null ) {
+			name = ApplicationConstant.GC_NS_ATL+getName() ;
+
+			cP.setName( name ) ;
+			aS.setName( name ) ;
+		}
+
 		a = new astrolabe.model.Annotation() ;
 		a.setAnnotationStraight( aS ) ;
 
 		cP.addAnnotation( a ) ;
 
-		desg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-		unit = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
-		tVal = "@{"+desg+unit+"}@" ;
+		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_DEGREES ) ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
 
-		disc = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_MSPREFIX ) ;	
-		qual = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_MINUTES ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEMINUTES ) ;
 		tGen = new astrolabe.model.Text() ;
-		tVal = "@{"+desg+disc+qual+"}@" ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_MINUTES ) ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
 
-		qual = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_SECONDS ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREESECONDS ) ;
 		tGen = new astrolabe.model.Text() ;
-		tVal = "@{"+desg+disc+qual+"}@" ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_SECONDS ) ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
+
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEFRACTION ) ;
+		tGen = new astrolabe.model.Text() ;
+		tVal = ".@{"+designator+indicator+"}@" ;
+		tGen.setValue( tVal ) ;
+		tDMS.add( tGen ) ;
+
+		cPAng = CAACoordinateTransformation.RadiansToDegrees( de ) ;
+		cPAng = new Rational( cPAng ).getValue() ;
+		dms = new DMS( cPAng ) ;
+		rDMS = dms.relevant() ;
+		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
+			tGen = tDMS.get( t ) ;
+			if ( t == rDMS[0] ) {
+				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_BOTH ) ;
+				tVal = tGen.getValue() ;
+				tGen.setValue( "@{"+designator+indicator+"}@"+tVal ) ;
+			}
+			aS.addText( tGen ) ;
+		}
 
 		try {
-			AstrolabeFactory.modelOf( aS, getName() ) ;
-
-			cPAng = CAACoordinateTransformation.RadiansToDegrees( de ) ;
-			AstrolabeFactory.modelOf( cPAng, 0, 360, cP, getName() ) ;
+			AstrolabeFactory.modelOf( aS ) ;
+			AstrolabeFactory.modelOf( cPAng, 0, 360, cP ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -458,61 +494,90 @@ public class Atlas extends astrolabe.model.AtlasType implements Companion {
 		astrolabe.model.AnnotationStraight aS ;
 		astrolabe.model.Text tGen ;
 		astrolabe.model.Superscript tSup ;
-		String desg, unit, disc, qual, tVal ;
+		String name, designator, indicator, tVal ;
+		java.util.Vector<astrolabe.model.Text> tDMS ;
+		int[] rDMS ;
+		DMS dms ;
 		double cMAng, cMEnd ;
 		Preferences node ;
 
+		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
+
 		cM = new astrolabe.model.CircleMeridian() ;
-		cM.setName( getName() ) ;
+
 		c = new astrolabe.model.Circle() ;
 		c.setCircleMeridian( cM ) ;
 
 		aS = new astrolabe.model.AnnotationStraight() ;
-		aS.setName( getName() ) ;
+		if ( getName() != null ) {
+			name = ApplicationConstant.GC_NS_ATL+getName() ;
+
+			cM.setName( name ) ;
+			aS.setName( name ) ;
+		}
+
 		a = new astrolabe.model.Annotation() ;
 		a.setAnnotationStraight( aS ) ;
 
 		cM.addAnnotation( a ) ;
 
-		desg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-		unit = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
-		tVal = "@{"+desg+unit+"}@" ;
+		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setValue( tVal ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
 		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_HMS_HOURS ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		disc = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_MSPREFIX ) ;	
-		qual = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_MINUTES ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURMINUTES ) ;
 		tGen = new astrolabe.model.Text() ;
-		tVal = "@{"+desg+disc+qual+"}@" ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen.setValue( tVal ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
 		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_HMS_MINUTES ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		qual = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_SECONDS ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURSECONDS ) ;
 		tGen = new astrolabe.model.Text() ;
-		tVal = "@{"+desg+disc+qual+"}@" ;
+		tVal = "@{"+designator+indicator+"}@" ;
 		tGen.setValue( tVal ) ;
-		aS.addText( tGen ) ;
+		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
 		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_HMS_SECONDS ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		try {
-			AstrolabeFactory.modelOf( aS, getName() ) ;
+		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURFRACTION ) ;
+		tGen = new astrolabe.model.Text() ;
+		tVal = "@{"+designator+indicator+"}@" ;
+		tGen.setValue( tVal ) ;
+		tDMS.add( tGen ) ;
 
-			cMAng = CAACoordinateTransformation.RadiansToDegrees( ra ) ;
+		cMAng = CAACoordinateTransformation.RadiansToDegrees( ra ) ;
+		cMAng = new Rational( cMAng ).getValue() ;
+		dms = new DMS( cMAng ) ;
+		rDMS = dms.relevant() ;
+		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
+			tGen = tDMS.get( t ) ;
+			if ( t == rDMS[0] ) {
+				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_MATH ) ;
+				tVal = tGen.getValue() ;
+				tGen.setValue( "@{"+designator+indicator+"}@"+tVal ) ;
+			}
+			aS.addText( tDMS.get( t ) ) ;
+		}
+
+		try {
+			AstrolabeFactory.modelOf( aS ) ;
+
 			node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 			cMEnd = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
-			AstrolabeFactory.modelOf( cMAng, northern?-90:90, cMEnd, cM, getName() ) ;
+			AstrolabeFactory.modelOf( cMAng, northern?-90:90, cMEnd, cM ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -543,19 +608,6 @@ public class Atlas extends astrolabe.model.AtlasType implements Companion {
 				break ;
 			}
 		}
-
-		if ( true ) { // start debug helper block
-			double edgeBegDeg, edgeEndDeg ;
-			double edgeG0, edgeI ;
-
-			edgeBegDeg = CAACoordinateTransformation.RadiansToDegrees( edgeBeg ) ;
-			edgeEndDeg = CAACoordinateTransformation.RadiansToDegrees(
-					ApplicationHelper.mapTo0To360Range( edgeEnd ) ) ;
-			edgeG0 = CAACoordinateTransformation.RadiansToDegrees( r[0] ) ;
-			edgeI = CAACoordinateTransformation.RadiansToDegrees( r[1] ) ;
-
-			boolean stop = true ;
-		} // end debug helper block
 
 		return r ;
 	}

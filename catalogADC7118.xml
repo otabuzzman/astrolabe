@@ -803,7 +803,7 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
-						<CatalogADC7118 url="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/7118/ngc2000.dat.gz" fov="chart" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
+						<CatalogADC7118 url="lib/cat/7118/ngc2000.dat.gz" fov="chart" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
 </CatalogADC7118>
 					</Catalog>
 				</HorizonEquatorial>

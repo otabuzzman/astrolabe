@@ -16,15 +16,15 @@
 						<entry key="setScale,java.lang.Double" value="100"/>
 						<entry key="setHemisphere,java.lang.String" value="northern"/>
 					</map>
-					<node name="northern">
+					<node name="atl:northern">
 						<map>
-							<entry key="setViewport,java.lang.Double" value="94"/>
+							<entry key="setViewport,java.lang.Double" value="92"/>
 							<entry key="setHemisphere,java.lang.String" value="northern"/>
 						</map>
 					</node>
-					<node name="southern">
+					<node name="atl:southern">
 						<map>
-							<entry key="setViewport,java.lang.Double" value="94"/>
+							<entry key="setViewport,java.lang.Double" value="92"/>
 							<entry key="setHemisphere,java.lang.String" value="southern"/>
 						</map>
 					</node>
@@ -50,104 +50,126 @@
 				<node name="AnnotationStraight">
 					<map>
 						<!--keys must equal to method names in model class.-->
-						<entry key="setPurpose,java.lang.String" value="circlelettering"/>
+						<entry key="setPurpose,java.lang.String" value="guidance"/>
 						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
 						<entry key="setReverse,java.lang.Boolean" value="false"/>
 						<entry key="setRadiant,java.lang.Boolean" value="false"/>
 					</map>
 					<!--Q I-IV, inside fov-->
-					<node name="northern">
+					<node name="atl:northern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="southern">
+					<node name="atl:southern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="I:northern">
+					<node name="I:atl:northern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="I:southern">
+					<node name="I:atl:southern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="II:northern">
+					<node name="II:atl:northern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="II:southern">
+					<node name="II:atl:southern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="III:northern">
+					<node name="III:atl:northern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="III:southern">
+					<node name="III:atl:southern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="IV:northern">
+					<node name="IV:atl:northern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
 						</map>
 					</node>
-					<node name="IV:southern">
+					<node name="IV:atl:southern">
 						<map>
 							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<!--Q I, top-->
+					<node name="It:atl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
+						</map>
+					</node>
+					<node name="It:atl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
+						</map>
+					</node>
+					<!--Q II, top-->
+					<node name="IIt:atl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
+						</map>
+					</node>
+					<node name="IIt:atl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
 						</map>
 					</node>
 					<!--Q II, left-->
-					<node name="IIl:northern">
+					<node name="IIl:atl:northern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+							<entry key="setAnchor,java.lang.String" value="middleright"/>
 						</map>
 					</node>
-					<node name="IIl:southern">
+					<node name="IIl:atl:southern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+							<entry key="setAnchor,java.lang.String" value="middleright"/>
 						</map>
 					</node>
 					<!--Q III, left-->
-					<node name="IIIl:northern">
+					<node name="IIIl:atl:northern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+							<entry key="setAnchor,java.lang.String" value="middleright"/>
 						</map>
 					</node>
-					<node name="IIIl:southern">
+					<node name="IIIl:atl:southern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+							<entry key="setAnchor,java.lang.String" value="middleright"/>
 						</map>
 					</node>
 					<!--Q III, bottom-->
-					<node name="IIIb:northern">
+					<node name="IIIb:atl:northern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="topleft"/>
+							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
 						</map>
 					</node>
-					<node name="IIIb:southern">
+					<node name="IIIb:atl:southern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="topleft"/>
+							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
 						</map>
 					</node>
 					<!--Q IV, bottom-->
-					<node name="IVb:northern">
+					<node name="IVb:atl:northern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="topleft"/>
+							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
 						</map>
 					</node>
-					<node name="IVb:southern">
+					<node name="IVb:atl:southern">
 						<map>
-							<entry key="setAnchor,java.lang.String" value="topleft"/>
+							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
 						</map>
 					</node>
 				</node>
@@ -168,6 +190,11 @@
 					<entry key="scanline" value="254"/>
 				</map>
 				<!--name attribute in Astrolabe element-->
+				<node name="astrolabe">
+					<map>
+						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=@{node}@.pdf -q -"/>
+					</map>
+				</node>
 				<node name="atlas-stereographic">
 					<map>
 						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=@{node}@.pdf -q -"/>
@@ -284,8 +311,8 @@
 				<map>
 					<entry key="practicality" value="0"/>
 					<entry key="importance" value=".4:0"/>
-					<entry key="urlModelMap" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/@{node}@.map"/>
-					<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/@{node}@.xml"/>
+					<entry key="urlModelMap" value="@{node}@.map"/>
+					<entry key="urlModelXML" value="@{node}@.xml"/>
 					<!--percent-->
 					<entry key="overlap" value="10"/>
 					<!--degrees-->
@@ -298,14 +325,14 @@
 				<node name="northern">
 					<map>
 						<entry key="practicality" value="0:0:.58"/>
-						<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/Atlas-@{node}@.xml"/>
+						<entry key="urlModelXML" value="Atlas-@{node}@.xml"/>
 						<entry key="limitDe" value="89."/>
 					</map>
 				</node>
 				<node name="southern">
 					<map>
 						<entry key="practicality" value=".58:0:0"/>
-						<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/Atlas-@{node}@.xml"/>
+						<entry key="urlModelXML" value="Atlas-@{node}@.xml"/>
 						<entry key="limitDe" value="-89."/>
 					</map>
 				</node>
@@ -708,6 +735,16 @@
 						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
+			</node>
+			<node name="DMS">
+				<map>
+					<entry key="precision" value="2"/>
+				</map>
+			</node>
+			<node name="Rational">
+				<map>
+					<entry key="precision" value="6"/>
+				</map>
 			</node>
 		</node>
 	</root>

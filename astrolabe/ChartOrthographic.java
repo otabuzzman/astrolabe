@@ -2,17 +2,17 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class ChartOrthographic extends ChartStereographic {
+public class ChartOrthographic extends ChartAzimuthalType {
 
 	public ChartOrthographic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 
-	public double[] project( double RA, double d ) {
-		return null ;
+	double thetaToDistance( double de ) {
+		return java.lang.Math.cos( de ) ;
 	}
 
-	public double[] unproject( double x, double y ) {
-		return null ;
+	double distanceToTheta( double d ) {
+		return java.lang.Math.acos( d ) ;
 	}
 }

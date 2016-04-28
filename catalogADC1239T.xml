@@ -878,7 +878,7 @@ astrolabe.xsd">
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_17.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_19.dat.gz-->
-						<CatalogADC1239T fov="chart" url="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_00.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6"/>
+						<CatalogADC1239T fov="chart" url="lib/cat/1239/tyc_00.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6"/>
 					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>

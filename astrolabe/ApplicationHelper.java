@@ -59,50 +59,50 @@ public final class ApplicationHelper {
 
 	public static void registerHMS( String key, double hms, double precision ) {
 		double h ;
+		DMS hDMS ;
 		String ind ;
 
-		h = CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
+		h = CAACoordinateTransformation.RadiansToHours( hms ) ;
+		h = new Rational( h ).getValue() ;
+		hDMS = new DMS( h ) ;
 
 		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
-		registerNumber( key+ind, (long) h ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_MSPREFIX ) ;
-		registerMS( key+ind, java.lang.Math.abs( hms ), precision, true ) ;
+		registerNumber( key+ind, hDMS.deg() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURMINUTES ) ;
+		registerNumber( key+ind, hDMS.min() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURSECONDS ) ;
+		registerNumber( key+ind, hDMS.sec() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURFRACTION ) ;
+		registerNumber( key+ind, hDMS.frc() ) ;
+
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_MATH ) ;
+		registerName( key+ind, hDMS.sign()?"-":"" ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_BOTH ) ;
+		registerName( key+ind, hDMS.sign()?"-":"+" ) ;
 	}
 
 	public static void registerDMS( String key, double dms, double precision ) {
 		double d ;
+		DMS dDMS ;
 		String ind ;
 
-		d = CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
+		d = CAACoordinateTransformation.RadiansToDegrees( dms ) ;
+		d = new Rational( d ).getValue() ;
+		dDMS = new DMS( d ) ;
 
 		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
-		registerNumber( key+ind, (long) d ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_MSPREFIX ) ;
-		registerMS( key+ind, java.lang.Math.abs( dms ), precision, false ) ;
-	}
+		registerNumber( key+ind, dDMS.deg() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEMINUTES ) ;
+		registerNumber( key+ind, dDMS.min() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREESECONDS ) ;
+		registerNumber( key+ind, dDMS.sec() ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEFRACTION ) ;
+		registerNumber( key+ind, dDMS.frc() ) ;
 
-	public static void registerMS( String key, double value, double precision, boolean h ) {
-		double v, p, ms ;
-		long m, s, f ;
-		String ind ;
-
-		if ( h ) {
-			v = CAACoordinateTransformation.RadiansToHours( value<0?value-.000000001:value+.000000001 ) ;
-		} else {
-			v = CAACoordinateTransformation.RadiansToDegrees( value<0?value-.000000001:value+.000000001 ) ;
-		}
-
-		p = java.lang.Math.pow( 10, precision ) ;
-		ms = v-(int) v ;
-		m = (long) ( 60*ms ) ;
-		s = (long) ( 60*( 60*ms-m ) ) ;
-		f = (long) ( ( ( 60*( 60*ms-m ) )-s )*p+.5 ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_MINUTES ) ;
-		registerNumber( key+ind, m ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_SECONDS ) ;
-		registerNumber( key+ind, java.lang.Math.abs( s ) ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MS_FRACTION ) ;
-		registerNumber( key+ind, java.lang.Math.abs( f ) ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_MATH ) ;
+		registerName( key+ind, dDMS.sign()?"-":"" ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_BOTH ) ;
+		registerName( key+ind, dDMS.sign()?"-":"+" ) ;
 	}
 
 	public static void registerNumber( String key, double value, int precision ) {
@@ -140,40 +140,6 @@ public final class ApplicationHelper {
 		t = mapTo0To24Range( value ) ;
 
 		registerHMS( key, t, precision ) ;
-	}
-
-	public static double[] discreteDMS( double dms ) {
-		double[] r = new double[3] ;
-		double d, ms, m, s ;
-
-		d = CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
-		ms = d-(int) d ;
-		m = (int) ( 60*ms ) ;
-		s = 60*( 60*ms-m ) ;
-
-		r[0] = java.lang.Math.abs( d ) ;
-		r[1] = java.lang.Math.abs( m ) ;
-		r[2] = java.lang.Math.abs( s ) ;
-		r[3] = dms<0?-1:1 ;
-
-		return r ;
-	}
-
-	public static double[] discreteHMS( double hms ) {
-		double[] r = new double[4] ;
-		double h, ms, m, s ;
-
-		h = CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
-		ms = h-(int) h ;
-		m = (int) ( 60*ms ) ;
-		s = 60*( 60*ms-m ) ;
-
-		r[0] = java.lang.Math.abs( h ) ;
-		r[1] = java.lang.Math.abs( m ) ;
-		r[2] = java.lang.Math.abs( s ) ;
-		r[3] = hms<0?-1:1 ;
-
-		return r ;
 	}
 
 	public static double jdOfNow() {

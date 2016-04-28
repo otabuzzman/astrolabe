@@ -1,11 +1,14 @@
 
 package astrolabe;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Set;
@@ -59,15 +62,25 @@ abstract public class CatalogType extends astrolabe.model.CatalogType {
 	}
 
 	public Hashtable<String, CatalogRecord> read() throws ParameterNotValidException {
-		URL url ;
+		URI cati ;
+		URL catl ;
+		File catf ;
 
 		try {
-			url = new URL( getUrl() ) ;
-		} catch ( MalformedURLException e ) {
+			cati = new URI( getUrl() ) ;
+			if ( cati.isAbsolute() ) {
+				catf = new File( cati ) ;	
+			} else {
+				catf = new File( cati.getPath() ) ;
+			}
+			catl = catf.toURL() ;
+		} catch ( URISyntaxException e ) { // URI constructor
+			throw new ParameterNotValidException( e.toString() ) ;
+		} catch ( MalformedURLException e ) { // URL constructor
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		return read( url ) ;
+		return read( catl ) ;
 	}
 
 	public Hashtable<String, CatalogRecord> read( URL catalog ) {

@@ -803,7 +803,7 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 fov="chart" url="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+						<CatalogADC5050 fov="chart" url="lib/cat/5050/catalog.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
 							<Select value="mag0,mag1">
 								<Annotation>
 									<AnnotationStraight purpose="bodylettering0" anchor="bottomleft" reverse="false" radiant="false">

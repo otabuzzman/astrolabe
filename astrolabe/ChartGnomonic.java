@@ -2,17 +2,17 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class ChartGnomonic extends ChartStereographic {
+public class ChartGnomonic extends ChartAzimuthalType {
 
 	public ChartGnomonic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 
-	public double[] project( double RA, double d ) {
-		return null ;
+	double thetaToDistance( double de ) {
+		return java.lang.Math.tan( Math.rad90-de ) ;
 	}
 
-	public double[] unproject( double x, double y ) {
-		return null ;
+	double distanceToTheta( double d ) {
+		return Math.rad90-java.lang.Math.atan( d ) ;
 	}
 }

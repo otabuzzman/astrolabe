@@ -2,17 +2,17 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class ChartEquidistant extends ChartStereographic {
+public class ChartEquidistant extends ChartAzimuthalType {
 
 	public ChartEquidistant( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 
-	public double[] project( double RA, double d ) {
-		return null ;
+	double thetaToDistance( double de ) {
+		return ( Math.rad90-de )/Math.rad90 ;
 	}
 
-	public double[] unproject( double x, double y ) {
-		return null ;
+	double distanceToTheta( double d ) {
+		return Math.rad90-d*Math.rad90 ;
 	}
 }

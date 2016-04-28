@@ -9,7 +9,7 @@ import astrolabe.model.AngleType;
 import astrolabe.model.AnnotationType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
-import astrolabe.model.ChartType;
+import astrolabe.model.ChartAzimuthalType;
 import astrolabe.model.CircleType;
 import astrolabe.model.DateType;
 import astrolabe.model.DMSType;
@@ -33,7 +33,6 @@ public final class AstrolabeFactory {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
 		astrolabe.model.ChartEquidistant chE ;
-		astrolabe.model.ChartGnomonic chG ;
 		Companion chart ;
 
 		if ( ( chS = ch.getChartStereographic() ) != null ) {
@@ -42,10 +41,8 @@ public final class AstrolabeFactory {
 			chart = new ChartOrthographic( chO ) ;
 		} else if ( ( chE = ch.getChartEquidistant() ) != null ) {
 			chart = new ChartEquidistant( chE ) ;
-		} else if ( ( chG = ch.getChartGnomonic() ) != null ) {
-			chart = new ChartGnomonic( chG ) ;
-		} else { // ch.getChartEqualarea() != null
-			chart = new ChartEqualarea( ch.getChartEqualarea() ) ;
+		} else { // ch.getChartGnomonic() != null
+			chart = new ChartGnomonic( ch.getChartGnomonic() ) ;
 		}
 		return chart ;
 	}
@@ -170,18 +167,18 @@ public final class AstrolabeFactory {
 		return catalog ;
 	}
 
-	public static void modelOf( ChartType chart, String instance ) throws ParameterNotValidException {
-		modelOf( new double[] { 1, 0, 90 }, chart, instance ) ;
+	public static void modelOf( ChartAzimuthalType chart ) throws ParameterNotValidException {
+		modelOf( new double[] { 1, 0, 90 }, chart ) ;
 	}
 
-	public static void modelOf( double[] origin, ChartType chart, String instance ) throws ParameterNotValidException {
+	public static void modelOf( double[] origin, ChartAzimuthalType chart ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( chart == null ) {
-			throw new ParameterNotValidException( ChartType.class.toString()+":"+null ) ;
+			throw new ParameterNotValidException( ChartAzimuthalType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( chart, instance, null ) ;
+		node = ApplicationHelper.getClassNode( chart, chart.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( chart, node ) ;
 
 		chart.setOrigin( new astrolabe.model.Origin() ) ;
@@ -194,18 +191,18 @@ public final class AstrolabeFactory {
 		}
 	}
 
-	public static void modelOf( HorizonType horizon, String instance ) throws ParameterNotValidException {
-		modelOf( 90, horizon, instance ) ;
+	public static void modelOf( HorizonType horizon ) throws ParameterNotValidException {
+		modelOf( 90, horizon ) ;
 	}
 
-	public static void modelOf( double latitude, HorizonType horizon, String instance ) throws ParameterNotValidException {
+	public static void modelOf( double latitude, HorizonType horizon ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( horizon == null ) {
 			throw new ParameterNotValidException( HorizonType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( horizon, instance, null ) ;
+		node = ApplicationHelper.getClassNode( horizon, horizon.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( horizon, node ) ;
 
 		horizon.setLatitude( new astrolabe.model.Latitude() ) ;
@@ -218,18 +215,18 @@ public final class AstrolabeFactory {
 		}
 	}
 
-	public static void modelOf( CircleType circle, String instance ) throws ParameterNotValidException {
-		modelOf( 0, 0, 0, circle, instance ) ;
+	public static void modelOf( CircleType circle ) throws ParameterNotValidException {
+		modelOf( 0, 0, 0, circle ) ;
 	}
 
-	public static void modelOf( double angle, double begin, double end, CircleType circle, String instance ) throws ParameterNotValidException {
+	public static void modelOf( double angle, double begin, double end, CircleType circle ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( circle == null ) {
 			throw new ParameterNotValidException( CircleType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( circle, instance, null ) ;
+		node = ApplicationHelper.getClassNode( circle, circle.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( circle, node ) ;
 
 		circle.setAngle( new astrolabe.model.Angle() ) ;
@@ -250,14 +247,14 @@ public final class AstrolabeFactory {
 		}
 	}
 
-	public static void modelOf( AnnotationType annotation, String instance ) throws ParameterNotValidException {
+	public static void modelOf( AnnotationType annotation ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( annotation == null ) {
 			throw new ParameterNotValidException( AnnotationType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( annotation, instance, null ) ;
+		node = ApplicationHelper.getClassNode( annotation, annotation.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( annotation, node ) ;
 
 		try {

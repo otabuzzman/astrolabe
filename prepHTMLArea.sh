@@ -111,20 +111,22 @@ NF==23 {
 	# atlas page count
 	p++ ;
 
-	split(discreteDMS($22),des) ;
-	split(discreteDMS($12),den) ;
-	split(discreteHMS($15),ran) ;
-	split(discreteHMS($9),raf) ;
+	split(discreteDMS($22),deb) ;
+	split(discreteDMS($12),det) ;
 	# northern
 	if($22<$20) {
+		split(discreteHMS($9),ran) ;
+		split(discreteHMS($15),raf) ;
 		title=sprintf(messages["html.home.atlas.area.title"],
-			des[4]<0?des[1]*-1:des[1],des[2],den[4]<0?den[1]*-1:den[1],den[2],
+			deb[4]<0?deb[1]*-1:deb[1],deb[2],det[4]<0?det[1]*-1:det[1],det[2],
 			ran[4]<0?ran[1]*-1:ran[1],ran[2],raf[4]<0?raf[1]*-1:raf[1],raf[2]) ;
 		class=ENVIRON["area_class_1"] ;
 	# southern
 	} else {
+		split(discreteHMS($15),ran) ;
+		split(discreteHMS($9),raf) ;
 		title=sprintf(messages["html.home.atlas.area.title"],
-			des[4]<0?des[1]*-1:des[1],des[2],den[4]<0?den[1]*-1:den[1],den[2],
+			deb[4]<0?deb[1]*-1:deb[1],deb[2],det[4]<0?det[1]*-1:det[1],det[2],
 			raf[4]<0?raf[1]*-1:raf[1],raf[2],ran[4]<0?ran[1]*-1:ran[1],ran[2]) ;
 		class=ENVIRON["area_class_2"] ;
 	}

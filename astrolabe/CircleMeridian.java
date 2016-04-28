@@ -248,6 +248,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
 				peer = new astrolabe.model.CircleMeridian() ;
+				if ( getName() != null ) {
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				}
 
 				lob = projector.unproject( s.get( 0 ) ) ;
 				lob[0] = ApplicationHelper.mapTo0To360Range( lob[0] ) ;
@@ -259,13 +262,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 					a = CAACoordinateTransformation.RadiansToDegrees( az ) ;
 					ab = CAACoordinateTransformation.RadiansToDegrees( lob[1] ) ;
 					ae = CAACoordinateTransformation.RadiansToDegrees( loe[1] ) ;
-					AstrolabeFactory.modelOf( a, ab, ae, peer, getName() ) ;
+					AstrolabeFactory.modelOf( a, ab, ae, peer ) ;
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
-				}
-
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 				}
 
 				peer.setImportance( getImportance() ) ;
@@ -276,10 +275,11 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 					aCM = annotation.getAnnotationCurved() ;
 					if ( aCM != null && aCM.getName() != null ) {
 						aCC = new astrolabe.model.AnnotationCurved() ;
+						aCC.setName( ApplicationHelper.getFovNSMark( xy )+aCM.getName() ) ;
 						aCC.setText( aCM.getText() ) ;
 
 						try {
-							AstrolabeFactory.modelOf( aCC, ApplicationHelper.getFovNSMark( xy )+aCM.getName() ) ;
+							AstrolabeFactory.modelOf( aCC ) ;
 						} catch ( ParameterNotValidException e ) {
 							throw new RuntimeException( e.toString() ) ;
 						}
@@ -298,10 +298,11 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 					aSM = annotation.getAnnotationStraight() ;
 					if ( aSM != null && aSM.getName() != null ) {
 						aSC = new astrolabe.model.AnnotationStraight() ;
+						aSC.setName( ApplicationHelper.getFovNSMark( xy )+aSM.getName() ) ;
 						aSC.setText( aSM.getText() ) ;
 
 						try {
-							AstrolabeFactory.modelOf( aSC, ApplicationHelper.getFovNSMark( xy )+aSM.getName() ) ;
+							AstrolabeFactory.modelOf( aSC ) ;
 						} catch ( ParameterNotValidException e ) {
 							throw new RuntimeException( e.toString() ) ;
 						}

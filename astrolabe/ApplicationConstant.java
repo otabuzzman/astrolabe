@@ -12,6 +12,7 @@ public final class ApplicationConstant {
 	public final static String GC_NS_FOVG		= "fovg:" ;			// name space, application generated
 	public final static String GC_NS_FOVE		= "fove:" ;			// name space, application generated
 	public final static String GC_NS_CUT		= "cut:" ;			// name space, application generated
+	public final static String GC_NS_ATL		= "atl:" ;			// name space, application generated
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;
@@ -258,15 +259,18 @@ public final class ApplicationConstant {
 	public final static String LK_YMD_NUMBEROFMONTH	= "substitute.indicator.ymd.numberofmonth" ;
 	public final static String LK_YMD_NUMBEROFDAY	= "substitute.indicator.ymd.numberofday" ;
 
-	public final static String LK_HMS_HOURS		= "substitute.indicator.hms.hours" ;
-	public final static String LK_HMS_MSPREFIX	= "substitute.indicator.hms.msprefix" ;
+	public final static String LK_HMS_HOURS			= "substitute.indicator.hms.hours" ;
+	public final static String LK_HMS_HOURMINUTES	= "substitute.indicator.hms.hourminutes" ;
+	public final static String LK_HMS_HOURSECONDS	= "substitute.indicator.hms.hourseconds" ;
+	public final static String LK_HMS_HOURFRACTION	= "substitute.indicator.hms.hourfraction" ;
 
-	public final static String LK_DMS_DEGREES	= "substitute.indicator.dms.degrees" ;
-	public final static String LK_DMS_MSPREFIX	= "substitute.indicator.dms.msprefix" ;
+	public final static String LK_DMS_DEGREES			= "substitute.indicator.dms.degrees" ;
+	public final static String LK_DMS_DEGREEMINUTES		= "substitute.indicator.dms.degreeminutes" ;
+	public final static String LK_DMS_DEGREESECONDS		= "substitute.indicator.dms.degreeseconds" ;
+	public final static String LK_DMS_DEGREEFRACTION	= "substitute.indicator.dms.degreefraction" ;
 
-	public final static String LK_MS_MINUTES	= "substitute.indicator.ms.minutes" ;
-	public final static String LK_MS_SECONDS	= "substitute.indicator.ms.seconds" ;
-	public final static String LK_MS_FRACTION	= "substitute.indicator.ms.fraction" ;
+	public final static String LK_SIG_MATH	= "substitute.indicator.sig.math" ;
+	public final static String LK_SIG_BOTH	= "substitute.indicator.sig.both" ;
 
 	// locale annotation keys (LK_)
 	public final static String LK_TEXT_HMS_HOURS	= "annotation.text.hms.hours" ;
@@ -358,6 +362,7 @@ public final class ApplicationConstant {
 	public final static String PK_GENERAL_SPACE			= "space" ;
 	public final static String PK_GENERAL_INTERVAL		= "interval" ;
 	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
+	public final static String PK_GENERAL_PRECISION		= "precision" ;
 
 	public final static String PK_CHART_UNIT			= "unit" ;
 	public final static String PK_CHART_HALO			= "halo" ;
@@ -403,7 +408,7 @@ public final class ApplicationConstant {
 	public final static String PK_BODY_STRETCH		= "stretch" ;
 	public final static String PK_BODY_IMPORTANCE	= PK_GENERAL_IMPORTANCE ;
 
-	public final static String PK_POSTSCRIPT_PRECISION	= "precision" ;
+	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;
 	public final static String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
 	public final static String PN_POSTSCRIPT_TYPE3		= "type3" ;
 	public final static String PN_POSTSCRIPT_PROLOG		= "prolog" ;
@@ -411,6 +416,10 @@ public final class ApplicationConstant {
 	public final static String PK_POSTSCRIPT_DEFAULT	= "default" ;
 
 	public final static String PK_PRINTSTREAM_VIEWER	= "viewer" ;
+
+	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
+
+	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
 
 	// postscript prolog definitions
 	public final static String PS_PROLOG_LIM0			= "LIM0" ;
