@@ -1,16 +1,24 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+import java.util.prefs.Preferences;
+
 import org.exolab.castor.xml.ValidationException;
 
-@SuppressWarnings("serial")
-public class ChartStereographic extends astrolabe.model.ChartStereographic implements Chart {
+import caa.CAACoordinateTransformation;
 
-	private final static String DEFAULT_PAGESIZE = "210x297" ;
+import com.vividsolutions.jts.geom.Polygon;
+
+@SuppressWarnings("serial")
+public class ChartStereographic extends astrolabe.model.ChartStereographic implements Companion, Projector {
+
 	private final static double DEFAULT_UNIT = 2.834646 ;
 	private final static double DEFAULT_HALO = 4 ;
 	private final static double DEFAULT_HALOMIN = .08 ;
 	private final static double DEFAULT_HALOMAX = .4 ;
+	private final static String DEFAULT_PRACTICALITY = "0" ;
+	private final static String DEFAULT_IMPORTANCE = ".1:0" ;
 
 	private double unit ;
 	private boolean northern ;
@@ -18,14 +26,16 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	private double[] pagesize = new double[2] ;
 	private double scale ;
 
-	private double[] origin ;
+	private double[] origin = new double[2] ;
 
 	private double halo ;
 	private double halomin ;
 	private double halomax ;
 
 	public ChartStereographic( Object peer ) throws ParameterNotValidException {
-		String[] pagesize ;
+		Preferences node ;
+		String psa, psd[] ;
+		double[] origin ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
@@ -34,111 +44,86 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		pagesize = ApplicationHelper.getClassNode( this, getName(),
-				ApplicationConstant.PN_CHART_PAGESIZE ).get( getPagesize(), DEFAULT_PAGESIZE /*a4*/ ).split( "x" ) ;
-		this.pagesize[0] = new Double( pagesize[0] ).doubleValue() ;
-		this.pagesize[1] = new Double( pagesize[1] ).doubleValue() ;
+		if ( ( psa = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CHART_PAGESIZE ),
+				getPagesize(), null ) ) == null ) {
+			psd = getPagesize().split( "x" ) ;
+		} else {
+			psd = psa.split( "x" ) ;
+		}
+		pagesize[0] = new Double( psd[0] ).doubleValue() ;
+		pagesize[1] = new Double( psd[1] ).doubleValue() ;
 
-		unit = ApplicationHelper.getClassNode( this, getName(),
-				null ).getDouble( ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
-		scale = java.lang.Math.min( this.pagesize[0], this.pagesize[1] )/2/Math.goldensection ;
+		ApplicationHelper.setFovGlobal( fov() ) ;
+
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+
+		unit = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
+		scale = java.lang.Math.min( pagesize[0], pagesize[1] )/2/Math.goldensection ;
+		scale = scale*getViewport()/100 ;
 		scale = scale*getScale()/100 ;
 
 		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
 
 		origin = AstrolabeFactory.valueOf( getOrigin() ) ;
+		this.origin[0] = origin[1] ;
+		this.origin[1] = origin[2] ;
 
-		halo = ApplicationHelper.getClassNode( this, getName(),
-				null ).getDouble( ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
-		halomin = ApplicationHelper.getClassNode( this, getName(),
-				null ).getDouble( ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
-		halomax = ApplicationHelper.getClassNode( this, getName(),
-				null ).getDouble( ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
-	}
-
-	public double[] project( double[] eq ) {
-		return project( eq[0], eq[1] ) ;
+		halo = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
+		halomin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
+		halomax = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
+		Registry.register( ApplicationConstant.PK_CHART_HALO, new Double( halo ) ) ;
+		Registry.register( ApplicationConstant.PK_CHART_HALOMIN, new Double( halomin ) ) ;
+		Registry.register( ApplicationConstant.PK_CHART_HALOMAX, new Double( halomax ) ) ;
 	}
 
 	public double[] project( double RA, double d ) {
-		Vector vo, vp0 ;
-		double x, y, px, py ;
-
-		if ( northern ) {
-			x = java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
-			y = -java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
-			vo = new Vector( x, y ) ;
-
-			x = java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.cos( RA ) ;
-			y = -java.lang.Math.tan( ( Math.rad90-d )/2 )*java.lang.Math.sin( RA ) ;
-			vp0 = new Vector( x, y ) ;
-		} else { // southern
-			x = -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ;
-			y = -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ;
-			vo = new Vector( x, y ) ;
-
-			x = -java.lang.Math.tan( ( Math.rad90+d )/2 )*java.lang.Math.cos( RA ) ;
-			y = -java.lang.Math.tan( ( Math.rad90+d )/2 )*java.lang.Math.sin( RA ) ;
-			vp0 = new Vector( x, y ) ;
-		}
-
-		vo.mul( scale ) ;
-		vp0.mul( scale ) ;
-
-		if ( vo.abs()>0 ) {
-			Vector vp, vux, vuy ;
-
-			vp = new Vector( vp0 ).sub( vo ) ;
-			vuy = new Vector( vo ).mul( -1 ).scale( 1 ) ;
-			vux = new Vector( vuy ).apply( new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ) ;
-
-			px = vp.dot( vux ) ;
-			py = vp.dot( vuy ) ;
-		} else {
-			px = vp0.x ;
-			py = vp0.y ;
-		}
-
-		return new double[] { px, py } ;
+		return project( new double[] { RA, d } ) ;
 	}
 
-	public double[] unproject( double[] xy ) {
-		return unproject( xy[0], xy[1] ) ;
+	public double[] project( double[] eq ) {
+		double[] r ;
+		Vector vp, vo, vZ, vY ;
+		CoordinateSystem cs ;
+
+		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
+
+		vo = new Vector( polarToWorld( hemisphereToPolar( origin ) ) ) ;
+		if ( vo.abs()>0 ) {
+			vZ = new Vector( 0, 0, 1 ) ;
+			vY = new Vector( vo ).mul( -1 ) ;
+			cs = new CoordinateSystem( vo, vZ, vY ) ;
+			vp.set( cs.local( vp.toArray() ) ) ;
+		}
+
+		vp.mul( scale ) ;
+
+		r = new double[] { vp.x, vp.y } ;
+
+		return r ;
 	}
 
 	public double[] unproject( double x, double y ) {
-		double[] r = new double[2] ;
-		Vector vo, vp0, vp ;
+		return unproject( new double[] { x, y } ) ;
+	}
 
-		if ( northern ) {
-			vo = new Vector( java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
-					-java.lang.Math.tan( ( Math.rad90-origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
-		} else { // southern
-			vo = new Vector( -java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.cos( origin[1] ) ,
-					-java.lang.Math.tan( ( Math.rad90+origin[2] )/2 )*java.lang.Math.sin( origin[1] ) ) ;
-		}
+	public double[] unproject( double[] xy ) {
+		double[] r ;
+		Vector vp, vo, vZ, vY ;
+		CoordinateSystem cs ;
 
-		vp0 = new Vector( x, y ) ;
-		vp0.mul( 1/scale ) ;
+		vp = new Vector( xy ) ;
+		vp.mul( 1/scale ) ;
 
+		vo = new Vector( polarToWorld( hemisphereToPolar( origin ) ) ) ;
 		if ( vo.abs()>0 ) {
-			vo = new Vector( 0, vo.abs() ) ;
-			vp = new Vector( vp0 ).sub( vo ) ;
-			vp = new Vector( -vp.y, vp.x ).apply( new double[] {
-					java.lang.Math.cos( origin[1] ), java.lang.Math.sin( origin[1] ), 0,
-					-java.lang.Math.sin( origin[1] ), java.lang.Math.cos( origin[1] ), 0,
-					0, 0, 1 } ) ;
-		} else {
-			vp = new Vector( vp0 ) ;
+			vZ = new Vector( 0, 0, 1 ) ;
+			vY = new Vector( vo ).mul( -1 ) ;
+			cs = new CoordinateSystem( vo, vZ, vY ) ;
+			vp.set( cs.world( vp.toArray() ) ) ;
 		}
 
-		if ( northern ) {
-			r[0] = java.lang.Math.atan2( -vp.y, vp.x ) ;
-			r[1] = Math.rad90-java.lang.Math.atan( vp.x/java.lang.Math.cos( r[0] ) )*2 ;
-		} else { // southern
-			r[0] = java.lang.Math.atan2( -vp.y, -vp.x ) ;
-			r[1] = -Math.rad90+java.lang.Math.atan( -vp.x/java.lang.Math.cos( r[0] ) )*2 ;
-		}
+		r = polarToHemisphere( worldToPolar( new double[] { vp.x, vp.y } ) ) ;
 
 		return r ;
 	}
@@ -160,7 +145,27 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 	}
 
 	public void headPS( PostscriptStream ps ) {
+		String practicality, importance ;
+		double pagesizex, pagesizey ;
+
 		ps.dsc.beginSetup() ;
+
+		// Set pagesize
+		try {
+			pagesizex = pagesize[0]*unit ;
+			pagesizey = pagesize[1]*unit ;
+
+			ps.dict( true ) ;
+			ps.push( "/PageSize" ) ;
+			ps.array( true ) ;
+			ps.push( pagesizex ) ;
+			ps.push( pagesizey ) ;
+			ps.array( false ) ;
+			ps.dict( false ) ;
+
+			ps.operator.setpagedevice() ;
+		} catch ( ParameterNotValidException e ) {}
+
 		// Set origin at center of page.
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
@@ -175,28 +180,179 @@ public class ChartStereographic extends astrolabe.model.ChartStereographic imple
 		ps.dsc.endSetup() ;
 
 		ps.dsc.beginPageSetup() ;
+
 		ps.operator.scale( unit ) ;
+
+		practicality = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_CHART_PRACTICALITY, DEFAULT_PRACTICALITY ) ;
+		importance = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_CHART_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
+		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
+		ApplicationHelper.emitPSImportance( ps, importance ) ;
+
 		ps.dsc.endPageSetup() ;
 
 		ps.dsc.page( getName(), 1 ) ;
+	}
 
-		try {
-			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALO ) ;
-			ps.push( halo ) ;
-			ps.operator.def() ;
-			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALOMIN ) ;
-			ps.push( halomin ) ;
-			ps.operator.def() ;
-			ps.push( "/"+ApplicationConstant.PS_PROLOG_HALOMAX ) ;
-			ps.push( halomax ) ;
-			ps.operator.def() ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
+	public void emitPS( PostscriptStream ps ) {
+		PostscriptEmitter atlas ;
+
+		if ( 100.>getViewport() ) {
+			ps.operator.mark() ;
+			for ( double[] xy : ApplicationHelper.jtsToVector( fov() ) ) {
+				ps.push( xy[0] ) ;
+				ps.push( xy[1] ) ;
+			}
+			try {
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+
+				ps.operator.closepath() ;
+				ps.operator.stroke() ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+		}
+
+		if ( getAtlas() != null ) {
+			ps.operator.gsave() ;
+
+			try {
+				atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			atlas.headPS( ps ) ;
+			atlas.emitPS( ps ) ;
+			atlas.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
 		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
 		ps.operator.showpage() ;
 		ps.dsc.pageTrailer() ;
+	}
+
+	public void addToModel( Object[] modelWithArgs ) throws ParameterNotValidException {
+		astrolabe.model.AstrolabeType astrolabe ;
+		astrolabe.model.Chart c ;
+		astrolabe.model.ChartStereographic cS ;
+		astrolabe.model.Horizon h ;
+		astrolabe.model.HorizonEquatorial hE ;
+		double oRA, ode ;
+		Atlas atlas ;
+
+		if ( getAtlas() == null ) {
+			String msg ;
+
+			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "getAtlas()", null } ) ;
+
+			throw new ParameterNotValidException( msg ) ;
+		}
+
+		astrolabe = (astrolabe.model.AstrolabeType) modelWithArgs[0] ;
+
+		try {
+			atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		for ( AtlasPage atlasPage : atlas.volume() ) {
+			hE = new astrolabe.model.HorizonEquatorial() ;
+			atlas.addToModel( new Object[] { hE, atlasPage } ) ;
+
+			h = new astrolabe.model.Horizon() ;
+			h.setHorizonEquatorial( hE ) ;
+
+			cS = new astrolabe.model.ChartStereographic() ;
+			cS.addHorizon( h ) ;
+
+			c = new astrolabe.model.Chart() ;
+			c.setChartStereographic( cS ) ;
+
+			try {
+				AstrolabeFactory.modelOf( hE, getAtlas().getName() ) ;
+
+				oRA = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[0] ) ;
+				ode = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[1] ) ;
+				AstrolabeFactory.modelOf( new double[] { 1, oRA, ode }, cS, getAtlas().getName() ) ;
+
+				cS.setScale( atlasPage.scale ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			astrolabe.addChart( c ) ;
+		}
+	}
+
+	public void emitAUX() {
+		Companion atlas ;
+
+		if ( getAtlas() != null ) {
+			try {
+				atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			atlas.emitAUX() ;
+		}
+	}
+
+	public double[] hemisphereToPolar( double[] eq ) {
+		return northern?flipNorthern( eq ):flipSouthern( eq ) ;
+	}
+
+	public double[] polarToHemisphere( double[] p ) {
+		return northern?flipNorthern( p ):flipSouthern( p ) ;
+	}
+
+	private double[] flipNorthern( double[] eq ) {
+		return new double[] { ApplicationHelper.mapTo0To360Range( -eq[0] ), eq[1] } ;
+	}
+
+	private double[] flipSouthern( double[] eq ) {
+		return new double[] { ApplicationHelper.mapTo0To360Range( Math.rad180+eq[0] ), -eq[1] } ;
+	}
+
+	public double[] polarToWorld( double[] eq ) {
+		return new double[] {
+				java.lang.Math.tan( ( Math.rad90-eq[1] )/2 )*java.lang.Math.cos( eq[0] ),
+				java.lang.Math.tan( ( Math.rad90-eq[1] )/2 )*java.lang.Math.sin( eq[0] ) } ;
+	}
+
+	public double[] worldToPolar( double[] xy ) {
+		return new double[] {
+				ApplicationHelper.mapTo0To360Range( java.lang.Math.atan2( xy[1], xy[0] ) ),
+				Math.rad90-java.lang.Math.atan( java.lang.Math.sqrt( xy[0]*xy[0]+xy[1]*xy[1] ) )*2 } ;
+	}
+
+	private Polygon fov() {
+		Polygon r ;
+		java.util.Vector<double[]> l ;
+		double viewport, fovx, fovy ;
+
+		viewport = getViewport() ;
+
+		fovx = ( pagesize[0]/2 )*viewport/100 ;
+		fovy = ( pagesize[1]/2 )*viewport/100 ;
+
+		l = new java.util.Vector<double[]>() ;
+		l.add( new double[] { -fovx, -fovy } ) ; // bottom left
+		l.add( new double[] { -fovx, fovy } ) ; // top left
+		l.add( new double[] { fovx, fovy } ) ; // top right
+		l.add( new double[] { fovx, -fovy } ) ; // bottom right
+
+		r = ApplicationHelper.jtsToPolygon( l ) ;
+
+		return r ;
 	}
 }

@@ -57,8 +57,10 @@ public class CatalogADC7118Record implements CatalogRecord {
 		}
 	}
 
-	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		astrolabe.model.Position pm ;
+		double[] pv ;
 		CAA2DCoordinate ceq ;
 
 		model = new astrolabe.model.Body() ;
@@ -70,8 +72,10 @@ public class CatalogADC7118Record implements CatalogRecord {
 		model.getBodyStellar().setSpin( 0 ) ;
 
 		ceq = CAAPrecession.PrecessEquatorial( RAh()+RAm()/60., DEd()+DEm()/60., 2451545./*J2000*/, epoch ) ;
-		model.getBodyStellar().setPosition( AstrolabeFactory.modelPosition(
-				CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+		pm = new astrolabe.model.Position() ;
+		pv = new double[] { 1, CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() } ;
+		AstrolabeFactory.modelOf( pv, pm ) ;
+		model.getBodyStellar().setPosition( pm ) ;
 		ceq.delete() ;
 
 		try {

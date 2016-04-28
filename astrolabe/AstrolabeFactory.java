@@ -1,12 +1,20 @@
 
 package astrolabe;
 
+import java.util.prefs.Preferences;
+
+import org.exolab.castor.xml.ValidationException;
+
 import astrolabe.model.AngleType;
+import astrolabe.model.AnnotationType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
+import astrolabe.model.ChartType;
+import astrolabe.model.CircleType;
 import astrolabe.model.DateType;
 import astrolabe.model.DMSType;
 import astrolabe.model.HMSType;
+import astrolabe.model.HorizonType;
 import astrolabe.model.RationalType;
 import astrolabe.model.PolarType;
 import astrolabe.model.SphericalType;
@@ -21,12 +29,12 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static Chart companionOf( astrolabe.model.Chart ch ) throws ParameterNotValidException {
+	public static Companion companionOf( astrolabe.model.Chart ch, astrolabe.model.AstrolabeType parent ) throws ParameterNotValidException {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
 		astrolabe.model.ChartEquidistant chE ;
 		astrolabe.model.ChartGnomonic chG ;
-		Chart chart ;
+		Companion chart ;
 
 		if ( ( chS = ch.getChartStereographic() ) != null ) {
 			chart = new ChartStereographic( chS ) ;
@@ -42,11 +50,11 @@ public final class AstrolabeFactory {
 		return chart ;
 	}
 
-	public static Horizon companionOf( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.HorizonLocal hoLo ;
 		astrolabe.model.HorizonEquatorial hoEq ;
 		astrolabe.model.HorizonEcliptical hoEc ;
-		Horizon horizon ;
+		PostscriptEmitter horizon ;
 
 		if ( ( hoLo = ho.getHorizonLocal() ) != null  ) {
 			horizon = new HorizonLocal( hoLo, epoch, p ) ;
@@ -61,13 +69,13 @@ public final class AstrolabeFactory {
 		return horizon ;
 	}
 
-	public static Circle companionOf( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.CircleParallel clP ;
 		astrolabe.model.CircleMeridian clM ;
 		astrolabe.model.CircleSouthernPolar clSP ;
 		astrolabe.model.CircleNorthernPolar clNP ;
 		astrolabe.model.CircleSouthernTropic clST ;
-		Circle circle ;
+		PostscriptEmitter circle ;
 
 		if ( ( clP = cl.getCircleParallel() ) != null ) {
 			circle = new CircleParallel( clP, p ) ;
@@ -86,9 +94,9 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
-	public static Dial companionOf( astrolabe.model.Dial dl, Baseline baseline ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Dial dl, Baseline baseline ) throws ParameterNotValidException {
 		astrolabe.model.DialDegree dlD ;
-		Dial dial ;
+		PostscriptEmitter dial ;
 
 		if ( ( dlD = dl.getDialDegree() ) != null ) {
 			dial = new DialDegree( dlD, baseline ) ;
@@ -99,9 +107,9 @@ public final class AstrolabeFactory {
 		return dial ;
 	}
 
-	public static Annotation companionOf( astrolabe.model.Annotation an ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Annotation an ) throws ParameterNotValidException {
 		astrolabe.model.AnnotationStraight anS ;
-		Annotation annotation ;
+		PostscriptEmitter annotation ;
 
 		if ( ( anS = an.getAnnotationStraight() ) != null ) {
 			annotation = new AnnotationStraight( anS ) ;
@@ -112,14 +120,14 @@ public final class AstrolabeFactory {
 		return annotation ;
 	}
 
-	public static Body companionOf( astrolabe.model.Body bd, Projector p, double epoch ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p, double epoch ) throws ParameterNotValidException {
 		astrolabe.model.BodyStellar bdS ;
 		astrolabe.model.BodyAreal bdA ;
 		astrolabe.model.BodyPlanet bdP ;
 		astrolabe.model.BodyMoon bdM ;
 		astrolabe.model.BodySun bdH ;
 		astrolabe.model.BodyElliptical bdE ;
-		Body body ;
+		PostscriptEmitter body ;
 
 		if ( ( bdS = bd.getBodyStellar() ) != null ) {
 			body = new BodyStellar( bdS, p ) ;
@@ -132,20 +140,20 @@ public final class AstrolabeFactory {
 		} else if ( ( bdH = bd.getBodySun() ) != null ) {
 			body = new BodySun( bdH, epoch, p ) ;
 		} else if ( ( bdE = bd.getBodyElliptical() ) != null ) {
-			body = new BodyElliptical( bdE, p ) ;
-		} else { // bd.getBodyParabolic() != null
-			body = new BodyParabolic( bd.getBodyParabolic(), p ) ;
+			body = new BodyElliptical( bdE, epoch, p ) ;
+		} else { // bd.getBodyParabolical() != null
+			body = new BodyParabolical( bd.getBodyParabolical(), epoch, p ) ;
 		}
 
 		return body ;
 	}
 
-	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p, double epoch ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p, double epoch ) throws ParameterNotValidException {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
 		astrolabe.model.CatalogADC6049 ct6049 ;
-		Catalog catalog ;
+		PostscriptEmitter catalog ;
 
 		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
 			catalog = new CatalogADC1239H( ct1239h, p, epoch ) ;
@@ -162,31 +170,141 @@ public final class AstrolabeFactory {
 		return catalog ;
 	}
 
-	public static astrolabe.model.Position modelPosition( double phi, double theta ) {
-		astrolabe.model.Position p = new astrolabe.model.Position() ;
-
-		modelSphericalType( p, 1, phi, theta ) ;
-
-		return p ;
+	public static void modelOf( ChartType chart, String instance ) throws ParameterNotValidException {
+		modelOf( new double[] { 1, 0, 90 }, chart, instance ) ;
 	}
 
-	public static astrolabe.model.SphericalType modelSphericalType( double r, double phi, double theta ) {
-		astrolabe.model.SphericalType sT = new astrolabe.model.SphericalType() ;
+	public static void modelOf( double[] origin, ChartType chart, String instance ) throws ParameterNotValidException {
+		Preferences node ;
 
-		modelSphericalType( sT, r, phi, theta ) ;
+		if ( chart == null ) {
+			throw new ParameterNotValidException( ChartType.class.toString()+":"+null ) ;
+		}
 
-		return sT ;
+		node = ApplicationHelper.getClassNode( chart, instance, null ) ;
+		ApplicationHelper.setupPeerFromClassNode( chart, node ) ;
+
+		chart.setOrigin( new astrolabe.model.Origin() ) ;
+		modelOf( origin, chart.getOrigin() ) ;
+
+		try {
+			chart.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 	}
 
-	private static void modelSphericalType( astrolabe.model.SphericalType sT, double r, double phi, double theta ) {
-		sT.setR( new astrolabe.model.R() ) ;
-		sT.getR().setValue( r ) ;
-		sT.setPhi( new astrolabe.model.Phi() ) ;
-		sT.getPhi().setRational( new astrolabe.model.Rational() ) ;
-		sT.getPhi().getRational().setValue( phi ) ;
-		sT.setTheta( new astrolabe.model.Theta() ) ;
-		sT.getTheta().setRational( new astrolabe.model.Rational() ) ;
-		sT.getTheta().getRational().setValue( theta ) ;
+	public static void modelOf( HorizonType horizon, String instance ) throws ParameterNotValidException {
+		modelOf( 90, horizon, instance ) ;
+	}
+
+	public static void modelOf( double latitude, HorizonType horizon, String instance ) throws ParameterNotValidException {
+		Preferences node ;
+
+		if ( horizon == null ) {
+			throw new ParameterNotValidException( HorizonType.class.toString()+":"+null ) ;
+		}
+
+		node = ApplicationHelper.getClassNode( horizon, instance, null ) ;
+		ApplicationHelper.setupPeerFromClassNode( horizon, node ) ;
+
+		horizon.setLatitude( new astrolabe.model.Latitude() ) ;
+		modelOf( latitude, horizon.getLatitude() ) ;
+
+		try {
+			horizon.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
+	}
+
+	public static void modelOf( CircleType circle, String instance ) throws ParameterNotValidException {
+		modelOf( 0, 0, 0, circle, instance ) ;
+	}
+
+	public static void modelOf( double angle, double begin, double end, CircleType circle, String instance ) throws ParameterNotValidException {
+		Preferences node ;
+
+		if ( circle == null ) {
+			throw new ParameterNotValidException( CircleType.class.toString()+":"+null ) ;
+		}
+
+		node = ApplicationHelper.getClassNode( circle, instance, null ) ;
+		ApplicationHelper.setupPeerFromClassNode( circle, node ) ;
+
+		circle.setAngle( new astrolabe.model.Angle() ) ;
+		modelOf( angle, circle.getAngle() ) ;
+
+		circle.setBegin( new astrolabe.model.Begin() ) ;
+		circle.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+		modelOf( begin, circle.getBegin().getImmediate() ) ;
+
+		circle.setEnd( new astrolabe.model.End() ) ;
+		circle.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+		modelOf( end, circle.getEnd().getImmediate() ) ;
+
+		try {
+			circle.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
+	}
+
+	public static void modelOf( AnnotationType annotation, String instance ) throws ParameterNotValidException {
+		Preferences node ;
+
+		if ( annotation == null ) {
+			throw new ParameterNotValidException( AnnotationType.class.toString()+":"+null ) ;
+		}
+
+		node = ApplicationHelper.getClassNode( annotation, instance, null ) ;
+		ApplicationHelper.setupPeerFromClassNode( annotation, node ) ;
+
+		try {
+			annotation.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
+	}
+
+	public static void modelOf( double value, AngleType angle ) throws ParameterNotValidException {
+		if ( angle == null ) {
+			throw new ParameterNotValidException( AngleType.class.toString()+":"+null ) ;
+		}
+
+		angle.setRational( new astrolabe.model.Rational() ) ;
+		angle.getRational().setValue( value ) ;
+
+		try {
+			angle.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
+	}
+
+	public static void modelOf( double[] value, SphericalType spherical ) throws ParameterNotValidException {
+		modelOf( value[0], value[1], value[2], spherical ) ;
+	}
+
+	public static void modelOf( double r, double phi, double theta, SphericalType spherical ) throws ParameterNotValidException {
+		if ( spherical == null ) {
+			throw new ParameterNotValidException( SphericalType.class.toString()+":"+null ) ;
+		}
+
+		spherical.setR( new astrolabe.model.R() ) ;
+		spherical.getR().setValue( r ) ;
+
+		spherical.setPhi( new astrolabe.model.Phi() ) ;
+		modelOf( phi, spherical.getPhi() ) ;
+
+		spherical.setTheta( new astrolabe.model.Theta() ) ;
+		modelOf( theta, spherical.getTheta() ) ;
+
+		try {
+			spherical.validate() ;
+		} catch ( ValidationException e ) {
+			throw new ParameterNotValidException( e.toString() ) ;
+		}
 	}
 
 	public static double valueOf( DateType date ) throws ParameterNotValidException {

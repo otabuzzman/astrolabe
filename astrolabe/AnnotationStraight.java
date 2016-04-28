@@ -2,13 +2,15 @@
 package astrolabe;
 
 import java.text.MessageFormat;
+import java.util.Hashtable;
+import java.util.prefs.Preferences;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
-public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements Annotation {
+public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
 
 	private final static Log log = LogFactory.getLog( AnnotationStraight.class ) ;
 
@@ -33,6 +35,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private double size ;
 
 	public AnnotationStraight( Object peer ) throws ParameterNotValidException {
+		Preferences node ;
+
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;
@@ -40,22 +44,19 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		subscriptshrink = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
-		margin = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+		subscriptshrink = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		size = ApplicationHelper.getClassNode( this,
-				getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( getPurpose(), DEFAULT_PURPOSE ) ;
+		margin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+
+		size = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ),
+				getPurpose(), DEFAULT_PURPOSE ) ;
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -155,7 +156,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
-		java.util.Vector FET, fet ;
+		java.util.Vector<java.util.Vector<Object>> FET ;
+		java.util.Vector<Object> fet ;
 		String t ;
 
 		t = substitute( text.getValue() ) ;
@@ -170,7 +172,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		FET = ps.ucFET( t ) ;
 		try {
 			for ( int e=0 ; e<FET.size() ; e++ ) {
-				fet = (java.util.Vector) FET.get( e ) ;
+				fet = (java.util.Vector<Object>) FET.get( e ) ;
 				ps.array( true ) ;
 				ps.push( (String) fet.get( 0 ) ) ;
 				ps.push( (String[]) fet.get( 1 ) ) ;
@@ -198,7 +200,11 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 	}
 
-	private static String substitute( String string ) {
+	public static String substitute( String string ) {
+		return substitute( string, new Hashtable<String, String>() ) ;
+	}
+
+	public static String substitute( String string, Hashtable<String, String> registry ) {
 		String s, k, t, v ;
 		java.util.regex.Pattern p ;
 		java.util.regex.Matcher m ;
@@ -212,7 +218,10 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			s = t.substring( m.start(), m.end() ) ;
 			k = s.substring( 2, s.length()-2 ) ;
 			try {
-				v = (String) Registry.retrieve( k ) ;
+				v = registry.get( k ) ;
+				if ( v == null ) {
+					v = (String) Registry.retrieve( k ) ;
+				}
 				t = m.replaceFirst( v ) ;
 			} catch ( ParameterNotValidException e ) {
 				String msg ;

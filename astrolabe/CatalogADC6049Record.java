@@ -53,18 +53,24 @@ public class CatalogADC6049Record implements CatalogRecord {
 		}
 	}
 
-	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		astrolabe.model.Position pm ;
+		double[] pv ;
 		CAA2DCoordinate ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
 		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_AREA ) ;
-		for ( int position=0 ; position<RAhr.size() ; position++ ) {
-			ceq = CAAPrecession.PrecessEquatorial( RAhr( position ), DEdeg( position ), 2451545./*J2000*/, epoch ) ;
-			model.getBodyAreal().addPosition( AstrolabeFactory.modelPosition(
-					CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() ) ) ;
+		pv = new double[] { 1, 0, 0 } ;
+		for ( int p=0 ; p<RAhr.size() ; p++ ) {
+			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
+			pm = new astrolabe.model.Position() ;
+			pv[1] = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
+			pv[2] = ceq.Y() ;
+			AstrolabeFactory.modelOf( pv, pm ) ;
+			model.getBodyAreal().addPosition( pm ) ;
 			ceq.delete() ;
 		}
 

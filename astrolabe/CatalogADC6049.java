@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC6049 extends CatalogType {
+public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 
 	private final static int C_CHUNK = 29+1/*0x0a*/ ;
 
@@ -18,12 +18,18 @@ public class CatalogADC6049 extends CatalogType {
 
 	private HashSet<String> restrict ;
 
+	private Projector projector ;
+	private double epoch ;
+
 	private String memory ;
 
 	public CatalogADC6049( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
-		super( peer, projector, epoch ) ;
+		super( peer, projector ) ;
 
 		String[] rv ;
+
+		this.projector = projector ;
+		this.epoch = epoch ;
 
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC6049) peer ).getRestrict() != null ) {
@@ -34,6 +40,50 @@ public class CatalogADC6049 extends CatalogType {
 		}
 
 		memory = new String() ;
+	}
+
+	public void headPS( PostscriptStream ps ) {
+	}
+
+	public void emitPS( PostscriptStream ps ) {
+		Hashtable<String, CatalogRecord> catalog ;
+		astrolabe.model.Annotation[] annotation ;
+		astrolabe.model.BodyAreal bodyModel ;
+		BodyAreal bodyAreal ;
+
+		try {
+			catalog = read() ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		for ( CatalogRecord record : arrange( catalog ) ) {
+			try {
+				bodyModel = record.toModel( epoch ).getBodyAreal() ;
+
+				annotation = annotation( record ) ;
+				if ( annotation != null ) {
+					bodyModel.setAnnotation( annotation ) ;
+
+					record.register() ;
+				}
+
+				bodyAreal = new BodyAreal( bodyModel, projector ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			ps.operator.gsave() ;
+
+			bodyAreal.headPS( ps ) ;
+			bodyAreal.emitPS( ps ) ;
+			bodyAreal.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {
@@ -54,8 +104,8 @@ public class CatalogADC6049 extends CatalogType {
 				if ( memory.length()==0 ) {
 					memory = rl ;
 				}
-				rc = rl.substring( 23, 27).trim();
-				mc = memory.substring( 23, 27).trim();
+				rc = rl.substring( 23, 27 ).trim() ;
+				mc = memory.substring( 23, 27 ).trim() ;
 				if ( rc.equals( mc ) ) {
 					rb = rb+rl ;
 

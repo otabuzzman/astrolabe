@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC5050 extends CatalogType {
+public class CatalogADC5050 extends CatalogType implements PostscriptEmitter {
 
 	private final static int C_CHUNK = 197+1/*0x0a*/ ;
 
@@ -35,7 +35,7 @@ public class CatalogADC5050 extends CatalogType {
 	} ;
 
 	public CatalogADC5050( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
-		super( peer, projector, epoch ) ;
+		super( peer, projector ) ;
 
 		String[] rv ;
 
@@ -52,13 +52,26 @@ public class CatalogADC5050 extends CatalogType {
 		}
 	}
 
+	public void headPS( PostscriptStream ps ) {
+	}
+
 	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<BodyAreal> sign ;
-		astrolabe.model.BodyAreal model ;
+		astrolabe.model.BodyAreal bodySign ;
 		HashSet<String> headline ;
 		String[] sv, hv, bv ;
+		Hashtable<String, CatalogRecord> catalog ;
 		CatalogRecord cr ;
-		BodyAreal body ;
+		BodyAreal bodyAreal ;
+		astrolabe.model.Annotation[] annotation ;
+		astrolabe.model.BodyStellar bodyModel ;
+		BodyStellar bodyStellar ;
+
+		try {
+			catalog = read() ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		for ( int s=0 ; s<peer.getSignCount() ; s++ ) {
 			sign = new java.util.Vector<BodyAreal>() ;
@@ -73,27 +86,27 @@ public class CatalogADC5050 extends CatalogType {
 
 			sv = peer.getSign( s ).getValue().split( "," ) ;
 			for ( int b=0 ; b<sv.length ; b++ ) {
-				model = new astrolabe.model.BodyAreal() ;
-				model.setType( ApplicationConstant.AV_BODY_SIGN ) ;
+				bodySign = new astrolabe.model.BodyAreal() ;
+				bodySign.setType( ApplicationConstant.AV_BODY_SIGN ) ;
 
 				bv = sv[b].split( ":" ) ;
 				for ( int p=0 ; p<bv.length ; p++ ) {
-					if ( ( cr = entry( bv[p] ) ) == null ) {
+					if ( ( cr = catalog.get( bv[p] ) ) == null ) {
 						break ; // element missing in catalog
 					}
 					try {
-						model.addPosition( cr.toBody( epoch ).getBodyStellar().getPosition() ) ;
+						bodySign.addPosition( cr.toModel( epoch ).getBodyStellar().getPosition() ) ;
 					} catch ( ParameterNotValidException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
 				}
 
-				if ( model.getPositionCount()<bv.length ) { // element(s) missing in catalog
+				if ( bodySign.getPositionCount()<bv.length ) { // element(s) missing in catalog
 					break ;
 				}
 
 				try {
-					body = new BodyAreal( model, projector ) ;
+					bodyAreal = new BodyAreal( bodySign, projector ) ;
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -101,31 +114,57 @@ public class CatalogADC5050 extends CatalogType {
 				if ( peer.getSign( s ).getAnnotationCount()>0 ) {
 					if ( headline.size()==0 ) {
 						if ( b==0 ) {
-							body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+							bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
 						}
 					} else {
 						if ( headline.contains( new Integer( b+1 ).toString() ) ) {
-							body.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+							bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
 						}
 					}
 				}
 
-				sign.add( body ) ;
+				sign.add( bodyAreal ) ;
 			}
 			for ( int b=0 ; b<sign.size() ; b++ ) {
-				body = sign.get( b ) ;
+				bodyAreal = sign.get( b ) ;
 
 				ps.operator.gsave() ;
 
-				body.headPS( ps ) ;
-				body.emitPS( ps ) ;
-				body.tailPS( ps ) ;
+				bodyAreal.headPS( ps ) ;
+				bodyAreal.emitPS( ps ) ;
+				bodyAreal.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
 		}
 
-		super.emitPS( ps ) ;
+		for ( CatalogRecord record : arrange( catalog ) ) {
+			annotation = annotation( record ) ;
+
+			try {
+				bodyModel = record.toModel( epoch ).getBodyStellar() ;
+				if ( annotation != null ) {
+					bodyModel.setAnnotation( annotation( record ) ) ;
+
+					record.register() ;
+				}
+
+				bodyStellar = new BodyStellar( bodyModel, projector ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			ps.operator.gsave() ;
+
+			bodyStellar.headPS( ps ) ;
+			bodyStellar.emitPS( ps ) ;
+			bodyStellar.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {

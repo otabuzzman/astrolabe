@@ -1,22 +1,21 @@
 
 package astrolabe;
 
+import java.util.List;
+import java.util.prefs.Preferences;
+
 import org.exolab.castor.xml.ValidationException;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
+public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEmitter {
 
 	private Projector projector ;
 
-	private final static double DEFAULT_LINECRACK = .36 ;
-	private final static double DEFAULT_LINEWIDTH = .36 ;
-	private final static double DEFAULT_LINEDASH = 0 ;
-
-	private double linecrack ;
-	private double linewidth ;
-	private double linedash ;
+	private final static String DEFAULT_IMPORTANCE = ".36:1:1.8" ;
 
 	private java.util.Vector<double[]> outline ;
 
@@ -34,13 +33,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 
 		this.projector = projector ;
 
-		linecrack = ApplicationHelper.getClassNode( this,
-				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINECRACK, DEFAULT_LINECRACK ) ;
-		linewidth = ApplicationHelper.getClassNode( this,
-				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
-		linedash = ApplicationHelper.getClassNode( this,
-				getName(), getType() ).getDouble( ApplicationConstant.PK_BODY_LINEDASH, DEFAULT_LINEDASH ) ;
-
 		outline = AstrolabeFactory.valueOf( getPosition() ) ;
 		if ( outline.size()>2 ) {
 			polygon = new PolygonSpherical( outline ) ;
@@ -56,69 +48,133 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements Body {
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		ps.operator.setlinewidth( linewidth ) ;
-		ps.operator.setdash( linedash ) ;
+		Preferences node ;
+		String importance ;
+
+		node = ApplicationHelper.getClassNode( this, getName(), getType() ) ;
+
+		importance = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
+
+		ApplicationHelper.emitPSImportance( ps, importance ) ;
 	}
 
 	public void emitPS( PostscriptStream ps ) {
+		emitPS( ps, true ) ;
+	}
+
+	public void emitPS( PostscriptStream ps, boolean cut ) {
+		ListCutter cutter ;
+		Geometry fov ;
+		astrolabe.model.BodyAreal peer ;
+		BodyAreal body ;
+		astrolabe.model.Position position ;
+		double phi, the ;
 		double[] lo, xy = null ;
-		java.util.Vector<double[]> outline ;
-		PolygonPlane polygon ;
 		Vector z, p ;
 		double a ;
 
-		outline = new java.util.Vector<double[]>() ;
+		if ( cut ) {
+			fov = ApplicationHelper.getFovEffective() ;
+			if ( fov == null ) {
+				fov = ApplicationHelper.getFovGlobal() ;
+			}
+			cutter = new ListCutter( list(), fov ) ;
+			for ( List<double[]> segment : cutter.segmentsInterior() ) {
+				peer = new astrolabe.model.BodyAreal() ;
 
-		ps.operator.mark() ;
+				for ( double[] coordinate : segment ) {
+					lo = projector.unproject( coordinate ) ;
+					lo[0] = ApplicationHelper.mapTo0To360Range( lo[0] ) ;
 
-		for ( int n=this.outline.size() ; n>0 ; n-- ) {
-			lo = this.outline.get( n-1 ) ;
+					phi = CAACoordinateTransformation.RadiansToDegrees( lo[0] ) ;
+					the = CAACoordinateTransformation.RadiansToDegrees( lo[1] ) ;
 
-			xy = projector.project( lo[1], lo[2] ) ;
-			ps.push( xy[0] ) ;
-			ps.push( xy[1] ) ;
+					try {
+						position = new astrolabe.model.Position() ;
+						AstrolabeFactory.modelOf( new double[] { 1, phi, the }, position ) ;
 
-			outline.add( xy ) ;
-		}
-		try {
-			ps.custom( ApplicationConstant.PS_PROLOG_LISTREDUCE ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+						peer.addPosition( position ) ;
+					} catch ( ParameterNotValidException e ) {
+						throw new RuntimeException( e.toString() ) ;
+					}
+				}
 
-			if ( outline.size()>2 ) {
-				polygon = new PolygonPlane( outline ) ;
-				ps.push( polygon.sign()*( linewidth+linecrack )/2 ) ;
-				ps.push( true ) ; // parallel edges
-				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
+				if ( getName() != null ) {
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				}
+
+				peer.setType( getType() ) ;
+
+				peer.setAnnotation( getAnnotation() ) ;
+
+				try {
+					body = new BodyAreal( peer, projector ) ;
+
+					ps.operator.gsave();
+
+					body.headPS( ps ) ;
+					body.emitPS( ps, false ) ;
+					body.tailPS( ps ) ;
+
+					ps.operator.grestore();
+				} catch ( ParameterNotValidException e ) {}
+			}
+		} else {
+			ps.operator.mark() ;
+
+			for ( int n=outline.size() ; n>0 ; n-- ) {
+				lo = outline.get( n-1 ) ;
+
+				xy = projector.project( lo[1], lo[2] ) ;
+				ps.push( xy[0] ) ;
+				ps.push( xy[1] ) ;
+			}
+			try {
+				ps.custom( ApplicationConstant.PS_PROLOG_LISTREDUCE ) ;
+				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+
+				// halo stroke
+				ps.operator.currentlinewidth() ;
+				ps.operator.dup();
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.operator.mul( 2 ) ;
+				ps.operator.add() ;
+				ps.operator.gsave() ;
+				ps.operator.setlinewidth() ;
+				ps.operator.setlinecap( 2 ) ;
+				ps.operator.setgray( 1 ) ;
+				ps.operator.stroke() ;
+				ps.operator.grestore() ;
+
+				ps.operator.gsave() ;
+				ps.operator.stroke() ;
+				ps.operator.grestore() ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;			
 			}
 
-			ps.operator.gsave() ;
-			ps.operator.setlinecap( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
-			ps.operator.grestore() ;
+			lo = outline.get( outline.size()-1 ) ;
+			xy = projector.project( lo[1], lo[2] ) ;
+			p = new Vector( xy[0], xy[1] ) ;
+			xy = projector.project( 0, Math.rad90 ) ;
+			z = new Vector( xy[0], xy[1] ) ; // zenit
 
-			ps.operator.gsave() ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;			
-		}
+			z.sub( p ) ;
 
-		p = new Vector( xy[0], xy[1] ) ;
-		xy = projector.project( 0, Math.rad90 ) ;
-		z = new Vector( xy[0], xy[1] ) ; // zenit
+			a = java.lang.Math.atan2( z.y, z.x )-Math.rad90 ;
+			a = CAACoordinateTransformation.RadiansToDegrees( a ) ;
 
-		z.sub( p ) ;
+			ps.operator.rotate( a ) ;
 
-		a = java.lang.Math.atan2( z.y, z.x )-Math.rad90 ;
-		a = CAACoordinateTransformation.RadiansToDegrees( a ) ;
-
-		ps.operator.rotate( a ) ;
-
-		if ( getAnnotation() != null ) {
-			try {
-				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
+			if ( getAnnotation() != null ) {
+				try {
+					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 			}
 		}
 	}

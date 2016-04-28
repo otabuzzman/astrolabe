@@ -1,10 +1,12 @@
 
 package astrolabe;
 
+import java.util.prefs.Preferences;
+
 import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
-public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements Annotation {
+public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements PostscriptEmitter {
 
 	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
 	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
@@ -29,6 +31,8 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private double distance ;
 
 	public AnnotationCurved( Object peer ) throws ParameterNotValidException {
+		Preferences node ;
+
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;
@@ -36,22 +40,19 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		subscriptshrink = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
-		margin = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = ApplicationHelper.getClassNode( this,
-				getName(), null ).getDouble( ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+		subscriptshrink = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		size = ApplicationHelper.getClassNode( this,
-				getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ).getDouble( getPurpose(), DEFAULT_PURPOSE ) ;
+		margin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+
+		size = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ),
+				getPurpose(), DEFAULT_PURPOSE ) ;
 
 		distance = getDistance() ;
 	}

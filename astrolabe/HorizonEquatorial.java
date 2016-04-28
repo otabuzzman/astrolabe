@@ -4,13 +4,11 @@ package astrolabe;
 import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
-public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial implements Horizon {
+public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial implements PostscriptEmitter, Projector {
 
-	private final static double DEFAULT_PRACTICALITY = 0 ;
+	private final static String DEFAULT_PRACTICALITY = "0" ;
 
 	private Projector projector ;
-
-	private double grayscale ;
 
 	@SuppressWarnings("unused")
 	private double la ;
@@ -27,8 +25,6 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 
 		this.projector = projector ;
 
-		grayscale = ApplicationHelper.getClassNode( this,
-				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
 		la = Math.rad90 ;
 		ST = 0 ;
 	}
@@ -42,7 +38,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	}
 
 	public double[] unproject( double[] xy ) {
-		return project( xy[0], xy[1] ) ;
+		return unproject( xy[0], xy[1] ) ;
 	}
 
 	public double[] unproject( double x, double y ) {
@@ -76,7 +72,16 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		ps.operator.setgray( grayscale ) ; 
+		String practicality ;
+
+		practicality = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ),
+				getPracticality(), DEFAULT_PRACTICALITY ) ;
+
+		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
+	}
+
+	public void emitPS( PostscriptStream ps ) {
 	}
 
 	public void tailPS( PostscriptStream ps ) {

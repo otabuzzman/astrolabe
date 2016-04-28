@@ -7,8 +7,11 @@ public final class ApplicationConstant {
 	}
 
 	// general constants (GC_), patterns (GP_)
-	public final static String GC_APPLICATION	= "astrolabe" ;
-	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;
+	public final static String GC_APPLICATION	= "astrolabe" ;		// application name
+	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;	// native library
+	public final static String GC_NS_FOVG		= "fovg:" ;			// name space, application generated
+	public final static String GC_NS_FOVE		= "fove:" ;			// name space, application generated
+	public final static String GC_NS_CUT		= "cut:" ;			// name space, application generated
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;
@@ -265,6 +268,15 @@ public final class ApplicationConstant {
 	public final static String LK_MS_SECONDS	= "substitute.indicator.ms.seconds" ;
 	public final static String LK_MS_FRACTION	= "substitute.indicator.ms.fraction" ;
 
+	// locale annotation keys (LK_)
+	public final static String LK_TEXT_HMS_HOURS	= "annotation.text.hms.hours" ;
+	public final static String LK_TEXT_HMS_MINUTES	= "annotation.text.hms.minutes" ;
+	public final static String LK_TEXT_HMS_SECONDS	= "annotation.text.hms.seconds" ;
+
+	public final static String LK_TEXT_DMS_DEGREES	= "annotation.text.dms.degrees" ;
+	public final static String LK_TEXT_DMS_MINUTES	= "annotation.text.dms.minutes" ;
+	public final static String LK_TEXT_DMS_SECONDS	= "annotation.text.dms.seconds" ;
+
 	// locale message keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LK_MESSAGE_PARAMETERNOTAVLID = "message.parameternotvalid" ;
 
@@ -337,41 +349,59 @@ public final class ApplicationConstant {
 	public final static String AV_BODY_SIGN = "sign" ;
 
 	// preferences keys (PK_), nodes (PN_)
-	public final static String PK_CHART_UNIT		= "unit" ;
-	public final static String PK_CHART_HALO		= "halo" ;
-	public final static String PK_CHART_HALOMIN		= "halomin" ;
-	public final static String PK_CHART_HALOMAX		= "halomax" ;
-	public final static String PN_CHART_PAGESIZE	= "pagesize" ;
+	public final static String PN_GENERAL_PRACTICALITY	= "practicality" ;
+	public final static String PN_GENERAL_IMPORTANCE	= "importance" ;
 
-	public final static String PN_HORIZON_PRACTICALITY = "practicality" ;
+	public final static String PK_GENERAL_PRACTICALITY	= PN_GENERAL_PRACTICALITY ;
+	public final static String PK_GENERAL_IMPORTANCE	= PN_GENERAL_IMPORTANCE ;
+	public final static String PK_GENERAL_RISE			= "rise" ;
+	public final static String PK_GENERAL_SPACE			= "space" ;
+	public final static String PK_GENERAL_INTERVAL		= "interval" ;
+	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
 
-	public final static String PK_CIRCLE_SEGMENT	= "segment" ;
-	public final static String PN_CIRCLE_IMPORTANCE	= "importance" ;
+	public final static String PK_CHART_UNIT			= "unit" ;
+	public final static String PK_CHART_HALO			= "halo" ;
+	public final static String PK_CHART_HALOMIN			= "halomin" ;
+	public final static String PK_CHART_HALOMAX			= "halomax" ;
+	public final static String PK_CHART_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
+	public final static String PK_CHART_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
+	public final static String PN_CHART_PAGESIZE		= "pagesize" ;
+
+	public final static String PK_ATLAS_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
+	public final static String PK_ATLAS_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
+	public final static String PK_ATLAS_URLMODELMAP		= "urlModelMap" ;
+	public final static String PK_ATLAS_OVERLAP			= "overlap" ;
+	public final static String PK_ATLAS_LIMITDE			= "limitDe" ;
+	public final static String PK_ATLAS_INTERVALUNITSH	= "intervalUnitsH" ;
+	public final static String PK_ATLAS_INTERVALUNITSD	= "intervalUnitsD" ;
+
+	public final static String PN_HORIZON_PRACTICALITY = PN_GENERAL_PRACTICALITY ;
+
+	public final static String PK_CIRCLE_INTERVAL	= PK_GENERAL_INTERVAL ;
+	public final static String PN_CIRCLE_IMPORTANCE	= PN_GENERAL_IMPORTANCE ;
 
 	public final static String PN_DIAL_ANNOTATION	= "annotation" ;
-	public final static String PK_DIAL_RISE			= "rise" ;
+	public final static String PK_DIAL_RISE			= PK_GENERAL_RISE ;
 	public final static String PN_DIAL_BASELINE		= "baseline" ;
-	public final static String PK_DIAL_SPACE		= "space" ;
+	public final static String PK_DIAL_SPACE		= PK_GENERAL_SPACE ;
 	public final static String PK_DIAL_THICKNESS	= "thickness" ;
-	public final static String PK_DIAL_LINEWIDTH	= "linewidth" ;
+	public final static String PK_DIAL_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
 
-	public final static String PK_GRADUATION_SPACE		= "space" ;
+	public final static String PK_GRADUATION_SPACE		= PK_GENERAL_SPACE ;
 	public final static String PK_GRADUATION_LINELENGTH	= "linelength" ;
-	public final static String PK_GRADUATION_LINEWIDTH	= "linewidth" ;
+	public final static String PK_GRADUATION_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
 
 	public final static String PK_ANNOTATION_SUBSCRIPTSHIFT		= "subscriptshift" ;
 	public final static String PK_ANNOTATION_SUPERSCRIPTSHIFT	= "superscriptshift" ;
 	public final static String PK_ANNOTATION_SUBSCRIPTSHRINK	= "subscriptshrink" ;
 	public final static String PK_ANNOTATION_SUPERSCRIPTSHRINK	= "superscriptshrink" ;
 	public final static String PK_ANNOTATION_MARGIN				= "margin" ;
-	public final static String PK_ANNOTATION_RISE				= "rise" ;
+	public final static String PK_ANNOTATION_RISE				= PK_GENERAL_RISE ;
 	public final static String PN_ANNOTATION_PURPOSE			= "purpose" ;
 
-	public final static String PK_BODY_SEGMENT		= "segment" ;
+	public final static String PK_BODY_INTERVAL		= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH		= "stretch" ;
-	public final static String PK_BODY_LINECRACK	= "linecrack" ;
-	public final static String PK_BODY_LINEWIDTH	= "linewidth" ;
-	public final static String PK_BODY_LINEDASH		= "linedash" ;
+	public final static String PK_BODY_IMPORTANCE	= PK_GENERAL_IMPORTANCE ;
 
 	public final static String PK_POSTSCRIPT_PRECISION	= "precision" ;
 	public final static String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
@@ -383,13 +413,10 @@ public final class ApplicationConstant {
 	public final static String PK_PRINTSTREAM_VIEWER	= "viewer" ;
 
 	// postscript prolog definitions
-	public final static String PS_PROLOG_HALO			= "HALO" ;
-	public final static String PS_PROLOG_HALOMIN		= "HALOMIN" ;
-	public final static String PS_PROLOG_HALOMAX		= "HALOMAX" ;
 	public final static String PS_PROLOG_LIM0			= "LIM0" ;
 	public final static String PS_PROLOG_ACOS			= "acos" ;
 	public final static String PS_PROLOG_ASIN			= "asin" ;
-	public final static String PS_PROLOG_HALOSTROKE		= "halostroke" ;
+	public final static String PS_PROLOG_HALO			= "halo" ;
 	public final static String PS_PROLOG_LINE			= "line" ;
 	public final static String PS_PROLOG_LISTREDUCE		= "listreduce" ;
 	public final static String PS_PROLOG_MATROT90CC		= "matrot90cc" ;

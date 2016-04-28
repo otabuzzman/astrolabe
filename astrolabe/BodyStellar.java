@@ -1,12 +1,14 @@
 
 package astrolabe;
 
+import java.util.prefs.Preferences;
+
 import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
+public class BodyStellar extends astrolabe.model.BodyStellar implements PostscriptEmitter {
 
 	@SuppressWarnings("unused")
 	private Projector projector ;
@@ -23,6 +25,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 	private double y ;
 
 	public BodyStellar( Object peer, Projector projector ) throws ParameterNotValidException {
+		Preferences node ;
 		double[] lo, eq, xy ;
 		String key ;
 
@@ -33,9 +36,11 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Body {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+
 		this.projector = projector ;
 
-		size = ApplicationHelper.getClassNode( this, getName(), null ).getDouble( getType(), 0 ) ;
+		size = ApplicationHelper.getPreferencesKV( node, getType(), 0. ) ;
 		if ( ! ( size>0 ) ) {
 			size = DEFAULT_SIZE ;
 			setGlyph( DEFAULT_STAR ) ;

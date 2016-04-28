@@ -2,36 +2,31 @@ APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
 JDK14     = /cygdrive/c/j2sdk1.4.2
-JDK15     = /cygdrive/c/programme/java/jre1.5.0_11
+JDK15     = /cygdrive/c/programme/java/jre1.5.0_17
 
 .PHONY: all clean tidy
-.SUFFIXES: .pdf .ps .xml
+.SUFFIXES: .pdf .ps .xml .class .map
 
 empty =
 space = $(empty) $(empty)
 
-CLASSPATH = ./castor-0.9.6/castor-0.9.6.jar \
-	./castor-0.9.6/castor-0.9.6-xml.jar \
-	./castor-0.9.6/jdbc-se2.0.jar \
-	./castor-0.9.6/jta1.0.1.jar \
-	./commons-logging-1.0.5/commons-logging.jar \
-	./commons-logging-1.0.5/commons-logging-api.jar \
-	./commons-logging-1.0.5/commons-logging-optional.jar \
-	./xerces-2_5_0/xercesImpl.jar \
-	./xerces-2_5_0/xmlParserAPIs.jar \
-	./xerces-2_5_0/xml-apis.jar \
+vpath %.class $(APPL)/model
+
+CLASSPATH = ./lib/castor-0.9.6.jar \
+	./lib/commons-logging-api.jar \
+	./lib/commons-cli-1.0.jar \
+	./lib/jakarta-oro-2.0.8.jar \
+	./lib/xercesImpl.jar \
 	./jts-1.8.0/lib/jts-1.8.jar \
-	./jts-1.8.0/lib/jtsio-1.8.jar \
-	./jakarta-oro-2.0.8/jakarta-oro-2.0.8.jar \
-	./commons-cli-1.0/commons-cli-1.0.jar
+	./jts-1.8.0/lib/jtsio-1.8.jar
 
 .xml.ps:
-	@( pagesize=`grep pagesize= $< |\
+	@( pagesize=`grep Chart.*pagesize= $< |\
 		sed -e 's,.*pagesize=",,' -e 's,".*,,'` ; set $$pagesize ;\
 		if test $$# -gt 1 ; then \
 			echo "pagesizes in $< are $$*" ; else \
 			echo "pagesize in $< is $$1" ; fi )
-	@time ( PATH=/cygdrive/c/programme/gs/gs7.04/bin:caa-1.17:$$PATH \
+	@time ( PATH=/cygdrive/c/programme/gs/gs8.54/bin:caa-1.17:$$PATH \
 		$(JDK15)/bin/java \
 			-classpath $(subst $(space),\;, \
 			./astrolabe \
@@ -42,16 +37,22 @@ CLASSPATH = ./castor-0.9.6/castor-0.9.6.jar \
 
 .ps.pdf:
 	@echo "pagesize=$${pagesize:-a4}"
-	@time ( PATH=/cygdrive/c/programme/gs/gs7.04/bin:$$PATH \
-		gs -q -dBATCH -dNOPAUSE -sPAPERSIZE=$${pagesize:-a4} -sDEVICE=pdfwrite -sOutputFile=$@ $< )
+	@time ( PATH=/cygdrive/c/programme/gs/gs8.54/bin:$$PATH \
+		gswin32c -q -dBATCH -dNOPAUSE -sPAPERSIZE=$${pagesize:-a4} -sDEVICE=pdfwrite -sOutputFile=$@ $< )
+
+.class.map:
+	@$(JDK15)/bin/java \
+		-classpath $(subst $(space),\;, \
+		$(CLASSPATH)) \
+		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<)) -o $@
 
 all: $(APPL)/model
 
 $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
-	@$(JDK14)/bin/java \
+	@$(JDK15)/bin/java \
 		-classpath $(subst $(space),\;, \
-		./castor-0.9.6/castor-0.9.6-srcgen-ant-task.jar \
+		./castor-0.9.6-srcgen-ant-task.jar \
 		$(CLASSPATH)) \
 		org.exolab.castor.builder.SourceGenerator -i $<
 	@touch $@
@@ -59,12 +60,12 @@ $(APPL)/model: $(MODEL)
 
 clean:
 	rm -rf $(APPL)/model
-	rm -rf *.class *.ps
+	rm -rf *.class
 
 tidy: clean
-	rm -rf *.pdf
-
-
+	rm -rf *.ps *.pdf
+		
+		
 
 astrolabe.pdf: astrolabe.xml
 
@@ -74,6 +75,10 @@ catalogADC5050.pdf: catalogADC5050.xml
 catalogADC6049.pdf: catalogADC6049.xml
 catalogADC7118.pdf: catalogADC7118.xml
 
-chartaecaeli-pick.pdf: chartaecaeli-pick.xml
-chartaecaeli-full.pdf: chartaecaeli-full.xml
-chartaecaeli-grid.pdf: chartaecaeli-grid.xml
+wallpaper.pdf: wallpaper.xml
+
+intersection.pdf: intersection.xml
+
+.SECONDARY: atlas-stereographic.ps
+atlas-stereographic.pdf: atlas-stereographic.xml
+

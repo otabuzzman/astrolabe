@@ -27,12 +27,21 @@
 		<xs:sequence>
 			<xs:element ref="Origin"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
+			<xs:element ref="Atlas" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="pagesize" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="a[0-6]|[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
+					<xs:pattern value="a[0-5]|[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="viewport" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:maxInclusive value="100"/>
+					<xs:minExclusive value="0"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -63,6 +72,7 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Origin" type="SphericalType"/>
+	<xs:element name="Extent" type="SphericalType"/>
 	<xs:element name="ChartStereographic">
 		<xs:complexType>
 			<xs:complexContent>
@@ -70,10 +80,110 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ChartOrthographic" type="ChartType"/>
-	<xs:element name="ChartEquidistant" type="ChartType"/>
-	<xs:element name="ChartGnomonic" type="ChartType"/>
-	<xs:element name="ChartEqualarea" type="ChartType"/>
+	<xs:element name="ChartOrthographic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ChartType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChartEquidistant">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ChartType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChartGnomonic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ChartType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChartEqualarea">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ChartType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="AtlasType">
+		<xs:sequence>
+			<xs:element ref="Origin"/>
+			<xs:element ref="Extent"/>
+			<xs:choice>
+				<xs:element name="SpanDe" type="AngleType"/>
+				<xs:element name="SpanRA" type="AngleType"/>
+			</xs:choice>
+			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="pagesizex" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="pagesizey" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="checker" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([1-9]|([1-9][0-9]+))x([1-9]|([1-9][0-9]+))"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="marshal" type="xs:anyURI" use="optional"/>
+	</xs:complexType>
+	<xs:element name="Atlas" type="AtlasType"/>
+	<xs:complexType name="AtlasPageType">
+		<xs:sequence>
+			<xs:element name="P0" type="SphericalType"/>
+			<xs:element name="P1" type="SphericalType"/>
+			<xs:element name="P2" type="SphericalType"/>
+			<xs:element name="P3" type="SphericalType"/>
+			<xs:element ref="Origin"/>
+			<xs:element name="Top" type="SphericalType"/>
+			<xs:element name="Bottom" type="SphericalType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="scale" type="xs:double" use="optional"/>
+		<xs:attribute name="p0x" type="xs:double" use="optional"/>
+		<xs:attribute name="p0y" type="xs:double" use="optional"/>
+		<xs:attribute name="p1x" type="xs:double" use="optional"/>
+		<xs:attribute name="p1y" type="xs:double" use="optional"/>
+		<xs:attribute name="p2x" type="xs:double" use="optional"/>
+		<xs:attribute name="p2y" type="xs:double" use="optional"/>
+		<xs:attribute name="p3x" type="xs:double" use="optional"/>
+		<xs:attribute name="p3y" type="xs:double" use="optional"/>
+		<xs:attribute name="originx" type="xs:double" use="optional"/>
+		<xs:attribute name="originy" type="xs:double" use="optional"/>
+		<xs:attribute name="topx" type="xs:double" use="optional"/>
+		<xs:attribute name="topy" type="xs:double" use="optional"/>
+		<xs:attribute name="bottomx" type="xs:double" use="optional"/>
+		<xs:attribute name="bottomy" type="xs:double" use="optional"/>
+	</xs:complexType>
+	<xs:element name="AtlasPage">
+		<xs:annotation>
+			<xs:documentation>Automatisch generiert falls Atlas-Element in ChartType vorhanden ist</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AtlasPageType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="HorizonType">
 		<xs:sequence>
 			<xs:element ref="Latitude"/>
@@ -129,9 +239,7 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="fov" use="optional">
 			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+(,[^,]+)*"/>
-				</xs:restriction>
+				<xs:restriction base="xs:string"/>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="importance" use="required">
@@ -305,7 +413,7 @@
 		<xs:attribute name="purpose" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="bodylettering[07]|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure"/>
+					<xs:pattern value="bodylettering[07]|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -361,10 +469,23 @@
 	<xs:element name="Text" type="TextType"/>
 	<xs:element name="Subscript" type="TextType"/>
 	<xs:element name="Superscript" type="TextType"/>
+	<xs:element name="Body">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="BodyStellar"/>
+				<xs:element ref="BodyAreal"/>
+				<xs:element ref="BodyPlanet"/>
+				<xs:element ref="BodyMoon"/>
+				<xs:element ref="BodySun"/>
+				<xs:element ref="BodyElliptical"/>
+				<xs:element ref="BodyParabolical"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
-			<xs:element ref="Position"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Position"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="type" use="required">
@@ -398,19 +519,6 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Body">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="BodyStellar"/>
-				<xs:element ref="BodyAreal"/>
-				<xs:element ref="BodyPlanet"/>
-				<xs:element ref="BodyMoon"/>
-				<xs:element ref="BodySun"/>
-				<xs:element ref="BodyElliptical"/>
-				<xs:element ref="BodyParabolic"/>
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="BodyStellar" type="BodyStellarType"/>
 	<xs:element name="Position">
 		<xs:complexType>
@@ -421,8 +529,8 @@
 	</xs:element>
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
-			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="type" use="required">
@@ -433,17 +541,21 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="BodyAreal" type="BodyArealType"/>
+	<xs:element name="BodyAreal">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BodyArealType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="BodyOrbitalType">
 		<xs:sequence>
-			<xs:element ref="DialDay" minOccurs="0"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Epoch" minOccurs="0"/>
+			<xs:element ref="DialDay" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="name" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string"/>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="stretch" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 	<xs:element name="BodyPlanet">
 		<xs:complexType>
@@ -460,13 +572,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="BodyMoon">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="BodyOrbitalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="BodyMoon" type="BodyOrbitalType"/>
 	<xs:element name="BodySun">
 		<xs:complexType>
 			<xs:complexContent>
@@ -504,7 +610,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="BodyParabolic">
+	<xs:element name="BodyParabolical">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="BodyOrbitalType">
@@ -526,9 +632,7 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="fov" use="optional">
 			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+(,[^,]+)*"/>
-				</xs:restriction>
+				<xs:restriction base="xs:string"/>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="url" type="xs:anyURI" use="required"/>

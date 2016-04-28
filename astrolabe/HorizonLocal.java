@@ -7,13 +7,11 @@ import caa.CAACoordinateTransformation ;
 import caa.CAADate;
 
 @SuppressWarnings("serial")
-public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizon {
+public class HorizonLocal extends astrolabe.model.HorizonLocal implements PostscriptEmitter, Projector {
 
-	private final static double DEFAULT_PRACTICALITY = 0 ;
+	private final static String DEFAULT_PRACTICALITY = "0" ;
 
 	private Projector projector ;
-
-	private double grayscale ;
 
 	private double la ;
 	private double ST ;
@@ -30,9 +28,6 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizo
 		}
 
 		this.projector = projector ;
-
-		grayscale = ApplicationHelper.getClassNode( this,
-				getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ).getDouble( getPracticality(), DEFAULT_PRACTICALITY ) ;
 
 		la = AstrolabeFactory.valueOf( getLatitude() ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
@@ -83,7 +78,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizo
 	}
 
 	public double[] unproject( double[] xy ) {
-		return project( xy[0], xy[1] ) ;
+		return unproject( xy[0], xy[1] ) ;
 	}
 
 	public double[] unproject( double x, double y ) {
@@ -118,7 +113,16 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Horizo
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		ps.operator.setgray( grayscale ) ; 
+		String practicality ;
+
+		practicality = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ),
+				getPracticality(), DEFAULT_PRACTICALITY ) ;
+
+		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
+	}
+
+	public void emitPS( PostscriptStream ps ) {
 	}
 
 	public void tailPS( PostscriptStream ps ) {

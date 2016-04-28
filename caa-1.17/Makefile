@@ -3,7 +3,7 @@ VER   = 1.17
 
 APPL  = $(PKG)-$(VER)
 
-JDK   = /cygdrive/c/programme/java/jdk1.5.0_01
+JDK   = /cygdrive/c/programme/java/jdk1.5.0_17
 
 DLL   = cyg$(APPL).dll
 JAR   = $(APPL).jar

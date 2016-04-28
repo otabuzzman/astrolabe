@@ -1,9 +1,14 @@
 
 package astrolabe;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
@@ -11,6 +16,14 @@ import java.util.prefs.Preferences;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -74,9 +87,9 @@ public final class ApplicationHelper {
 		String ind ;
 
 		if ( h ) {
-			v = CAACoordinateTransformation.RadiansToHours( value ) ;
+			v = CAACoordinateTransformation.RadiansToHours( value<0?value-.000000001:value+.000000001 ) ;
 		} else {
-			v = CAACoordinateTransformation.RadiansToDegrees( value ) ;
+			v = CAACoordinateTransformation.RadiansToDegrees( value<0?value-.000000001:value+.000000001 ) ;
 		}
 
 		p = java.lang.Math.pow( 10, precision ) ;
@@ -127,6 +140,40 @@ public final class ApplicationHelper {
 		t = mapTo0To24Range( value ) ;
 
 		registerHMS( key, t, precision ) ;
+	}
+
+	public static double[] discreteDMS( double dms ) {
+		double[] r = new double[3] ;
+		double d, ms, m, s ;
+
+		d = CAACoordinateTransformation.RadiansToDegrees( dms<0?dms-.000000001:dms+.000000001 ) ;
+		ms = d-(int) d ;
+		m = (int) ( 60*ms ) ;
+		s = 60*( 60*ms-m ) ;
+
+		r[0] = java.lang.Math.abs( d ) ;
+		r[1] = java.lang.Math.abs( m ) ;
+		r[2] = java.lang.Math.abs( s ) ;
+		r[3] = dms<0?-1:1 ;
+
+		return r ;
+	}
+
+	public static double[] discreteHMS( double hms ) {
+		double[] r = new double[4] ;
+		double h, ms, m, s ;
+
+		h = CAACoordinateTransformation.RadiansToHours( hms<0?hms-.000000001:hms+.000000001 ) ;
+		ms = h-(int) h ;
+		m = (int) ( 60*ms ) ;
+		s = 60*( 60*ms-m ) ;
+
+		r[0] = java.lang.Math.abs( h ) ;
+		r[1] = java.lang.Math.abs( m ) ;
+		r[2] = java.lang.Math.abs( s ) ;
+		r[3] = hms<0?-1:1 ;
+
+		return r ;
 	}
 
 	public static double jdOfNow() {
@@ -196,7 +243,7 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static java.util.Vector<double[]> reverseVector( java.util.Vector<double[]> vector ) {
+	public static java.util.Vector<double[]> createReverseVector( java.util.Vector<double[]> vector ) {
 		java.util.Vector<double[]> r ;
 
 		r = new java.util.Vector<double[]>() ;
@@ -471,73 +518,150 @@ public final class ApplicationHelper {
 		return r ;
 	}
 
-	public static Preferences getClassNode( Object clazz, String instance, String qualifier ) {        
-		String i = instance != null ? "/"+instance : "" ;
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String d = "/"+clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
-		String n = d+i+q ;
-		Preferences r = null ;
+	public static boolean getPreferencesKV( Preferences node, String key, boolean def ) {
+		boolean r = def ;
+		HashSet<String> keys ;
 
-		try {
-			if ( ! Preferences.systemRoot().nodeExists( n ) ) {
-				n = d+q ;
-			}
-
-			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IllegalArgumentException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		return r ;
-	} 
-
-	public static Preferences getNestedClassNode( Object clazz, String instance, String qualifier ) {        
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String c[] = clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 ) ;
-		String s = c[1].replaceAll( "[$]", "/" ) ;
-		String n = "/"+c[0]+( instance != null? "/"+instance+"/" : "/" )+s+q ;
-		Preferences r = null ;
-
-		try {
-			if ( ! Preferences.systemRoot().nodeExists( n ) ) {
-				n = "/"+c[0]+"/"+s+q ;
-			}
-
-			r = Preferences.systemRoot().node( n ) ;
-		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IllegalArgumentException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		return r ;
-	} 
-
-	public static Preferences getPackageNode( Object clazz, String instance, String qualifier ) {        
-		java.lang.Package p = clazz.getClass().getPackage() ;
-		String i = instance != null ? "/"+instance : "" ;
-		String q = qualifier != null ? "/"+qualifier : "" ;
-		String d, n ;
-		Preferences r = null ;
-
-		try {
-			if ( p != null ) {
-				d = "/"+p.getName().replaceAll( "\\.", "/" ) ;
-				n = d+i+q ;
-				if ( ! Preferences.systemRoot().nodeExists( n ) ) {
-					n = d+q ;
+		if ( node == null ) {
+			r = def ;
+		} else {
+			try {
+				keys = new HashSet<String>() ;
+				for ( String k : node.keys() ) {
+					keys.add( k ) ;
 				}
+			} catch ( BackingStoreException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+			if ( keys.contains( key ) ) {
+				r = node.getBoolean( key, def ) ;
 			} else {
-				d = "/"+"default" ;
-				n = d+i+q ;
-				if ( ! Preferences.systemRoot().nodeExists( n ) ) {
-					n = d+q ;
+				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
+			}
+		}
+
+		return r ;
+	}
+
+	public static int getPreferencesKV( Preferences node, String key, int def ) {
+		int r = def ;
+		HashSet<String> keys ;
+
+		if ( node == null ) {
+			r = def ;
+		} else {
+			try {
+				keys = new HashSet<String>() ;
+				for ( String k : node.keys() ) {
+					keys.add( k ) ;
+				}
+			} catch ( BackingStoreException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+			if ( keys.contains( key ) ) {
+				r = node.getInt( key, def ) ;
+			} else {
+				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
+			}
+		}
+
+		return r ;
+	}
+
+	public static double getPreferencesKV( Preferences node, String key, double def ) {
+		double r ;
+		HashSet<String> keys ;
+
+		if ( node == null ) {
+			r = def ;
+		} else {
+			try {
+				keys = new HashSet<String>() ;
+				for ( String k : node.keys() ) {
+					keys.add( k ) ;
+				}
+			} catch ( BackingStoreException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+			if ( keys.contains( key ) ) {
+				r = node.getDouble( key, def ) ;
+			} else {
+				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
+			}
+		}
+
+		return r ;
+	}
+
+	public static String getPreferencesKV( Preferences node, String key, String def ) {
+		String r ;
+		HashSet<String> keys ;
+		Hashtable<String, String> registry ;
+
+		if ( node == null ) {
+			r = def ;
+		} else {
+			try {
+				keys = new HashSet<String>() ;
+				for ( String k : node.keys() ) {
+					keys.add( k ) ;
+				}
+			} catch ( BackingStoreException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+			if ( keys.contains( key ) ) {
+				registry = new Hashtable<String, String>() ;
+				registry.put( "node", node.name() ) ;
+
+				r = AnnotationStraight.substitute( node.get( key, def ), registry ) ;
+			} else {
+				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
+			}
+		}
+
+		return r ;
+	}
+
+	public static Preferences getClassNode( Class<?> clazz, String instance, String qualifier ) {
+		String name ;
+
+		name = "/"+clazz.getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
+
+		return getClassNode( name, instance, qualifier) ;
+	}
+
+	public static Preferences getClassNode( Object clazz, String instance, String qualifier ) {
+		String name ;
+
+		name = "/"+clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
+
+		return getClassNode( name, instance, qualifier) ;
+	} 
+
+	public static Preferences getClassNode( String clazz, String instance, String qualifier ) {
+		Preferences r ;
+		String i, q, n ;
+		String pi ; // parent instance
+		int pd ;	// parent delimiter
+
+		i = instance != null ? "/"+instance : "" ;
+		q = qualifier != null ? "/"+qualifier : "" ;
+
+		n = clazz+i+q ;
+
+		try {
+			if ( Preferences.systemRoot().nodeExists( n ) ) {
+				r = Preferences.systemRoot().node( n ) ;
+			} else {
+				if ( instance == null ) {
+					r = null ;
+				} else {
+					pd = instance.lastIndexOf( "/" ) ;
+					pi = pd<0?null:instance.substring( 0, pd ) ;
+
+					r = ApplicationHelper.getClassNode( clazz, pi , qualifier ) ;
 				}
 			}
-
-			r = Preferences.systemRoot().node( n ) ;
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( IllegalArgumentException e ) {
@@ -567,7 +691,7 @@ public final class ApplicationHelper {
 	public static void setupCompanionFromPeer( Object companion, Object peer ) {
 		Method method[] , gm, sm ;
 		String gn, sn ;
-		Class[] pt ;
+		Class<?>[] pt ;
 
 		method = peer.getClass().getMethods() ;
 		for ( int m=0 ; m<method.length ; m++ ) {
@@ -591,9 +715,62 @@ public final class ApplicationHelper {
 		}
 	}
 
+	public static void setupPeerFromClassNode( Object peer, Preferences node ) {
+		String keyDis[], keyVal ;
+		Constructor<?> keyCon ;
+		Method keyMth ;
+		Object keyObj ;
+		Class<?> keyCls ;
+		HashMap<Class<?>, Class<?>> jPring ; // Java primitive types and java.lang.String
+
+		if ( ! node.name().equals( peer.getClass().getSimpleName() ) ) {
+			setupPeerFromClassNode( peer, node.parent() ) ;
+		}
+
+		try {
+			jPring = new HashMap<Class<?>, Class<?>>() ;
+			// primitives
+			jPring.put( Boolean.class,		boolean.class ) ;
+			jPring.put( Byte.class,			byte.class ) ;
+			jPring.put( Character.class,	char.class ) ;
+			jPring.put( Short.class,		short.class ) ;
+			jPring.put( Integer.class,		int.class ) ;
+			jPring.put( Long.class,			long.class ) ;
+			jPring.put( Float.class,		float.class ) ;
+			jPring.put( Double.class,		double.class ) ;
+			jPring.put( Void.class,			void.class ) ;
+			// convenience
+			jPring.put( String.class,		String.class ) ;
+
+			for ( String k : node.keys() ) {
+				keyVal = node.get( k, null ) ;
+				keyDis = k.split( "," ) ;
+
+				keyCls = Class.forName( keyDis[1] ) ;
+				keyCon = keyCls.getConstructor( new Class[] { String.class } ) ;
+				keyObj = keyCon.newInstance( new Object[] { keyVal } ) ;
+
+				keyMth = peer.getClass().getMethod( keyDis[0], new Class[] { jPring.get( keyCls ) } ) ;
+				keyMth.invoke( peer, new Object[] { keyObj } ) ;
+			}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( NoSuchMethodException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( ClassNotFoundException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( InstantiationException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+	}
+
 	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
 		for ( int a=0 ; a<an.length ; a++ ) {
-			Annotation annotation ;
+			PostscriptEmitter annotation ;
 
 			ps.operator.gsave() ;
 
@@ -608,7 +785,7 @@ public final class ApplicationHelper {
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved[] an ) throws ParameterNotValidException {
 		for ( int a=0 ; a<an.length ; a++ ) {
-			Annotation annotation ;
+			PostscriptEmitter annotation ;
 
 			ps.operator.gsave() ;
 
@@ -623,7 +800,7 @@ public final class ApplicationHelper {
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight[] an ) throws ParameterNotValidException {
 		for ( int a=0 ; a<an.length ; a++ ) {
-			Annotation annotation ;
+			PostscriptEmitter annotation ;
 
 			ps.operator.gsave() ;
 
@@ -658,6 +835,229 @@ public final class ApplicationHelper {
 		i = importance.split( ":" ) ;
 
 		ps.operator.setlinewidth( new Double( i[0] ).doubleValue() ) ;
-		ps.operator.setdash( new Double( i[1] ).doubleValue() ) ;
+		if ( i.length>2 ) {
+			ps.array( true ) ;
+			ps.push( new Double( i[1] ).doubleValue() ) ;
+			ps.push( new Double( i[1] ).doubleValue()*new Double( i[2] ).doubleValue() ) ;
+			ps.array( false ) ;
+			ps.push( 0 ) ;
+			ps.operator.setdash() ;
+		} else {
+			ps.operator.setdash( new Double( i[1] ).doubleValue() ) ;
+		}
+	}
+
+	public static Coordinate jtsToCoordinate( double[] xy ) {
+		return new Coordinate( xy[0], xy[1] ) ;
+	}
+
+	public static Coordinate[] jtsToCoordinateArray( List<double[]> list ) {
+		Coordinate[] r ;
+
+		r = new Coordinate[list.size()] ;
+
+		for ( int c=0 ; c<list.size() ; c++ ) {
+			r[c] = jtsToCoordinate( list.get( c ) ) ;
+		}
+
+		return r ;
+	}
+
+	public static Point jtsToPoint( double[] xy ) {
+		return new GeometryFactory().createPoint( jtsToCoordinate( xy ) ) ;
+	}
+
+	public static LineString jtsToLineString( List<double[]> list ) {
+		return new GeometryFactory().createLineString( jtsToCoordinateArray( list ) ) ;
+	}
+
+	public static LinearRing jtsToLinearRing( List<double[]> list ) {
+		double[] a, o ;
+		Coordinate[] c ;
+		java.util.Vector<double[]> l ;
+
+		a = list.get( 0 ) ;
+		o = list.get( list.size()-1 ) ;
+
+		if ( a[0]==o[0]&&a[1]==o[1] ) {
+			c = jtsToCoordinateArray( list ) ;
+		} else {
+			l = new java.util.Vector<double[]>() ;
+			for ( double[] xy : list ) {
+				l.add( xy ) ;
+			}
+			l.add( list.get( 0 ) ) ;
+			c = jtsToCoordinateArray( l ) ;
+		}
+
+		return new GeometryFactory().createLinearRing( c ) ;
+	}
+
+	public static Polygon jtsToPolygon( java.util.Vector<double[]> list ) {
+		return new GeometryFactory().createPolygon( jtsToLinearRing( list ), null ) ;
+	}
+
+	public static double[] jtsToXY( Coordinate coordinate ) {
+		double[] r = new double[2] ;
+
+		r[0] = coordinate.x ;
+		r[1] = coordinate.y ;
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> jtsToVector( Coordinate[] coordinate ) {
+		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+
+		for ( Coordinate c : coordinate ) {
+			r.add( jtsToXY( c ) ) ;
+		}
+
+		return r ;
+	}
+
+	public static double[] jtsToXY( Point point ) {
+		return jtsToXY( point.getCoordinate() ) ;
+	}
+
+	public static java.util.Vector<double[]> jtsToVector( LineString geometry ) {
+		java.util.Vector<double[]> r ;
+
+		r = jtsToVector( geometry.getCoordinates() ) ;
+		if ( r.size()>0 ) {
+			r.remove( r.size()-1 ) ;
+		}
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> jtsToVector( LinearRing geometry ) {
+		java.util.Vector<double[]> r ;
+
+		r = jtsToVector( geometry.getCoordinates() ) ;
+		if ( r.size()>0 ) {
+			r.remove( r.size()-1 ) ;
+		}
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> jtsToVector( Polygon geometry ) {
+		java.util.Vector<double[]> r ;
+
+		r = jtsToVector( geometry.getCoordinates() ) ;
+		if ( r.size()>0 ) {
+			r.remove( r.size()-1 ) ;
+		}
+
+		return r ;
+	}
+
+	public static java.util.Vector<double[]> jtsToVector( Geometry geometry ) {
+		return jtsToVector( geometry.getCoordinates() ) ;
+	}
+
+	public static void setFovGlobal( Geometry fov ) {
+		Registry.register( ApplicationConstant.GC_NS_FOVG+Thread.currentThread().getId(), fov ) ;
+	}
+
+	public static Geometry getFovGlobal() {
+		Geometry r ;
+
+		try {
+			r = (Geometry) Registry.retrieve( ApplicationConstant.GC_NS_FOVG+Thread.currentThread().getId() ) ;
+		} catch ( ParameterNotValidException e ) {
+			r = null ;
+		}
+
+		return r ;
+	}
+
+	public static void setFovEffective( Geometry fov ) {
+		Registry.register( ApplicationConstant.GC_NS_FOVE+Thread.currentThread().getId(), fov ) ;
+	}
+
+	public static Geometry getFovEffective() {
+		Geometry r ;
+
+		try {
+			r = (Geometry) Registry.retrieve( ApplicationConstant.GC_NS_FOVE+Thread.currentThread().getId() ) ;
+		} catch ( ParameterNotValidException e ) {
+			r = null ;
+		}
+
+		return r ;
+	}
+
+	public static String getFovNSMark( double[] xy ) {
+		Coordinate[] fov ;
+		double minx, miny, maxx, maxy, curx, cury ;
+		int Q ;	// quadrant (1/I, 2/II, ...)
+		int e ; // edge (1/top, 2/right, 3/bottom, 4/left)
+		String ns, nsQ, nse ;
+
+		Q = ( xy[0] > 0 && xy[1] > 0 ) ? 1 :				// QI
+			( xy[0] < 0 && xy[1] > 0 ) ? 2 :				// QII
+				( xy[0] < 0 && xy[1] < 0 ) ? 3 :			// QIII
+					( xy[0] > 0 && xy[1] < 0 ) ? 4 : 0 ;	// QIV
+
+		nsQ = Q==1?"I":Q==2?"II":Q==3?"III":Q==4?"IV":"" ;
+
+		fov = getFovGlobal()
+		.getEnvelope()
+		.getCoordinates() ;
+
+		minx = java.lang.Math.floor( fov[0].x*1000. ) ;
+		miny = java.lang.Math.floor( fov[0].y*1000. ) ;
+		maxx = java.lang.Math.floor( fov[2].x*1000. ) ;
+		maxy = java.lang.Math.floor( fov[2].y*1000. ) ;
+
+		curx = java.lang.Math.floor( xy[0]*1000. ) ;
+		cury = java.lang.Math.floor( xy[1]*1000. ) ;
+
+		e = cury == maxy ? 1 :				// top edge
+			curx == maxx ? 2 :				// right edge
+				cury == miny ? 3 :			// bottom edge
+					curx == minx ? 4 : 0 ;	// left edge
+
+		nse = e==1?"t":e==2?"r":e==3?"b":e==4?"l":"" ;
+
+		ns = nsQ+nse ;
+		if ( ! ns.equals( "" ) ) {
+			ns = ns+":" ;
+		}
+
+		return ns ;
+	}
+
+	public static Polygon extendFov( Polygon fov, java.util.Vector<double[]> list ) {
+		Polygon r ;
+		java.util.Vector<double[]> fl ;
+		Vector flo, cla, clo ;
+
+		// - closed circle replaces fov
+		// - open circle appends fov
+
+		cla = new Vector( list.firstElement() ) ;
+		clo = new Vector( list.lastElement() ) ;
+
+		if ( cla.x==clo.x&&cla.y==clo.y ) {
+			r = jtsToPolygon( list ) ;
+		} else {
+			fl = jtsToVector( fov ) ;
+			if ( fl.size()>0 ) {
+				flo = new Vector( fl.lastElement() ) ;
+				if ( new Vector( flo ).sub( cla ).abs()>new Vector( flo ).sub( clo ).abs() ) {
+					fl.addAll( createReverseVector( list ) ) ;
+				} else {
+					fl.addAll( list ) ;
+				}
+			} else {
+				fl.addAll( list ) ;
+			}
+			r = jtsToPolygon( fl ) ;
+		}
+
+		return r ;
 	}
 }

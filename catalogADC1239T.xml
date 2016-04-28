@@ -7,7 +7,7 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a0" viewport="100" scale="100" hemisphere="northern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -839,7 +839,46 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_17.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_18.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_19.dat.gz-->
-						<CatalogADC1239T fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_00.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6"/>
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_00.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_01.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_02.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_03.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_04.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_05.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_06.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_07.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_08.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_09.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_10.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_11.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_12.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_13.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_14.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_15.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_16.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_17.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_18.dat.gz-->
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_19.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_00.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_01.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_02.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_03.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_04.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_05.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_06.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_07.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_08.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_09.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_11.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_12.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_13.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_14.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_15.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_16.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_17.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_18.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_19.dat.gz-->
+						<CatalogADC1239T fov="chart" url="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/tyc_00.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6"/>
 					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>

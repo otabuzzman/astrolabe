@@ -3,45 +3,176 @@
 <preferences>
 	<root type="system">
 		<map/>
-		<node name="AtlasStereographic">
-			<map>
-				<entry key="pagesize" value="a3"/>
-				<!--decimal hours-->
-				<entry key="startRA" value=".4"/>
-				<entry key="shiftRA" value=".4"/>
-				<!--decimal degrres-->
-				<entry key="startDE" value="0"/>
-				<entry key="shiftDE" value="10"/>
-				<!--percent of pagesize x-->
-				<entry key="overlappingX" value="10"/>
-				<entry key="overlappingY" value="10"/>
-				<entry key="practicality" value="0"/>
-				<entry key="importance" value=".4:0"/>
-			</map>
-			<node name="chartaecaeli-pick-northern">
-				<map>
-					<entry key="practicality" value="0:0:.58"/>
-					<entry key="startDE" value="-25.2"/>
-					<entry key="shiftDE" value="33"/>
-				</map>
-			</node>
-			<node name="chartaecaeli-pick-southern">
-				<map>
-					<entry key="practicality" value=".58:0:0"/>
-					<entry key="startDE" value="25.2"/>
-					<entry key="shiftDE" value="33"/>
-				</map>
-			</node>
-		</node>
 		<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 		<node name="astrolabe">
 			<map/>
+			<node name="model">
+				<map/>
+				<node name="ChartStereographic">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setPagesize,java.lang.String" value="a4"/>
+						<entry key="setViewport,java.lang.Double" value="100"/>
+						<entry key="setScale,java.lang.Double" value="100"/>
+						<entry key="setHemisphere,java.lang.String" value="northern"/>
+					</map>
+					<node name="northern">
+						<map>
+							<entry key="setViewport,java.lang.Double" value="94"/>
+							<entry key="setHemisphere,java.lang.String" value="northern"/>
+						</map>
+					</node>
+					<node name="southern">
+						<map>
+							<entry key="setViewport,java.lang.Double" value="94"/>
+							<entry key="setHemisphere,java.lang.String" value="southern"/>
+						</map>
+					</node>
+				</node>
+				<node name="HorizonEquatorial">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setPracticality,java.lang.String" value="always"/>
+					</map>
+				</node>
+				<node name="CircleParallel">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setImportance,java.lang.String" value="canonical"/>
+					</map>
+				</node>
+				<node name="CircleMeridian">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setImportance,java.lang.String" value="canonical"/>
+					</map>
+				</node>
+				<node name="AnnotationStraight">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setPurpose,java.lang.String" value="circlelettering"/>
+						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
+						<entry key="setReverse,java.lang.Boolean" value="false"/>
+						<entry key="setRadiant,java.lang.Boolean" value="false"/>
+					</map>
+					<!--Q I-IV, inside fov-->
+					<node name="northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="I:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="I:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="II:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="II:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="III:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="III:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="IV:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="IV:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<!--Q II, left-->
+					<node name="IIl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+						</map>
+					</node>
+					<node name="IIl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+						</map>
+					</node>
+					<!--Q III, left-->
+					<node name="IIIl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+						</map>
+					</node>
+					<node name="IIIl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="bottomright"/>
+						</map>
+					</node>
+					<!--Q III, bottom-->
+					<node name="IIIb:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="topleft"/>
+						</map>
+					</node>
+					<node name="IIIb:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="topleft"/>
+						</map>
+					</node>
+					<!--Q IV, bottom-->
+					<node name="IVb:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="topleft"/>
+						</map>
+					</node>
+					<node name="IVb:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="topleft"/>
+						</map>
+					</node>
+				</node>
+				<node name="AnnotationCurved">
+					<map>
+						<!--keys must equal to method names in model class.-->
+						<entry key="setPurpose,java.lang.String" value="circlelettering"/>
+						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
+						<entry key="setReverse,java.lang.Boolean" value="false"/>
+						<entry key="setDistance,java.lang.Double" value="0"/>
+					</map>
+				</node>
+			</node>
 			<node name="PostscriptStream">
 				<map>
-					<entry key="viewer" value="gswin32c.exe -q -dNOPAUSE -dBATCH -sPAPERSIZE=a0 -"/>
+					<entry key="viewer" value="gswin32c.exe -dNOPAUSE -dBATCH -q -"/>
 					<entry key="precision" value="6"/>
 					<entry key="scanline" value="254"/>
 				</map>
+				<!--name attribute in Astrolabe element-->
+				<node name="atlas-stereographic">
+					<map>
+						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=@{node}@.pdf -q -"/>
+					</map>
+				</node>
 				<!--type 3 font definitions-->
 				<node name="type3">
 					<map/>
@@ -64,13 +195,10 @@
 				<!--octal representations instead of blank characters in strings-->
 				<node name="prolog">
 					<map>
-						<entry key="/HALO" value="0"/>
-						<entry key="/HALOMIN" value="0"/>
-						<entry key="/HALOMAX" value="0"/>
 						<entry key="/LIM0" value=".00001"/>
 						<entry key="/acos" value="{dup dup mul 1 exch sub sqrt exch atan}"/>
 						<entry key="/asin" value="{dup dup mul 1 exch sub sqrt atan}"/>
-						<entry key="/halostroke" value="{HALO 0 gt {gsave currentlinewidth dup HALO mul 100 div HALOMIN 0 gt {HALOMIN max} if HALOMAX 0 gt {HALOMAX min} if 2 mul add setlinewidth 1 setgray stroke grestore} if}"/>
+						<entry key="/halo" value="{dup 0 gt {4 3 roll mul 100 div max exch dup 3 1 roll 0 gt {min} {exch pop} ifelse} {pop exch pop exch pop} ifelse}"/>
 						<entry key="/line" value="{newpath moveto lineto}"/>
 						<entry key="/listreduce" value="{counttomark dup /n exch 1 add def 2 div cvi 1 sub {4 copy vsub vabs truncatef 0. eq {pop pop /n n 2 sub def} {n 2 roll} ifelse} repeat n 3 roll}"/>
 						<entry key="/mod" value="{exch dup type /integertype eq {systemdict begin exch mod end} {dup dup cvi sub exch cvi 3 2 roll systemdict begin mod end add} ifelse}"/>
@@ -136,17 +264,49 @@
 					<!--astrolabe units-->
 					<entry key="halomin" value=".08"/>
 					<entry key="halomax" value=".4"/>
+					<!--defaults-->
+					<entry key="practicality" value="0"/>
+					<entry key="importance" value=".1:0"/>
 				</map>
 				<node name="pagesize">
 					<map>
-						<!--must equal to values of pagesize atttribue in XSD.-->
+						<!--keys must equal to allowed values for pagesize atttribue in XSD.-->
 						<entry key="a0" value="840x1188"/>
 						<entry key="a1" value="594x840"/>
 						<entry key="a2" value="420x594"/>
 						<entry key="a3" value="297x420"/>
 						<entry key="a4" value="210x297"/>
-						<!--user defined pagesizes-->
-						<entry key="large" value="1000x1000"/>
+						<entry key="a5" value="148x210"/>
+					</map>
+				</node>
+			</node>
+			<node name="Atlas">
+				<map>
+					<entry key="practicality" value="0"/>
+					<entry key="importance" value=".4:0"/>
+					<entry key="urlModelMap" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/@{node}@.map"/>
+					<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/@{node}@.xml"/>
+					<!--percent-->
+					<entry key="overlap" value="10"/>
+					<!--degrees-->
+					<entry key="limitDe" value="0"/>
+					<!--6h,3h,2h,1h,30',20',10',5',2',1',30",20",10",5",2",1" in seconds, descending order (must), remainder of 24h divided by value equals 0 (must)-->
+					<entry key="intervalUnitsH" value="21600:10800:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1"/>
+					<!--90°,60°,30°,20°,10°,5°,2°,1°,30',20',10',5',2',1',30",20",10",5",2",1" in seconds, descending order (must), remainder of 360° divided by value equals 0 (must)-->
+					<entry key="intervalUnitsD" value="324000:216000:108000:72000:36000:18000:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1"/>
+				</map>
+				<node name="northern">
+					<map>
+						<entry key="practicality" value="0:0:.58"/>
+						<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/Atlas-@{node}@.xml"/>
+						<entry key="limitDe" value="89."/>
+					</map>
+				</node>
+				<node name="southern">
+					<map>
+						<entry key="practicality" value=".58:0:0"/>
+						<entry key="urlModelXML" value="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/Atlas-@{node}@.xml"/>
+						<entry key="limitDe" value="-89."/>
 					</map>
 				</node>
 			</node>
@@ -154,7 +314,7 @@
 				<map/>
 				<node name="practicality">
 					<map>
-						<!--must equal to values of practicality atttribue in XSD.-->
+						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
 						<entry key="none" value="1"/>
 						<entry key="never" value=".85"/>
 						<entry key="seldom" value=".75"/>
@@ -168,7 +328,7 @@
 				<map/>
 				<node name="practicality">
 					<map>
-						<!--must equal to values of practicality atttribue in XSD.-->
+						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
 						<entry key="none" value="1"/>
 						<entry key="never" value=".85"/>
 						<entry key="seldom" value=".75"/>
@@ -182,7 +342,7 @@
 				<map/>
 				<node name="practicality">
 					<map>
-						<!--must equal to values of practicality atttribue in XSD.-->
+						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
 						<entry key="none" value="1"/>
 						<entry key="never" value=".85"/>
 						<entry key="seldom" value=".75"/>
@@ -196,7 +356,7 @@
 				<map/>
 				<node name="practicality">
 					<map>
-						<!--must equal to values of practicality atttribue in XSD.-->
+						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
 						<entry key="none" value="1"/>
 						<entry key="never" value=".85"/>
 						<entry key="seldom" value=".75"/>
@@ -208,11 +368,11 @@
 			</node>
 			<node name="CircleParallel">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -220,11 +380,11 @@
 			</node>
 			<node name="CircleMeridian">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -232,11 +392,11 @@
 			</node>
 			<node name="CircleSouthernTropic">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -244,11 +404,11 @@
 			</node>
 			<node name="CircleNorthernTropic">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -256,11 +416,11 @@
 			</node>
 			<node name="CircleSouthernPolar">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -268,11 +428,11 @@
 			</node>
 			<node name="CircleNorthernPolar">
 				<map>
-					<entry key="segment" value="1"/>
+					<entry key="interval" value="1"/>
 				</map>
 				<node name="importance">
 					<map>
-						<!--must equal to values of importance atttribue in XSD.-->
+						<!--keys must equal to allowed values for importance atttribue in XSD.-->
 						<entry key="canonical" value=".1:0"/>
 						<entry key="cardinal" value=".5:0"/>
 					</map>
@@ -397,7 +557,7 @@
 				</map>
 				<node name="purpose">
 					<map>
-						<!--must equal to values of purpose atttribue in XSD.-->
+						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
 						<entry key="bodylettering0" value="3.0"/>
 						<entry key="bodylettering7" value="1.4"/>
 						<entry key="circlelettering" value="3.8"/>
@@ -406,6 +566,7 @@
 						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
+						<entry key="invisible" value="0"/>
 					</map>
 				</node>
 			</node>
@@ -420,7 +581,7 @@
 				</map>
 				<node name="purpose">
 					<map>
-						<!--must equal to values of purpose atttribue in XSD.-->
+						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
 						<entry key="bodylettering0" value="3.0"/>
 						<entry key="bodylettering7" value="1.4"/>
 						<entry key="circlelettering" value="3.8"/>
@@ -429,6 +590,7 @@
 						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
+						<entry key="invisible" value="0"/>
 					</map>
 				</node>
 			</node>
@@ -462,16 +624,12 @@
 				<!--node names on this level must equal to values of type atttribue in XSD.-->
 				<node name="area">
 					<map>
-						<entry key="linecrack" value=".36"/>
-						<entry key="linewidth" value=".36"/>
-						<entry key="linedash" value="2.4"/>
+						<entry key="importance" value=".36:1:1.8"/>
 					</map>
 				</node>
 				<node name="sign">
 					<map>
-						<entry key="linecrack" value="-0.28"/>
-						<entry key="linewidth" value=".28"/>
-						<entry key="linedash" value="0"/>
+						<entry key="importance" value=".28:0"/>
 					</map>
 				</node>
 			</node>
@@ -479,75 +637,75 @@
 				<map/>
 				<node name="mercury">
 					<map>
-						<entry key="segment" value=".2"/>
+						<entry key="interval" value=".2"/>
 						<entry key="stretch" value=".034"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="venus">
 					<map>
-						<entry key="segment" value=".6"/>
+						<entry key="interval" value=".6"/>
 						<entry key="stretch" value=".034"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="mars">
 					<map>
-						<entry key="segment" value="2"/>
+						<entry key="interval" value="2"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="jupiter">
 					<map>
-						<entry key="segment" value="11"/>
+						<entry key="interval" value="11"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="saturn">
 					<map>
-						<entry key="segment" value="28"/>
+						<entry key="interval" value="28"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="uranus">
 					<map>
-						<entry key="segment" value="72"/>
+						<entry key="interval" value="72"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="neptune">
 					<map>
-						<entry key="segment" value="180"/>
+						<entry key="interval" value="180"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 			</node>
 			<node name="BodyMoon">
 				<map>
-					<entry key="segment" value=".02"/>
+					<entry key="interval" value=".02"/>
 					<entry key="stretch" value=".012"/>
-					<entry key="linewidth" value=".04"/>
+					<entry key="importance" value=".04:0"/>
 				</map>
 			</node>
 			<node name="BodySun">
 				<map/>
 				<node name="mean">
 					<map>
-						<entry key="segment" value="1"/>
+						<entry key="interval" value="1"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="true">
 					<map>
-						<entry key="segment" value="1"/>
+						<entry key="interval" value="1"/>
 						<entry key="stretch" value="0"/>
-						<entry key="linewidth" value=".72"/>
+						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 			</node>

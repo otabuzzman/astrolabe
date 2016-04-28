@@ -14,13 +14,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC7118 extends CatalogType {
+public class CatalogADC7118 extends CatalogType implements PostscriptEmitter {
 
 	private final static int C_CHUNK = 96+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC7118.class ) ;
 
 	private HashSet<String> restrict ;
+
+	private Projector projector ;
+	private double epoch ;
 
 	private final static Comparator<CatalogRecord> comparator = new Comparator<CatalogRecord>() {
 
@@ -31,9 +34,12 @@ public class CatalogADC7118 extends CatalogType {
 	} ;
 
 	public CatalogADC7118( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
-		super( peer, projector, epoch ) ;
+		super( peer, projector ) ;
 
 		String[] rv ;
+
+		this.projector = projector ;
+		this.epoch = epoch ;
 
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC7118) peer ).getRestrict() != null ) {
@@ -42,6 +48,50 @@ public class CatalogADC7118 extends CatalogType {
 				restrict.add( rv[v] ) ;
 			}
 		}
+	}
+
+	public void headPS( PostscriptStream ps ) {
+	}
+
+	public void emitPS( PostscriptStream ps ) {
+		Hashtable<String, CatalogRecord> catalog ;
+		astrolabe.model.Annotation[] annotation ;
+		astrolabe.model.BodyStellar bodyModel ;
+		BodyStellar bodyStellar ;
+
+		try {
+			catalog = read() ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		for ( CatalogRecord record : arrange( catalog ) ) {
+			annotation = annotation( record ) ;
+
+			try {
+				bodyModel = record.toModel( epoch ).getBodyStellar() ;
+				if ( annotation != null ) {
+					bodyModel.setAnnotation( annotation( record ) ) ;
+
+					record.register() ;
+				}
+
+				bodyStellar = new BodyStellar( bodyModel, projector ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			ps.operator.gsave() ;
+
+			bodyStellar.headPS( ps ) ;
+			bodyStellar.emitPS( ps ) ;
+			bodyStellar.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+	}
+
+	public void tailPS( PostscriptStream ps ) {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {

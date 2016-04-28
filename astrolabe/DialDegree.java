@@ -4,13 +4,14 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class DialDegree extends astrolabe.model.DialDegree implements Dial {
+public class DialDegree extends astrolabe.model.DialDegree implements PostscriptEmitter {
 
 	@SuppressWarnings("unused")
 	private final static double DEFAULT_NONE_SPACE = .1 ;
@@ -54,6 +55,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 	}
 
 	public DialDegree( Object peer, Baseline baseline, double unit ) throws ParameterNotValidException {
+		Preferences node ;
+
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;
@@ -65,8 +68,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		this.unit = unit ;
 
 		try {
-			Class c ;
-			String bl, blm, blf, node ;
+			Class<?> c ;
+			String bl, blm, blf, n ;
 			double ds, dt, dl ;
 
 			c = Class.forName( "astrolabe.DialDegree" ) ;
@@ -82,13 +85,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			dt = c.getDeclaredField( "DEFAULT_"+blf+"_THICKNESS" ).getDouble( this ) ;
 			dl = c.getDeclaredField( "DEFAULT_"+blf+"_LINEWIDTH" ).getDouble( this ) ;
 
-			node = ApplicationConstant.PN_DIAL_BASELINE+"/"+blm ;
-			space = ApplicationHelper.getClassNode( this, getName(),
-					node ).getDouble( ApplicationConstant.PK_DIAL_SPACE, ds ) ;
-			thickness = ApplicationHelper.getClassNode( this, getName(),
-					node ).getDouble( ApplicationConstant.PK_DIAL_THICKNESS, dt ) ;
-			linewidth = ApplicationHelper.getClassNode( this, getName(),
-					node ).getDouble( ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
+			n = ApplicationConstant.PN_DIAL_BASELINE+"/"+blm ;
+			node = ApplicationHelper.getClassNode( this, getName(), n ) ;
+			space = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_SPACE, ds ) ;
+			thickness = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_THICKNESS, dt ) ;
+			linewidth = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
 		} catch ( ClassNotFoundException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {
@@ -99,8 +100,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		rise = ApplicationHelper.getClassNode( this, getName(),
-				ApplicationConstant.PN_DIAL_ANNOTATION ).getDouble( ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
+		rise = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_DIAL_ANNOTATION ),
+				ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -203,9 +205,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 			}
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
 			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
 			ps.operator.setlinecap( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 
 			ps.operator.gsave() ;
@@ -237,7 +250,21 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					ps.push( xy[1] ) ;
 				}
 				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+
+				// halo stroke
+				ps.operator.currentlinewidth() ;
+				ps.operator.dup();
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.operator.mul( 2 ) ;
+				ps.operator.add() ;
+				ps.operator.gsave() ;
+				ps.operator.setlinewidth() ;
+				ps.operator.setgray( 1 ) ;
+				ps.operator.stroke() ;
+				ps.operator.grestore() ;
 
 				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
@@ -249,9 +276,23 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 					ps.push( xy[1] ) ;
 				}
 				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
 
-				vDRv = ApplicationHelper.reverseVector( vDRv ) ;
+				// halo stroke
+				ps.operator.currentlinewidth() ;
+				ps.operator.dup();
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.operator.mul( 2 ) ;
+				ps.operator.add() ;
+				ps.operator.gsave() ;
+				ps.operator.setlinewidth() ;
+				ps.operator.setgray( 1 ) ;
+				ps.operator.stroke() ;
+				ps.operator.grestore() ;
+
+				vDRv = ApplicationHelper.createReverseVector( vDRv ) ;
 				vDFw.addAll( vDRv ) ;
 
 				if ( nss%2 == 0 ) { // subunit filled
@@ -310,9 +351,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 				ps.push( xy[1] ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_LINE ) ;
 
+				// halo stroke
+				ps.operator.currentlinewidth() ;
+				ps.operator.dup();
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.operator.mul( 2 ) ;
+				ps.operator.add() ;
 				ps.operator.gsave() ;
+				ps.operator.setlinewidth() ;
 				ps.operator.setlinecap( 2 ) ;
-				ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+				ps.operator.setgray( 1 ) ;
+				ps.operator.stroke() ;
 				ps.operator.grestore() ;
 
 				ps.operator.gsave() ;
@@ -339,7 +391,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Dial {
 		double s, a ;
 		Vector bc, ec, bd ;
 		double[] o, t, xy ;
-		Graduation g ;
+		PostscriptEmitter g ;
 
 		// prepare circle closed check
 		s = getGraduationSpan().getSpan() ;

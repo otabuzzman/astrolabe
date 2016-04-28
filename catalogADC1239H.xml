@@ -7,7 +7,7 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a0" viewport="100" scale="100" hemisphere="northern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -801,7 +801,9 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/hip_main.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H fov="chart" url="file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
+						<CatalogADC1239H fov="chart" url="file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
 							<Select value="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
 								<Annotation>
 									<AnnotationStraight purpose="bodylettering0" anchor="bottomleft" reverse="false" radiant="false">

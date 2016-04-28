@@ -1,10 +1,14 @@
 
 package astrolabe;
 
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 
-public class PostscriptStream extends PrintStream {
+public class PostscriptStream extends FilterOutputStream {
 
 	private final static int DEFAULT_PRECISION = 6 ;
 	private final static int DEFAULT_SCANLINE = 254 ;
@@ -20,13 +24,36 @@ public class PostscriptStream extends PrintStream {
 
 	private Hashtable<String, String> prolog = new Hashtable<String, String>() ;
 
-	private final int precision = ApplicationHelper.getClassNode( this,
-			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
-	private final int scanline = ApplicationHelper.getClassNode( this,
-			null, null ).getInt( ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
+	private final int precision = ApplicationHelper.getPreferencesKV(
+			ApplicationHelper.getClassNode( this, null, null ),
+			ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
+	private final int scanline = ApplicationHelper.getPreferencesKV(
+			ApplicationHelper.getClassNode( this, null, null ),
+			ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
-	public PostscriptStream( java.io.PrintStream ps ) {
-		super( ps ) ;
+	private Process viewerProcess ;
+	private OutputStream viewerOutput ;
+
+	public PostscriptStream( OutputStream out, String instance ) {
+		super( out ) ;
+
+		String viewer ;
+
+		viewer = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, instance, null ),
+				ApplicationConstant.PK_PRINTSTREAM_VIEWER, null ) ;
+		if ( viewer.equals( "" ) ) {
+			viewer = null ;
+		}
+		if ( viewer != null ) {
+			try {
+				viewerProcess = Runtime.getRuntime().exec( viewer.split( " " ) ) ;
+				viewerProcess.getInputStream().close() ;
+				viewerProcess.getErrorStream().close() ;
+
+				viewerOutput = new PrintStream( viewerProcess.getOutputStream() ) ;
+			} catch ( IOException e ) {}
+		}
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
 		ucBlock = new UcBlock[145] ;
@@ -177,7 +204,9 @@ public class PostscriptStream extends PrintStream {
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
 		ucEncodingVectors = new Hashtable<String, String>() ;
-		String vector = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
+		String vector = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ),
+				ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = DEFAULT_FONTNAME ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
@@ -206,11 +235,11 @@ public class PostscriptStream extends PrintStream {
 		return numberFormat.format( number ) ;
 	} 
 
-	public java.util.Vector ucFET( String string ) {        
+	public java.util.Vector<java.util.Vector<Object>> ucFET( String string ) {        
 		int block = -1, pblock = -1,
 		chart = -1, pchart = -1, code = -1 , tcc ;
 		String fe[], rt = "", t = "" ;
-		java.util.Vector<java.util.Vector> FET = new java.util.Vector<java.util.Vector>() ;
+		java.util.Vector<java.util.Vector<Object>> FET = new java.util.Vector<java.util.Vector<Object>>() ;
 		java.util.Vector<Object> fet ;
 		java.text.StringCharacterIterator rti, si = new java.text.StringCharacterIterator( string ) ;
 
@@ -313,6 +342,10 @@ public class PostscriptStream extends PrintStream {
 		print( begin?"{\n":"}\n" ) ;
 	}
 
+	public void dict( boolean begin ) {        
+		print( begin?"<<\n":">>\n" ) ;
+	}
+
 	public void push( boolean bool ) {        
 		print( ( bool?"true":"false" )+"\n" ) ;
 	}
@@ -338,6 +371,49 @@ public class PostscriptStream extends PrintStream {
 			push( string[i] ) ;
 		}
 		this.array( false ) ;
+	}
+
+	private void print( String def ) {
+		byte[] b ;
+
+		b = def.getBytes() ;
+		try {
+			write( b ) ;
+
+			if ( viewerOutput != null ) {
+				viewerOutput.write( b ) ;
+			}
+		} catch ( IOException e ) {}
+
+		flush() ;
+	}
+
+	public void flush() {
+		try {
+			super.flush() ;
+
+			if ( viewerOutput != null ) {
+				viewerOutput.flush() ;
+			}
+		} catch ( IOException e ) {}
+	}
+
+	public void close() {
+		try {
+			super.close() ;
+
+			if ( viewerOutput != null ) {
+				viewerOutput.flush() ;
+				viewerOutput.flush() ;
+				viewerOutput.close() ;
+
+				viewerProcess.waitFor() ;
+			}
+		} catch ( IOException e ) {
+		} catch ( InterruptedException e ) {
+		}
+
+		viewerProcess.destroy() ;
 	}
 
 	public void comment( String def ) {
@@ -417,6 +493,10 @@ public class PostscriptStream extends PrintStream {
 
 		public void currentdict() {        
 			print( "currentdict\n" ) ;
+		}
+
+		public void currentlinewidth() {        
+			print( "currentlinewidth\n" ) ;
 		}
 
 		public void currentpoint() {        
@@ -597,19 +677,35 @@ public class PostscriptStream extends PrintStream {
 			setdash() ;
 		}
 
-		public void setgray( double num ) {        
-			push( num ) ;
+		public void setgray() { 
 			print( "setgray\n" ) ;
 		} 
 
+		public void setgray( double num ) {        
+			push( num ) ;
+			setgray() ;
+		} 
+
+		public void setlinecap() {        
+			print( "setlinecap\n" ) ;
+		}
+
 		public void setlinecap( int num ) {        
 			push( num%3 ) ;
-			print( "setlinecap\n" ) ;
+			setlinecap() ;
+		}
+
+		public void setlinewidth() {        
+			print( "setlinewidth\n" ) ;
 		}
 
 		public void setlinewidth( double num ) {        
 			push( num ) ;
-			print( "setlinewidth\n" ) ;
+			setlinewidth() ;
+		}
+
+		public void setpagedevice() {        
+			print( "setpagedevice\n" ) ;
 		}
 
 		public void setrgbcolor( double r, double g, double b ) {
@@ -753,6 +849,9 @@ public class PostscriptStream extends PrintStream {
 
 		try {
 			fontname = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
+			if ( fontname == null ) {
+				fontname = new String[0] ;
+			}
 			for ( int f=0 ; f<fontname.length ; f++ ) {
 				push( "/"+fontname[f] ) ;
 
@@ -773,7 +872,7 @@ public class PostscriptStream extends PrintStream {
 			}
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
-		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion failed
+		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion or getClassNode failed
 			throw new RuntimeException( e.toString() ) ;
 		}
 
@@ -781,6 +880,9 @@ public class PostscriptStream extends PrintStream {
 		try {
 			node = ApplicationConstant.PN_POSTSCRIPT_PROLOG ;
 			procedure = ApplicationHelper.getClassNode( this, null, node ).keys() ;
+			if ( procedure == null ) {
+				procedure = new String[0] ;
+			}
 			for ( int p=0 ; p<procedure.length ; p++ ) {
 				emitProcedureDefintion( procedure[p],
 						ApplicationHelper.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
@@ -788,7 +890,7 @@ public class PostscriptStream extends PrintStream {
 			}
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
-		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion failed
+		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion or getClassNode failed
 			throw new RuntimeException( e.toString() ) ;
 		}
 

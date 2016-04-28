@@ -1,12 +1,14 @@
 
 package astrolabe;
 
+import java.util.prefs.Preferences;
+
 import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class GraduationSpan extends astrolabe.model.GraduationSpan implements Graduation {
+public class GraduationSpan extends astrolabe.model.GraduationSpan implements PostscriptEmitter {
 
 	private final static double DEFAULT_SPACE = .4 ;
 	private final static double DEFAULT_LINELENGTH = 2.8 ;
@@ -20,6 +22,8 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 	private Vector origin ;
 
 	public GraduationSpan( Object peer, double[] origin, double[] tangent ) throws ParameterNotValidException {
+		Preferences node ;
+
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;
@@ -27,17 +31,16 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
+		node = ApplicationHelper.getClassNode( this, null, null ) ;
+
 		this.origin = new Vector( origin[0], origin[1] ) ;
 		this.tangent = new Vector( tangent[0], tangent[1] ) ;
 
 		this.tangent.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 
-		space = ApplicationHelper.getClassNode( this,
-				null, null ).getDouble( ApplicationConstant.PK_GRADUATION_SPACE, DEFAULT_SPACE ) ;
-		linelength = ApplicationHelper.getClassNode( this,
-				null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINELENGTH, DEFAULT_LINELENGTH ) ;
-		linewidth = ApplicationHelper.getClassNode( this,
-				null, null ).getDouble( ApplicationConstant.PK_GRADUATION_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
+		space = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_SPACE, DEFAULT_SPACE ) ;
+		linelength = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_LINELENGTH, DEFAULT_LINELENGTH ) ;
+		linewidth = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -60,9 +63,20 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Gr
 		try {
 			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
 			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
 			ps.operator.setlinecap( 2 ) ;
-			ps.custom( ApplicationConstant.PS_PROLOG_HALOSTROKE ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;

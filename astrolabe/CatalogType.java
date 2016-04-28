@@ -13,38 +13,29 @@ import java.util.zip.GZIPInputStream;
 
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 @SuppressWarnings("serial")
-abstract public class CatalogType extends astrolabe.model.CatalogType implements Catalog {
+abstract public class CatalogType extends astrolabe.model.CatalogType {
 
 	private Projector projector ;
-	private double epoch ;
-
-	private FOV fov ;
-
-	private Hashtable<String, CatalogRecord> catalog ;
 
 	private Hashtable<String, astrolabe.model.Annotation[]> select ;
 
-	public CatalogType( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
-		String[] fov, sv ;
+	private Geometry fov ; // effective field-of-view
+
+	public CatalogType( Object peer, Projector projector ) throws ParameterNotValidException {
+		String[] sv ;
+		Geometry fovg, fovu ;
 
 		this.projector = projector ;
-		this.epoch = epoch ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
-		}
-
-		if ( getFov() != null ) {
-			fov = getFov().split( "," ) ;
-
-			this.fov = new FOV( fov[0] ) ;
-			for ( int f=1 ; f<fov.length ; f++ ) {
-				this.fov.insert( new FOV( fov[f] ) ) ;
-			}
 		}
 
 		select = new Hashtable<String, astrolabe.model.Annotation[]>() ;
@@ -56,50 +47,18 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 				}
 			}
 		}
-	}
 
-	public void headPS( PostscriptStream ps ) {
-	}
-
-	public void emitPS( PostscriptStream ps ) {
-		astrolabe.model.Annotation[] annotation ;
-		Set<String> matchSet ;
-		Body body ;
-
-		for ( CatalogRecord record : arrange( catalog ) ) {
-			try {
-				body = AstrolabeFactory.companionOf( record.toBody( epoch ), projector, 0 ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-
-			annotation = getAnnotation() ;
-
-			matchSet = record.matchSet( select.keySet() ) ;
-			if ( matchSet.size()>0 ) {
-				annotation = select.get( matchSet.iterator().next() ) ;
-			}
-
-			if ( annotation != null ) {
-				body.setAnnotation( annotation ) ;
-
-				record.register() ;
-			}
-
-			ps.operator.gsave() ;
-
-			body.headPS( ps ) ;
-			body.emitPS( ps ) ;
-			body.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
+		fovg = new GeometryFactory().createGeometry( ApplicationHelper.getFovGlobal() ) ;
+		if ( getFov() != null ) {
+			fovu = (Geometry) Registry.retrieve( getFov() ) ;
+			fov = fovg.intersection( fovu ) ;
+		} else {
+			fov = fovg ;
 		}
+		ApplicationHelper.setFovEffective( fov ) ;
 	}
 
-	public void tailPS( PostscriptStream ps ) {
-	}
-
-	public void read() throws ParameterNotValidException {
+	public Hashtable<String, CatalogRecord> read() throws ParameterNotValidException {
 		URL url ;
 
 		try {
@@ -108,7 +67,7 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		this.catalog = read( url ) ;
+		return read( url ) ;
 	}
 
 	public Hashtable<String, CatalogRecord> read( URL catalog ) {
@@ -155,20 +114,21 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		Hashtable<String, CatalogRecord> r = new Hashtable<String, CatalogRecord>() ;
 		java.util.Vector<double[]> l ;
 		CatalogRecord record ;
+		Geometry body ;
 		boolean ok ;
 
 		while ( ( record = record( catalog ) ) != null ) {
-			if ( fov != null ) {
-				l = record.list( projector ) ;
-				if ( l.size() == 1 ) {
-					ok = fov.covers( l.get( 0 ) ) ;
-				} else {
-					ok = fov.covers( l ) ;
-				}
-				if ( ! ok ) {
-					continue ;
-				}
-			}					
+			l = record.list( projector ) ;
+			if ( l.size() == 1 ) {
+				ok = fov.covers( ApplicationHelper.jtsToPoint( l.get( 0 ) ) ) ;
+			} else {
+				body = ApplicationHelper.jtsToPolygon( l ) ;
+
+				ok = fov.covers( body ) || fov.overlaps( body ) ;
+			}
+			if ( ! ok ) {
+				continue ;
+			}
 
 			r.put( record.ident(), record ) ;
 		}
@@ -176,8 +136,18 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		return r ;
 	}
 
-	public CatalogRecord entry( String ident ) {
-		return catalog.get( ident ) ;
+	public astrolabe.model.Annotation[] annotation( CatalogRecord record ) {
+		astrolabe.model.Annotation[] r ;
+		Set<String> matchSet ;
+
+		matchSet = record.matchSet( select.keySet() ) ;
+		if ( matchSet.size()>0 ) {
+			r = select.get( matchSet.iterator().next() ) ;
+		} else {
+			r = getAnnotation() ;
+		}
+
+		return r ;
 	}
 
 	abstract public CatalogRecord record( java.io.Reader catalog ) ;

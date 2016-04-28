@@ -23,18 +23,32 @@ public class Vector {
 		set ( x, y, z )	;
 	}
 
-	public void set( double[] xyz ) {
-		this.x = xyz[0] ;
-		this.y = xyz[1] ;
-		if ( xyz.length>2 ) {
-			this.z = xyz[2] ;
-		}
+	public Vector( double[] xyz ) {
+		set ( xyz )	;
+	}
+
+	public void set( Vector v ) {
+		set( v.x, v.y, v.z ) ;
+	}
+
+	public void set( double x, double y ) {
+		set( x, y, 0 ) ;
 	}
 
 	public void set( double x, double y, double z ) {
 		this.x = x ;
 		this.y = y ;
 		this.z = z ;
+	}
+
+	public void set( double[] xyz ) {
+		this.x = xyz[0] ;
+		this.y = xyz[1] ;
+		if ( xyz.length>2 ) {
+			this.z = xyz[2] ;
+		} else {
+			this.z = 0 ;
+		}
 	}
 
 	public double abs() {
@@ -84,9 +98,13 @@ public class Vector {
 	}
 
 	public Vector cross( Vector v ) {
-		x = y*v.z-z*v.y ;
-		y = z*v.x-x*v.z ;
-		z = x*v.y-y*v.x ;
+		double x = this.x ;
+		double y = this.y ;
+		double z = this.z ;
+
+		this.x = y*v.z-z*v.y ;
+		this.y = z*v.x-x*v.z ;
+		this.z = x*v.y-y*v.x ;
 
 		return this ;
 	}
@@ -101,5 +119,9 @@ public class Vector {
 		this.z = x*m[6]+y*m[7]+z*m[8] ;
 
 		return this ;
+	}
+
+	public double[] toArray() {
+		return new double[] { x, y, z } ;
 	}
 }

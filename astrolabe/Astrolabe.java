@@ -15,7 +15,7 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAADate ;
 
 @SuppressWarnings("serial")
-public class Astrolabe extends astrolabe.model.Astrolabe {
+public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEmitter {
 
 	private double epoch ;
 
@@ -64,52 +64,51 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 		d.delete() ;
 	}
 
-	static public PostscriptStream initPS() {
-		return initPS( System.out ) ;
-	}
-
-	static public PostscriptStream initPS( java.io.PrintStream ps ) {
-		return new PostscriptStream( ps ) ;
+	public void headPS( PostscriptStream ps ) {
+		ps.emitDSCHeader() ;
+		ps.emitDSCProlog() ;
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		ps.emitDSCHeader() ;
-		ps.emitDSCProlog() ;
-
 		// Chart processing.
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
-			Chart chart ;
+			Companion chart ;
 
 			ps.operator.gsave() ;
 
 			try {
-				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
+				chart = AstrolabeFactory.companionOf( getChart( ch ), this ) ;
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
+
 			chart.headPS( ps ) ;
+			chart.emitPS( ps ) ;
 
 			// Horizon processing.
-			for ( int ho=0 ; ho<chart.getHorizonCount() ; ho++ ) {
-				Horizon horizon ;
+			for ( int ho=0 ; ho<( (astrolabe.model.ChartType) chart ).getHorizonCount() ; ho++ ) {
+				PostscriptEmitter horizon ;
 
 				ps.operator.gsave() ;
 
 				try {
-					horizon = AstrolabeFactory.companionOf( chart.getHorizon( ho ), epoch, chart ) ;
+					astrolabe.model.Horizon modelHorizon = ( (astrolabe.model.ChartType) chart ).getHorizon( ho ) ;
+					horizon = AstrolabeFactory.companionOf( modelHorizon, epoch, (Projector) chart ) ;
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
 				horizon.headPS( ps ) ;
+				horizon.emitPS( ps ) ;
 
 				// Circle processing.
-				for ( int cl=0 ; cl<horizon.getCircleCount() ; cl++ ) {
-					Circle circle ;
+				for ( int cl=0 ; cl<( (astrolabe.model.HorizonType) horizon ).getCircleCount() ; cl++ ) {
+					PostscriptEmitter circle ;
 
 					ps.operator.gsave() ;
 
 					try {
-						circle = AstrolabeFactory.companionOf( horizon.getCircle( cl ), epoch, horizon ) ;
+						astrolabe.model.Circle modelCircle = ( (astrolabe.model.HorizonType) horizon ).getCircle( cl ) ;
+						circle = AstrolabeFactory.companionOf( modelCircle, epoch, (Projector) horizon ) ;
 					} catch ( ParameterNotValidException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
@@ -122,12 +121,14 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 				// Body processing
 				try {
-					for ( int bd=0 ; bd<horizon.getBodyCount() ; bd++ ) {
-						Body body ;
+					for ( int bd=0 ; bd<( (astrolabe.model.HorizonType) horizon ).getBodyCount() ; bd++ ) {
+						PostscriptEmitter body ;
 
 						ps.operator.gsave() ;
 
-						body = AstrolabeFactory.companionOf( horizon.getBody( bd ), horizon, epoch ) ;
+						astrolabe.model.Body modelBody = ( (astrolabe.model.HorizonType) horizon ).getBody( bd ) ;
+						body = AstrolabeFactory.companionOf( modelBody, (Projector) horizon, epoch ) ;
+
 						body.headPS( ps ) ;
 						body.emitPS( ps ) ;
 						body.tailPS( ps ) ;
@@ -140,14 +141,13 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 				// Catalog processing
 				try {
-					for ( int ct=0 ; ct<horizon.getCatalogCount() ; ct++ ) {
-						Catalog catalog ;
+					for ( int ct=0 ; ct<( (astrolabe.model.HorizonType) horizon ).getCatalogCount() ; ct++ ) {
+						PostscriptEmitter catalog ;
 
 						ps.operator.gsave() ;
 
-						catalog = AstrolabeFactory.companionOf( horizon.getCatalog( ct ), horizon, epoch ) ;
-
-						catalog.read() ;
+						astrolabe.model.Catalog modelCatalog = ( (astrolabe.model.HorizonType) horizon ).getCatalog( ct ) ;
+						catalog = AstrolabeFactory.companionOf( modelCatalog, (Projector) horizon, epoch ) ;
 
 						catalog.headPS( ps ) ;
 						catalog.emitPS( ps ) ;
@@ -166,9 +166,17 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 
 			chart.tailPS( ps ) ;
 
+			try {
+				chart.addToModel( new Object[] { this } ) ;
+			} catch ( ParameterNotValidException e ) {}
+
+			chart.emitAUX() ;
+
 			ps.operator.grestore() ;
 		} // Chart processing.
+	}
 
+	public void tailPS( PostscriptStream ps ) {
 		ps.emitDSCTrailer() ;
 	}
 
@@ -183,9 +191,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe {
 			m = new FileReader( f ) ;
 			a = new AstrolabeReader().read( m ) ;
 
-			ps = Astrolabe.initPS() ;
+			ps = new PostscriptStream( System.out, a.getName() ) ;
 
+			a.headPS( ps ) ;
 			a.emitPS( ps ) ;
+			a.tailPS( ps ) ;
 
 			ps.close() ;
 

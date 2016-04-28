@@ -2,7 +2,7 @@
 package astrolabe;
 
 public interface CatalogRecord {
-	public astrolabe.model.Body toBody( double epoch ) throws ParameterNotValidException ;
+	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException ;
 	public boolean matchAny( java.util.Set<String> set ) ;
 	public boolean matchAll( java.util.Set<String> set ) ;
 	public java.util.Set<String> matchSet( java.util.Set<String> set ) ;
