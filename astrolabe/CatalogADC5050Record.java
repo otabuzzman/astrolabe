@@ -224,8 +224,7 @@ public class CatalogADC5050Record implements CatalogRecord {
 
 		ra = RAh()+RAm()/60.+RAs()/3600. ;
 		de = DEd()+DEm()/60.+DEs()/3600. ;
-		xy = projector.project( CAACoordinateTransformation.HoursToRadians( ra ),
-				CAACoordinateTransformation.DegreesToRadians( de ) ) ;
+		xy = projector.project( CAACoordinateTransformation.HoursToDegrees( ra ), de ) ;
 		r.add( xy ) ;
 
 		return r ;

@@ -7,6 +7,6 @@ import caa.CAACoordinateTransformation;
 public class DialHour extends DialDegree {
 
 	public DialHour( Object peer, Baseline baseline ) throws ParameterNotValidException {
-		super( peer, baseline, CAACoordinateTransformation.HoursToRadians( 1 ) ) ;
+		super( peer, baseline, CAACoordinateTransformation.HoursToDegrees( 1 ) ) ;
 	}
 }

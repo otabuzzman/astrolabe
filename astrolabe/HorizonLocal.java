@@ -1,8 +1,10 @@
 
 package astrolabe;
 
+import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation ;
 import caa.CAADate;
+import caa.CAANutation;
 
 @SuppressWarnings("serial")
 public class HorizonLocal extends HorizonType {
@@ -33,28 +35,30 @@ public class HorizonLocal extends HorizonType {
 			lo = 0 ;
 		}
 		try {
+			CAA2DCoordinate c ;
 			double lt, ra0, lo0, la0, e, jd ;
 			CAADate d ;
 
 			jd = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getDate() ) ;
 			d = new CAADate( jd, true ) ;
 
-			lt = CAACoordinateTransformation.HoursToRadians( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
+			lt = CAACoordinateTransformation.HoursToDegrees( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
 
 			d.delete() ;
 
-			lt = lt+( lo>Math.rad180?lo-Math.rad360:lo ) ;
+			lt = lt+( lo>180?lo-360:lo ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
 			ApplicationHelper.registerHMS( key, lt ) ;
 
 			lo0 = ApplicationHelper.meanEclipticLongitude( jd ) ;
 			la0 = ApplicationHelper.meanEclipticLatitude( jd ) ;
 			epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ; 
-			e = ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
+			e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
-			ra0 = ApplicationHelper.ecliptic2Equatorial( lo0, la0, e )[0] ;
+			c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
+			ra0 = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 
-			ST = ApplicationHelper.mapTo0To24Range( ra0+lt-Math.rad180/*12h*/ ) ;
+			ST = CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			ApplicationHelper.registerHMS( key, ST ) ;
 		} catch ( ParameterNotValidException e ) {
@@ -71,9 +75,12 @@ public class HorizonLocal extends HorizonType {
 	}
 
 	public double[] convert( double A, double h ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2] ;
 
-		r = ApplicationHelper.horizontal2Equatorial( A, h, la ) ;
+		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, la ) ;
+		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		r[1] = c.Y() ;
 
 		// r[0] is HA is ST-lo-RA.
 		r[0] = ST-r[0] ;
@@ -82,9 +89,13 @@ public class HorizonLocal extends HorizonType {
 	}
 
 	public double[] unconvert( double RA, double d ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2];
 
-		r = ApplicationHelper.equatorial2Horizontal( this.ST-RA, d, la ) ;
+		c = CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.DegreesToHours( this.ST-RA ), d, la ) ;
+		r[0] = c.X() ;
+		r[1] = c.Y() ;
 
 		return r ;
 	}

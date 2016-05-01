@@ -296,10 +296,10 @@ public final class AstrolabeFactory {
 		if ( calendar.getTime() == null ) {
 			t = 0 ;
 		} else {
-			t = CAACoordinateTransformation.RadiansToHours( AstrolabeFactory.valueOf( calendar.getTime() ) ) ;
+			t = AstrolabeFactory.valueOf( calendar.getTime() ) ;
 		}
 
-		d = new CAADate( c[0], c[1], c[2]+t/24, true ) ;
+		d = new CAADate( c[0], c[1], c[2]+t, true ) ;
 		r = d.Julian() ;
 		d.delete() ;
 
@@ -314,7 +314,7 @@ public final class AstrolabeFactory {
 		}
 
 		try {
-			r = CAACoordinateTransformation.HoursToRadians( AstrolabeFactory.valueOf( time.getRational() ) ) ;
+			r = AstrolabeFactory.valueOf( time.getRational() ) ;
 		} catch ( ParameterNotValidException e ) {
 			r = AstrolabeFactory.valueOf( time.getHMS() ) ;
 		}
@@ -385,12 +385,12 @@ public final class AstrolabeFactory {
 		}
 
 		try {
-			r = CAACoordinateTransformation.DegreesToRadians( AstrolabeFactory.valueOf( angle.getRational() ) ) ;
+			r = AstrolabeFactory.valueOf( angle.getRational() ) ;
 		} catch ( ParameterNotValidException er ) {
 			try {
 				r = AstrolabeFactory.valueOf( angle.getDMS() ) ;
 			} catch ( ParameterNotValidException ed ) {
-				r = AstrolabeFactory.valueOf( angle.getHMS() ) ;
+				r = CAACoordinateTransformation.HoursToDegrees( AstrolabeFactory.valueOf( angle.getHMS() ) ) ;
 			}
 		}
 
@@ -410,7 +410,7 @@ public final class AstrolabeFactory {
 			throw new ParameterNotValidException( DMSType.class.toString()+":"+null ) ;
 		}
 
-		return CAACoordinateTransformation.DegreesToRadians( dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ) ;
+		return dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
 	}
 
 	public static double valueOf( HMSType hms ) throws ParameterNotValidException {
@@ -418,7 +418,7 @@ public final class AstrolabeFactory {
 			throw new ParameterNotValidException( HMSType.class.toString()+":"+null ) ;
 		}
 
-		return CAACoordinateTransformation.HoursToRadians( hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ) ;
+		return hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ;
 	}
 
 	public static double valueOf( RationalType rational ) throws ParameterNotValidException {

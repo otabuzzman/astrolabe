@@ -15,6 +15,7 @@ lib/cat/1239/cdrom/tables/*
 !lib/cat/1239/cdrom/tables/selectADC5050Template.xml
 lib/cat/5050/*
 !lib/cat/5050/prep.sh
+lib/cat/5109/
 lib/cat/6049/
 lib/cat/7118/
 lib/vsop87/

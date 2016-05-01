@@ -130,8 +130,7 @@ public class CatalogADC6049Record implements CatalogRecord {
 		for ( int position=0 ; position<RAhr.size() ; position++ ) {
 			ra = RAhr( position ) ;
 			de = DEdeg( position ) ;
-			xy = projector.project( CAACoordinateTransformation.HoursToRadians( ra ),
-					CAACoordinateTransformation.DegreesToRadians( de ) ) ;
+			xy = projector.project( CAACoordinateTransformation.HoursToDegrees( ra ), de ) ;
 			r.add( xy ) ;
 		}
 

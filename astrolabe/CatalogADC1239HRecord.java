@@ -277,8 +277,7 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
 		double[] xy ;
 
-		xy = projector.project( CAACoordinateTransformation.HoursToRadians( RAhms() ),
-				CAACoordinateTransformation.DegreesToRadians( DEdms() ) ) ;
+		xy = projector.project( CAACoordinateTransformation.HoursToDegrees( RAhms() ), DEdms() ) ;
 		r.add( xy ) ;
 
 		return r ;

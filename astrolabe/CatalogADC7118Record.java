@@ -139,8 +139,7 @@ public class CatalogADC7118Record implements CatalogRecord {
 
 		ra = RAh()+RAm()/60. ;
 		de = DEd()+DEm()/60. ;
-		xy = projector.project( CAACoordinateTransformation.HoursToRadians( ra ),
-				CAACoordinateTransformation.DegreesToRadians( de ) ) ;
+		xy = projector.project( CAACoordinateTransformation.HoursToDegrees( ra ), de ) ;
 		r.add( xy ) ;
 
 		return r ;

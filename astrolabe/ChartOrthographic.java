@@ -9,10 +9,10 @@ public class ChartOrthographic extends ChartAzimuthalType {
 	}
 
 	double thetaToDistance( double de ) {
-		return java.lang.Math.cos( de ) ;
+		return Math.cos( de ) ;
 	}
 
 	double distanceToTheta( double d ) {
-		return java.lang.Math.acos( d ) ;
+		return Math.acos( d ) ;
 	}
 }

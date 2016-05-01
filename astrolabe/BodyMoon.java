@@ -9,6 +9,7 @@ import org.exolab.castor.xml.ValidationException;
 import com.vividsolutions.jts.geom.Geometry;
 
 import caa.CAADate;
+import caa.CAAMoon;
 
 @SuppressWarnings("serial")
 public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmitter, Baseline {
@@ -252,9 +253,9 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	public double[] convert( double jd ) {
 		double[] r = new double[2] ;
 
-		r[0] = ApplicationHelper.moonEclipticLongitude( jd ) ;
-		r[1] = ApplicationHelper.moonEclipticLatitude( jd ) ;
-		r[1] = r[1]+( jd-jdAy )*Math.rad90/90*stretch ;
+		r[0] = CAAMoon.EclipticLongitude( jd ) ;
+		r[1] = CAAMoon.EclipticLatitude( jd ) ;
+		r[1] = r[1]+( jd-jdAy )*stretch ;
 
 		return r ;
 	}

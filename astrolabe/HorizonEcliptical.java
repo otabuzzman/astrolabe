@@ -1,6 +1,10 @@
 
 package astrolabe;
 
+import caa.CAA2DCoordinate;
+import caa.CAACoordinateTransformation;
+import caa.CAANutation;
+
 @SuppressWarnings("serial")
 public class HorizonEcliptical extends HorizonType {
 
@@ -13,14 +17,17 @@ public class HorizonEcliptical extends HorizonType {
 	public HorizonEcliptical( Object peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
-		double epoch, eq[] ;
+		CAA2DCoordinate c ;
+		double epoch, eq[] = new double[2] ;
 		String key ;
 
 		this.projector = projector ;
 
 		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
-		e = ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
-		eq = ApplicationHelper.ecliptic2Equatorial( 0, Math.rad90, e ) ;
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
+		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		eq[1] = c.Y() ;
 		la = eq[1] ;
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
@@ -38,17 +45,23 @@ public class HorizonEcliptical extends HorizonType {
 	}
 
 	public double[] convert( double l, double b ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2] ;
 
-		r = ApplicationHelper.ecliptic2Equatorial( l, b, e ) ;
+		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, e ) ;
+		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		r[1] = c.Y() ;
 
 		return r ;
 	}
 
 	public double[] unconvert( double RA, double d ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2] ;
 
-		r = ApplicationHelper.equatorial2Ecliptic( RA, d, e ) ;
+		c = CAACoordinateTransformation.Equatorial2Ecliptic( CAACoordinateTransformation.DegreesToHours( RA ), d, e ) ;
+		r[0] = c.X() ;
+		r[1] = c.Y() ;
 
 		return r ;
 	}

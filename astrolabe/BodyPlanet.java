@@ -102,10 +102,10 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		try {
 			Class<?> c ;
 
-			c = Class.forName( "astrolabe.ApplicationHelper" ) ;
+			c = Class.forName( "caa.CAA"+getType().substring( 0, 1 ).toUpperCase()+getType().substring( 1 ) ) ;
 
-			eclipticLongitude = c.getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
-			eclipticLatitude = c.getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
+			eclipticLongitude = c.getMethod( "EclipticLongitude", new Class[] { double.class } ) ;
+			eclipticLatitude = c.getMethod( "EclipticLatitude", new Class[] { double.class } ) ;
 		} catch ( ClassNotFoundException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {
@@ -285,7 +285,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		}
 
 		r[0] = l ;
-		r[1] = b+( jd-jdAy )*Math.rad90/90*stretch ;
+		r[1] = b+( jd-jdAy )*90/90*stretch ;
 
 		return r ;
 	}

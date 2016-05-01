@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -59,14 +57,13 @@ public class PolygonPlane {
 	}
 
 	public int sign() {
-		double rad1, sin, cos ;
+		double sin, cos ;
 		Vector a0, a1, b0 ;
 		Coordinate c[] ;
 		Point p ;
 
-		rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
-		sin = java.lang.Math.sin( rad1 ) ;
-		cos = java.lang.Math.cos( rad1 ) ;
+		sin = Math.sin( 1 ) ;
+		cos = Math.cos( 1 ) ;
 
 		c = polygon.getCoordinates() ;
 

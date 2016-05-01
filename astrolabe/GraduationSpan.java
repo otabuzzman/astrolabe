@@ -5,8 +5,6 @@ import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
-import caa.CAACoordinateTransformation;
-
 @SuppressWarnings("serial")
 public class GraduationSpan extends astrolabe.model.GraduationSpan implements PostscriptEmitter {
 
@@ -49,7 +47,6 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 
 	public void emitPS( PostscriptStream ps ) {
 		java.util.Vector<double[]> v ;
-		double rad, deg ;
 		double[] xy ;
 
 		v = list() ;
@@ -85,10 +82,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 		ps.operator.stroke() ;
 		ps.operator.grestore() ;
 
-		rad = java.lang.Math.atan2( tangent.y, tangent.x ) ;
-		deg = CAACoordinateTransformation.RadiansToDegrees( rad )-90 ;
-
-		ps.operator.rotate( deg ) ;
+		ps.operator.rotate( Math.atan2( tangent.y, tangent.x )-90 ) ;
 
 		if ( getAnnotationStraight() != null ) {
 			try {

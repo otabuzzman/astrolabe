@@ -5,6 +5,8 @@ import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAACoordinateTransformation;
+
 @SuppressWarnings("serial")
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements PostscriptEmitter, Projector {
 
@@ -235,11 +237,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	private double[] flipNorthern( double[] eq ) {
-		return new double[] { ApplicationHelper.mapTo0To360Range( -eq[0] ), eq[1] } ;
+		return new double[] { CAACoordinateTransformation.MapTo0To360Range( -eq[0] ), eq[1] } ;
 	}
 
 	private double[] flipSouthern( double[] eq ) {
-		return new double[] { ApplicationHelper.mapTo0To360Range( Math.rad180+eq[0] ), -eq[1] } ;
+		return new double[] { CAACoordinateTransformation.MapTo0To360Range( 180+eq[0] ), -eq[1] } ;
 	}
 
 	public double[] polarToWorld( double[] eq ) {
@@ -248,13 +250,13 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		d = thetaToDistance( eq[1] ) ;
 
 		return new double[] {
-				d*java.lang.Math.cos( eq[0] ),
-				d*java.lang.Math.sin( eq[0] ) } ;
+				d*Math.cos( eq[0] ),
+				d*Math.sin( eq[0] ) } ;
 	}
 
 	public double[] worldToPolar( double[] xy ) {
 		return new double[] {
-				ApplicationHelper.mapTo0To360Range( java.lang.Math.atan2( xy[1], xy[0] ) ),
+				CAACoordinateTransformation.MapTo0To360Range( Math.atan2( xy[1], xy[0] ) ),
 				distanceToTheta( java.lang.Math.sqrt( xy[0]*xy[0]+xy[1]*xy[1] ) ) } ;
 	}
 

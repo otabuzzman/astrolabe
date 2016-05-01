@@ -94,7 +94,7 @@ public class Vector {
 	}
 
 	public double angle( Vector v ) {
-		return java.lang.Math.acos( dot( v )/( abs()*v.abs() ) ) ;
+		return Math.acos( dot( v )/( abs()*v.abs() ) ) ;
 	}
 
 	public Vector cross( Vector v ) {

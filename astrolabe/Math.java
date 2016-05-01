@@ -7,11 +7,6 @@ public final class Math {
 
 	public final static double lim0 = .000000000001 ;
 
-	public final static double rad90 = CAACoordinateTransformation.DegreesToRadians( 90 ) ;
-	public final static double rad180 = CAACoordinateTransformation.DegreesToRadians( 180 ) ;
-	public final static double rad270 = CAACoordinateTransformation.DegreesToRadians( 270 ) ;
-	public final static double rad360 = CAACoordinateTransformation.DegreesToRadians( 360 ) ;
-
 	// approximate value of golden section
 	public final static double goldensection = ( 1+java.lang.Math.sqrt( 5 ) )/2 ;
 
@@ -25,13 +20,13 @@ public final class Math {
 
 		// sin(a):sin(b) = sin(al):sin(be)
 		// sin(be) = sin(b)*sin(al):sin(a)
-		sina = java.lang.Math.sin( a ) ;
-		sinb = java.lang.Math.sin( b ) ;
-		sinal = java.lang.Math.sin( al ) ;
+		sina = sin( a ) ;
+		sinb = sin( b ) ;
+		sinal = sin( al ) ;
 
 		sinbe = sinb*sinal/sina ;
 
-		r = java.lang.Math.asin( truncate ( sinbe ) ) ;
+		r = asin( truncate ( sinbe ) ) ;
 
 		return r ;
 	} 
@@ -52,15 +47,15 @@ public final class Math {
 		double r ;
 
 		// cos(a) = cos(b)*cos(c)+sin(b)*sin(c)*cos(al)
-		sinb = java.lang.Math.sin( b ) ;
-		sinc = java.lang.Math.sin( c ) ;
-		cosb = java.lang.Math.cos( b ) ;
-		cosc = java.lang.Math.cos( c ) ;
-		cosal = java.lang.Math.cos( al ) ;
+		sinb = sin( b ) ;
+		sinc = sin( c ) ;
+		cosb = cos( b ) ;
+		cosc = cos( c ) ;
+		cosal = cos( al ) ;
 
 		cosa = cosb*cosc+sinb*sinc*cosal ;
 
-		r = java.lang.Math.acos( truncate ( cosa ) ) ;
+		r = acos( truncate ( cosa ) ) ;
 
 		return r ;
 	}
@@ -71,15 +66,15 @@ public final class Math {
 		double r ;
 
 		// cos(al) = ( cos(a)-cos(b)*cos(c) ):( sin(b)*sin(c) )
-		sinb = java.lang.Math.sin( b ) ;
-		sinc = java.lang.Math.sin( c ) ;
-		cosa = java.lang.Math.cos( a ) ;
-		cosb = java.lang.Math.cos( b ) ;
-		cosc = java.lang.Math.cos( c ) ;
+		sinb = sin( b ) ;
+		sinc = sin( c ) ;
+		cosa = cos( a ) ;
+		cosb = cos( b ) ;
+		cosc = cos( c ) ;
 
 		cosal = ( cosa-cosb*cosc )/( sinb*sinc ) ;
 
-		r = java.lang.Math.acos( truncate ( cosal ) ) ;
+		r = acos( truncate ( cosal ) ) ;
 
 		return r ;
 	}
@@ -90,15 +85,15 @@ public final class Math {
 		double r ;
 
 		// cos(al) = -cos(be)*cos(ga)+sin(be)*sin(ga)*cos(a)
-		sinbe = java.lang.Math.sin( be ) ;
-		singa = java.lang.Math.sin( ga ) ;
-		cosbe = java.lang.Math.cos( be ) ;
-		cosga = java.lang.Math.cos( ga ) ;
-		cosa = java.lang.Math.cos( a ) ;
+		sinbe = sin( be ) ;
+		singa = sin( ga ) ;
+		cosbe = cos( be ) ;
+		cosga = cos( ga ) ;
+		cosa = cos( a ) ;
 
 		cosal = -cosbe*cosga+sinbe*singa*cosa ;
 
-		r = java.lang.Math.acos( truncate ( cosal ) ) ;
+		r = acos( truncate ( cosal ) ) ;
 
 		return r ;
 	} 
@@ -109,15 +104,15 @@ public final class Math {
 		double r ;
 
 		// cos(a) = ( cos(al)+cos(be)*cos(ga) )/( sin(be)*sin(ga) )
-		sinbe = java.lang.Math.sin( be ) ;
-		singa = java.lang.Math.sin( ga ) ;
-		cosal = java.lang.Math.cos( al ) ;
-		cosbe = java.lang.Math.cos( be ) ;
-		cosga = java.lang.Math.cos( ga ) ;
+		sinbe = sin( be ) ;
+		singa = sin( ga ) ;
+		cosal = cos( al ) ;
+		cosbe = cos( be ) ;
+		cosga = cos( ga ) ;
 
 		cosa = ( cosal+cosbe*cosga )/( sinbe*singa ) ;
 
-		r = java.lang.Math.acos( truncate ( cosa ) ) ;
+		r = acos( truncate ( cosa ) ) ;
 
 		return r ;
 	}
@@ -130,16 +125,16 @@ public final class Math {
 
 		// cot(a/2) = sqrt( cos(o-al)*cos(o-be)*cos(o-ga)/-cos(o) ):cos(o-al), o = ( al+be+ga ):2
 		o = ( al+be+ga )/2 ;
-		cosoal = java.lang.Math.cos( o-al ) ;
-		cosobe = java.lang.Math.cos( o-be ) ;
-		cosoga = java.lang.Math.cos( o-ga ) ;
-		coso = java.lang.Math.cos( o ) ;
+		cosoal = cos( o-al ) ;
+		cosobe = cos( o-be ) ;
+		cosoga = cos( o-ga ) ;
+		coso = cos( o ) ;
 
 		k = java.lang.Math.sqrt( cosoal*cosobe*cosoga/-coso ) ;
 
 		cota2 = k/cosoal ;
 
-		r = java.lang.Math.atan2( 1, cota2 )*2 ;
+		r = atan2( 1, cota2 )*2 ;
 
 		return r ;
 	}
@@ -151,14 +146,14 @@ public final class Math {
 
 		// tan(a/2) = sqrt( sin(s-a)*sin(s-b)*sin(s-c):sin(s) ):sin(s-a), s = ( a+b+c ):2
 		s = ( a+b+c )/2 ;
-		sinsa = java.lang.Math.sin( s-a ) ;
-		sinsb = java.lang.Math.sin( s-b ) ;
-		sinsc = java.lang.Math.sin( s-c ) ;
-		sins = java.lang.Math.sin( s ) ;
+		sinsa = sin( s-a ) ;
+		sinsb = sin( s-b ) ;
+		sinsc = sin( s-c ) ;
+		sins = sin( s ) ;
 
 		k = java.lang.Math.sqrt( sinsa*sinsb*sinsc/sins ) ;
 
-		r = java.lang.Math.atan2( k, sinsa )*2 ;
+		r = atan2( k, sinsa )*2 ;
 
 		return r ;
 	}
@@ -210,7 +205,7 @@ public final class Math {
 		double cotal2, cosbpc2, cosbmc2 ;
 
 		be = lawOfSine( a, b, al ) ;
-		be = ambiguous?rad180-be:be ;
+		be = ambiguous?180-be:be ;
 
 		// tan(al:2-be:2)*sin(a:2+b:2)=cot(ga:2)*sin(a:2-b:2)
 		// tan(al:2+be:2)*cos(a:2+b:2)=cot(ga:2)*cos(a:2-b:2)
@@ -226,18 +221,18 @@ public final class Math {
 		// tan(c:2+a:2)*cos(ga:2+al:2)=tan(b:2)*cos(ga:2-al:2)
 
 		// tan(c:2)=tan(a:2+b:2)*cos(al:2+be:2):cos(al:2-be:2)
-		tanapb2 = java.lang.Math.tan( a/2+b/2 ) ;
-		cosalpbe2 = java.lang.Math.cos( al/2+be/2 ) ;
-		cosalmbe2 = java.lang.Math.cos( al/2-be/2 ) ;
+		tanapb2 = tan( a/2+b/2 ) ;
+		cosalpbe2 = cos( al/2+be/2 ) ;
+		cosalmbe2 = cos( al/2-be/2 ) ;
 
-		c = java.lang.Math.atan2( tanapb2*cosalpbe2, cosalmbe2 )*2 ;
+		c = Math.atan2( tanapb2*cosalpbe2, cosalmbe2 )*2 ;
 
 		// tan(be+ga):2=cot(al):2*cos(b-c):2:cos(b+c):2
 		cotal2 = cot( al/2 ) ;
-		cosbpc2 = java.lang.Math.cos( b/2+c/2 ) ;
-		cosbmc2 = java.lang.Math.cos( b/2-c/2 ) ;
+		cosbpc2 = cos( b/2+c/2 ) ;
+		cosbmc2 = cos( b/2-c/2 ) ;
 
-		ga = java.lang.Math.atan2( cotal2*cosbmc2, cosbpc2 )*2-be ;
+		ga = atan2( cotal2*cosbmc2, cosbpc2 )*2-be ;
 
 		r[0] = c ; 
 		r[1] = be ; 
@@ -253,21 +248,21 @@ public final class Math {
 		double cotal2, cosbpc2, cosbmc2 ;
 
 		b = lawOfSineSolveEdge( a, al, be ) ;
-		b = ambiguous?rad180-b:b ;
+		b = ambiguous?180-b:b ;
 
 		// tan(c:2)=tan(a:2+b:2)*cos(al:2+be:2):cos(al:2-be:2)
-		tanapb2 = java.lang.Math.tan( a/2+b/2 ) ;
-		cosalpbe2 = java.lang.Math.cos( al/2+be/2 ) ;
-		cosalmbe2 = java.lang.Math.cos( al/2-be/2 ) ;
+		tanapb2 = tan( a/2+b/2 ) ;
+		cosalpbe2 = cos( al/2+be/2 ) ;
+		cosalmbe2 = cos( al/2-be/2 ) ;
 
-		c = java.lang.Math.atan2( tanapb2*cosalpbe2, cosalmbe2 )*2 ;
+		c = Math.atan2( tanapb2*cosalpbe2, cosalmbe2 )*2 ;
 
 		// tan(be+ga):2=cot(al):2*cos(b-c):2:cos(b+c):2
 		cotal2 = cot( al/2 ) ;
-		cosbpc2 = java.lang.Math.cos( b/2+c/2 ) ;
-		cosbmc2 = java.lang.Math.cos( b/2-c/2 ) ;
+		cosbpc2 = cos( b/2+c/2 ) ;
+		cosbmc2 = cos( b/2-c/2 ) ;
 
-		ga = java.lang.Math.atan2( cotal2*cosbmc2, cosbpc2 )*2-be ;
+		ga = Math.atan2( cotal2*cosbmc2, cosbpc2 )*2-be ;
 
 		r[0] = b ; 
 		r[1] = c ; 
@@ -286,7 +281,7 @@ public final class Math {
 	}
 
 	public static double cot( double al ) {
-		return 1/java.lang.Math.tan( al ) ;
+		return 1/tan( al ) ;
 	}
 
 	public static boolean isLim0( double v ) {
@@ -295,5 +290,34 @@ public final class Math {
 
 	public static boolean isNaN( double v ) {
 		return Double.doubleToLongBits( v )==Double.doubleToLongBits( Double.NaN )?true:false ;
+	}
+
+	// degree versions of java.lang.Math trigonometric methods
+	public static double sin( double a ) {
+		return java.lang.Math.sin( CAACoordinateTransformation.DegreesToRadians( a ) ) ;
+	}
+
+	public static double cos( double a ) {
+		return java.lang.Math.cos( CAACoordinateTransformation.DegreesToRadians( a ) ) ;
+	}
+
+	public static double tan( double a ) {
+		return java.lang.Math.tan( CAACoordinateTransformation.DegreesToRadians( a ) ) ;
+	}
+
+	public static double asin( double a ) {
+		return CAACoordinateTransformation.RadiansToDegrees( java.lang.Math.asin( a ) ) ;
+	}
+
+	public static double acos( double a ) {
+		return CAACoordinateTransformation.RadiansToDegrees( java.lang.Math.acos( a ) ) ;
+	}
+
+	public static double atan( double a ) {
+		return CAACoordinateTransformation.RadiansToDegrees( java.lang.Math.atan( a ) ) ;
+	}
+
+	public static double atan2( double y, double x ) {
+		return CAACoordinateTransformation.RadiansToDegrees( java.lang.Math.atan2( y, x ) ) ;
 	}
 }

@@ -9,10 +9,10 @@ public class ChartGnomonic extends ChartAzimuthalType {
 	}
 
 	double thetaToDistance( double de ) {
-		return java.lang.Math.tan( Math.rad90-de ) ;
+		return Math.tan( 90-de ) ;
 	}
 
 	double distanceToTheta( double d ) {
-		return Math.rad90-java.lang.Math.atan( d ) ;
+		return 90-Math.atan( d ) ;
 	}
 }

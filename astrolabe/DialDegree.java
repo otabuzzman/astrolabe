@@ -51,7 +51,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	private double unit ;
 
 	public DialDegree( Object peer, Baseline baseline ) throws ParameterNotValidException {
-		this( peer, baseline, CAACoordinateTransformation.DegreesToRadians( 1 ) ) ;
+		this( peer, baseline, 1 ) ;
 	}
 
 	public DialDegree( Object peer, Baseline baseline, double unit ) throws ParameterNotValidException {
@@ -457,7 +457,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		double r ;
 
 		r = Math.truncate( baseline.mapIndexToScale( index, span*unit ) ) ;
-		if ( ! baseline.probe( r ) || r>Math.rad360 ) {
+		if ( ! baseline.probe( r ) || r>360 ) {
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
@@ -486,8 +486,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
 		ApplicationHelper.registerDMS( key, a ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
-		ApplicationHelper.registerTime( key, a ) ;
+		ApplicationHelper.registerHMS( key, a ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-		ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/ ) ;
+		ApplicationHelper.registerHMS( key, CAACoordinateTransformation.MapTo0To360Range( a+180/*12h*/ ) ) ;
 	}
 }

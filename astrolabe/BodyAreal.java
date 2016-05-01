@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import caa.CAACoordinateTransformation;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 @SuppressWarnings("serial")
 public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEmitter {
@@ -19,7 +19,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	public BodyAreal( Object peer, Projector projector ) throws ParameterNotValidException {
 		PolygonSpherical polygon ;
 		String key ;
-		double rad1 ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
@@ -39,9 +38,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
 		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area() ) ;
-		rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area()/( rad1*rad1 ) ) ;		
+		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area() ) ;		
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -63,7 +61,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		astrolabe.model.BodyAreal peer ;
 		BodyAreal body ;
 		astrolabe.model.Position position ;
-		double phi, the ;
 		double[] lo, xy = null ;
 		Vector z, p ;
 		double a ;
@@ -79,10 +76,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 				for ( double[] coordinate : segment ) {
 					lo = projector.unproject( coordinate ) ;
-					lo[0] = ApplicationHelper.mapTo0To360Range( lo[0] ) ;
-
-					phi = CAACoordinateTransformation.RadiansToDegrees( lo[0] ) ;
-					the = CAACoordinateTransformation.RadiansToDegrees( lo[1] ) ;
+					lo[0] = CAACoordinateTransformation.MapTo0To360Range( lo[0] ) ;
 
 					position = new astrolabe.model.Position() ;
 					// astrolabe.model.SphericalType
@@ -91,11 +85,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 					// astrolabe.model.AngleType
 					position.setPhi( new astrolabe.model.Phi() ) ;
 					position.getPhi().setRational( new astrolabe.model.Rational() ) ;
-					position.getPhi().getRational().setValue( phi ) ;  
+					position.getPhi().getRational().setValue( lo[0] ) ;  
 					// astrolabe.model.AngleType
 					position.setTheta( new astrolabe.model.Theta() ) ;
 					position.getTheta().setRational( new astrolabe.model.Rational() ) ;
-					position.getTheta().getRational().setValue( the ) ;  
+					position.getTheta().getRational().setValue( lo[1] ) ;  
 
 					peer.addPosition( position ) ;
 				}
@@ -161,13 +155,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			lo = outline.get( outline.size()-1 ) ;
 			xy = projector.project( lo[1], lo[2] ) ;
 			p = new Vector( xy[0], xy[1] ) ;
-			xy = projector.project( 0, Math.rad90 ) ;
+			xy = projector.project( 0, 90 ) ;
 			z = new Vector( xy[0], xy[1] ) ; // zenit
 
 			z.sub( p ) ;
 
-			a = java.lang.Math.atan2( z.y, z.x )-Math.rad90 ;
-			a = CAACoordinateTransformation.RadiansToDegrees( a ) ;
+			a = Math.atan2( z.y, z.x )-90 ;
 
 			ps.operator.rotate( a ) ;
 

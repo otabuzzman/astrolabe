@@ -140,7 +140,7 @@ public class DialDay extends DialDegree {
 			eot = CAAEquationOfTime.Calculate( jd ) ;
 			// convert to hours if greater than 20 minutes
 			eot = ( eot>20?eot-24*60:eot )/60 ;
-			eot = CAACoordinateTransformation.HoursToRadians( eot ) ;
+			eot = CAACoordinateTransformation.HoursToDegrees( eot ) ;
 
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
 			ApplicationHelper.registerHMS( key, eot ) ;

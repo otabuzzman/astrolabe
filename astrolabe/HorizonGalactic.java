@@ -1,6 +1,9 @@
 
 package astrolabe;
 
+import caa.CAA2DCoordinate;
+import caa.CAACoordinateTransformation;
+
 @SuppressWarnings("serial")
 public class HorizonGalactic extends HorizonType {
 
@@ -12,12 +15,15 @@ public class HorizonGalactic extends HorizonType {
 	public HorizonGalactic( Object peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
-		double[] eq ;
+		CAA2DCoordinate c ;
+		double[] eq = new double[2] ;
 		String key ;
 
 		this.projector = projector ;
 
-		eq = ApplicationHelper.galactic2Equatorial( 0, Math.rad90 ) ;
+		c = CAACoordinateTransformation.Galactic2Equatorial( 0, 90 ) ;
+		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		eq[1] = c.Y() ;
 		la = eq[1] ;
 		ST = eq[0] ;
 
@@ -36,17 +42,23 @@ public class HorizonGalactic extends HorizonType {
 	}
 
 	public double[] convert( double l, double b ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2];
 
-		r = ApplicationHelper.galactic2Equatorial( l, b ) ;
+		c = CAACoordinateTransformation.Galactic2Equatorial( l, b ) ;
+		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		r[1] = c.Y() ;
 
 		return r ;
 	}
 
 	public double[] unconvert( double RA, double d ) {
-		double[] r ;
+		CAA2DCoordinate c ;
+		double[] r = new double[2];
 
-		r = ApplicationHelper.equatorial2Galactic( RA, d ) ;
+		c = CAACoordinateTransformation.Equatorial2Galactic( CAACoordinateTransformation.DegreesToHours( RA ), d ) ;
+		r[0] = c.X() ;
+		r[1] = c.Y() ;
 
 		return r ;
 	}

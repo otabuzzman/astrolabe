@@ -332,7 +332,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			r = new double[] { l, b+( jd-jdAy )*Math.rad90/90*stretch } ;
+			r = new double[] { l, b+( jd-jdAy )*90/90*stretch } ;
 		} else {
 			a = angle( jd ) ;
 			r = circle.tangent( a ) ;
@@ -369,7 +369,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		}
 
 		r[0] = l ;
-		r[1] = b+( jd-jdAy )*Math.rad90/90*stretch ;
+		r[1] = b+( jd-jdAy )*90/90*stretch ;
 
 		return r ;
 	}
