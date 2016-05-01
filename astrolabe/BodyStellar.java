@@ -47,6 +47,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		Script script ;
+
 		ps.push( x ) ;
 		ps.push( y ) ;
 		ps.operator.moveto() ;
@@ -59,7 +61,9 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.array( true ) ;
 		try {
-			AnnotationStraight.emitPS( ps, getScript(), new Script( getScript() ).size(), 0, 0, 0, 0, 0 ) ;
+			script = new Script( getScript() ) ;
+
+			AnnotationStraight.emitPS( ps, script, script.size(), 0, 0, 0, 0, 0 ) ;
 		} catch ( ParameterNotValidException e ) {
 			String msg ;
 

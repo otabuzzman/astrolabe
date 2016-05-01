@@ -140,8 +140,22 @@
 				<xs:element ref="SpanParallel"/>
 				<xs:element ref="SpanMeridian"/>
 			</xs:choice>
-			<xs:element ref="AnnotationParallel" minOccurs="0"/>
-			<xs:element ref="AnnotationMeridian" minOccurs="0"/>
+			<xs:element name="CheckerParallel" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="AnnotationStraight"/>
+					</xs:sequence>
+					<xs:attribute name="value" type="xs:positiveInteger" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="CheckerMeridian" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="AnnotationStraight"/>
+					</xs:sequence>
+					<xs:attribute name="value" type="xs:positiveInteger" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" use="optional">
@@ -177,20 +191,6 @@
 	</xs:element>
 	<xs:element name="SpanMeridian" type="AngleType"/>
 	<xs:element name="SpanParallel" type="AngleType"/>
-	<xs:complexType name="InsertionAnnotationType">
-		<xs:sequence>
-			<xs:element ref="AnnotationStraight"/>
-		</xs:sequence>
-		<xs:attribute name="checker" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:positiveInteger">
-					<xs:minInclusive value="2"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="AnnotationParallel" type="InsertionAnnotationType"/>
-	<xs:element name="AnnotationMeridian" type="InsertionAnnotationType"/>
 	<xs:element name="AtlasStereographic">
 		<xs:complexType>
 			<xs:complexContent>
@@ -330,8 +330,8 @@
 	<xs:element name="HorizonGalactic" type="HorizonType"/>
 	<xs:complexType name="CircleType">
 		<xs:sequence>
-			<xs:element ref="Begin"/>
-			<xs:element ref="End"/>
+			<xs:element name="Begin" type="MarkType"/>
+			<xs:element name="End" type="MarkType"/>
 			<xs:element ref="Dial" minOccurs="0"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -366,37 +366,28 @@
 	</xs:element>
 	<xs:complexType name="MarkType">
 		<xs:choice>
-			<xs:element ref="Immediate"/>
-			<xs:element ref="Reference"/>
+			<xs:element ref="Angle"/>
+			<xs:element name="Reference">
+				<xs:complexType>
+					<xs:attribute name="circle" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[^,]+"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="node" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="chasing"/>
+								<xs:pattern value="leading"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:complexType>
-	<xs:element name="Begin" type="MarkType"/>
-	<xs:element name="End" type="MarkType"/>
-	<xs:complexType name="ReferenceType">
-		<xs:attribute name="circle" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="node" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="chasing"/>
-					<xs:pattern value="leading"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Reference">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ReferenceType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="Immediate" type="AngleType"/>
 	<xs:element name="CircleParallel">
 		<xs:complexType>
 			<xs:complexContent>
@@ -493,6 +484,7 @@
 		<xs:sequence>
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="span" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
@@ -829,7 +821,32 @@
 	<xs:complexType name="CatalogType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="Select" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Restrict" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="value">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="\{.+\}"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Select" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Script" minOccurs="0"/>
+						<xs:element ref="Annotation" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="value" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="\{.+\}"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
 			<xs:element ref="Artefact" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -840,33 +857,6 @@
 		</xs:attribute>
 		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="CommonType">
-		<xs:sequence>
-			<xs:element ref="Script"/>
-		</xs:sequence>
-		<xs:attribute name="value" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+(,[^,]+)*"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Common" type="CommonType"/>
-	<xs:complexType name="SelectType">
-		<xs:sequence>
-			<xs:element ref="Script" minOccurs="0"/>
-			<xs:element ref="Annotation" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="value" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+(,[^,]+)*"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Select" type="SelectType"/>
 	<xs:element name="Catalog">
 		<xs:complexType>
 			<xs:choice>
@@ -887,14 +877,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
-								<xs:pattern value="[1-9][0-9]{0,5}(,[1-9][0-9]{0,5})*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -906,14 +888,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
-								<xs:pattern value="[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -925,14 +899,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
-								<xs:pattern value="[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -944,14 +910,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
-								<xs:pattern value="[1-9][0-9]{0,7}(,[1-9][0-9]{0,7})*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -959,15 +917,7 @@
 	<xs:element name="CatalogADC6049">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="CatalogType">
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL)(,(AND|ANT|APS|AQL|AQR|ARA|ARI|AUR|BOO|CAE|CAM|CAP|CAR|CAS|CEN|CEP|CET|CHA|CIR|CMA|CMI|CNC|COL|COM|CRA|CRB|CRT|CRU|CRV|CVN|CYG|DEL|DOR|DRA|EQU|ERI|FOR|GEM|GRU|HER|HOR|HYA|HYI|IND|LAC|LEO|LEP|LIB|LMI|LUP|LYN|LYR|MEN|MIC|MON|MUS|NOR|OCT|OPH|ORI|PAV|PEG|PER|PHE|PIC|PSA|PSC|PUP|PYX|RET|SCL|SCO|SCT|SER1|SER2|SEX|SGE|SGR|TAU|TEL|TRA|TRI|TUC|UMA|UMI|VEL|VIR|VOL|VUL))*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
+				<xs:extension base="CatalogType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -978,14 +928,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
-								<xs:pattern value="I?[1-9][0-9]{0,3}(,I?[1-9][0-9]{0,3})*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -997,13 +939,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="restrict" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="[1-9][0-9]{0,6}(,[1-9][0-9]{0,6})*"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

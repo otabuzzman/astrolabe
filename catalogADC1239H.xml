@@ -24,14 +24,14 @@ astrolabe.xsd">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -47,11 +47,12 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H name="1239H" fov="chart" url="lib/cat/1239/hip_main.dat.gz" restrict="Vmag-1,Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
-							<Select value="Vmag-1,Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
+						<CatalogADC1239H name="1239H" fov="chart" url="lib/cat/1239/hip_main.dat.gz">
+							<Restrict value="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;4}"/>
+							<Select value="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Script purpose="bodylettering0" value="{HIP}"/>
+										<Script purpose="{VarFlag~&#x0022;[123]&#x0022;?&#x0022;bodylettering0&#x0022;:Ncomp>1?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{HIP}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
@@ -233,7 +234,7 @@ astrolabe.xsd">
 								<!--Vel-->
 								<Sign value="39953:42536:42913:45941:48774:52727:51986:50191:46651:44816:39953"/>
 							</Artefact>
-							<Script purpose="{Vmag&#x003c;-1?4.64:Vmag&#x003c;0?3.74:Vmag&#x003c;1?3.02:Vmag&#x003c;2?2.43:Vmag&#x003c;3?1.96:Vmag&#x003c;4?1.58:Vmag&#x003c;5?1.27:Vmag&#x003c;6?1.03:Vmag&#x003c;7?0.83:Vmag&#x003c;8?0.67:Vmag&#x003c;9?0.54:Vmag&#x003c;10?0.43:Vmag&#x003c;11?0.35:Vmag&#x003c;12?0.28:Vmag&#x003c;13?0.22:Vmag&#x003c;14?0.18:0.14}" value="&#xf811;"/>
+							<Script purpose="{Vmag&#x003c;-1?4.64:Vmag&#x003c;0?3.74:Vmag&#x003c;1?3.02:Vmag&#x003c;2?2.43:Vmag&#x003c;3?1.96:Vmag&#x003c;4?1.58:Vmag&#x003c;5?1.27:Vmag&#x003c;6?1.03:Vmag&#x003c;7?0.83:Vmag&#x003c;8?0.67:Vmag&#x003c;9?0.54:Vmag&#x003c;10?0.43:Vmag&#x003c;11?0.35:Vmag&#x003c;12?0.28:Vmag&#x003c;13?0.22:Vmag&#x003c;14?0.18:0.14}" value="{VarFlag~&#x0022;[123]&#x0022;?(Period~&#x0022;[0-9].*&#x0022;?(Period>1?(VarFlag>2?&#x0022;&#xf816;&#x0022;:&#x0022;&#xf818;&#x0022;):(VarFlag>2?&#x0022;&#xf815;&#x0022;:&#x0022;&#xf817;&#x0022;)):&#x0022;&#xf814;&#x0022;):Ncomp>2?&#x0022;&#xf813;&#x0022;:Ncomp>1?&#x0022;&#xf812;&#x0022;:&#x0022;&#xf811;&#x0022;}"/>
 						</CatalogADC1239H>
 					</Catalog>
 				</HorizonEquatorial>

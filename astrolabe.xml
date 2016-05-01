@@ -24,14 +24,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -139,14 +139,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="40"/>
@@ -156,14 +156,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -173,14 +173,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="80"/>
@@ -194,9 +194,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -209,9 +209,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -224,9 +224,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -236,14 +236,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -253,14 +253,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -270,14 +270,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -290,9 +290,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -319,9 +319,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -334,9 +334,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -349,9 +349,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -364,9 +364,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="300"/>
@@ -379,9 +379,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -424,14 +424,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical" name="suntrue">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS min="0" sec="0.0" deg="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-20"/>
@@ -441,14 +441,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical" name="sunmean">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS min="0" sec="0.0" deg="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-19.9"/>
@@ -490,14 +490,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="true" distance="71.5">
@@ -515,14 +515,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -546,14 +546,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="40"/>
@@ -563,14 +563,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -580,14 +580,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="80"/>
@@ -601,9 +601,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -616,9 +616,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="15"/>
@@ -631,9 +631,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -646,9 +646,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -675,9 +675,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -690,9 +690,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="75"/>
@@ -705,9 +705,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -720,9 +720,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="105"/>
@@ -735,9 +735,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -750,9 +750,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="135"/>
@@ -765,9 +765,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -780,9 +780,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="165"/>
@@ -795,9 +795,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="180"/>
@@ -810,9 +810,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="195"/>
@@ -825,9 +825,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -840,9 +840,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="225"/>
@@ -855,9 +855,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -870,9 +870,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="255"/>
@@ -885,9 +885,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -900,9 +900,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="285"/>
@@ -915,9 +915,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="300"/>
@@ -930,9 +930,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="315"/>
@@ -945,9 +945,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -960,9 +960,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="345"/>
@@ -1266,14 +1266,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="20" min="0" sec="0.0"/>
@@ -1283,14 +1283,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="rail" reflect="false">
@@ -1314,14 +1314,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="40" min="0" sec="0.0"/>
@@ -1331,14 +1331,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="50" min="0" sec="0.0"/>
@@ -1348,14 +1348,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="60" min="0" sec="0.0"/>
@@ -1365,14 +1365,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="70" min="0" sec="0.0"/>
@@ -1382,14 +1382,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<DMS deg="80" min="0" sec="0.0"/>
@@ -1403,9 +1403,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -1418,9 +1418,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="15"/>
@@ -1433,9 +1433,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -1448,9 +1448,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="45"/>
@@ -1463,9 +1463,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -1492,9 +1492,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="75"/>
@@ -1507,9 +1507,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -1522,9 +1522,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="105"/>
@@ -1537,9 +1537,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -1552,9 +1552,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="135"/>
@@ -1567,9 +1567,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -1582,9 +1582,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="165"/>
@@ -1597,9 +1597,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="180"/>
@@ -1612,9 +1612,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="195"/>
@@ -1627,9 +1627,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -1642,9 +1642,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="225"/>
@@ -1657,9 +1657,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -1672,9 +1672,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="255"/>
@@ -1687,9 +1687,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -1702,9 +1702,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="285"/>
@@ -1717,9 +1717,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -1746,9 +1746,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="315"/>
@@ -1761,9 +1761,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -1776,9 +1776,9 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="345"/>
@@ -1840,14 +1840,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="52">
@@ -1870,14 +1870,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialHour baseline="rail" reflect="true">
@@ -1929,14 +1929,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialHour baseline="rail" reflect="false">
@@ -1987,14 +1987,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-10"/>
@@ -2005,14 +2005,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26">
@@ -2027,14 +2027,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="10"/>
@@ -2044,14 +2044,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="20"/>
@@ -2061,14 +2061,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -2078,14 +2078,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="40"/>
@@ -2095,14 +2095,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="50"/>
@@ -2112,14 +2112,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -2129,14 +2129,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="70"/>
@@ -2146,14 +2146,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="80"/>
@@ -2164,14 +2164,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26.5">
@@ -2184,14 +2184,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="27">
@@ -2204,14 +2204,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleNorthernPolar importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleNorthernPolar>
 					</Circle>
@@ -2219,14 +2219,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -2236,14 +2236,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="15"/>
@@ -2253,14 +2253,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -2270,14 +2270,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="45"/>
@@ -2287,14 +2287,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -2318,14 +2318,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="75"/>
@@ -2335,14 +2335,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -2352,14 +2352,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="105"/>
@@ -2369,14 +2369,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -2386,14 +2386,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="135"/>
@@ -2403,14 +2403,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -2420,14 +2420,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="165"/>
@@ -2437,14 +2437,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -2468,14 +2468,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="195"/>
@@ -2485,14 +2485,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -2502,14 +2502,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="225"/>
@@ -2519,14 +2519,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -2536,14 +2536,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="255"/>
@@ -2553,14 +2553,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -2570,14 +2570,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="285"/>
@@ -2587,14 +2587,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
@@ -2618,14 +2618,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="315"/>
@@ -2635,14 +2635,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -2652,14 +2652,14 @@ astrolabe.xsd" name="astrolabe">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="345"/>
@@ -2678,21 +2678,21 @@ astrolabe.xsd" name="astrolabe">
 									<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 								</AnnotationStraight>
 							</Annotation>
-							<Select value="CMI,CNC,ERI,FOR,MON">
+							<Select value="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
-							<Select value="AQL,AUR,CAM,CRT,CRV,LEO,ORI,PSC,PUP,SER1,SEX,SGR,UMI,VIR">
+							<Select value="{abk&#x00fc;rzung~&#x0022;AQL&#x0022;||abk&#x00fc;rzung~&#x0022;AUR&#x0022;||abk&#x00fc;rzung~&#x0022;CAM&#x0022;||abk&#x00fc;rzung~&#x0022;CAS&#x0022;||abk&#x00fc;rzung~&#x0022;CEP&#x0022;||abk&#x00fc;rzung~&#x0022;CRT&#x0022;||abk&#x00fc;rzung~&#x0022;CRV&#x0022;||abk&#x00fc;rzung~&#x0022;CVN&#x0022;||abk&#x00fc;rzung~&#x0022;LEO&#x0022;||abk&#x00fc;rzung~&#x0022;ORI&#x0022;||abk&#x00fc;rzung~&#x0022;PSC&#x0022;||abk&#x00fc;rzung~&#x0022;PUP&#x0022;||abk&#x00fc;rzung~&#x0022;SER1&#x0022;||abk&#x00fc;rzung~&#x0022;SEX&#x0022;||abk&#x00fc;rzung~&#x0022;SGR&#x0022;||abk&#x00fc;rzung~&#x0022;UMI&#x0022;||abk&#x00fc;rzung~&#x0022;VIR&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
-							<Select value="LAC,LEP,SCT,SER2">
+							<Select value="{abk&#x00fc;rzung~&#x0022;LAC&#x0022;||abk&#x00fc;rzung~&#x0022;LEP&#x0022;||abk&#x00fc;rzung~&#x0022;SCT&#x0022;||abk&#x00fc;rzung~&#x0022;SER2&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
@@ -2705,8 +2705,9 @@ astrolabe.xsd" name="astrolabe">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz" restrict="Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
-							<Select value="Vmag0,Vmag1,Vmag2">
+						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
+							<Restrict value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}"/>
+							<Select value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;2}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Script purpose="bodylettering0" value="{Name}"/>

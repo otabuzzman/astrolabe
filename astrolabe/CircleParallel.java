@@ -53,7 +53,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
 		AstrolabeRegistry.registerDMS( key, al ) ;
 
-		if ( getBegin().getImmediate() == null ) {
+		if ( getBegin().getAngle() == null ) {
 			Object circle ;
 			boolean leading ;
 
@@ -73,11 +73,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				begin = 0 ;
 			}
 		} else {
-			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
+			begin = AstrolabeFactory.valueOf( getBegin().getAngle() ) ;
 		}
 		begin = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
 
-		if ( getEnd().getImmediate() == null ) {
+		if ( getEnd().getAngle() == null ) {
 			Object circle ;
 			boolean leading ;
 
@@ -97,7 +97,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				end = 360 ;
 			}
 		} else {
-			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
+			end = AstrolabeFactory.valueOf( getEnd().getAngle() ) ;
 		}
 		end = CAACoordinateTransformation.MapTo0To360Range( end ) ;
 
@@ -262,14 +262,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 					peer.setBegin( new astrolabe.model.Begin() ) ;
 					// astrolabe.model.AngleType
-					peer.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-					peer.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-					peer.getBegin().getImmediate().getRational().setValue( lob[0] ) ;
+					peer.getBegin().setAngle( new astrolabe.model.Angle() ) ;
+					peer.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
+					peer.getBegin().getAngle().getRational().setValue( lob[0] ) ;
 					peer.setEnd( new astrolabe.model.End() ) ;
 					// astrolabe.model.AngleType
-					peer.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-					peer.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-					peer.getEnd().getImmediate().getRational().setValue( loe[0] ) ;
+					peer.getEnd().setAngle( new astrolabe.model.Angle() ) ;
+					peer.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
+					peer.getEnd().getAngle().getRational().setValue( loe[0] ) ;
 					if ( getName() != null ) {
 					}
 

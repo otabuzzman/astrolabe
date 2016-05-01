@@ -215,14 +215,14 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		double circleNumber ;
 		double ra, de ;
 
-		if ( getAnnotationMeridian() == null )
+		if ( getCheckerMeridian() == null )
 			checkerRA = 1 ;
 		else
-			checkerRA = getAnnotationMeridian().getChecker() ;
-		if ( getAnnotationParallel() == null )
+			checkerRA = getCheckerMeridian().getValue() ;
+		if ( getCheckerParallel() == null )
 			checkerDe = 1 ;
 		else
-			checkerDe = getAnnotationParallel().getChecker() ;
+			checkerDe = getCheckerParallel().getValue() ;
 
 		if ( checkerDe == 1 && checkerRA == 1 )
 			return ;
@@ -561,19 +561,19 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 
 		cP.setBegin( new astrolabe.model.Begin() ) ;
 		// astrolabe.model.AngleType
-		cP.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-		cP.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cP.getBegin().setAngle( new astrolabe.model.Angle() ) ;
+		cP.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
 		cP.setEnd( new astrolabe.model.End() ) ;
 		// astrolabe.model.AngleType
-		cP.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-		cP.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cP.getEnd().setAngle( new astrolabe.model.Angle() ) ;
+		cP.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
 
 		cP.getAngle().getRational().setValue( de ) ;
-		cP.getBegin().getImmediate().getRational().setValue( 0 ) ;
-		cP.getEnd().getImmediate().getRational().setValue( 360 ) ;
+		cP.getBegin().getAngle().getRational().setValue( 0 ) ;
+		cP.getEnd().getAngle().getRational().setValue( 360 ) ;
 
 		a = new astrolabe.model.Annotation() ;
-		a.setAnnotationStraight( getAnnotationParallel().getAnnotationStraight() ) ;
+		a.setAnnotationStraight( getCheckerParallel().getAnnotationStraight() ) ;
 
 		cP.addAnnotation( a ) ;
 
@@ -602,22 +602,22 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 
 		cM.setBegin( new astrolabe.model.Begin() ) ;
 		// astrolabe.model.AngleType
-		cM.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-		cM.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cM.getBegin().setAngle( new astrolabe.model.Angle() ) ;
+		cM.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
 		cM.setEnd( new astrolabe.model.End() ) ;
 		// astrolabe.model.AngleType
-		cM.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-		cM.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cM.getEnd().setAngle( new astrolabe.model.Angle() ) ;
+		cM.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 		cMEnd = Configuration.getValue( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
 
 		cM.getAngle().getRational().setValue( ra ) ;
-		cM.getBegin().getImmediate().getRational().setValue( northern?-90:90 ) ;
-		cM.getEnd().getImmediate().getRational().setValue( cMEnd ) ;
+		cM.getBegin().getAngle().getRational().setValue( northern?-90:90 ) ;
+		cM.getEnd().getAngle().getRational().setValue( cMEnd ) ;
 
 		a = new astrolabe.model.Annotation() ;
-		a.setAnnotationStraight( getAnnotationMeridian().getAnnotationStraight() ) ;
+		a.setAnnotationStraight( getCheckerMeridian().getAnnotationStraight() ) ;
 
 		cM.addAnnotation( a ) ;
 
@@ -690,11 +690,11 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 	private void flipCircleRange( astrolabe.model.CircleType circle ) {
 		double b, e ;
 
-		b = circle.getBegin().getImmediate().getRational().getValue() ;
-		e = circle.getEnd().getImmediate().getRational().getValue() ;
+		b = circle.getBegin().getAngle().getRational().getValue() ;
+		e = circle.getEnd().getAngle().getRational().getValue() ;
 
-		circle.getBegin().getImmediate().getRational().setValue( e ) ;
-		circle.getEnd().getImmediate().getRational().setValue( b ) ;
+		circle.getBegin().getAngle().getRational().setValue( e ) ;
+		circle.getEnd().getAngle().getRational().setValue( b ) ;
 	}
 
 	public static void modelOf( astrolabe.model.AngleType angle, boolean discrete, boolean time, double value ) {

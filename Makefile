@@ -2,6 +2,10 @@ APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
 JDK     = /cygdrive/c/programme/java/jre1.5.0_17
+JDO		= -Xcheck:jni -Dhttp \
+			-Xmx1024m \
+			-Dftp.proxyHost=proxy.materna.de \
+			-Dftp.proxyPort=8080
 
 .PHONY: all clean tidy
 .SUFFIXES: .pdf .ps .xml .class .map
@@ -21,7 +25,7 @@ CLASSPATH = ./lib/castor-1.3.1.jar \
 	./lib/commons-logging-1.1.1.jar
 
 .xml.ps:
-	@time $(JDK)/bin/java \
+	@time $(JDK)/bin/java $(JDO) \
 			-Djava.library.path=./$(CAA) \
 			-classpath $(subst $(space),\;, \
 			./astrolabe \
@@ -34,7 +38,7 @@ CLASSPATH = ./lib/castor-1.3.1.jar \
 	@time $${GS:-gswin32c} -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$@ $<
 
 .class.map:
-	@$(JDK)/bin/java \
+	@$(JDK)/bin/java $(JDO) \
 		-classpath $(subst $(space),\;, \
 		$(CLASSPATH)) \
 		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<)) -o $@
@@ -43,7 +47,7 @@ all: $(APPL)/model
 
 $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
-	@$(JDK)/bin/java \
+	@$(JDK)/bin/java $(JDO) \
 		-classpath $(subst $(space),\;, \
 		./castor-1.3.1-codegen.jar \
 		./castor-1.3.1-xml-schema.jar \

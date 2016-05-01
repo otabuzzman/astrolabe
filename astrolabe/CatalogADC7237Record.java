@@ -9,7 +9,7 @@ import caa.CAACoordinateTransformation;
 
 public class CatalogADC7237Record implements CatalogRecord {
 
-	private final static int CR_LENGTH = 343 ;
+	private final static int CR_LENGTH = 521 ;
 
 	public String PGC	; // [1/3099300] PGC number
 	public String RAh	; // Right ascension (J2000)
@@ -64,7 +64,6 @@ public class CatalogADC7237Record implements CatalogRecord {
 		DEd() ;
 		DEm() ;
 		DEs() ;
-		logD25() ; // continue new methods
 	}
 
 	public void toModel( astrolabe.model.Body body ) throws ValidationException {
@@ -149,39 +148,27 @@ public class CatalogADC7237Record implements CatalogRecord {
 		Registry.registerName( key, ANames ) ;
 	}
 
-	public List<String> ident() {
-		List<String> r = new java.util.Vector<String>( 2 ) ;
-
-		r.add( PGC ) ;
-
-		return r ;
-	}
-
-	public double RAh() {
+	private double RAh() {
 		return new Double( RAh ).doubleValue() ;
 	}
 
-	public double RAm() {
+	private double RAm() {
 		return new Double( RAm ).doubleValue() ;
 	}
 
-	public double RAs() {
+	private double RAs() {
 		return new Double( RAs ).doubleValue() ;
 	}
 
-	public double DEd() {
+	private double DEd() {
 		return new Double( DE+DEd ).doubleValue() ;
 	}
 
-	public double DEm() {
+	private double DEm() {
 		return new Double( DE+DEm ).doubleValue() ;
 	}
 
-	public double DEs() {
+	private double DEs() {
 		return new Double( DE+DEs ).doubleValue() ;
-	}
-
-	public double logD25() {
-		return new Double( logD25 ).doubleValue() ;
 	}
 }

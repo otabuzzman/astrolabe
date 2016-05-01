@@ -54,7 +54,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		AstrolabeRegistry.registerDMS( key, az ) ;
 		AstrolabeRegistry.registerHMS( key, az ) ;
 
-		if ( getBegin().getImmediate() == null ) {
+		if ( getBegin().getAngle() == null ) {
 			Object circle ;
 			boolean leading ;
 
@@ -74,10 +74,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				begin = -90 ;
 			}
 		} else {
-			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
+			begin = AstrolabeFactory.valueOf( getBegin().getAngle() ) ;
 		}
 
-		if ( getEnd().getImmediate() == null ) {
+		if ( getEnd().getAngle() == null ) {
 			Object circle ;
 			boolean leading ;
 
@@ -97,7 +97,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				end = 90 ;
 			}
 		} else {
-			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
+			end = AstrolabeFactory.valueOf( getEnd().getAngle() ) ;
 		}
 
 		if ( getName() != null ) {
@@ -261,14 +261,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 					peer.setBegin( new astrolabe.model.Begin() ) ;
 					// astrolabe.model.AngleType
-					peer.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-					peer.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-					peer.getBegin().getImmediate().getRational().setValue( lob[1] ) ;
+					peer.getBegin().setAngle( new astrolabe.model.Angle() ) ;
+					peer.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
+					peer.getBegin().getAngle().getRational().setValue( lob[1] ) ;
 					peer.setEnd( new astrolabe.model.End() ) ;
 					// astrolabe.model.AngleType
-					peer.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-					peer.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-					peer.getEnd().getImmediate().getRational().setValue( loe[1] ) ;
+					peer.getEnd().setAngle( new astrolabe.model.Angle() ) ;
+					peer.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
+					peer.getEnd().getAngle().getRational().setValue( loe[1] ) ;
 
 					peer.setDial( getDial() ) ;
 					peer.setAnnotation( getAnnotation() ) ;

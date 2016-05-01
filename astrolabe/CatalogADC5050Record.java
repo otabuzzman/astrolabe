@@ -134,22 +134,25 @@ public class CatalogADC5050Record implements CatalogRecord {
 		DEd() ;
 		DEm() ;
 		DEs() ;
-		Vmag() ;
-		pmRA() ;
-		pmDE() ; // continue new methods
 	}
 
 	public void toModel( astrolabe.model.Body body ) throws ValidationException {
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
-		double epoch ;
+		double epoch, pmRA, pmDE ;
 
 		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		body.getBodyStellar().setName( HR ) ;
 
+		pmRA = 0 ;
+		if ( this.pmRA.length()>0 )
+			pmRA = new Double( this.pmRA ).doubleValue() ;
+		pmDE = 0 ;
+		if ( this.pmDE.length()>0 )
+			pmDE = new Double( this.pmDE ).doubleValue() ;
 		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
-				epoch-2451545., RAh()+RAm()/60.+RAs()/3600., DEd()+DEm()/60.+DEs()/3600., pmRA(), pmDE() ) ;
+				epoch-2451545., RAh()+RAm()/60.+RAs()/3600., DEd()+DEm()/60.+DEs()/3600., pmRA, pmDE ) ;
 		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 		pm = new astrolabe.model.Position() ;
 		// astrolabe.model.SphericalType
@@ -297,48 +300,27 @@ public class CatalogADC5050Record implements CatalogRecord {
 		Registry.registerName( key, NoteFlag ) ;
 	}
 
-	public List<String> ident() {
-		List<String> r = new java.util.Vector<String>( 2 ) ;
-
-		r.add( HR ) ;
-		r.add( "Vmag"+( (int) Vmag() ) ) ;
-
-		return r ;
-	}
-
-	public double RAh() {
+	private double RAh() {
 		return new Double( RAh ).doubleValue() ;
 	}
 
-	public double RAm() {
+	private double RAm() {
 		return new Double( RAm ).doubleValue() ;
 	}
 
-	public double RAs() {
+	private double RAs() {
 		return new Double( RAs ).doubleValue() ;
 	}
 
-	public double DEd() {
+	private double DEd() {
 		return new Double( DE+DEd ).doubleValue() ;
 	}
 
-	public double DEm() {
+	private double DEm() {
 		return new Double( DE+DEm ).doubleValue() ;
 	}
 
-	public double DEs() {
+	private double DEs() {
 		return new Double( DE+DEs ).doubleValue() ;
-	}
-
-	public double Vmag() {
-		return new Double( Vmag ).doubleValue() ;
-	}
-
-	public double pmRA() {
-		return new Double( pmRA ).doubleValue() ;
-	}
-
-	public double pmDE() {
-		return new Double( pmDE ).doubleValue() ;
 	}
 }

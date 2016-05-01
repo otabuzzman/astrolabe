@@ -27,12 +27,12 @@ astrolabe.xsd" name="atlas-stereographic">
 			<SpanParallel>
 				<Rational value="33"/>
 			</SpanParallel>
-			<AnnotationParallel checker="5">
+			<CheckerParallel value="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
 					<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
 				</AnnotationStraight>
-			</AnnotationParallel>
-			<AnnotationMeridian checker="5">
+			</CheckerParallel>
+			<CheckerMeridian value="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
 					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
@@ -41,7 +41,7 @@ astrolabe.xsd" name="atlas-stereographic">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>
-			</AnnotationMeridian>
+			</CheckerMeridian>
 			<ChartStereographic scale="100" northern="true" practicality="always" importance="graphical">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
 				<Origin>
@@ -172,12 +172,12 @@ astrolabe.xsd" name="atlas-stereographic">
 			<SpanParallel>
 				<Rational value="-33"/>
 			</SpanParallel>
-			<AnnotationParallel checker="5">
+			<CheckerParallel value="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
 					<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
 				</AnnotationStraight>
-			</AnnotationParallel>
-			<AnnotationMeridian checker="5">
+			</CheckerParallel>
+			<CheckerMeridian value="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
 					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
@@ -186,7 +186,7 @@ astrolabe.xsd" name="atlas-stereographic">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>
-			</AnnotationMeridian>
+			</CheckerMeridian>
 			<ChartStereographic scale="100" northern="false" practicality="always" importance="graphical">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
 				<Origin>
@@ -314,14 +314,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="northern" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -336,14 +336,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-25"/>
@@ -353,14 +353,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-10"/>
@@ -371,14 +371,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0"/>
@@ -388,14 +388,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="10"/>
@@ -405,14 +405,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="20"/>
@@ -422,14 +422,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -439,14 +439,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="40"/>
@@ -456,14 +456,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="50"/>
@@ -473,14 +473,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -490,14 +490,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="70"/>
@@ -507,14 +507,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="80"/>
@@ -525,14 +525,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleSouthernTropic>
 					</Circle>
@@ -540,14 +540,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleNorthernTropic>
 					</Circle>
@@ -555,14 +555,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleNorthernPolar importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleNorthernPolar>
 					</Circle>
@@ -570,14 +570,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -587,14 +587,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="15"/>
@@ -604,14 +604,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -621,14 +621,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="45"/>
@@ -638,14 +638,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -655,14 +655,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="75"/>
@@ -672,14 +672,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -689,14 +689,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="105"/>
@@ -706,14 +706,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -723,14 +723,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="135"/>
@@ -740,14 +740,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -757,14 +757,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="165"/>
@@ -774,14 +774,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="180"/>
@@ -791,14 +791,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="195"/>
@@ -808,14 +808,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -825,14 +825,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="225"/>
@@ -842,14 +842,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -859,14 +859,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="255"/>
@@ -876,14 +876,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -893,14 +893,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="285"/>
@@ -910,14 +910,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="300"/>
@@ -927,14 +927,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="315"/>
@@ -944,14 +944,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -961,14 +961,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="-25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="345"/>
@@ -997,14 +997,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel name="eqp24.5" fov="southern" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="24.5"/>
@@ -1019,14 +1019,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="25"/>
@@ -1036,14 +1036,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="10"/>
@@ -1054,14 +1054,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0"/>
@@ -1071,14 +1071,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-10"/>
@@ -1088,14 +1088,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-20"/>
@@ -1105,14 +1105,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-30"/>
@@ -1122,14 +1122,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-40"/>
@@ -1139,14 +1139,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-50"/>
@@ -1156,14 +1156,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-60"/>
@@ -1173,14 +1173,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-70"/>
@@ -1190,14 +1190,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-80"/>
@@ -1208,14 +1208,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleNorthernTropic>
 					</Circle>
@@ -1223,14 +1223,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleSouthernTropic>
 					</Circle>
@@ -1238,14 +1238,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleSouthernPolar importance="cardinal">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0.0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 						</CircleSouthernPolar>
 					</Circle>
@@ -1253,14 +1253,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="0.0"/>
@@ -1270,14 +1270,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="15"/>
@@ -1287,14 +1287,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="30"/>
@@ -1304,14 +1304,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="45"/>
@@ -1321,14 +1321,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="60"/>
@@ -1338,14 +1338,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="75"/>
@@ -1355,14 +1355,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="90"/>
@@ -1372,14 +1372,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="105"/>
@@ -1389,14 +1389,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="120"/>
@@ -1406,14 +1406,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="135"/>
@@ -1423,14 +1423,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="150"/>
@@ -1440,14 +1440,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="165"/>
@@ -1457,14 +1457,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="180"/>
@@ -1474,14 +1474,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="195"/>
@@ -1491,14 +1491,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="210"/>
@@ -1508,14 +1508,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="225"/>
@@ -1525,14 +1525,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="240"/>
@@ -1542,14 +1542,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="255"/>
@@ -1559,14 +1559,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="270"/>
@@ -1576,14 +1576,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="285"/>
@@ -1593,14 +1593,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="300"/>
@@ -1610,14 +1610,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="315"/>
@@ -1627,14 +1627,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="330"/>
@@ -1644,14 +1644,14 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Circle>
 						<CircleMeridian importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="25"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="345"/>

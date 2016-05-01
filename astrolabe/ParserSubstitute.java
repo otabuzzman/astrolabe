@@ -4,7 +4,6 @@ package astrolabe;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.MessageFormat;
 
 import fri.patterns.interpreter.parsergenerator.Lexer;
 import fri.patterns.interpreter.parsergenerator.Parser;
@@ -28,15 +27,18 @@ public class ParserSubstitute extends ReflectSemantic {
 		{ "SUBSTITUTE", "DEFINITION" }, // single top level rule to avoid warning
 		{ "DEFINITION", "CONDITION" },
 		{ "DEFINITION", "CONDITION", "'?'", "DEFINITION", "':'", "DEFINITION" },
-		{ "CONDITION", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'<'", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'>'", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'<='", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'>='", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'=='", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'!='", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'~'", "EXPRESSION" },
-		{ "CONDITION", "CONDITION", "'!~'", "EXPRESSION" },
+		{ "CONDITION", "COMPARISON" },
+		{ "CONDITION", "CONDITION", "'&&'", "COMPARISON" },
+		{ "CONDITION", "CONDITION", "'||'", "COMPARISON" },
+		{ "COMPARISON", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'<'", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'>'", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'<='", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'>='", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'=='", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'!='", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'~'", "EXPRESSION" },
+		{ "COMPARISON", "COMPARISON", "'!~'", "EXPRESSION" },
 		{ "EXPRESSION", "TERM" },
 		{ "EXPRESSION", "EXPRESSION", "'+'", "TERM" },
 		{ "EXPRESSION", "EXPRESSION", "'-'", "TERM" },
@@ -58,45 +60,46 @@ public class ParserSubstitute extends ReflectSemantic {
 		return DEFINITION ;
 	}
 
-	public Object DEFINITION( Object COMPARISON ) {
+	public Object DEFINITION( Object CONDITION ) {
+		return CONDITION ;
+	}
+
+	public Object DEFINITION( Object CONDITION, Object question, Object TRUE, Object colon, Object FALSE ) {
+		if ( ( (Boolean) CONDITION ).booleanValue() )
+			return TRUE ;
+		return FALSE ;
+	}
+
+	public Object CONDITION( Object COMPARISON ) {
 		return COMPARISON ;
 	}
 
-	public Object DEFINITION( Object CONDITION, Object question, Object ifDEFINITION, Object colon, Object DEFINITION ) {
-		if ( ( (Boolean) CONDITION ).booleanValue() )
-			return ifDEFINITION ;
-		return DEFINITION ;
+	public Object CONDITION( Object CONDITION, Object operator, Object COMPARISON ) {
+		if ( operator.equals( "&&" ) )
+			return ( (Boolean) CONDITION ).booleanValue()&&( (Boolean) COMPARISON ).booleanValue() ;
+		return ( (Boolean) CONDITION ).booleanValue()||( (Boolean) COMPARISON ).booleanValue() ;
 	}
 
-	public Object CONDITION( Object EXPRESSION ) {
+	public Object COMPARISON( Object EXPRESSION ) {
 		return EXPRESSION ;
 	}
 
-	public Object CONDITION( Object CONDITION, Object operator, Object EXPRESSION ) {
-		boolean longCONDITION = CONDITION instanceof Long ;
-		boolean longEXPRESSION = EXPRESSION instanceof Long ;
-
+	public Object COMPARISON( Object COMPARISON, Object operator, Object EXPRESSION ) {
 		if ( operator.equals( "<" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )<
-					( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()<number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( ">" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )>
-			( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()>number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( "<=" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )<=
-				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()<=number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( ">=" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )>=
-				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()>=number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( "==" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )==
-				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()==number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( "!=" ) )
-			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )!=
-				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+			return number( COMPARISON ).doubleValue()!=number( EXPRESSION ).doubleValue() ;
 		if ( operator.equals( "~" ) )
-			return new Boolean( CONDITION.toString().matches( EXPRESSION.toString() ) ) ;
-		return new Boolean( ! CONDITION.toString().matches( EXPRESSION.toString() ) ) ;
+			return string( COMPARISON ).matches( string( EXPRESSION ) ) ;
+		return ! string( COMPARISON ).matches( string( EXPRESSION ) ) ;
 	}
 
 	public Object EXPRESSION( Object TERM ) {
@@ -104,19 +107,9 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object EXPRESSION( Object EXPRESSION, Object operator, Object TERM ) {
-		boolean longEXPRESSION = EXPRESSION instanceof Long ;
-		boolean longTERM = TERM instanceof Long ;
-		Double result ;
-
 		if ( operator.equals( "+" ) )
-			result = new Double( ( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() )+
-					( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() ) ) ;
-		else 
-			result = new Double( ( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() )-
-					( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() ) ) ;
-		if ( longEXPRESSION || longTERM )
-			return new Long( result.longValue() ) ;
-		return result ;
+			return number( EXPRESSION )+number( TERM ) ;
+		return number( EXPRESSION )-number( TERM ) ;
 	}
 
 	public Object TERM( Object FACTOR ) {
@@ -124,64 +117,51 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object TERM( Object TERM, Object operator, Object FACTOR ) {
-		boolean longTERM = TERM instanceof Long ;
-		boolean longFACTOR = FACTOR instanceof Long ;
-		Double result ;
-
 		if ( operator.equals( "*" ) )
-			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )*
-					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
-		else if ( operator.equals( "/" ) )
-			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )/
-					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
-		else
-			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )%
-					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
-		if ( longTERM || longFACTOR )
-			return new Long( result.longValue() ) ;
-		return result ;
+			return number( TERM )*number( FACTOR ) ;
+		if ( operator.equals( "/" ) )
+			return number( TERM )/number( FACTOR ) ;
+		return number( TERM )%number( FACTOR ) ;
+	}
+
+	private String string( Object value ) {
+		return value instanceof String ? (String) value :
+			new String( value.toString() ) ;
+	}
+
+	private Double number( Object value ) {
+		return value instanceof Double ? (Double) value :
+			value instanceof Long ? new Double( value.toString() ) :
+				new Double( value.toString().length() ) ;
 	}
 
 	public Object FACTOR( Object value ) {
+		Object factor ;
+
 		try {
 			// value is a "`number`"
-			return valueNumber( value ) ;
-		} catch ( NumberFormatException eV ) {
-			if ( value.toString().matches( "\".*\"" ) )
-				// value is a "`stringdef`"
-				return value.toString().substring( 1, value.toString().length()-1 ) ;
-			Object objectFACTOR = Registry.retrieve( value.toString() ) ;
-			if ( objectFACTOR != null ) {
-				// value is a valid registry key
-				try {
-					return valueNumber( objectFACTOR ) ;
-				} catch ( NumberFormatException eO ) {
-					return objectFACTOR ;
-				}
-			}
-			// value is invalid
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "\""+value.toString()+"\"", "" } ) ;
-
-			throw new RuntimeException ( msg ) ;
-		}
-	}
-
-	private static Object valueNumber( Object value ) throws NumberFormatException {
-		try {
-			// value is a long "`number`"
-			return Long.valueOf( value.toString() ) ;
-		} catch ( NumberFormatException e ) {
-			// value is a double "`number`"
 			return Double.valueOf( value.toString() ) ;
-		}
+		} catch ( NumberFormatException e ) {}
+		if ( value.toString().matches( "\".*\"" ) )
+			// value is a "`stringdef`"
+			return value.toString().substring( 1, value.toString().length()-1 ) ;
+		factor = Registry.retrieve( value.toString() ) ;
+		if ( factor == null )
+			// value is a literal
+			return value ;
+		try {
+			// registry value is a "`number`"
+			return Long.valueOf( factor.toString() ) ;
+		} catch ( NumberFormatException e ) {}
+		try {
+			// registry value is a "`number`"
+			return Double.valueOf( factor.toString() ) ;
+		} catch ( NumberFormatException e ) {}
+		// registry value should be a string
+		return factor.toString() ;
 	}
 
 	public Object FACTOR( Object minus, Object FACTOR ) {
-		if ( FACTOR instanceof Long )
-			return new Long( -( (Long) FACTOR ).longValue() ) ;
 		return new Double( -( (Double) FACTOR ).doubleValue() ) ;
 	}
 
@@ -239,7 +219,7 @@ public class ParserSubstitute extends ReflectSemantic {
 		BufferedReader r ;
 		String s ;
 
-		for ( int a=1 ; a<argv.length-1 ; a=a+2 )
+		for ( int a=0 ; a<argv.length-1 ; a=a+2 ) {
 			try {
 				Registry.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
 			} catch ( NumberFormatException el ) {
@@ -249,13 +229,14 @@ public class ParserSubstitute extends ReflectSemantic {
 					Registry.registerName( argv[a], new String( argv[a+1] ) ) ;
 				}
 			}
+		}
 
-			try {
-				r = new BufferedReader( new InputStreamReader( System.in ) ) ;
-				while ( ( s = r.readLine() ) != null )
-					System.err.println( new ParserSubstitute().parse( s ) ) ;
-			} catch ( IOException e ) {
-				System.exit( 1 ) ;
-			}
+		try {
+			r = new BufferedReader( new InputStreamReader( System.in ) ) ;
+			while ( ( s = r.readLine() ) != null )
+				System.err.println( new ParserSubstitute().parse( s ) ) ;
+		} catch ( IOException e ) {
+			System.exit( 1 ) ;
+		}
 	}
 }

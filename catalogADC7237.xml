@@ -24,14 +24,14 @@ astrolabe.xsd">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -48,7 +48,8 @@ astrolabe.xsd">
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VII/237/pgc.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7237/pgc.dat.gz-->
 						<CatalogADC7237 name="7237" fov="chart" url="lib/cat/7237/pgc.dat.gz">
-							<Script purpose="" value=""/>
+							<Restrict value="{PGC%1000==0}"/>
+							<Script purpose="{log_D25&#x003c;9?4.4:log_D25&#x003c;3?3.7:log_D25&#x003c;2?3.0:log_D245&#x003c;1?2.3:1.6}" value="{OType~&#x0022;G&#x0022;?(logR25>0.5?&#x0022;&#xf822;&#x0022;:logR25>0.3?&#x0022;&#xf821;&#x0022;:&#x0022;&#xf820;&#x0022;):&#x0022;&#xf813;&#x0022;}"/>
 						</CatalogADC7237>
 					</Catalog>
 				</HorizonEquatorial>

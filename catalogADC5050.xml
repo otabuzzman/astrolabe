@@ -24,14 +24,14 @@ astrolabe.xsd">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -47,8 +47,9 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz" restrict="Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
-							<Select value="Vmag0,Vmag1">
+						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
+							<Restrict value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}"/>
+							<Select value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Script purpose="bodylettering0" value="{Name}"/>

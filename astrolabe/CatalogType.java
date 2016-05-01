@@ -10,10 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -21,23 +17,10 @@ import com.vividsolutions.jts.geom.Geometry;
 @SuppressWarnings("serial")
 abstract public class CatalogType extends astrolabe.model.CatalogType {
 
-	private Hashtable<String, Integer> select ;
-
 	public CatalogType( Peer peer, Projector projector ) {
-		String[] sv ;
 		Geometry fov, fovu, fove ;
 
 		peer.setupCompanion( this ) ;
-
-		select = new Hashtable<String, Integer>() ;
-		if ( getSelect() != null ) {
-			for ( int s=0 ; s<getSelectCount() ; s++ ) {
-				sv = getSelect( s ).getValue().split( "," ) ;
-				for ( int v=0 ; v<sv.length ; v++ ) {
-					select.put( sv[v], s ) ;
-				}
-			}
-		}
 
 		if ( getFov() == null ) {
 			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
@@ -77,41 +60,6 @@ abstract public class CatalogType extends astrolabe.model.CatalogType {
 		} catch ( IOException e ) {
 			r = new InputStreamReader( cIS ) ;
 		}
-
-		return r ;
-	}
-
-	public astrolabe.model.Select[] getSelect( List<String> ident ) {
-		astrolabe.model.Select[] r ;
-		List<astrolabe.model.Select> selL ;
-		List<Integer> intL = new java.util.Vector<Integer>() ;
-		Comparator<Integer> c = new Comparator<Integer>() {
-			public int compare( Integer a, Integer b ) {
-				int x, y ;
-
-				x = a.intValue() ;
-				y = b.intValue() ;
-
-				return ( x<y?1:
-					x>y?-1:
-						0 ) ;
-			}
-		} ;
-
-		for ( String key : ident ) {
-			if ( select.containsKey( key ) )
-				intL.add( select.get( key ) ) ;
-		}
-
-		if ( intL.size()>0 ) {
-			Collections.sort( intL, c ) ;
-
-			selL = new java.util.Vector<astrolabe.model.Select>() ;
-			for ( int s : intL )
-				selL.add( getSelect( s ) ) ;
-			r = selL.toArray( new astrolabe.model.Select[0] ) ;
-		} else
-			r = null ;
 
 		return r ;
 	}

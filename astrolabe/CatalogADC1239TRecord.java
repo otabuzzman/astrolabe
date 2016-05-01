@@ -140,25 +140,27 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		Remark    = token[57].trim() ;
 
 		// validation
-		TYC() ;
 		RAhms() ;
 		DEdms() ;
-		Vmag() ; 
-		pmRA() ;
-		pmDE() ; // continue new methods
 	}
 
 	public void toModel( astrolabe.model.Body body ) throws ValidationException {
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
-		double epoch ;
+		double epoch, pmRA, pmDE ;
 
 		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
-		body.getBodyStellar().setName( TYC() ) ;
+		body.getBodyStellar().setName( TYC.replaceAll( "[ ]+", "-" ) ) ;
 
+		pmRA = 0 ;
+		if ( this.pmRA.length()>0 )
+			pmRA = new Double( this.pmRA ).doubleValue() ;
+		pmDE = 0 ;
+		if ( this.pmDE.length()>0 )
+			pmDE = new Double( this.pmDE ).doubleValue() ;
 		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
-				epoch-2451545., RAhms(), DEdms(), pmRA()/1000., pmDE()/1000. ) ;
+				epoch-2451545., RAhms(), DEdms(), pmRA/1000., pmDE/1000. ) ;
 		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 		pm = new astrolabe.model.Position() ;
 		// astrolabe.model.SphericalType
@@ -310,21 +312,7 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		Registry.registerName( key, Remark ) ;
 	}
 
-	public List<String> ident() {
-		List<String> r = new java.util.Vector<String>( 2 ) ;
-
-		r.add( TYC() ) ;
-		r.add( "Vmag"+( (int) Vmag() ) ) ;
-
-		return r ;
-	}
-
-	public String TYC() {
-		// <GSC region number 1-9537>-<number in region 1-12119>-<component number 1-4>
-		return TYC.trim().replaceAll( "[ ]+", "-" ) ;
-	}
-
-	public double RAhms() {
+	private double RAhms() {
 		String rams[] ;
 		double ra ;
 
@@ -336,7 +324,7 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		return ra ;
 	}
 
-	public double DEdms() {
+	private double DEdms() {
 		String dems[] ;
 		double de ;
 
@@ -346,17 +334,5 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		+new Double( dems[2] ).doubleValue()/3600. ;
 
 		return de ;
-	}
-
-	public double Vmag() {
-		return new Double( Vmag ).doubleValue() ;
-	}
-
-	public double pmRA() {
-		return new Double( pmRA ).doubleValue() ;
-	}
-
-	public double pmDE() {
-		return new Double( pmDE ).doubleValue() ;
 	}
 }

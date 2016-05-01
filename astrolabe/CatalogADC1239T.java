@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -26,8 +25,6 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 
 	private final static Log log = LogFactory.getLog( CatalogADC1239T.class ) ;
 
-	private HashSet<String> restrict ;
-
 	private astrolabe.model.Script script ;
 
 	private Hashtable<String, CatalogRecord> catalogT ;
@@ -38,17 +35,7 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 	public CatalogADC1239T( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
-		String[] rv ;
-
 		this.projector = projector ;
-
-		restrict = new HashSet<String>() ;
-		if ( ( (astrolabe.model.CatalogADC1239T) peer ).getRestrict() != null ) {
-			rv = ( (astrolabe.model.CatalogADC1239T) peer ).getRestrict().split( "," ) ;
-			for ( int v=0 ; v<rv.length ; v++ ) {
-				restrict.add( rv[v] ) ;
-			}
-		}
 
 		script = ( (astrolabe.model.CatalogADC1239T) peer ).getScript() ;
 
@@ -58,19 +45,23 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 
 	public void addAllCatalogRecord() {
 		Reader catalogR ;
-		CatalogRecord record ;
+		CatalogADC1239TRecord record ;
 		List<double[]> bodyL ;
 		Geometry bodyG, fov ;
-		String ident ;
+		String id ;
 		Comparator<String> c = new Comparator<String>() {
 			public int compare( String a, String b ) {
 				CatalogADC1239TRecord x, y ;
+				double xmag, ymag ;
 
 				x = (CatalogADC1239TRecord) catalogT.get( a ) ;
 				y = (CatalogADC1239TRecord) catalogT.get( b ) ;
 
-				return x.Vmag()<y.Vmag()?-1:
-					x.Vmag()>y.Vmag()?1:
+				xmag = Double.valueOf( x.Vmag ).doubleValue() ;
+				ymag = Double.valueOf( y.Vmag ).doubleValue() ;
+
+				return xmag<ymag?-1:
+					xmag>ymag?1:
 						0 ;
 			}
 		} ;
@@ -86,6 +77,17 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 		}
 
 		while ( ( record = record( catalogR ) ) != null ) {
+			id = record.TYC.replaceAll( "[ ]+", "-" ) ;
+
+			if ( record.Vmag.length() == 0 ) {
+				String msg ;
+
+				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { id+".Vmag 0", "" } ) ;
+				log.warn( msg ) ;
+
+				continue ;
+			}
 
 			bodyL = record.list( projector ) ;
 
@@ -103,9 +105,8 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 					continue ;
 			}
 
-			ident = record.ident().get( 0 ) ;
-			catalogT.put( ident, record ) ;
-			catalogL.add( ident ) ;
+			catalogT.put( id, record ) ;
+			catalogL.add( id ) ;
 		}
 
 		try {
@@ -129,12 +130,18 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		ParserAttribute parser ;
 		astrolabe.model.Body body ;
 		BodyStellar bodyStellar ;
-		astrolabe.model.Select[] select ;
+
+		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
 
 		for ( CatalogRecord record : catalogT.values() ) {
 			record.register() ;
+
+			if ( getRestrict() != null )
+				if ( ! parser.booleanValue( getRestrict().getValue() ) )
+					continue ;
 
 			body = new astrolabe.model.Body() ;
 			body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
@@ -147,11 +154,13 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 			body.getBodyStellar().setScript( script ) ;
 			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
 
-			select = getSelect( record.ident() ) ;
-			if ( select != null ) {
-				body.getBodyStellar().setAnnotation( select[select.length-1].getAnnotation() ) ;
-				if ( select[select.length-1].getScript() != null )
-					body.getBodyStellar().setScript( select[select.length-1].getScript() ) ;
+			for ( astrolabe.model.Select select : getSelect() ) {
+				if ( ! parser.booleanValue( select.getValue() ) )
+					continue ;
+				body.getBodyStellar().setAnnotation( select.getAnnotation() ) ;
+				if ( select.getScript() != null )
+					body.getBodyStellar().setScript( select.getScript() ) ;
+				break ;
 			}
 
 			try {
@@ -175,7 +184,7 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public CatalogRecord record( java.io.Reader catalog ) {
+	public CatalogADC1239TRecord record( java.io.Reader catalog ) {
 		CatalogADC1239TRecord r = null ;
 		char[] cl ;
 		String rl ;
@@ -199,15 +208,9 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 
 	private CatalogADC1239TRecord record( String record ) {
 		CatalogADC1239TRecord r = null ;
-		boolean ok = true ;
 
 		try {
 			r = new CatalogADC1239TRecord( record ) ;
-
-			if ( restrict.size()>0 )
-				for ( String key : r.ident() )
-					if ( ok = restrict.contains( key ) )
-						break ;
 		} catch ( ParameterNotValidException e ) {
 			String msg ;
 
@@ -222,6 +225,6 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 			log.warn( msg ) ;
 		}
 
-		return ok?r:null ;
+		return r ;
 	}
 }

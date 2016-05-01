@@ -24,14 +24,14 @@ astrolabe.xsd">
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
 							<Begin>
-								<Immediate>
+								<Angle>
 									<Rational value="0"/>
-								</Immediate>
+								</Angle>
 							</Begin>
 							<End>
-								<Immediate>
+								<Angle>
 									<Rational value="360"/>
-								</Immediate>
+								</Angle>
 							</End>
 							<Angle>
 								<Rational value="-24.5"/>
@@ -49,8 +49,9 @@ astrolabe.xsd">
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5109/sky2kv4.dat.00.gz-->
 						<!--...-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5109/sky2kv4.dat.23.gz-->
-						<CatalogADC5109 name="5109" fov="chart" url="lib/cat/5109/sky2kv4.dat.00.gz" restrict="Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
-							<Select value="Vmag0,Vmag1">
+						<CatalogADC5109 name="5109" fov="chart" url="lib/cat/5109/sky2kv4.dat.00.gz">
+							<Restrict value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}"/>
+							<Select value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Script purpose="bodylettering0" value="{Name}"/>

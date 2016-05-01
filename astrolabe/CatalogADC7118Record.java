@@ -53,7 +53,6 @@ public class CatalogADC7118Record implements CatalogRecord {
 		RAm() ;
 		DEd() ;
 		DEm() ;
-		mag() ; // continue new methods
 	}
 
 	public void toModel( astrolabe.model.Body body ) throws ValidationException {
@@ -133,32 +132,19 @@ public class CatalogADC7118Record implements CatalogRecord {
 		Registry.registerName( key, Desc ) ;
 	}
 
-	public List<String> ident() {
-		List<String> r = new java.util.Vector<String>( 2 ) ;
-
-		r.add( Name ) ;
-		r.add( "mag"+( (int) mag() ) ) ;
-
-		return r ;
-	}
-
-	public double RAh() {
+	private double RAh() {
 		return new Double( RAh ).doubleValue() ;
 	}
 
-	public double RAm() {
+	private double RAm() {
 		return new Double( RAm ).doubleValue() ;
 	}
 
-	public double DEd() {
+	private double DEd() {
 		return new Double( DE+DEd ).doubleValue() ;
 	}
 
-	public double DEm() {
+	private double DEm() {
 		return new Double( DE+DEm ).doubleValue() ;
-	}
-
-	public double mag() {
-		return new Double( mag ).doubleValue() ;
 	}
 }

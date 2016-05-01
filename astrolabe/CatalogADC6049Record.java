@@ -144,19 +144,11 @@ public class CatalogADC6049Record implements CatalogRecord {
 		Registry.registerName( k, v ) ;
 	}
 
-	public List<String> ident() {
-		List<String> r = new java.util.Vector<String>( 1 ) ;
-
-		r.add( con ) ;
-
-		return r ;
-	}
-
-	public double RAhr( int index ) {
+	private double RAhr( int index ) {
 		return new Double( RAhr.get( index ) ).doubleValue() ;		
 	}
 
-	public double DEdeg( int index ) {
+	private double DEdeg( int index ) {
 		return new Double( DEdeg.get( index ) ).doubleValue() ;
 	}
 }
