@@ -6,7 +6,7 @@
 
 	<xsl:output method="html" encoding="UTF-8"/>
 
-	<xsl:template xmlns:ns="http://www.chartaecaeli.eu/astrolabe/model" match="AtlasStereographic">
+	<xsl:template xmlns:ns="http://www.chartacaeli.eu/astrolabe/model" match="AtlasStereographic">
 		<xsl:value-of select="@chartpagerealx"/><xsl:text> </xsl:text>
 		<xsl:value-of select="@chartpagerealy"/><xsl:text> </xsl:text>
 		
@@ -15,7 +15,7 @@
 		<xsl:apply-templates/>
 	</xsl:template>
 
-	<xsl:template xmlns:ns="http://www.chartaecaeli.eu/astrolabe/model" match="AtlasPage">
+	<xsl:template xmlns:ns="http://www.chartacaeli.eu/astrolabe/model" match="AtlasPage">
 		<xsl:value-of select="@p0x"/><xsl:text> </xsl:text>
 		<xsl:value-of select="@p0y"/><xsl:text> </xsl:text>
 		<xsl:value-of select="@p1x"/><xsl:text> </xsl:text>

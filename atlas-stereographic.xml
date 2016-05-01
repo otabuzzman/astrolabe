@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
 astrolabe.xsd" name="atlas-stereographic">
 	<Epoch>
 		<Calendar>
@@ -41,8 +41,8 @@ astrolabe.xsd" name="atlas-stereographic">
 					<HorizonEquatorial practicality="always">
 						<!--$pagetitle-->
 						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<!--"CHARTAE CAELI"-->
-							<Text purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741;&#xf745; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
+							<!--"CHARTA CAELI"-->
+							<Text purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
 							<Frame number="2" anchor="bottommiddle"/>
 						</AnnotationStraight>
 						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
@@ -118,7 +118,7 @@ astrolabe.xsd" name="atlas-stereographic">
 						</AnnotationStraight>
 						<!--$trademark-->
 						<AnnotationStraight reverse="{seite%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
-							<Text purpose="guidance" value="2010 CHARTAE CAELI"/>
+							<Text purpose="guidance" value="2010 CHARTA CAELI"/>
 							<Frame number="{seite%2>0?7:9}" anchor="{seite%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
 						</AnnotationStraight>
 						<!--$legendlcon-->
@@ -30829,8 +30829,8 @@ astrolabe.xsd" name="atlas-stereographic">
 					<HorizonEquatorial practicality="always">
 						<!--$pagetitle-->
 						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<!--"CHARTAE CAELI"-->
-							<Text purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741;&#xf745; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
+							<!--"CHARTA CAELI"-->
+							<Text purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
 							<Frame number="2" anchor="bottommiddle"/>
 						</AnnotationStraight>
 						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
@@ -30906,7 +30906,7 @@ astrolabe.xsd" name="atlas-stereographic">
 						</AnnotationStraight>
 						<!--$trademark-->
 						<AnnotationStraight reverse="{(seite+68)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
-							<Text purpose="guidance" value="2010 CHARTAE CAELI"/>
+							<Text purpose="guidance" value="2010 CHARTA CAELI"/>
 							<Frame number="{(seite+68)%2>0?7:9}" anchor="{(seite+68)%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
 						</AnnotationStraight>
 						<!--$legendlcon-->

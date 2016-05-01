@@ -1,0 +1,5 @@
+../pdfsplit.sh 1 2 0 atlas-stereographic-picker-%03d.pdf atlas-stereographic.pdf
+../pdfsplit.sh 3 4 -2 atlas-stereographic-%03d.pdf atlas-stereographic.pdf
+../pdfsplit.sh 5 140 -4 atlaspage-stereographic-%03d.pdf atlas-stereographic.pdf
+../pdfsplit.sh 5 72 -4 atlaspage-stereographic-northern-%03d.pdf atlas-stereographic.pdf
+../pdfsplit.sh 73 140 -72 atlaspage-stereographic-southern-%03d.pdf atlas-stereographic.pdf

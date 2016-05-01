@@ -1,0 +1,35 @@
+<binding>
+	<complexTypeBinding name="/DMSType/@deg">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/DMSType/@min">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/HMSType/@hrs">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/HMSType/@min">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@num">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@col">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@row">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@tcp">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@bcp">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@pcp">
+		<member java-type="int"/>
+	</complexTypeBinding>
+	<complexTypeBinding name="/AtlasPageType/@fcp">
+		<member java-type="int"/>
+	</complexTypeBinding>
+</binding>

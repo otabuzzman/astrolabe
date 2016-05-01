@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
-<xs:schema xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartaecaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartacaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
 			<xs:element ref="Epoch"/>

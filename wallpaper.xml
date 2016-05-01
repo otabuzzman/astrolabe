@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
 astrolabe.xsd">
 	<Epoch>
 		<Calendar>
@@ -8,7 +8,7 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
-			<ChartPage size="a0" real="100" layout="default"/>
+			<ChartPage size="a1" real="100" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -700,7 +700,7 @@ astrolabe.xsd">
 	</Chart>
 	<Chart>
 		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
-			<ChartPage size="a0" real="100" layout="default"/>
+			<ChartPage size="a1" real="100" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -734,7 +734,7 @@ astrolabe.xsd">
 			</Horizon>
 			<!--äquatorial-->
 			<Horizon>
-				<HorizonEquatorial practicality="always">
+				<HorizonEquatorial practicality="sometimes">
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Angle>

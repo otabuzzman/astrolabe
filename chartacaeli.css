@@ -1,0 +1,60 @@
+#chartacaeli {
+}
+
+#common-frame {
+	background: #000000 ;
+	margin: auto ;
+	width: 1600px ;
+	position: relative ;
+}
+
+#common-west {
+	background: url("img/common-west.png") no-repeat ;
+	width: 320px ;
+	min-height: 1200px ;
+	float: left ;
+}
+
+#common-main {
+	width: 960px ;
+	float: left ;
+}
+
+#common-east {
+	background: url("img/common-east.png") no-repeat ;
+	width: 320px ;
+	min-height: 1200px ;
+	float: left ;
+}
+
+#common-north {
+	background: url("img/common-north.png") no-repeat ;
+	height: 70px ;
+}
+
+#common-head {
+	background: url("img/common-head.png") no-repeat ;
+	height: 130px ;
+}
+
+#common-body {
+	background: #ffffff url("img/common-body.png") no-repeat ;
+	min-height: 860px ;
+	position: relative ; /* required for z-index */
+	z-index: 200 ;
+}
+
+#common-tail {
+	background: url("img/common-tail.png") no-repeat ;
+	height: 140px ;
+	width: 960px ;
+	top: 1060px ; /* common-north.height + common-head.height + common-body.height */
+	position: absolute ;
+	z-index: 100 ; /* common-tail below common-body */
+}
+
+#common-south {
+	background: url("img/common-south.png") no-repeat ;
+	height: 120px ;
+	clear: both ;
+}

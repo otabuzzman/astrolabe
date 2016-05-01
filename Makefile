@@ -13,11 +13,11 @@ vpath %.class $(APPL)/model
 
 CAA = caa-1.17
 
-CLASSPATH = ./lib/castor-0.9.6.jar \
+CLASSPATH = ./lib/castor-1.3.1.jar \
+	./lib/castor-1.3.1-core.jar \
 	./lib/jts-1.8.jar \
 	./lib/jtsio-1.8.jar \
 	./lib/runcc.jar \
-	./lib/xercesImpl.jar \
 	./lib/commons-logging-1.1.1.jar
 
 .xml.ps:
@@ -45,8 +45,11 @@ $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
 	@$(JDK)/bin/java \
 		-classpath $(subst $(space),\;, \
+		./castor-1.3.1-codegen.jar \
+		./castor-1.3.1-xml-schema.jar \
 		$(CLASSPATH)) \
-		org.exolab.castor.builder.SourceGenerator -i $<
+		org.exolab.castor.builder.SourceGeneratorMain -i $< \
+		-binding-file binding.xml
 	@touch $@
 	@echo "done!"
 

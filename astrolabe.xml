@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.chartaecaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartaecaeli.eu/astrolabe/model
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
 astrolabe.xsd" name="astrolabe">
 	<Epoch>
 		<Calendar>
