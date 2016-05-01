@@ -63,9 +63,23 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public void emitPS( PostscriptStream ps ) {
+		Layout layout ;
+		Frame frame ;
 		int nt, ne ;
 
 		ps.operator.gsave() ;
+
+		if ( getFrame() != null ) {
+			try {
+				layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
+
+				frame = new Frame( getFrame(), layout ) ;
+
+				frame.headPS( ps ) ;
+				frame.emitPS( ps ) ;
+				frame.tailPS( ps ) ;
+			} catch ( ParameterNotValidException e ) {} // Registry.retrieve()
+		}
 
 		ps.array( true ) ;
 		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {

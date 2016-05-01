@@ -7,7 +7,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a3" viewport="100" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a3" viewport="100" layout="100x100" scale="100" hemisphere="northern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -30734,7 +30734,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a3" viewport="100" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a3" viewport="100" layout="100x100" scale="100" hemisphere="northern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -31448,7 +31448,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a3" viewport="100" scale="100" hemisphere="southern">
+		<ChartStereographic pagesize="a3" viewport="100" layout="100x100" scale="100" hemisphere="southern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -62175,7 +62175,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a3" viewport="100" scale="100" hemisphere="southern">
+		<ChartStereographic pagesize="a3" viewport="100" layout="100x100" scale="100" hemisphere="southern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>

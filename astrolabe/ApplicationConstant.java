@@ -13,6 +13,8 @@ public final class ApplicationConstant {
 	public final static String GC_NS_FOVE		= "fove:" ;			// name space, application generated
 	public final static String GC_NS_CUT		= "cut:" ;			// name space, application generated
 	public final static String GC_NS_ATL		= "atl:" ;			// name space, application generated
+	public final static String GC_EPOCHE		= "epoch" ;			// class global model variable
+	public final static String GC_LAYOUT		= "layout" ;		// class global model variable
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;

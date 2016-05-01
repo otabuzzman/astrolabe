@@ -7,7 +7,7 @@ astrolabe.xsd" name="astrolabe">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" viewport="100" scale="100" hemisphere="northern">
+		<ChartStereographic pagesize="a0" viewport="100" layout="50:50x50:50" scale="100" hemisphere="northern">
 			<Origin>
 				<phi>
 					<Rational value="0"/>

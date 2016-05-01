@@ -19,7 +19,6 @@ import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
-
 @SuppressWarnings("serial")
 public class Atlas extends astrolabe.model.Atlas implements Companion {
 
@@ -229,7 +228,7 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 	public java.util.Vector<AtlasPage> volume() {
 		java.util.Vector<AtlasPage> r = new java.util.Vector<AtlasPage>() ;
-		int nra, nde ; // number of pages per single declination, number of page rows
+		int nra, nde ; // number of pages per single declination, number of page rows, current total nop
 		double a, b, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
 		double overlap, spanDe, originDe, extentDe ;
 		double de, dde, sde, ra, dim[] ;
@@ -269,6 +268,7 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 				dp = page( ra, de, a, b, northern ) ;
 				atlaspage = new AtlasPage() ;
+
 				atlaspage.col = cra ;
 				atlaspage.row = cde ;
 

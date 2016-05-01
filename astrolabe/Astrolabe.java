@@ -58,6 +58,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
 		d = new CAADate( epoch, true ) ;
 
+		Registry.register( ApplicationConstant.GC_EPOCHE, new Double( d.Julian() ) ) ;
+
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
 		ApplicationHelper.registerYMD( key, d ) ;
 
