@@ -7,7 +7,7 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" viewport="64" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a0" viewport="64" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -167,7 +167,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -220,7 +220,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -273,7 +273,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -326,7 +326,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -379,7 +379,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -432,7 +432,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -496,7 +496,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="100x100" hemisphere="northern" scale="100">
+		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>

@@ -37,7 +37,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	public ChartAzimuthalType( Object peer ) throws ParameterNotValidException {
 		Preferences node ;
 		String psa, psd[] ;
-		Layout layout ;
+		String layout ;
 		double[] origin ;
 		double ms, mv, mu ;
 
@@ -60,12 +60,17 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		ApplicationHelper.setFovGlobal( fov() ) ;
 
-		layout = new Layout( getLayout(), new double[] {
-			-pagesize[0]/2,
-			-pagesize[1]/2,
-			pagesize[0]/2,
-			pagesize[1]/2 } ) ;
-		Registry.register( ApplicationConstant.GC_LAYOUT, layout ) ;
+		if ( ( layout = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CHART_LAYOUT ),
+				getLayout(), null ) ) == null ) {
+			layout = getLayout() ;
+		}
+		Registry.register( ApplicationConstant.GC_LAYOUT,
+				new Layout( layout, new double[] {
+						-pagesize[0]/2,
+						-pagesize[1]/2,
+						pagesize[0]/2,
+						pagesize[1]/2 } ) ) ;
 
 		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 

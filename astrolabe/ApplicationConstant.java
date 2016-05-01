@@ -373,6 +373,7 @@ public final class ApplicationConstant {
 	public final static String PK_CHART_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
 	public final static String PK_CHART_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
 	public final static String PN_CHART_PAGESIZE		= "pagesize" ;
+	public final static String PN_CHART_LAYOUT			= "layout" ;
 
 	public final static String PK_ATLAS_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
 	public final static String PK_ATLAS_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;

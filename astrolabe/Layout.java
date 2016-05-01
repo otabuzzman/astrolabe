@@ -70,8 +70,8 @@ public class Layout {
 
 		saveIndex = ( index-1 )%numberOfFrames ;
 
-		col = saveIndex%numberOfRows ;
-		row = saveIndex/numberOfRows ;
+		col = saveIndex%numberOfCols ;
+		row = saveIndex/numberOfCols ;
 
 		return new double[] {
 				origin[0]+extent[0]*frameColLE[col],

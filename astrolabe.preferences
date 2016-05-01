@@ -19,15 +19,15 @@
 					</map>
 					<node name="atl:northern">
 						<map>
-							<entry key="setViewport,java.lang.Double" value="92"/>
-							<entry key="setLayout,java.lang.String" value="4:92:4x4:92:4"/>
+							<entry key="setViewport,java.lang.Double" value="82"/>
+							<entry key="setLayout,java.lang.String" value="atlaspage"/>
 							<entry key="setHemisphere,java.lang.String" value="northern"/>
 						</map>
 					</node>
 					<node name="atl:southern">
 						<map>
-							<entry key="setViewport,java.lang.Double" value="92"/>
-							<entry key="setLayout,java.lang.String" value="4:92:4x4:92:4"/>
+							<entry key="setViewport,java.lang.Double" value="82"/>
+							<entry key="setLayout,java.lang.String" value="atlaspage"/>
 							<entry key="setHemisphere,java.lang.String" value="southern"/>
 						</map>
 					</node>
@@ -307,6 +307,12 @@
 						<entry key="a3" value="297x420"/>
 						<entry key="a4" value="210x297"/>
 						<entry key="a5" value="148x210"/>
+					</map>
+				</node>
+				<node name="layout">
+					<map>
+						<entry key="default" value="100x100"/>
+						<entry key="atlaspage" value="9:82:9x9:82:2.6:2.6:2.6:1.2"/>
 					</map>
 				</node>
 			</node>

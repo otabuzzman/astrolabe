@@ -1260,13 +1260,13 @@ astrolabe.xsd" name="astrolabe">
 									<Text value=", Sternzeit @{sternzeitstd}@">
 										<Superscript value="h"/>
 									</Text>
-									<Text value="@{sternzeitsmin}@">
+									<Text value="@{sternzeitstdmin}@">
 										<Superscript value="m"/>
 									</Text>
-									<Text value="@{sternzeitssek}@">
+									<Text value="@{sternzeitstdsek}@">
 										<Superscript value="s"/>
 									</Text>
-									<Text value=".@{sternzeitsfrk}@ (ST)"/>
+									<Text value=".@{sternzeitstdfrk}@ (ST)"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleParallel>

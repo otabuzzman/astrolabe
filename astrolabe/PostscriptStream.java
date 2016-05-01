@@ -412,8 +412,6 @@ public class PostscriptStream extends FilterOutputStream {
 		} catch ( IOException e ) {
 		} catch ( InterruptedException e ) {
 		}
-
-		viewerProcess.destroy() ;
 	}
 
 	public void comment( String def ) {
