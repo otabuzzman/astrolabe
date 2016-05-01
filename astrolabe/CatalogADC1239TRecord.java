@@ -1,9 +1,7 @@
 
 package astrolabe;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -11,11 +9,11 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC1239TRecord implements CatalogRecord {
+public class CatalogADC1239TRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
-	public final static int CR_TOKEN = 58 ;
+	private final static int CR_TOKEN = 58 ;
 
 	public String   Catalog   ; //  [T] Catalogue (T = Tycho)
 	public String   TYC       ; // *TYC1-3 (TYC number)
@@ -194,39 +192,6 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		return model ;
 	}
 
-	public boolean matchAny( Set<String> list ) {
-		return list.size()==0||matchSet( list ).size()>0 ;
-	}
-
-	public boolean matchAll( Set<String> list ) {
-		return list.size()==matchSet( list ).size() ;
-	}
-
-	public Set<String> matchSet( Set<String> list ) {
-		HashSet<String> r = new HashSet<String>() ;
-
-		for ( String ident : identSet() ) {
-			if ( list.contains( ident ) ) {
-				r.add( ident ) ;
-			}
-		}
-
-		return r ;
-	}
-
-	public Set<String> identSet() {
-		HashSet<String> r = new HashSet<String>() ;
-
-		r.add( ident() ) ;
-		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
-
-		return r ;
-	}
-
-	public String ident() {
-		return TYC() ;
-	}
-
 	public List<double[]> list( Projector projector ) {
 		List<double[]> r = new java.util.Vector<double[]>() ;
 		double[] xy ;
@@ -355,6 +320,15 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		Registry.registerName( key, CPD ) ;
 		key = m.message( ApplicationConstant.LK_ADC1239T_REMARK ) ;
 		Registry.registerName( key, Remark ) ;
+	}
+
+	public List<String> ident() {
+		List<String> r = new java.util.Vector<String>( 2 ) ;
+
+		r.add( TYC() ) ;
+		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+
+		return r ;
 	}
 
 	public String TYC() {

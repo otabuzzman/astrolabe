@@ -2,10 +2,10 @@
 package astrolabe;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -16,8 +16,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 @SuppressWarnings("serial")
-public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
+public class CatalogADC1239H extends CatalogType implements Catalog {
 
 	private final static int C_CHUNK = 450+1/*0x0a*/ ;
 
@@ -25,17 +28,13 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 
 	private HashSet<String> restrict ;
 
+	private Hashtable<String, CatalogADC1239HRecord> catalogT ;
+	private List<String> catalogL ;
+
 	private astrolabe.model.CatalogADC1239H peer ;
+
 	private Projector projector ;
 	private double epoch ;
-
-	private final static Comparator<CatalogRecord> comparator = new Comparator<CatalogRecord>() {
-
-		public int compare( CatalogRecord a, CatalogRecord b ) {
-			return ( (CatalogADC1239HRecord) a ).Vmag()<( (CatalogADC1239HRecord) b ).Vmag()?-1:
-				( (CatalogADC1239HRecord) a ).Vmag()>( (CatalogADC1239HRecord) b ).Vmag()?1:0 ;
-		}
-	} ;
 
 	public CatalogADC1239H( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
@@ -54,6 +53,70 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 				restrict.add( rv[v] ) ;
 			}
 		}
+
+		catalogT = new Hashtable<String, CatalogADC1239HRecord>() ;
+		catalogL = new java.util.Vector<String>() ;
+	}
+
+	public void addAllCatalogRecord() {
+		Reader catalogR ;
+		CatalogADC1239HRecord record ;
+		List<double[]> bodyL ;
+		Geometry bodyG, fov ;
+		String ident ;
+		Comparator<String> c = new Comparator<String>() {
+			public int compare( String a, String b ) {
+				CatalogADC1239HRecord x, y ;
+
+				x = catalogT.get( a ) ;
+				y = catalogT.get( b ) ;
+
+				return x.Vmag()<y.Vmag()?-1:
+					x.Vmag()>y.Vmag()?1:
+						0 ;
+			}
+		} ;
+
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+
+		try {
+			catalogR = reader() ;
+		} catch ( URISyntaxException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( MalformedURLException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		while ( ( record = record( catalogR ) ) != null ) {
+
+			bodyL = record.list( projector ) ;
+
+			if ( bodyL.size() == 1 ) {
+				if ( ! fov.covers( new GeometryFactory().createPoint(
+						new JTSCoordinate( bodyL.get( 0 ) ) ) ) )
+					continue ;
+			} else {
+				bodyL.add( bodyL.get( 0 ) ) ;
+				bodyG = new GeometryFactory().createPolygon(
+						new GeometryFactory().createLinearRing(
+								new JTSCoordinateArraySequence( bodyL ) ), null ) ;
+
+				if ( ! ( fov.covers( bodyG ) || fov.overlaps( bodyG ) ) )
+					continue ;
+			}
+
+			ident = record.ident().get( 0 ) ;
+			catalogT.put( ident, record ) ;
+			catalogL.add( ident ) ;
+		}
+
+		try {
+			catalogR.close() ;
+		} catch (IOException e) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		Collections.sort( catalogL, c ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -62,105 +125,102 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		List<BodyAreal> sign ;
 		astrolabe.model.BodyAreal bodySign ;
+		BodyAreal bodyAreal ;
 		HashSet<String> headline ;
 		String[] sv, hv, bv ;
-		Hashtable<String, CatalogRecord> catalog ;
-		CatalogRecord cr ;
-		BodyAreal bodyAreal ;
-		astrolabe.model.Annotation[] annotation ;
+		CatalogADC1239HRecord recordS ;
 		astrolabe.model.BodyStellar bodyModel ;
 		BodyStellar bodyStellar ;
-
-		try {
-			catalog = read() ;
-		} catch ( URISyntaxException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( MalformedURLException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		astrolabe.model.Select[] select ;
 
 		for ( int s=0 ; s<peer.getSignCount() ; s++ ) {
-			sign = new java.util.Vector<BodyAreal>() ;
+			try {
+				sign = new java.util.Vector<BodyAreal>() ;
 
-			headline = new HashSet<String>() ;
-			if ( peer.getSign( s ).getHeadline() != null ) {
-				hv = peer.getSign( s ).getHeadline().split( "," ) ;
-				for ( int h=0 ; h<hv.length ; h++ ) {
-					headline.add( hv[h] ) ;
-				}
-			}
-
-			sv = peer.getSign( s ).getValue().split( "," ) ;
-			for ( int b=0 ; b<sv.length ; b++ ) {
-				bodySign = new astrolabe.model.BodyAreal() ;
-				bodySign.setImportance( ApplicationConstant.AV_BODY_GRAPHICAL ) ;
-
-				bv = sv[b].split( ":" ) ;
-				for ( int p=0 ; p<bv.length ; p++ ) {
-					if ( ( cr = catalog.get( bv[p] ) ) == null ) {
-						break ; // element missing in catalog
+				headline = new HashSet<String>() ;
+				if ( peer.getSign( s ).getHeadline() != null ) {
+					hv = peer.getSign( s ).getHeadline().split( "," ) ;
+					for ( int h=0 ; h<hv.length ; h++ ) {
+						headline.add( hv[h] ) ;
 					}
+				}
+
+				sv = peer.getSign( s ).getValue().split( "," ) ;
+				for ( int b=0 ; b<sv.length ; b++ ) {
+					bodySign = new astrolabe.model.BodyAreal() ;
+					bodySign.setImportance( ApplicationConstant.AV_BODY_GRAPHICAL ) ;
+
+					bv = sv[b].split( ":" ) ;
+					for ( int p=0 ; p<bv.length ; p++ ) {
+						if ( ( recordS = catalogT.get( bv[p] ) ) == null ) {
+							String msg ;
+
+							msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+							msg = MessageFormat.format( msg, new Object[] { "\""+bv[p]+"\"", "\""+sv[b]+"\"" } ) ;
+
+							throw new ParameterNotValidException( msg ) ;
+						}
+						try {
+							bodySign.addPosition( recordS.toModel( epoch ).getBodyStellar().getPosition() ) ;
+						} catch ( ValidationException e ) {
+							throw new RuntimeException( e.toString() ) ;
+						}
+					}
+
 					try {
-						bodySign.addPosition( cr.toModel( epoch ).getBodyStellar().getPosition() ) ;
+						bodySign.validate() ;
 					} catch ( ValidationException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
-				}
 
-				if ( bodySign.getPositionCount()<bv.length ) { // element(s) missing in catalog
-					break ;
-				}
+					bodyAreal = new BodyAreal( bodySign, projector ) ;
 
-				try {
-					bodySign.validate() ;
-				} catch ( ValidationException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				bodyAreal = new BodyAreal( bodySign, projector ) ;
-
-				if ( peer.getSign( s ).getAnnotationCount()>0 ) {
-					if ( headline.size()==0 ) {
-						if ( b==0 ) {
-							bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
-						}
-					} else {
-						if ( headline.contains( new Integer( b+1 ).toString() ) ) {
-							bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+					if ( peer.getSign( s ).getAnnotationCount()>0 ) {
+						if ( headline.size()==0 ) {
+							if ( b==0 ) {
+								bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+							}
+						} else {
+							if ( headline.contains( new Integer( b+1 ).toString() ) ) {
+								bodyAreal.setAnnotation( peer.getSign( s ).getAnnotation() ) ;
+							}
 						}
 					}
+
+					sign.add( bodyAreal ) ;
 				}
+				for ( int b=0 ; b<sign.size() ; b++ ) {
+					bodyAreal = sign.get( b ) ;
 
-				sign.add( bodyAreal ) ;
-			}
-			for ( int b=0 ; b<sign.size() ; b++ ) {
-				bodyAreal = sign.get( b ) ;
+					ps.operator.gsave() ;
 
-				ps.operator.gsave() ;
+					bodyAreal.headPS( ps ) ;
+					bodyAreal.emitPS( ps ) ;
+					bodyAreal.tailPS( ps ) ;
 
-				bodyAreal.headPS( ps ) ;
-				bodyAreal.emitPS( ps ) ;
-				bodyAreal.tailPS( ps ) ;
-
-				ps.operator.grestore() ;
+					ps.operator.grestore() ;
+				}
+			} catch ( ParameterNotValidException e ) {
+				log.warn( e.toString() ) ;
 			}
 		}
 
-		for ( CatalogRecord record : arrange( catalog ) ) {
-			annotation = annotation( record ) ;
+		for ( CatalogADC1239HRecord recordB : catalogT.values() ) {
+			recordB.register() ;
 
 			try {
-				bodyModel = record.toModel( epoch ).getBodyStellar() ;
-				if ( annotation != null ) {
-					bodyModel.setAnnotation( annotation( record ) ) ;
-
-					record.register() ;
-				}
-
-				bodyStellar = new BodyStellar( bodyModel, projector ) ;
+				bodyModel = recordB.toModel( epoch ).getBodyStellar() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
+
+			bodyModel.setAnnotation( getAnnotation() ) ;
+
+			select = getSelect( recordB.ident() ) ;
+			if ( select != null )
+				bodyModel.setAnnotation( select[select.length-1].getAnnotation() ) ;
+
+			bodyStellar = new BodyStellar( bodyModel, projector ) ;
 
 			ps.operator.gsave() ;
 
@@ -175,43 +235,20 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public CatalogRecord record( java.io.Reader catalog ) {
+	public CatalogADC1239HRecord record( java.io.Reader catalog ) {
 		CatalogADC1239HRecord r = null ;
-		char[] c ;
-		String l ;
+		char[] cl ;
+		String rl ;
 
-		c = new char[C_CHUNK] ;
+		cl = new char[C_CHUNK] ;
 
 		try {
-			while ( catalog.read( c, 0, C_CHUNK ) == C_CHUNK ) {
-				l = new String( c ) ;
-				l = l.substring( 0, l.length()-1 ) ;
+			while ( catalog.read( cl, 0, C_CHUNK )>-1 ) {
+				rl = new String( cl ) ;
+				rl = rl.substring( 0, rl.length()-1 ) ;
 
-				try {
-					r = new CatalogADC1239HRecord( l ) ;
-
-					if ( r.matchAny( restrict ) ) {
-						break ;
-					} else {
-						continue ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					String msg ;
-
-					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+l+"\"" } ) ;
-					log.warn( msg ) ;
-
-					continue ;
-				} catch ( NumberFormatException e ) {
-					String msg ;
-
-					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-					msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+l+"\"" } ) ;
-					log.warn( msg ) ;
-
-					continue ;
-				}
+				if ( ( r = record( rl ) ) != null )
+					break ;
 			}
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
@@ -220,15 +257,31 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 		return r ;
 	}
 
-	public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) {
-		CatalogRecord[] r ;
-		List<CatalogRecord> l ;
+	private CatalogADC1239HRecord record( String record ) {
+		CatalogADC1239HRecord r = null ;
+		boolean ok = true ;
 
-		l = new ArrayList<CatalogRecord>( catalog.values() ) ;
-		Collections.sort( l, comparator ) ;
+		try {
+			r = new CatalogADC1239HRecord( record ) ;
 
-		r = new CatalogRecord[l.size()] ;
+			if ( restrict.size()>0 )
+				for ( String key : r.ident() )
+					if ( ok = restrict.contains( key ) )
+						break ;
+		} catch ( ParameterNotValidException e ) {
+			String msg ;
 
-		return l.toArray( r ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
+			log.warn( msg ) ;
+		} catch ( NumberFormatException e ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+record+"\"" } ) ;
+			log.warn( msg ) ;
+		}
+
+		return ok?r:null ;
 	}
 }

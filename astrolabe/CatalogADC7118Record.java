@@ -1,9 +1,7 @@
 
 package astrolabe;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -11,11 +9,11 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC7118Record implements CatalogRecord {
+public class CatalogADC7118Record {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
-	public final static int CR_LENGTH = 96 ;
+	private final static int CR_LENGTH = 96 ;
 
 	public String Name    ; //  NGC or IC designation (preceded by I)
 	public String Type    ; // *Object classification
@@ -99,39 +97,6 @@ public class CatalogADC7118Record implements CatalogRecord {
 		return model ;
 	}
 
-	public boolean matchAny( Set<String> list ) {
-		return list.size()==0||matchSet( list ).size()>0 ;
-	}
-
-	public boolean matchAll( Set<String> list ) {
-		return list.size()==matchSet( list ).size() ;
-	}
-
-	public Set<String> matchSet( Set<String> list ) {
-		HashSet<String> r = new HashSet<String>() ;
-
-		for ( String ident : identSet() ) {
-			if ( list.contains( ident ) ) {
-				r.add( ident ) ;
-			}
-		}
-
-		return r ;
-	}
-
-	public Set<String> identSet() {
-		HashSet<String> r = new HashSet<String>() ;
-
-		r.add( ident() ) ;
-		r.add( "mag"+( (int) ( mag()+100.5 )-100 ) ) ;
-
-		return r ;
-	}
-
-	public String ident() {
-		return Name ;
-	}
-
 	public List<double[]> list( Projector projector ) {
 		List<double[]> r = new java.util.Vector<double[]>() ;
 		double ra, de, xy[] ;
@@ -178,6 +143,15 @@ public class CatalogADC7118Record implements CatalogRecord {
 		Registry.registerName( key, n_mag ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_DESC ) ;
 		Registry.registerName( key, Desc ) ;
+	}
+
+	public List<String> ident() {
+		List<String> r = new java.util.Vector<String>( 2 ) ;
+
+		r.add( Name ) ;
+		r.add( "mag"+( (int) ( mag()+100.5 )-100 ) ) ;
+
+		return r ;
 	}
 
 	public double RAh() {

@@ -2,7 +2,7 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class AtlasStereographic extends AtlasAzimuthalType {
+public class AtlasStereographic extends AtlasAzimuthalType implements Atlas {
 
 	private astrolabe.model.ChartStereographic peerCS ;
 

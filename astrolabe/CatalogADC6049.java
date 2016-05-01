@@ -2,29 +2,39 @@
 package astrolabe;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
-@SuppressWarnings("serial")
-public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
-	private final static int C_CHUNK = 29+1/*0x0a*/ ;
+@SuppressWarnings("serial")
+public class CatalogADC6049 extends CatalogType implements Catalog {
+
+	private final static int C_CHUNK18 = 25+1/*0x0a*/ ;
+	private final static int C_CHUNK20 = 29+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC6049.class ) ;
 
 	private HashSet<String> restrict ;
 
+	private List<CatalogADC6049Record> catalogT ;
+
 	private Projector projector ;
 	private double epoch ;
 
-	private String memory ;
+	private String _m = new String() ;
+	private int _ch = 0 ;
+	private int _ca = 0 ;
+	private int _co = 0 ;
 
 	public CatalogADC6049( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
@@ -43,41 +53,77 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 			}
 		}
 
-		memory = new String() ;
+		catalogT = new java.util.Vector<CatalogADC6049Record>() ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
-	}
+	public void addAllCatalogRecord() {
+		Reader catalogR ;
+		CatalogADC6049Record record ;
+		List<double[]> bodyL ;
+		Geometry bodyG, fov ;
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
-		Hashtable<String, CatalogRecord> catalog ;
-		astrolabe.model.Annotation[] annotation ;
-		astrolabe.model.BodyAreal bodyModel ;
-		BodyAreal bodyAreal ;
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
 		try {
-			catalog = read() ;
+			catalogR = reader() ;
 		} catch ( URISyntaxException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( MalformedURLException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		for ( CatalogRecord record : arrange( catalog ) ) {
+		while ( ( record = record( catalogR ) ) != null ) {
+
+			bodyL = record.list( projector ) ;
+
+			if ( bodyL.size() == 1 ) {
+				if ( ! fov.covers( new GeometryFactory().createPoint(
+						new JTSCoordinate( bodyL.get( 0 ) ) ) ) )
+					continue ;
+			} else {
+				bodyL.add( bodyL.get( 0 ) ) ;
+				bodyG = new GeometryFactory().createPolygon(
+						new GeometryFactory().createLinearRing(
+								new JTSCoordinateArraySequence( bodyL ) ), null ) ;
+
+				if ( ! ( fov.covers( bodyG ) || fov.overlaps( bodyG ) ) )
+					continue ;
+			}
+
+			catalogT.add( record ) ;
+		}
+
+		try {
+			catalogR.close() ;
+		} catch (IOException e) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+	}
+
+	public void headPS( AstrolabePostscriptStream ps ) {
+	}
+
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		astrolabe.model.BodyAreal bodyModel ;
+		BodyAreal bodyAreal ;
+		astrolabe.model.Select[] select ;
+
+		for ( CatalogADC6049Record record : catalogT ) {
+			record.register() ;
+
 			try {
 				bodyModel = record.toModel( epoch ).getBodyAreal() ;
-
-				annotation = annotation( record ) ;
-				if ( annotation != null ) {
-					bodyModel.setAnnotation( annotation ) ;
-
-					record.register() ;
-				}
-
-				bodyAreal = new BodyAreal( bodyModel, projector ) ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
+
+			bodyModel.setAnnotation( getAnnotation() ) ;
+
+			select = getSelect( record.ident() ) ;
+			if ( select != null )
+				bodyModel.setAnnotation( select[select.length-1].getAnnotation() ) ;
+
+			bodyAreal = new BodyAreal( bodyModel, projector ) ;
 
 			ps.operator.gsave() ;
 
@@ -92,65 +138,66 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public CatalogRecord record( java.io.Reader catalog ) {
+	public CatalogADC6049Record record( java.io.Reader catalog ) {
 		CatalogADC6049Record r = null ;
-		char[] c ;
-		String rl/*record line*/, rb/*record buffer*/, rc/*record constellation*/, mc/*memory constellation*/ ;
-
-		c = new char[C_CHUNK] ;
-		if ( memory.length()==0 ) {
-			rb = new String() ;
-		} else {
-			rb = new String( memory ) ;
-		}
+		char[] cl ;
+		int cn ;
+		String rl, rb ;
+		String rc, mc ;
 
 		try {
-			while ( catalog.read( c, 0, C_CHUNK ) == C_CHUNK ) {
-				rl = new String( c ) ;
-				if ( memory.length()==0 ) {
-					memory = rl ;
+			if ( _m.length()==0 ) {
+				cl = new char[C_CHUNK18] ;
+				cn = catalog.read( cl, 0, C_CHUNK18 ) ;
+				if ( cn == -1 )
+					return r ;
+
+				if ( cl[C_CHUNK18-1] == '\n' ) {
+					rb = new String( cl ) ;
+
+					_ch = C_CHUNK18 ;
+					_ca = 20 ;
+					_co = 24 ;
+				} else {
+					rb = new String( cl ) ;
+					cl = new char[C_CHUNK20-C_CHUNK18] ;
+					cn = catalog.read( cl, 0, C_CHUNK20-C_CHUNK18 ) ;
+					rb = rb+new String( cl ) ;
+
+					_ch = C_CHUNK20 ;
+					_ca = 23 ;
+					_co = 27 ;
 				}
-				rc = rl.substring( 23, 27 ).trim() ;
-				mc = memory.substring( 23, 27 ).trim() ;
+
+				_m = new String( rb ) ;
+			} else {
+				rb = new String( _m ) ;
+			}
+
+			cl = new char[_ch] ;
+
+			while ( ( cn = catalog.read( cl, 0, _ch ) )>-1 ) {
+				rl = new String( cl ) ;
+
+				rc = rl.substring( _ca, _co ).trim() ;
+				mc = _m.substring( _ca, _co ).trim() ;
 				if ( rc.equals( mc ) ) {
 					rb = rb+rl ;
 
 					continue ;
 				} else {
-					memory = rl ;
+					_m = rl ;
 
-					try {
-						r = new CatalogADC6049Record( rb ) ;
+					if ( ( r = record( rb ) ) != null )
+						break ;
 
-						if ( r.matchAny( restrict ) ) {
-							break ;
-						} else {
-							rb = rl ;
-
-							continue ;
-						}
-					} catch ( ParameterNotValidException e ) {
-						String msg ;
-
-						msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-						msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+rb+"\"" } ) ;
-						log.warn( msg ) ;
-
-						rb = rl ;
-
-						continue ;
-					} catch ( NumberFormatException e ) {
-						String msg ;
-
-						msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-						msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+rb+"\"" } ) ;
-						log.warn( msg ) ;
-
-						rb = rl ;
-
-						continue ;
-					}
+					rb = rl ;
 				}
+			}
+			if ( cn == -1 ){
+				r = record( rb ) ;
+
+				_m = new String() ;
 			}
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
@@ -159,9 +206,31 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 		return r ;
 	}
 
-	public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) {
-		CatalogRecord[] r = new CatalogRecord[catalog.size()] ;
+	private CatalogADC6049Record record( String record ) {
+		CatalogADC6049Record r = null ;
 
-		return catalog.values().toArray( r ) ;
+		try {
+			r = new CatalogADC6049Record( record ) ;
+
+			if ( restrict.size()>0 ) {
+				for ( String key : r.ident() )
+					if ( restrict.contains( key ) )
+						break ;
+			}
+		} catch ( ParameterNotValidException e ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
+			log.warn( msg ) ;
+		} catch ( NumberFormatException e ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+record+"\"" } ) ;
+			log.warn( msg ) ;
+		}
+
+		return r ;
 	}
 }

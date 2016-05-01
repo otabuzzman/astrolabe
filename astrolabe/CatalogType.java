@@ -3,44 +3,38 @@ package astrolabe;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-abstract public class CatalogType extends astrolabe.model.CatalogType implements Catalog {
+abstract public class CatalogType extends astrolabe.model.CatalogType {
 
-	private Projector projector ;
-
-	private Hashtable<String, astrolabe.model.Annotation[]> select ;
-
-	private Geometry fov ; // effective field-of-view
+	private Hashtable<String, Integer> select ;
 
 	public CatalogType( Peer peer, Projector projector ) {
 		String[] sv ;
-		Geometry fovu, fove ;
-
-		this.projector = projector ;
+		Geometry fov, fovu, fove ;
 
 		peer.setupCompanion( this ) ;
 
-		select = new Hashtable<String, astrolabe.model.Annotation[]>() ;
+		select = new Hashtable<String, Integer>() ;
 		if ( getSelect() != null ) {
 			for ( int s=0 ; s<getSelectCount() ; s++ ) {
 				sv = getSelect( s ).getValue().split( "," ) ;
 				for ( int v=0 ; v<sv.length ; v++ ) {
-					select.put( sv[v], getSelect( s ).getAnnotation() ) ;
+					select.put( sv[v], s ) ;
 				}
 			}
 		}
@@ -55,106 +49,72 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
-	public Hashtable<String, CatalogRecord> read() throws URISyntaxException, MalformedURLException {
-		URI cati ;
-		URL catl ;
-		File catf ;
+	public Reader reader() throws URISyntaxException, MalformedURLException {
+		InputStreamReader r ;
+		URI cURI ;
+		URL cURL ;
+		File cFile ;
+		InputStream cIS ;
+		GZIPInputStream cF ;
 
-		cati = new URI( getUrl() ) ;
-		if ( cati.isAbsolute() ) {
-			catf = new File( cati ) ;	
+		cURI = new URI( getUrl() ) ;
+		if ( cURI.isAbsolute() ) {
+			cFile = new File( cURI ) ;	
 		} else {
-			catf = new File( cati.getPath() ) ;
+			cFile = new File( cURI.getPath() ) ;
 		}
-		catl = catf.toURL() ;
-
-		return read( catl ) ;
-	}
-
-	public Hashtable<String, CatalogRecord> read( URL catalog ) {
-		Hashtable<String, CatalogRecord> r ;
-		InputStreamReader reader ;
-		GZIPInputStream filter ;
+		cURL = cFile.toURL() ;
 
 		try {
-			try {
-				filter = new GZIPInputStream( catalog.openStream() ) ;
-				reader = new InputStreamReader( filter ) ;
-			} catch ( IOException e ) {
-				reader = new InputStreamReader( catalog.openStream() ) ;
-			}
-
-			try {
-				r = read( reader ) ;
-			} finally {
-				reader.close() ;
-			}
+			cIS = cURL.openStream() ;
 		} catch ( IOException e ) {
-			r = new Hashtable<String, CatalogRecord>() ;
+			throw new RuntimeException ( e.toString() ) ;
 		}
-
-		return r ;
-	}
-
-	public Hashtable<String, CatalogRecord> read( String catalog ) {
-		Hashtable<String, CatalogRecord> r ;
-		StringReader reader ;
-
-		reader = new StringReader( catalog ) ;
 
 		try {
-			r = read( reader ) ;
-		} finally {
-			reader.close() ;
+			cF = new GZIPInputStream( cIS ) ;
+			r = new InputStreamReader( cF ) ;
+		} catch ( IOException e ) {
+			r = new InputStreamReader( cIS ) ;
 		}
 
 		return r ;
 	}
 
-	public Hashtable<String, CatalogRecord> read( Reader catalog ) {
-		Hashtable<String, CatalogRecord> r = new Hashtable<String, CatalogRecord>() ;
-		List<double[]> l ;
-		CatalogRecord record ;
-		Geometry body ;
-		boolean ok ;
+	public astrolabe.model.Select[] getSelect( List<String> ident ) {
+		astrolabe.model.Select[] r ;
+		List<astrolabe.model.Select> selL ;
+		List<Integer> intL = new java.util.Vector<Integer>() ;
+		Comparator<Integer> c = new Comparator<Integer>() {
+			public int compare( Integer a, Integer b ) {
+				int x, y ;
 
-		while ( ( record = record( catalog ) ) != null ) {
-			l = record.list( projector ) ;
-			if ( l.size() == 1 ) {
-				ok = fov.covers( new GeometryFactory().createPoint(
-						new JTSCoordinate( l.get( 0 ) ) ) ) ;
-			} else {
-				l.add( l.get( 0 ) ) ;
-				body = new GeometryFactory().createPolygon(
-						new GeometryFactory().createLinearRing(
-								new JTSCoordinateArraySequence( l ) ), null ) ;
+				x = a.intValue() ;
+				y = b.intValue() ;
 
-				ok = fov.covers( body ) || fov.overlaps( body ) ;
+				return ( x<y?1:
+					x>y?-1:
+						0 ) ;
 			}
-			if ( ! ok ) {
-				continue ;
-			}
+		} ;
 
-			r.put( record.ident(), record ) ;
+		for ( String key : ident ) {
+			if ( select.containsKey( key ) )
+				intL.add( select.get( key ) ) ;
 		}
+
+		if ( intL.size()>0 ) {
+			Collections.sort( intL, c ) ;
+
+			selL = new java.util.Vector<astrolabe.model.Select>() ;
+			for ( int s : intL )
+				selL.add( getSelect( s ) ) ;
+			r = selL.toArray( new astrolabe.model.Select[0] ) ;
+		} else
+			r = null ;
 
 		return r ;
 	}
 
-	public astrolabe.model.Annotation[] annotation( CatalogRecord record ) {
-		astrolabe.model.Annotation[] r ;
-		Set<String> matchSet ;
-
-		matchSet = record.matchSet( select.keySet() ) ;
-		if ( matchSet.size()>0 ) {
-			r = select.get( matchSet.iterator().next() ) ;
-		} else {
-			r = getAnnotation() ;
-		}
-
-		return r ;
-	}
-
-	abstract public CatalogRecord record( java.io.Reader catalog ) ;
-	abstract public CatalogRecord[] arrange( Hashtable<String, CatalogRecord> catalog ) ;
+	abstract public void addAllCatalogRecord() ;
 }

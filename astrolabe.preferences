@@ -305,28 +305,30 @@
 							<entry key="/FontType" value="3"/>
 							<entry key="/FontMatrix" value="[.001 0 0 .001 0 0]"/>
 							<entry key="/FontBBox" value="[0 0 1000 1000]"/>
-							<entry key="/Encoding" value="[0 1 255 {/.notdef} for] dup 16 /sight put dup 17 /cstar put dup 18 /dstar put dup 19 /mstar put dup 20 /vstar put dup 21 /vstarfb put dup 22 /vstarsb put dup 23 /vstarfd put dup 24 /vstarsd put dup 25 /nebulaeb put dup 26 /nebulaed put dup 27 /pnebulae put dup 28 /ocluster put dup 29 /gcluster put dup 30 /galaxy3 put dup 31 /galaxy5 put dup 32 /galaxyc put"/>
-							<entry key="/BuildGlyph" value="{[] 0 setdash 1 setlinecap 1 setlinejoin 10 setlinewidth 10 setmiterlimit 2 copy known not {pop /.notdef} if get exec} bind"/>
+							<entry key="/Encoding" value="[0 1 255 {/.notdef} for] dup 16 /sight put dup 17 /cstar put dup 18 /dstar put dup 19 /mstar put dup 20 /vstar put dup 21 /vstarfb put dup 22 /vstarsb put dup 23 /vstarfd put dup 24 /vstarsd put dup 25 /nebulaeb put dup 26 /nebulaed put dup 27 /nebulaeb2 put dup 28 /nebulaed2 put dup 29 /pnebulae put dup 30 /ocluster put dup 31 /gcluster put dup 32 /galaxy3 put dup 33 /galaxy5 put dup 34 /galaxyc put"/>
+							<entry key="/BuildGlyph" value="{[] 0 setdash 1 setlinecap 1 setlinejoin 60 setlinewidth 10 setmiterlimit 2 copy known not {pop /.notdef} if get exec} bind"/>
 							<entry key="/BuildChar" value="{1 index /Encoding get exch get 1 index /BuildGlyph get exec} bind"/>
 							<entry key="/.notdef" value="{}"/>
 							<!--char procedures-->
-							<entry key="/sight" value="{1000 0 0 0 1000 1000 setcachedevice 500 0 moveto 500 1000 lineto stroke 0 500 moveto 1000 500 lineto stroke 500 500 309 0 360 arc closepath stroke} bind"/>
+							<entry key="/sight" value="{1000 0 0 0 1000 1000 setcachedevice 500 30 moveto 500 970 lineto stroke 30 500 moveto 970 500 lineto stroke 500 500 309 0 360 arc closepath stroke} bind"/>
 							<entry key="/cstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath fill} bind"/>
-							<entry key="/dstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath fill rand 360 mod rotate gsave 1 setgray 0 -124 154 0 360 arc closepath fill grestore} bind"/>
-							<entry key="/mstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath fill gsave 1 setgray 0 setlinecap 240 setlinewidth -500 0 moveto 500 0 lineto stroke grestore 1 setlinecap 160 setlinewidth -400 0 moveto 400 0 lineto stroke} bind"/>
-							<entry key="/vstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath stroke 0 0 300 0 360 arc closepath fill} bind"/>
-							<entry key="/vstarfb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 420 mul 3.1416 mul 24 div [ exch ] 0 setdash 0 0 420 0 360 arc closepath stroke 0 0 260 0 360 arc closepath fill} bind"/>
-							<entry key="/vstarsb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 420 mul 3.1416 mul 12 div [ exch ] 0 setdash 0 0 420 0 360 arc closepath stroke 0 0 260 0 360 arc closepath fill} bind"/>
-							<entry key="/vstarfd" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 420 mul 3.1416 mul 24 div [ exch ] 0 setdash 0 0 420 0 360 arc closepath stroke 0 0 360 0 360 arc closepath fill} bind"/>
-							<entry key="/vstarsd" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 420 mul 3.1416 mul 12 div [ exch ] 0 setdash 0 0 420 0 360 arc closepath stroke 0 0 360 0 360 arc closepath fill} bind"/>
-							<entry key="/nebulaeb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath eoclip newpath rand 360 mod rotate -500 50 500 {dup -500 exch moveto 500 exch lineto stroke} for} bind"/>
-							<entry key="/nebulaed" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath eoclip newpath rand 360 mod rotate -500 100 500 {dup -500 exch moveto 500 exch lineto stroke} for} bind"/>
-							<entry key="/pnebulae" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 -252 0 360 arc closepath stroke rand 360 mod rotate 0 -420 moveto 0 -252 lineto stroke 420 0 moveto 252 0 lineto stroke 0 420 moveto 0 252 lineto stroke -420 0 moveto -252 0 lineto stroke} bind"/>
-							<entry key="/ocluster" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 420 mul 3.1416 mul 20 div [ exch dup 4 mul exch ] 0 setdash rand 360 mod rotate 0 0 420 0 360 arc closepath stroke} bind"/>
-							<entry key="/gcluster" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath stroke rand 360 mod rotate 0 -420 moveto 0 420 lineto stroke -420 0 moveto 420 0 lineto stroke} bind"/>
-							<entry key="/galaxy3" value="{1000 0 setcharwidth 500 500 translate 420 0 moveto 0 10 350 {dup cos 420 mul exch sin 420 mul .3 mul lineto} for closepath gsave 1 setgray 160 setlinewidth stroke grestore 80 setlinewidth stroke} bind"/>
-							<entry key="/galaxy5" value="{1000 0 setcharwidth 500 500 translate 420 0 moveto 0 10 350 {dup cos 420 mul exch sin 420 mul .5 mul lineto} for closepath gsave 1 setgray 160 setlinewidth stroke grestore 80 setlinewidth stroke} bind"/>
-							<entry key="/galaxyc" value="{1000 0 setcharwidth 500 500 translate 420 0 moveto 0 10 350 {dup cos 420 mul exch sin 420 mul lineto} for closepath gsave 1 setgray 160 setlinewidth stroke grestore 80 setlinewidth stroke} bind"/>
+							<entry key="/dstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath fill rand 360 mod rotate 1 setgray 0 -124 154 0 360 arc closepath fill} bind"/>
+							<entry key="/mstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath fill gsave 1 setgray 240 setlinewidth -380 0 moveto 380 0 lineto stroke grestore 140 setlinewidth -420 0 moveto 420 0 lineto stroke} bind"/>
+							<entry key="/vstar" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 390 0 360 arc closepath stroke 0 0 240 0 360 arc closepath fill} bind"/>
+							<entry key="/vstarfb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 390 mul 3.1416 mul 24 div [ exch ] 0 setdash 0 setlinecap 0 0 390 0 360 arc closepath stroke 0 0 240 0 360 arc closepath fill} bind"/>
+							<entry key="/vstarsb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 390 mul 3.1416 mul 12 div [ exch ] 0 setdash 0 setlinecap 0 0 390 0 360 arc closepath stroke 0 0 240 0 360 arc closepath fill} bind"/>
+							<entry key="/vstarfd" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 390 mul 3.1416 mul 24 div [ exch ] 0 setdash 0 setlinecap 0 0 390 0 360 arc closepath stroke 0 0 300 0 360 arc closepath fill} bind"/>
+							<entry key="/vstarsd" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 390 mul 3.1416 mul 12 div [ exch ] 0 setdash 0 setlinecap 0 0 390 0 360 arc closepath stroke 0 0 300 0 360 arc closepath fill} bind"/>
+							<entry key="/nebulaeb" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath eoclip newpath rand 360 mod rotate 0 setlinecap -390 130 470 {dup -500 exch moveto 500 exch lineto stroke} for} bind"/>
+							<entry key="/nebulaed" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 420 0 360 arc closepath eoclip newpath rand 360 mod rotate 0 setlinecap -390 158 470 {dup -500 exch moveto 500 exch lineto stroke} for} bind"/>
+							<entry key="/nebulaeb2" value="{1000 0 setcharwidth 500 500 translate -390 -390 moveto 390 -390 lineto 390 390 lineto -390 390 lineto closepath 0 setlinecap 0 setlinejoin gsave 1 setgray 220 setlinewidth stroke grestore stroke} bind"/>
+							<entry key="/nebulaed2" value="{1000 0 setcharwidth 500 500 translate -390 -390 moveto 390 -390 lineto 390 390 lineto -390 390 lineto closepath 0 setlinecap 0 setlinejoin gsave 1 setgray 220 setlinewidth stroke grestore stroke 1 setgray 0 90 270 {rotate -130 -390 moveto 130 -390 lineto stroke} for} bind"/>
+							<entry key="/pnebulae" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 -252 0 360 arc closepath stroke rand 360 mod rotate 0 -390 moveto 0 -252 lineto stroke 390 0 moveto 252 0 lineto stroke 0 390 moveto 0 252 lineto stroke -390 0 moveto -252 0 lineto stroke} bind"/>
+							<entry key="/ocluster" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 2 390 mul 3.1416 mul 20 div [ exch dup 4 mul exch ] 0 setdash 0 setlinecap rand 360 mod rotate 0 0 390 0 360 arc closepath stroke} bind"/>
+							<entry key="/gcluster" value="{1000 0 setcharwidth 500 500 translate gsave 1 setgray 0 0 500 0 360 arc closepath fill grestore 0 0 390 0 360 arc closepath stroke rand 360 mod rotate 0 -390 moveto 0 390 lineto stroke -390 0 moveto 390 0 lineto stroke} bind"/>
+							<entry key="/galaxy3" value="{1000 0 setcharwidth 500 500 translate 390 0 moveto 0 10 350 {dup cos 390 mul exch sin 390 mul .3 mul lineto} for closepath gsave 1 setgray 220 setlinewidth stroke grestore stroke} bind"/>
+							<entry key="/galaxy5" value="{1000 0 setcharwidth 500 500 translate 390 0 moveto 0 10 350 {dup cos 390 mul exch sin 390 mul .5 mul lineto} for closepath gsave 1 setgray 220 setlinewidth stroke grestore stroke} bind"/>
+							<entry key="/galaxyc" value="{1000 0 setcharwidth 500 500 translate 0 0 390 0 360 arc closepath gsave 1 setgray 220 setlinewidth stroke grestore stroke} bind"/>
 						</map>
 					</node>
 				</node>
@@ -389,24 +391,26 @@
 						<!--Justinian-->
 						<entry key="E000..F8FF-23" value="/Justinian:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /space /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /A /B /C /D /E /F /G /H /I /J /K /L /M /N /O /P /Q /R /S /T /U /V /W /X /Y /Z /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /a /b /c /d /e /f /g /h /i /j /k /l /m /n /o /p /q /r /s /t /u /v /w /x /y /z /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<!--Astrolabe-->
-						<!--0xf810: /sight-->
-						<!--0xf811: /cstar-->
-						<!--0xf812: /dstar-->
-						<!--0xf813: /mstar-->
-						<!--0xf814: /vstar-->
-						<!--0xf815: /vstarfb-->
-						<!--0xf816: /vstarsb-->
-						<!--0xf817: /vstarfd-->
-						<!--0xf818: /vstarsd-->
-						<!--0xf819: /nebulaeb-->
-						<!--0xf81A: /nebulaed-->
-						<!--0xf81B: /pnebulae-->
-						<!--0xf81C: /ocluster-->
-						<!--0xf81D: /gcluster-->
-						<!--0xf81E: /galaxy3-->
-						<!--0xf81F: /galaxy5-->
-						<!--0xf820: /galaxyc-->
-						<entry key="E000..F8FF-24" value="/Astrolabe:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /sight /cstar /dstar /mstar /vstar /vstarfb /vstarsb /vstarfd /vstarsd /nebulaeb /nebulaed /pnebulae /ocluster /gcluster /galaxy3 /galaxy5 /galaxyc /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+						<!--0xf810: /sight, point of interest-->
+						<!--0xf811: /cstar, common star-->
+						<!--0xf812: /dstar, double star-->
+						<!--0xf813: /mstar, multiple star-->
+						<!--0xf814: /vstar, variable star-->
+						<!--0xf815: /vstarfb, variable star, higher frequency, larger amplitude-->
+						<!--0xf816: /vstarsb, variable star, slower frequency, larger amplitude-->
+						<!--0xf817: /vstarfd, variable star, higher frequency, lower amplitude-->
+						<!--0xf818: /vstarsd, variable star, slower frequency, lower amplitude-->
+						<!--0xf819: /nebulaeb, bright nebulae-->
+						<!--0xf81A: /nebulaed, dark nebulae-->
+						<!--0xf81B: /nebulaeb2, bright nebulae, alternative symbol-->
+						<!--0xf81C: /nebulaed2, dark nebulae, alternative symbol-->
+						<!--0xf81D: /pnebulae, planetary nebulae-->
+						<!--0xf81E: /ocluster, open cluster-->
+						<!--0xf81F: /gcluster, globular cluster-->
+						<!--0xf820: /galaxy3, flat elliptic shaped galaxy-->
+						<!--0xf821: /galaxy5, elliptic shaped galaxy-->
+						<!--0xf822: /galaxyc, circular shaped galaxy-->
+						<entry key="E000..F8FF-24" value="/Astrolabe:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /sight /cstar /dstar /mstar /vstar /vstarfb /vstarsb /vstarfd /vstarsd /nebulaeb /nebulaed /nebulaeb2 /nebulaed2 /pnebulae /ocluster /gcluster /galaxy3 /galaxy5 /galaxyc /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="FB00..FB4F-0" value="/Times-Roman:/.notdef /fi /fl /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 					</map>
 				</node>
@@ -658,7 +662,7 @@
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
 						<entry key="zenit" value="4.2"/>
-						<!--magx*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
+						<!--.12*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
 						<entry key="mag-1" value="4.64"/>
 						<entry key="mag0" value="3.74"/>
 						<entry key="mag1" value="3.02"/>
@@ -676,8 +680,6 @@
 						<entry key="mag13" value=".22"/>
 						<entry key="mag14" value=".18"/>
 						<entry key="mag15" value=".14"/>
-						<!--faint object or magnitude unavailable-->
-						<entry key="magx" value=".12"/>
 					</map>
 				</node>
 			</node>

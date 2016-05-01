@@ -1,9 +1,7 @@
 
 package astrolabe;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -11,11 +9,11 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC5050Record implements CatalogRecord {
+public class CatalogADC5050Record {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
-	public final static int CR_LENGTH = 198 ;
+	private final static int CR_LENGTH = 198 ;
 
 	public String HR         ; //  [1/9110]+ Harvard Revised Number = Bright Star Number
 	public String Name       ; //  Name, generally Bayer and/or Flamsteed name
@@ -185,39 +183,6 @@ public class CatalogADC5050Record implements CatalogRecord {
 		return model ;
 	}
 
-	public boolean matchAny( Set<String> list ) {
-		return list.size()==0||matchSet( list ).size()>0 ;
-	}
-
-	public boolean matchAll( Set<String> list ) {
-		return list.size()==matchSet( list ).size() ;
-	}
-
-	public Set<String> matchSet( Set<String> list ) {
-		HashSet<String> r = new HashSet<String>() ;
-
-		for ( String ident : identSet() ) {
-			if ( list.contains( ident ) ) {
-				r.add( ident ) ;
-			}
-		}
-
-		return r ;
-	}
-
-	public Set<String> identSet() {
-		HashSet<String> r = new HashSet<String>() ;
-
-		r.add( ident() ) ;
-		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
-
-		return r ;
-	}
-
-	public String ident() {
-		return HR ;
-	}
-
 	public List<double[]> list( Projector projector ) {
 		List<double[]> r = new java.util.Vector<double[]>() ;
 		double ra, de, xy[] ;
@@ -342,6 +307,15 @@ public class CatalogADC5050Record implements CatalogRecord {
 		Registry.registerName( key, MultCnt ) ;
 		key = m.message( ApplicationConstant.LK_ADC5050_NOTEFLAG ) ;
 		Registry.registerName( key, NoteFlag ) ;
+	}
+
+	public List<String> ident() {
+		List<String> r = new java.util.Vector<String>( 2 ) ;
+
+		r.add( HR ) ;
+		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+
+		return r ;
 	}
 
 	public double RAh() {

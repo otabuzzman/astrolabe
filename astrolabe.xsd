@@ -625,7 +625,9 @@
 								<xs:pattern value="guidance"/>
 								<xs:pattern value="obscure"/>
 								<xs:pattern value="zenit"/>
-								<xs:pattern value="(mag([x]|(-?[0-9]+)))"/>
+								<xs:pattern value="mag-1"/>
+								<xs:pattern value="mag[0-9]"/>
+								<xs:pattern value="mag1[0-5]*"/>
 								<xs:pattern value="(\{.+\})"/>
 							</xs:restriction>
 						</xs:simpleType>
@@ -858,9 +860,6 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
-					<xs:sequence>
-						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -911,9 +910,6 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
-					<xs:sequence>
-						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -946,6 +942,10 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Sign" type="SignType"/>
+	<xs:complexType name="CatalogRecordType">
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="CatalogRecord" type="CatalogRecordType"/>
 	<!---->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" use="required">

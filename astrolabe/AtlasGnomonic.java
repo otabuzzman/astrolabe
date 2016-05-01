@@ -2,7 +2,7 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class AtlasGnomonic extends AtlasAzimuthalType {
+public class AtlasGnomonic extends AtlasAzimuthalType implements Atlas {
 
 	private astrolabe.model.ChartGnomonic peerCG ;
 

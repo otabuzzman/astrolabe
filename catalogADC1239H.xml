@@ -798,8 +798,8 @@ astrolabe.xsd">
 						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
 						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H fov="chart" url="lib/cat/1239/hip_main.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
-							<Select value="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+						<CatalogADC1239H fov="chart" url="lib/cat/1239/hip_main.dat.gz" restrict="mag-1,mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+							<Select value="mag-1,mag0,mag1,mag2,mag3,mag4,mag5,mag6">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Text purpose="bodylettering0" value="{HIP}"/>

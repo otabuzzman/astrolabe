@@ -21,7 +21,7 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType implements Atlas {
+abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 	private final static double DEFAULT_OVERLAP = 10. ;
 	private final static double DEFAULT_LIMITDE	= 0 ;

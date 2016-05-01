@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAACoordinateTransformation;
+
 import com.vividsolutions.jts.geom.Geometry;
 
 @SuppressWarnings("serial")
@@ -15,7 +17,10 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	private List<double[]> outline ;
 
 	public BodyAreal( Peer peer, Projector projector ) {
-		PolygonSpherical polygon ;
+		PolygonSphere polygon ;
+		List<double[]> outline ;
+		double lo, la ;
+		double sr, sd ;
 		MessageCatalog m ;
 		String key ;
 
@@ -23,19 +28,41 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 		this.projector = projector ;
 
-		outline = AstrolabeFactory.valueOf( getPosition() ) ;
-		if ( outline.size()>2 ) {
-			polygon = new PolygonSpherical( outline ) ;
-		} else {
-			polygon = null ;
+		this.outline = AstrolabeFactory.valueOf( getPosition() ) ;
+
+		sr = 0 ;
+		sd = 0 ;
+
+		if ( getPositionCount()>2 ) {
+			outline = new java.util.Vector<double[]>() ;
+			for ( double[] v : this.outline ) {
+				lo = CAACoordinateTransformation.MapTo0To360Range( v[1] ) ;
+				if ( lo>180 )
+					lo = lo-360 ;
+
+				la = CAACoordinateTransformation.MapTo0To360Range( v[2] ) ;
+				if ( la>180 )
+					la = la-360 ;
+				if ( la>90 )
+					la = 180-la ;
+				if ( la<-90 )
+					la = -180-la ;
+
+				outline.add( new double[] { 1, lo, la } ) ;
+			}			
+			polygon = new PolygonSphere( outline ) ;
+			sr = polygon.area() ;
+			if ( sr>( 2*java.lang.Math.PI ) )
+				sr = 4*java.lang.Math.PI-sr ;
+			sd = sr/java.lang.Math.pow( ( 2*java.lang.Math.PI/360. ), 2 ) ;
 		}
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		key = m.message( ApplicationConstant.LK_BODY_STERADIAN ) ;
-		AstrolabeRegistry.registerDMS( key, polygon==null?0:polygon.area() ) ;
+		AstrolabeRegistry.registerDMS( key, sr ) ;
 		key = m.message( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		AstrolabeRegistry.registerDMS( key, polygon==null?0:polygon.area() ) ;		
+		AstrolabeRegistry.registerDMS( key, sd ) ;		
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {

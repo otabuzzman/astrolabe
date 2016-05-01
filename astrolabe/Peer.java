@@ -94,15 +94,14 @@ public class Peer {
 					vp = gm.invoke( this, (Object[]) null ) ;
 					if ( vp instanceof String ) {
 						vs = parser.parse( (String) vp ) ;
-						if ( vs == null )
-							sm.invoke( companion, vp ) ;
-						else {
+						if ( vs != null ) {
 							validate( sm.getName().substring( 3 ).toLowerCase(), vs ) ;
 
 							sm.invoke( companion, vs ) ;
+							continue ;
 						}
-					} else
-						sm.invoke( companion, vp ) ;
+					}
+					sm.invoke( companion, vp ) ;
 				} catch ( NoSuchMethodException e ) {
 					continue ;
 				} catch ( InvocationTargetException e ) {

@@ -164,12 +164,12 @@ public final class AstrolabeFactory {
 		return body ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p ) {
+	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
 		astrolabe.model.CatalogADC6049 ct6049 ;
-		PostscriptEmitter catalog ;
+		Catalog catalog ;
 
 		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
 			catalog = new CatalogADC1239H( ct1239h, p ) ;

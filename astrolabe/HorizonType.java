@@ -61,9 +61,11 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 		}
 
 		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
-			PostscriptEmitter catalog ;
+			Catalog catalog ;
 
 			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
+
+			catalog.addAllCatalogRecord() ;
 
 			ps.operator.gsave() ;
 

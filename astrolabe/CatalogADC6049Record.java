@@ -5,9 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -15,9 +13,12 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC6049Record implements CatalogRecord {
+public class CatalogADC6049Record {
 
-	public final static int CR_LENGTH = 29 ;
+	private final static int CR_LENGTH18 = 25 ;
+	private final static int CR_LENGTH20 = 29 ;
+
+	private int _le = 0 ;
 
 	public List<String>	RAhr  ; // Right ascension in decimal hours (J2000)
 	public List<String>	DEdeg ; // Declination in degrees (J2000)
@@ -26,33 +27,48 @@ public class CatalogADC6049Record implements CatalogRecord {
 
 	public CatalogADC6049Record( String data ) throws ParameterNotValidException, NumberFormatException {
 		BufferedReader b ;
-		String l, lv[] ;
+		String l, lv[] = null ;
+		double ra, pra ;
+		double de, pde ;
 
 		RAhr = new java.util.Vector<String>() ;
 		DEdeg = new java.util.Vector<String>() ;
+
+		if ( data.charAt( CR_LENGTH18 ) == '\n' )
+			_le = CR_LENGTH18 ;
+		else
+			_le = CR_LENGTH20 ;
 
 		try {
 			b = new BufferedReader( new StringReader( data ) ) ;
 
 			while ( ( l = b.readLine() ) != null ) {
-				if ( l.length() != CR_LENGTH ) {
+				if ( l.length() != _le ) {
 					throw new ParameterNotValidException(  Integer.toString( l.length() ) ) ;
 				}
 
 				lv = l.trim().split( "[ ]+" ) ;
 				RAhr.add( lv[0] ) ;
 				DEdeg.add( lv[1] ) ;
-				con  = lv[2] ;
-				type = lv[3] ;
 			}
+			con  = lv[2] ;
+			type = lv[3] ;
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
 		// validation
+		pra = RAhr( RAhr.size()-1 ) ;
+		pde = DEdeg( DEdeg.size()-1 ) ;
 		for ( int position=0 ; position<RAhr.size() ; position++ ) {
-			RAhr( position ) ;
-			DEdeg( position ) ; // continue new methods
+			ra = RAhr( position ) ;
+			de = DEdeg( position ) ; // continue new methods
+			if ( ra==pra && de==pde ) {
+				RAhr.remove( position ) ;
+				DEdeg.remove( position ) ;
+			}
+			pra = ra ;
+			pde = de ;
 		}
 	}
 
@@ -87,38 +103,6 @@ public class CatalogADC6049Record implements CatalogRecord {
 		model.validate() ;
 
 		return model ;
-	}
-
-	public boolean matchAny( Set<String> list ) {
-		return list.size()==0||matchSet( list ).size()>0 ;
-	}
-
-	public boolean matchAll( Set<String> list ) {
-		return list.size()==matchSet( list ).size() ;
-	}
-
-	public Set<String> matchSet( Set<String> list ) {
-		HashSet<String> r = new HashSet<String>() ;
-
-		for ( String ident : identSet() ) {
-			if ( list.contains( ident ) ) {
-				r.add( ident ) ;
-			}
-		}
-
-		return r ;
-	}
-
-	public Set<String> identSet() {
-		HashSet<String> r = new HashSet<String>() ;
-
-		r.add( ident() ) ;
-
-		return r ;
-	}
-
-	public String ident() {
-		return con ;
 	}
 
 	public List<double[]> list( Projector projector ) {
@@ -160,6 +144,14 @@ public class CatalogADC6049Record implements CatalogRecord {
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_GENITIVE, new Object[] { con } ) ;
 		v = m.message( p ) ;
 		Registry.registerName( k, v ) ;
+	}
+
+	public List<String> ident() {
+		List<String> r = new java.util.Vector<String>( 1 ) ;
+
+		r.add( con ) ;
+
+		return r ;
 	}
 
 	public double RAhr( int index ) {

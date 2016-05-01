@@ -225,7 +225,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "null" })
 	private void emitPSBaselineRail( AstrolabePostscriptStream ps ) {
 		List<double[]> vDFw = null, vDRv = null, rvDRv ;
 		double b, e, s, span ;
@@ -336,8 +336,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				}
 			}
 		} catch ( ParameterNotValidException ee ) {
-			if ( nss%2 == 0 && // close unfilled subunit
-					vDFw != null ) {
+			if ( nss%2 == 0 ) {// close unfilled subunit
 				List<double[]> vector ;
 				double[] xy ;
 

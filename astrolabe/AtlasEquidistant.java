@@ -2,7 +2,7 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class AtlasEquidistant extends AtlasAzimuthalType {
+public class AtlasEquidistant extends AtlasAzimuthalType implements Atlas {
 
 	private astrolabe.model.ChartEquidistant peerCE ;
 
