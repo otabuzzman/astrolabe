@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
@@ -29,16 +30,16 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( this, null, null ) ;
+		node = Configuration.getClassNode( this, null, null ) ;
 
 		this.origin = new Vector( origin[0], origin[1] ) ;
 		this.tangent = new Vector( tangent[0], tangent[1] ) ;
 
 		this.tangent.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 
-		space = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_SPACE, DEFAULT_SPACE ) ;
-		linelength = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_LINELENGTH, DEFAULT_LINELENGTH ) ;
-		linewidth = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_GRADUATION_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
+		space = Configuration.getValue( node, ApplicationConstant.PK_GRADUATION_SPACE, DEFAULT_SPACE ) ;
+		linelength = Configuration.getValue( node, ApplicationConstant.PK_GRADUATION_LINELENGTH, DEFAULT_LINELENGTH ) ;
+		linewidth = Configuration.getValue( node, ApplicationConstant.PK_GRADUATION_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -46,7 +47,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		java.util.Vector<double[]> v ;
+		List<double[]> v ;
 		double[] xy ;
 
 		v = list() ;
@@ -86,7 +87,18 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 
 		if ( getAnnotationStraight() != null ) {
 			try {
-				ApplicationHelper.emitPS( ps, getAnnotationStraight() ) ;
+				PostscriptEmitter annotation ;
+
+				for ( int i=0 ; i<getAnnotationStraightCount() ; i++ ) {
+					ps.operator.gsave() ;
+
+					annotation = new AnnotationStraight( getAnnotationStraight( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
+
+					ps.operator.grestore() ;
+				}
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
@@ -96,8 +108,8 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	public void tailPS( PostscriptStream ps ) {
 	}
 
-	private java.util.Vector<double[]> list() {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	private List<double[]> list() {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		Vector a, b ;
 
 		a = new Vector( tangent ) ;

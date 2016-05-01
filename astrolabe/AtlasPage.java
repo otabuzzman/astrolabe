@@ -49,46 +49,49 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 
 	public void register() {
 		String key ;
+		MessageCatalog m ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_NUM ) ;
-		ApplicationHelper.registerNumber( key, getNum() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_TCP ) ;
-		ApplicationHelper.registerNumber( key, getTcp() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_BCP ) ;
-		ApplicationHelper.registerNumber( key, getBcp() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_PCP ) ;
-		ApplicationHelper.registerNumber( key, getPcp() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_FCP ) ;
-		ApplicationHelper.registerNumber( key, getFcp() ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_NUM ) ;
+		Registry.registerNumber( key, getNum() ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_TCP ) ;
+		Registry.registerNumber( key, getTcp() ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_BCP ) ;
+		Registry.registerNumber( key, getBcp() ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_PCP ) ;
+		Registry.registerNumber( key, getPcp() ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_FCP ) ;
+		Registry.registerNumber( key, getFcp() ) ;
 		try {
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P0RA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP0().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P0DE ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP0().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P1RA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP1().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P1DE ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP1().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P2RA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP2().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P2DE ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP2().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P3RA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP3().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_P3DE ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getP3().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_ORA ) ;
-			ApplicationHelper.registerHMS( key, AstrolabeFactory.valueOf( getOrigin().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_ODE ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getOrigin().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_TDE ) ;
-			ApplicationHelper.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_BRA ) ;
-			ApplicationHelper.registerDMS( key, AstrolabeFactory.valueOf( getBottom().getPhi() ) ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ATLASPAGE_BDE ) ;
-			ApplicationHelper.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P0RA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P0DE ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P1RA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P1DE ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P2RA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P2DE ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P3RA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_P3DE ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_ORA ) ;
+			AstrolabeRegistry.registerHMS( key, AstrolabeFactory.valueOf( getOrigin().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_ODE ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getOrigin().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_TDE ) ;
+			Registry.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_BRA ) ;
+			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getBottom().getPhi() ) ) ;
+			key = m.message( ApplicationConstant.LK_ATLASPAGE_BDE ) ;
+			Registry.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}

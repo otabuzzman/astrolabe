@@ -2690,21 +2690,21 @@ astrolabe.xsd" name="astrolabe">
 									<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 								</AnnotationStraight>
 							</Annotation>
-							<Select value="CMI,CNC,MON">
+							<Select value="CMI,CNC,ERI,FOR,MON">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
 										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
-							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR">
+							<Select value="AQL,AUR,CAM,CRT,CRV,LEO,ORI,PSC,PUP,SER1,SEX,SGR,UMI,VIR">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
 										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
-							<Select value="LAC,SCT,SER2">
+							<Select value="LAC,LEP,SCT,SER2">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
 										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>

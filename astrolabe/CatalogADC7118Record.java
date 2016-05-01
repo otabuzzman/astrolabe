@@ -2,6 +2,7 @@
 package astrolabe;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
@@ -133,8 +134,8 @@ public class CatalogADC7118Record implements CatalogRecord {
 		return Name ;
 	}
 
-	public java.util.Vector<double[]> list( Projector projector ) {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list( Projector projector ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double ra, de, xy[] ;
 
 		ra = RAh()+RAm()/60. ;
@@ -146,36 +147,39 @@ public class CatalogADC7118Record implements CatalogRecord {
 	}
 
 	public void register() {
+		MessageCatalog m ;
 		String key ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_NAME ) ;
-		ApplicationHelper.registerName( key, Name ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_TYPE ) ;
-		ApplicationHelper.registerName( key, Type  ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_RAH ) ;
-		ApplicationHelper.registerName( key, RAh ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_RAM ) ;
-		ApplicationHelper.registerName( key, RAm ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_DE ) ;
-		ApplicationHelper.registerName( key, DE ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_DED ) ;
-		ApplicationHelper.registerName( key, DEd  ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_DEM ) ;
-		ApplicationHelper.registerName( key, DEm ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_SOURCE ) ;
-		ApplicationHelper.registerName( key, Source ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_CONST ) ;
-		ApplicationHelper.registerName( key, Const ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_L_SIZE ) ;
-		ApplicationHelper.registerName( key, l_size ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_SIZE ) ;
-		ApplicationHelper.registerName( key, size ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_MAG ) ;
-		ApplicationHelper.registerName( key, mag ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_N_MAG ) ;
-		ApplicationHelper.registerName( key, n_mag ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC7118_DESC ) ;
-		ApplicationHelper.registerName( key, Desc ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_ADC7118_NAME ) ;
+		Registry.registerName( key, Name ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_TYPE ) ;
+		Registry.registerName( key, Type  ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_RAH ) ;
+		Registry.registerName( key, RAh ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_RAM ) ;
+		Registry.registerName( key, RAm ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_DE ) ;
+		Registry.registerName( key, DE ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_DED ) ;
+		Registry.registerName( key, DEd  ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_DEM ) ;
+		Registry.registerName( key, DEm ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_SOURCE ) ;
+		Registry.registerName( key, Source ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_CONST ) ;
+		Registry.registerName( key, Const ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_L_SIZE ) ;
+		Registry.registerName( key, l_size ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_SIZE ) ;
+		Registry.registerName( key, size ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_MAG ) ;
+		Registry.registerName( key, mag ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_N_MAG ) ;
+		Registry.registerName( key, n_mag ) ;
+		key = m.message( ApplicationConstant.LK_ADC7118_DESC ) ;
+		Registry.registerName( key, Desc ) ;
 	}
 
 	public double RAh() {

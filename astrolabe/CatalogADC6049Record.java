@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.exolab.castor.xml.ValidationException;
@@ -16,8 +17,8 @@ import caa.CAAPrecession;
 
 public class CatalogADC6049Record implements CatalogRecord {
 
-	public java.util.Vector<String> RAhr  ; // Right ascension in decimal hours (J2000)
-	public java.util.Vector<String> DEdeg ; // Declination in degrees (J2000)
+	public List<String> RAhr  ; // Right ascension in decimal hours (J2000)
+	public List<String> DEdeg ; // Declination in degrees (J2000)
 	public String                   con   ; // Constellation abbreviation
 	public String                   type  ; // [OI] Type of point (Original or Interpolated)
 
@@ -123,8 +124,8 @@ public class CatalogADC6049Record implements CatalogRecord {
 		return con ;
 	}
 
-	public java.util.Vector<double[]> list( Projector projector ) {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list( Projector projector ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double ra, de, xy[] ;
 
 		for ( int position=0 ; position<RAhr.size() ; position++ ) {
@@ -138,27 +139,30 @@ public class CatalogADC6049Record implements CatalogRecord {
 	}
 
 	public void register() {
+		MessageCatalog m ;
 		String k, p, v ;
 
-		k = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		k = m.message( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_CONSTELLATION, new Object[] { con } ) ;
-		v = ApplicationHelper.getLocalizedString( p ) ;
-		ApplicationHelper.registerName( k, v ) ;
+		v = m.message( p ) ;
+		Registry.registerName( k, v ) ;
 
-		k = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
+		k = m.message( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_ABBREVIATION, new Object[] { con } ) ;
-		v = ApplicationHelper.getLocalizedString( p ) ;
-		ApplicationHelper.registerName( k, v ) ;
+		v = m.message( p ) ;
+		Registry.registerName( k, v ) ;
 
-		k = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
+		k = m.message( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_NOMINATIVE, new Object[] { con } ) ;
-		v = ApplicationHelper.getLocalizedString( p ) ;
-		ApplicationHelper.registerName( k, v ) ;
+		v = m.message( p ) ;
+		Registry.registerName( k, v ) ;
 
-		k = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
+		k = m.message( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_GENITIVE, new Object[] { con } ) ;
-		v = ApplicationHelper.getLocalizedString( p ) ;
-		ApplicationHelper.registerName( k, v ) ;
+		v = m.message( p ) ;
+		Registry.registerName( k, v ) ;
 	}
 
 	public double RAhr( int index ) {

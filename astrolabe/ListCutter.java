@@ -63,10 +63,10 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	public void tailPS( PostscriptStream ps ) {
 	}
 
-	public java.util.Vector<List<double[]>> segmentsIntersecting( boolean interior ) {
-		java.util.Vector<List<double[]>> l ;
-		java.util.Vector<double[]> s ;
-		java.util.Vector<int[]> segmentsByIndex ;
+	public List<List<double[]>> segmentsIntersecting( boolean interior ) {
+		List<List<double[]>> l ;
+		List<double[]> s ;
+		List<int[]> segmentsByIndex ;
 		List<double[]> segmentByXY ;
 		Geometry gRaw, gCut ;
 		Coordinate[] segmentByCoordinate ;
@@ -108,28 +108,28 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		return l ;
 	}
 
-	public java.util.Vector<List<double[]>> segmentsInterior() {
+	public List<List<double[]>> segmentsInterior() {
 		return segmentsInterior( null ) ;
 	}
 
-	public java.util.Vector<List<double[]>> segmentsInterior( java.util.Vector<int[]> index ) {
+	public List<List<double[]>> segmentsInterior( List<int[]> index ) {
 		return segments( index, true ) ;
 	}
 
-	public java.util.Vector<List<double[]>> segmentsExterior() {
+	public List<List<double[]>> segmentsExterior() {
 		return segmentsExterior( null ) ;
 	}
 
-	public java.util.Vector<List<double[]>> segmentsExterior( java.util.Vector<int[]> index ) {
+	public List<List<double[]>> segmentsExterior( List<int[]> index ) {
 		return segments( index, false ) ;
 	}
 
-	public java.util.Vector<List<double[]>> segments( boolean interior ) {
+	public List<List<double[]>> segments( boolean interior ) {
 		return segments( null, interior ) ;
 	}
 
-	public java.util.Vector<List<double[]>> segments( java.util.Vector<int[]> index, boolean interior ) {
-		java.util.Vector<List<double[]>> r = new java.util.Vector<List<double[]>>() ;
+	public List<List<double[]>> segments( List<int[]> index, boolean interior ) {
+		List<List<double[]>> r = new java.util.Vector<List<double[]>>() ;
 		int ib, ie ;
 
 		for ( ib = nearest( 0, interior ) ; ib>-1&&ib<size()-1 ; ib = nearestFirst( ib+1, interior ) ) {

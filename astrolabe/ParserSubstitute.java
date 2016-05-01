@@ -153,7 +153,7 @@ public class ParserSubstitute extends ReflectSemantic {
 			} catch ( ParameterNotValidException pe ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "\""+value.toString()+"\"", null } ) ;
 				log.warn( msg ) ;
 
@@ -225,12 +225,12 @@ public class ParserSubstitute extends ReflectSemantic {
 
 		for ( int a=1 ; a<argv.length-1 ; a=a+2 )
 			try {
-				ApplicationHelper.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
+				Registry.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
 			} catch ( NumberFormatException el ) {
 				try {
-					ApplicationHelper.registerNumber( argv[a], new Double( argv[a+1] ) ) ;
+					Registry.registerNumber( argv[a], new Double( argv[a+1] ) ) ;
 				} catch ( NumberFormatException ed ) {
-					ApplicationHelper.registerName( argv[a], new String( argv[a+1] ) ) ;
+					Registry.registerName( argv[a], new String( argv[a+1] ) ) ;
 				}
 			}
 

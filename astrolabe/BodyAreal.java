@@ -12,10 +12,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	private Projector projector ;
 
-	private java.util.Vector<double[]> outline ;
+	private List<double[]> outline ;
 
 	public BodyAreal( Peer peer, Projector projector ) throws ParameterNotValidException {
 		PolygonSpherical polygon ;
+		MessageCatalog m ;
 		String key ;
 
 		peer.setupCompanion( this ) ;
@@ -34,10 +35,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			polygon = null ;
 		}
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
-		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area() ) ;		
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_BODY_STERADIAN ) ;
+		AstrolabeRegistry.registerDMS( key, polygon==null?0:polygon.area() ) ;
+		key = m.message( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
+		AstrolabeRegistry.registerDMS( key, polygon==null?0:polygon.area() ) ;		
 	}
 
 	public void headPS( PostscriptStream ps ) {
@@ -55,12 +58,16 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	public void emitPS( PostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
+		List<List<double[]>> segmentList ;
+		List<double[]> segment ;
 		Geometry fov ;
 		astrolabe.model.BodyAreal peer ;
 		BodyAreal body ;
 		astrolabe.model.Position position ;
 		double[] lo, xy = null ;
 		Vector z, p ;
+		double lm , lc ;
+		int ia ;
 		double a ;
 
 		if ( cut ) {
@@ -75,7 +82,20 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 
 			cutter = new ListCutter( list(), fov ) ;
-			for ( List<double[]> segment : cutter.segmentsInterior() ) {
+			segmentList = cutter.segmentsInterior() ;
+
+			lm = 0 ;
+			ia = 0 ;
+			for ( int is=0 ; is<segmentList.size() ; is++ ) {
+				lc = Vector.length( segmentList.get( is ) ) ;
+				if ( lc>lm ) {
+					lm = lc ;
+					ia = is ;
+				}
+			}
+
+			for ( int is=0 ; is<segmentList.size() ; is++ ) {
+				segment = segmentList.get( is ) ;
 				peer = new astrolabe.model.BodyAreal() ;
 
 				for ( double[] coordinate : segment ) {
@@ -104,7 +124,9 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				peer.setType( getType() ) ;
 				peer.setImportance( getImportance() ) ;
 
-				peer.setAnnotation( getAnnotation() ) ;
+				if ( is == ia ) {
+					peer.setAnnotation( getAnnotation() ) ;
+				}
 
 				try {
 					body = new BodyAreal( peer, projector ) ;
@@ -144,6 +166,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				ps.operator.gsave() ;
 				ps.operator.setlinewidth() ;
 				ps.operator.setlinecap( 2 ) ;
+				ps.operator.setdash( 0 ) ;
 				ps.operator.setgray( 1 ) ;
 				ps.operator.stroke() ;
 				ps.operator.grestore() ;
@@ -169,7 +192,18 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 			if ( getAnnotation() != null ) {
 				try {
-					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+					PostscriptEmitter annotation ;
+
+					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+						ps.operator.gsave() ;
+
+						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+						annotation.headPS( ps ) ;
+						annotation.emitPS( ps ) ;
+						annotation.tailPS( ps ) ;
+
+						ps.operator.grestore() ;
+					}
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -180,8 +214,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	public void tailPS( PostscriptStream ps ) {
 	}
 
-	public java.util.Vector<double[]> list() {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list() {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double[] lo, xy ;
 
 		for ( int n=0 ; n<outline.size() ; n++ ) {

@@ -59,7 +59,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		java.util.Vector<BodyAreal> sign ;
+		List<BodyAreal> sign ;
 		astrolabe.model.BodyAreal bodySign ;
 		HashSet<String> headline ;
 		String[] sv, hv, bv ;
@@ -194,7 +194,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
-					msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 					msg = MessageFormat.format( msg, new Object[] { "\""+l+"\"", "" } ) ;
 					log.warn( msg ) ;
 

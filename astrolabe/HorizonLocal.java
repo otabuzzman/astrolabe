@@ -19,18 +19,21 @@ public class HorizonLocal extends HorizonType {
 		super( peer, projector ) ;
 
 		String key ;
+		MessageCatalog m ;
 		double epoch ;
 
 		this.projector = projector ;
 
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
 		la = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getLatitude() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la ) ;
+		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, la ) ;
 
 		try {			
 			lo = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getLongitude() ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
-			ApplicationHelper.registerDMS( key, lo ) ;
+			key = m.message( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
+			AstrolabeRegistry.registerDMS( key, lo ) ;
 		} catch ( ParameterNotValidException e ) {
 			lo = 0 ;
 		}
@@ -47,11 +50,11 @@ public class HorizonLocal extends HorizonType {
 			d.delete() ;
 
 			lt = lt+( lo>180?lo-360:lo ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
-			ApplicationHelper.registerHMS( key, lt ) ;
+			key = m.message( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
+			AstrolabeRegistry.registerHMS( key, lt ) ;
 
-			lo0 = ApplicationHelper.meanEclipticLongitude( jd ) ;
-			la0 = ApplicationHelper.meanEclipticLatitude( jd ) ;
+			lo0 = BodySun.meanEclipticLongitude( jd ) ;
+			la0 = BodySun.meanEclipticLatitude( jd ) ;
 			epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ; 
 			e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
@@ -59,8 +62,8 @@ public class HorizonLocal extends HorizonType {
 			ra0 = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 
 			ST = CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-			ApplicationHelper.registerHMS( key, ST ) ;
+			key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+			AstrolabeRegistry.registerHMS( key, ST ) ;
 		} catch ( ParameterNotValidException e ) {
 			ST = 0 ;
 		}

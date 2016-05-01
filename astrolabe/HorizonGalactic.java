@@ -17,6 +17,7 @@ public class HorizonGalactic extends HorizonType {
 
 		CAA2DCoordinate c ;
 		double[] eq = new double[2] ;
+		MessageCatalog m ;
 		String key ;
 
 		this.projector = projector ;
@@ -27,10 +28,12 @@ public class HorizonGalactic extends HorizonType {
 		la = eq[1] ;
 		ST = eq[0] ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la ) ;		
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-		ApplicationHelper.registerHMS( key, ST ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, la ) ;		
+		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+		AstrolabeRegistry.registerHMS( key, ST ) ;
 	}
 
 	public double[] project( double l, double b ) {

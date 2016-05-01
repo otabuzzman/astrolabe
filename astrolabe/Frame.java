@@ -45,8 +45,8 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 		String[] xyRaw ;
 		double[] xyVal ;
 
-		xyRaw = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, null, null ),
+		xyRaw = Configuration.getValue(
+				Configuration.getClassNode( this, null, null ),
 				getAnchor(), DEFAULT_ANCHOR )
 				.split( ":" ) ;
 

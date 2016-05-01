@@ -37,8 +37,8 @@ public class DMS extends astrolabe.model.DMS {
 		if ( precision>-1 ) {
 			e = precision ;
 		} else {
-			node = ApplicationHelper.getClassNode( this, null, null ) ;
-			e = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DMS_PRECISION, DEFAULT_PRECISISON ) ;
+			node = Configuration.getClassNode( this, null, null ) ;
+			e = Configuration.getValue( node, ApplicationConstant.PK_DMS_PRECISION, DEFAULT_PRECISISON ) ;
 		}
 		p = java.lang.Math.pow( 10, e ) ;
 

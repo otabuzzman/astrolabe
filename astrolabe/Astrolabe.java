@@ -58,10 +58,10 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
 		d = new CAADate( epoch, true ) ;
 
-		ApplicationHelper.registerNumber( ApplicationConstant.GC_EPOCHE, d.Julian() ) ;
+		Registry.registerNumber( ApplicationConstant.GC_EPOCHE, d.Julian() ) ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
-		ApplicationHelper.registerYMD( key, d ) ;
+		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
+		AstrolabeRegistry.registerYMD( key, d ) ;
 
 		d.delete() ;
 	}
@@ -143,8 +143,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 			out =  new TeeOutputStream( System.out ) ;
 
-			viewerDecl = ApplicationHelper.getPreferencesKV(
-					ApplicationHelper.getClassNode( Astrolabe.class, astrolabe.getName(), null ),
+			viewerDecl = Configuration.getValue(
+					Configuration.getClassNode( Astrolabe.class, astrolabe.getName(), null ),
 					ApplicationConstant.PK_ASTROLABE_VIEWER, null ) ;
 			if ( viewerDecl == null ) {
 				viewerProc = null ;

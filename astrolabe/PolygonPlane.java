@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.util.List;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -11,13 +13,17 @@ public class PolygonPlane {
 
 	private Polygon polygon ;
 
-	public PolygonPlane( java.util.Vector<double[]> polygon ) {
+	public PolygonPlane( List<double[]> polygon ) {
 		Coordinate[] c ;
 		double[] a, o, xy ;
 		LinearRing r ;
+		int ea, eo ;
 
-		a = polygon.firstElement() ;
-		o = polygon.lastElement() ;
+		ea = 0 ;
+		eo = polygon.size()-1 ;
+
+		a = polygon.get( ea ) ; // firstElement() ;
+		o = polygon.get( eo ) ; // lastElement() ;
 		if ( a[0]!=o[0]&&a[1]!=o[1] ) {
 			c = new Coordinate[polygon.size()+1] ;
 			c[c.length-1] = new Coordinate( a[0], a[1] ) ;

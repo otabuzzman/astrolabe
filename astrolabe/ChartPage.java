@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.util.List;
+
 import org.exolab.castor.xml.ValidationException;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -14,7 +16,7 @@ public class ChartPage extends astrolabe.model.ChartPage {
 
 	public ChartPage( Peer peer ) throws ParameterNotValidException {
 		String sv, sd[], lv ;
-		java.util.Vector<double[]> cl ;
+		List<double[]> cl ;
 		Geometry fov ;
 
 		peer.setupCompanion( this ) ;
@@ -24,8 +26,8 @@ public class ChartPage extends astrolabe.model.ChartPage {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		sv = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), null ),
+		sv = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				getSize(), null ) ;
 		if ( sv == null ) {
 			sd = getSize().split( "x" ) ;
@@ -37,8 +39,8 @@ public class ChartPage extends astrolabe.model.ChartPage {
 		real[0] = size[0]*getReal()/100 ;
 		real[1] = size[1]*getReal()/100 ;
 
-		lv = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CHARTPAGE_LAYOUT ),
+		lv = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), ApplicationConstant.PN_CHARTPAGE_LAYOUT ),
 				getLayout(), null ) ;
 		if ( lv == null ) {
 			lv = getLayout() ;

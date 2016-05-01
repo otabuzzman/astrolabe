@@ -120,7 +120,7 @@ public class CatalogADC7118 extends CatalogType implements PostscriptEmitter {
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
-					msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 					msg = MessageFormat.format( msg, new Object[] { "\""+l+"\"", "" } ) ;
 					log.warn( msg ) ;
 

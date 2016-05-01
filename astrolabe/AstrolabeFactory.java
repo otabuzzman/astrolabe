@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
@@ -192,7 +193,7 @@ public final class AstrolabeFactory {
 	public static void modelOf( HorizonType horizon, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
-		node = ApplicationHelper.getClassNode( horizon, horizon.getName(), null ) ;
+		node = Configuration.getClassNode( horizon, horizon.getName(), null ) ;
 		horizon.setupPeer( node ) ;
 
 		if ( validate )
@@ -210,7 +211,7 @@ public final class AstrolabeFactory {
 	public static void modelOf( CircleType circle, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
-		node = ApplicationHelper.getClassNode( circle, circle.getName(), null ) ;
+		node = Configuration.getClassNode( circle, circle.getName(), null ) ;
 		circle.setupPeer( node ) ;
 
 		if ( validate )
@@ -232,7 +233,7 @@ public final class AstrolabeFactory {
 			throw new ParameterNotValidException( AnnotationType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( annotation, annotation.getName(), null ) ;
+		node = Configuration.getClassNode( annotation, annotation.getName(), null ) ;
 		annotation.setupPeer( node ) ;
 
 		if ( validate )
@@ -254,7 +255,7 @@ public final class AstrolabeFactory {
 			throw new ParameterNotValidException( TextType.class.toString()+":"+null ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( text, text.getName(), null ) ;
+		node = Configuration.getClassNode( text, text.getName(), null ) ;
 		text.setupPeer( node ) ;
 
 		if ( validate )
@@ -322,8 +323,8 @@ public final class AstrolabeFactory {
 		return r ;
 	}
 
-	public static java.util.Vector<double[]> valueOf( SphericalType[] spherical ) throws ParameterNotValidException {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public static List<double[]> valueOf( SphericalType[] spherical ) throws ParameterNotValidException {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 
 		if ( spherical == null ) {
 			throw new ParameterNotValidException( SphericalType[].class.toString()+":"+null ) ;

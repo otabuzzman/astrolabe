@@ -4,6 +4,7 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
@@ -82,7 +83,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		if ( ! ( jdAy<jdOy ) ) {
 			String msg ;
 
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
 
 			throw new ParameterNotValidException( msg ) ;
@@ -90,11 +91,11 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 		this.projector = projector ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), getType() ) ;
+		node = Configuration.getClassNode( this, getName(), getType() ) ;
 
-		interval = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
+		interval = Configuration.getValue( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
 		if ( getStretch() ) {
-			stretch = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
+			stretch = Configuration.getValue( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
 		} else {
 			stretch = 0 ;
 		}
@@ -131,10 +132,10 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		Geometry fov ;
 		astrolabe.model.BodyPlanet peer ;
 		BodyPlanet body ;
-		java.util.Vector<int[]> idlist ;
-		java.util.Vector<Double> jdlist ;
+		List<int[]> idlist ;
+		List<Double> jdlist ;
 		double jdAe, jdOe ;
-		java.util.Vector<double[]> l ;
+		List<double[]> l ;
 		double[] xy ;
 
 		if ( cut ) {
@@ -239,7 +240,18 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 			if ( getAnnotation() != null ) {
 				try {
-					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+					PostscriptEmitter annotation ;
+
+					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+						ps.operator.gsave() ;
+
+						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+						annotation.headPS( ps ) ;
+						annotation.emitPS( ps ) ;
+						annotation.tailPS( ps ) ;
+
+						ps.operator.grestore() ;
+					}
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -315,16 +327,16 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		return new double[] { v.x, v.y } ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list ) {
+	public List<double[]> list( List<Double> list ) {
 		return list( list, jdAy, jdOy, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double shift ) {
+	public List<double[]> list( List<Double> list, double shift ) {
 		return list( list, jdAy, jdOy, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double jdA, double jdO, double shift ) {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list( List<Double> list, double jdA, double jdO, double shift ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double g ;
 
 		r.add( project( jdA, shift ) ) ;
@@ -348,15 +360,15 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		return r ;
 	}
 
-	public java.util.Vector<double[]> list() {
+	public List<double[]> list() {
 		return list( null, jdAy, jdOy, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( double shift ) {
+	public List<double[]> list( double shift ) {
 		return list( null, jdAy, jdOy, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( double jdA, double jdO, double shift ) {
+	public List<double[]> list( double jdA, double jdO, double shift ) {
 		return list( null, jdA, jdO, shift ) ;
 	}
 

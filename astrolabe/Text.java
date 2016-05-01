@@ -18,8 +18,8 @@ public class Text extends astrolabe.model.Text {
 	}
 
 	public double size() {
-		return ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_TEXT_PURPOSE ),
+		return Configuration.getValue(
+				Configuration.getClassNode( this, getName(), ApplicationConstant.PN_TEXT_PURPOSE ),
 				getPurpose(), DEFAULT_PURPOSE ) ;
 	}
 }

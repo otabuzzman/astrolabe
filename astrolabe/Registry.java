@@ -10,9 +10,6 @@ public class Registry {
 	private final static Hashtable<String, Object> global = new Hashtable<String, Object>() ;
 	private final static Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
 
-	private Registry() {
-	}
-
 	public static Object retrieve( String key ) throws ParameterNotValidException {
 		Object r ;
 
@@ -52,7 +49,7 @@ public class Registry {
 		} else {
 			String msg ;
 
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { "\""+key+"\"", null } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
@@ -96,5 +93,26 @@ public class Registry {
 		if ( local.containsKey( registry ) ) {
 			local.remove( registry ) ;
 		}
+	}
+
+	public static void registerNumber( String key, double value, int precision ) {
+		double p, v ;
+
+		p = java.lang.Math.pow( 10, precision ) ;
+		v = (long) ( ( value*p+.5 ) )/p ;
+
+		registerNumber( key, v ) ;
+	}
+
+	public static void registerNumber( String key, double value ) {
+		register( key, (Object) new Double( value ) ) ;
+	}
+
+	public static void registerNumber( String key, long value ) {
+		register( key, (Object) new Long( value ) ) ;
+	}
+
+	public static void registerName( String key, String value ) {
+		register( key, new String( value ) ) ;
 	}
 }

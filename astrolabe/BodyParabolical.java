@@ -1,7 +1,7 @@
 
 package astrolabe;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -37,32 +37,32 @@ public class BodyParabolical extends astrolabe.model.BodyParabolical implements 
 		return null;
 	}
 
-	public Vector<double[]> list() {
+	public List<double[]> list() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Vector<double[]> list(double shift) {
+	public List<double[]> list(double shift) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Vector<double[]> list(double begin, double end, double shift) {
+	public List<double[]> list(double begin, double end, double shift) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Vector<double[]> list(Vector<Double> list) {
+	public List<double[]> list(List<Double> list) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Vector<double[]> list(Vector<Double> list, double shift) {
+	public List<double[]> list(List<Double> list, double shift) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Vector<double[]> list(Vector<Double> list, double begin, double end,
+	public List<double[]> list(List<Double> list, double begin, double end,
 			double shift) {
 		// TODO Auto-generated method stub
 		return null;

@@ -318,7 +318,7 @@
 				<!--octal representations instead of blank characters in strings-->
 				<node name="prolog">
 					<map>
-						<entry key="/LIM0" value=".00001"/>
+						<entry key="/LIM0" value=".0001"/>
 						<entry key="/acos" value="{dup dup mul 1 exch sub sqrt exch atan}"/>
 						<entry key="/asin" value="{dup dup mul 1 exch sub sqrt atan}"/>
 						<entry key="/halo" value="{dup 0 gt {4 3 roll mul 100 div max exch dup 3 1 roll 0 gt {min} {exch pop} ifelse} {pop exch pop exch pop} ifelse}"/>

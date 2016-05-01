@@ -1,21 +1,27 @@
 
 package astrolabe;
 
+import java.util.List;
+
 public class PolygonSpherical {
 
-	private java.util.Vector<double[]> polygon ;
+	private List<double[]> polygon ;
 
-	public PolygonSpherical( java.util.Vector<double[]> polygon ) {
+	public PolygonSpherical( List<double[]> polygon ) {
 		this.polygon = polygon ;
 	}
 
 	public double area() {
 		double d, s, r ;
 		double[] a, b, p ;
+		int ea, eo ;
 
-		a = polygon.lastElement() ;
+		ea = 0 ;
+		eo = polygon.size()-1 ;
+
+		a = polygon.get( eo ) ; // lastElement() ;
 		b = polygon.get( 1 ) ;
-		p = polygon.firstElement() ;
+		p = polygon.get( ea ) ; // firstElement() ;
 		d = transform( p, a )-transform( p, b ) ;
 		s = d<0?d+360:d ;
 		for ( int n=1 ; n<polygon.size()-1 ; n++ ) {
@@ -26,8 +32,8 @@ public class PolygonSpherical {
 			s = s+( d<0?d+360:d ) ;
 		}
 		a = polygon.get( polygon.size()-2 ) ;
-		b = polygon.firstElement() ;
-		p = polygon.lastElement() ;
+		b = polygon.get( ea ) ; // firstElement() ;
+		p = polygon.get( eo ) ; // lastElement() ;
 		d = transform( p, a )-transform( p, b ) ;
 		s = s+( d<0?d+360:d ) ;
 

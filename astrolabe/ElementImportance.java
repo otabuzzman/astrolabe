@@ -11,8 +11,8 @@ public class ElementImportance implements PostscriptEmitter {
 	public ElementImportance( String importance ) {
 		String iv, id[] ;
 
-		iv = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, null, null ),
+		iv = Configuration.getValue(
+				Configuration.getClassNode( this, null, null ),
 				importance, DEFAULT_IMPORTANCE ) ;
 		id = iv.split( ":" ) ;
 

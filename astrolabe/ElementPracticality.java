@@ -10,8 +10,8 @@ public class ElementPracticality implements PostscriptEmitter {
 	public ElementPracticality( String practicality ) {
 		String pv, pd[] ;
 
-		pv = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, null, null ),
+		pv = Configuration.getValue(
+				Configuration.getClassNode( this, null, null ),
 				practicality, DEFAULT_PRACTICALITY ) ;
 		pd = pv.split( ":" ) ;
 

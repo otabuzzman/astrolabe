@@ -21,6 +21,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 	public BodyStellar( Peer peer, Projector projector ) throws ParameterNotValidException {
 		double[] lo, eq, xy ;
+		MessageCatalog m ;
 		String key ;
 
 		peer.setupCompanion( this ) ;
@@ -45,14 +46,16 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 			x = xy[0] ;
 			y = xy[1] ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_AZIMUTH ) ;
-			ApplicationHelper.registerDMS( key, lo[1] ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_ALTITUDE ) ;
-			ApplicationHelper.registerDMS( key, lo[2] ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_RIGHTASCENSION ) ;
-			ApplicationHelper.registerDMS( key, eq[0] ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_DECLINATION ) ;
-			ApplicationHelper.registerDMS( key, eq[1] ) ;
+			m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+			key = m.message( ApplicationConstant.LK_BODY_AZIMUTH ) ;
+			AstrolabeRegistry.registerDMS( key, lo[1] ) ;
+			key = m.message( ApplicationConstant.LK_BODY_ALTITUDE ) ;
+			AstrolabeRegistry.registerDMS( key, lo[2] ) ;
+			key = m.message( ApplicationConstant.LK_BODY_RIGHTASCENSION ) ;
+			AstrolabeRegistry.registerDMS( key, eq[0] ) ;
+			key = m.message( ApplicationConstant.LK_BODY_DECLINATION ) ;
+			AstrolabeRegistry.registerDMS( key, eq[1] ) ;
 		} catch ( ParameterNotValidException e ) {}
 	}
 
@@ -145,7 +148,18 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		if ( getAnnotation() != null ) {
 			try {
-				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+				PostscriptEmitter annotation ;
+
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
+
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
+
+					ps.operator.grestore() ;
+				}
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}

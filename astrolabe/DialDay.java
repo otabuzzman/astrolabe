@@ -72,7 +72,7 @@ public class DialDay extends DialDegree {
 		if ( ! baseline.probe( r ) ) {
 			String msg ;
 
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { index+","+span, r } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
@@ -106,44 +106,47 @@ public class DialDay extends DialDegree {
 	}
 
 	public void register( int index ) {
+		MessageCatalog m ;
 		CAADate d = new CAADate() ;
 		String dn, dns, mn, mns, key ;
 		double jd, eot ;
 
 		try {
+			m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
 			jd = mapIndexToScale( index, getGraduationSpan().getSpan() ) ;
 
 			d.Set( jd, true ) ;
 
-			dn = ApplicationHelper.getLocalizedString( nameofday[ d.DayOfWeek() ] ) ;
-			dns = ApplicationHelper.getLocalizedString( shortnameofday[ d.DayOfWeek() ] ) ;
+			dn = m.message( nameofday[ d.DayOfWeek() ] ) ;
+			dns = m.message( shortnameofday[ d.DayOfWeek() ] ) ;
 
-			mn = ApplicationHelper.getLocalizedString( nameofmonth[ -1+(int) d.Month() ] ) ;
-			mns = ApplicationHelper.getLocalizedString( shortnameofmonth[ -1+(int) d.Month() ] ) ;
+			mn = m.message( nameofmonth[ -1+(int) d.Month() ] ) ;
+			mns = m.message( shortnameofmonth[ -1+(int) d.Month() ] ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DAY ) ;
-			ApplicationHelper.registerYMD( key, d ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_DAY ) ;
+			AstrolabeRegistry.registerYMD( key, d ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_JULIANDAY ) ;
-			ApplicationHelper.registerNumber( key, jd, 2 ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_JULIANDAY ) ;
+			Registry.registerNumber( key, jd, 2 ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_NAMEOFDAY ) ;
-			ApplicationHelper.registerName( key, dn ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_NAMEOFDAYSHORT ) ;
-			ApplicationHelper.registerName( key, dns ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_NAMEOFDAY ) ;
+			Registry.registerName( key, dn ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_NAMEOFDAYSHORT ) ;
+			Registry.registerName( key, dns ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_NAMEOFMONTH ) ;
-			ApplicationHelper.registerName( key, mn ) ;
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_NAMEOFMONTHSHORT ) ;
-			ApplicationHelper.registerName( key, mns ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_NAMEOFMONTH ) ;
+			Registry.registerName( key, mn ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_NAMEOFMONTHSHORT ) ;
+			Registry.registerName( key, mns ) ;
 
 			eot = CAAEquationOfTime.Calculate( jd ) ;
 			// convert to hours if greater than 20 minutes
 			eot = ( eot>20?eot-24*60:eot )/60 ;
 			eot = CAACoordinateTransformation.HoursToDegrees( eot ) ;
 
-			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
-			ApplicationHelper.registerHMS( key, eot ) ;
+			key = m.message( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
+			AstrolabeRegistry.registerHMS( key, eot ) ;
 		} catch ( ParameterNotValidException e ) {}
 
 		d.delete() ;

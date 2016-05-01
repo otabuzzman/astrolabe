@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
@@ -87,10 +88,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			dl = c.getDeclaredField( "DEFAULT_"+blf+"_LINEWIDTH" ).getDouble( this ) ;
 
 			n = ApplicationConstant.PN_DIAL_BASELINE+"/"+blm ;
-			node = ApplicationHelper.getClassNode( this, getName(), n ) ;
-			space = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_SPACE, ds ) ;
-			thickness = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_THICKNESS, dt ) ;
-			linewidth = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
+			node = Configuration.getClassNode( this, getName(), n ) ;
+			space = Configuration.getValue( node, ApplicationConstant.PK_DIAL_SPACE, ds ) ;
+			thickness = Configuration.getValue( node, ApplicationConstant.PK_DIAL_THICKNESS, dt ) ;
+			linewidth = Configuration.getValue( node, ApplicationConstant.PK_DIAL_LINEWIDTH, dl ) ;
 		} catch ( ClassNotFoundException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {
@@ -101,8 +102,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		rise = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_DIAL_ANNOTATION ),
+		rise = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), ApplicationConstant.PN_DIAL_ANNOTATION ),
 				ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
 	}
 
@@ -117,7 +118,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		java.util.Vector<double[]> v ;
+		List<double[]> v ;
 		double[] xy ;
 
 		try {
@@ -145,7 +146,18 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		if ( getAnnotation() != null ) {
 			try {
-				ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+				PostscriptEmitter annotation ;
+
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
+
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
+
+					ps.operator.grestore() ;
+				}
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
@@ -182,7 +194,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	@SuppressWarnings("unused")
 	private void emitPSBaselineLine( PostscriptStream ps ) throws ParameterNotValidException {
-		java.util.Vector<double[]> v ;
+		List<double[]> v ;
 		double b, e ;
 		int ns ;
 
@@ -230,7 +242,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	@SuppressWarnings("unused")
 	private void emitPSBaselineRail( PostscriptStream ps ) throws ParameterNotValidException {
-		java.util.Vector<double[]> vDFw = null, vDRv = null, rvDRv ;
+		List<double[]> vDFw = null, vDRv = null, rvDRv ;
 		double b, e, s, span ;
 		int nss = 0 ;
 
@@ -340,7 +352,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			}
 		} catch ( ParameterNotValidException ee ) {
 			if ( nss%2 == 0 ) { // close unfilled subunit
-				java.util.Vector<double[]> vector ;
+				List<double[]> vector ;
 				double[] xy ;
 
 				vector = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2-1, vDFw.size()/2+1 ) ) ;
@@ -462,7 +474,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		if ( ! baseline.probe( r ) || r>360 ) {
 			String msg ;
 
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { index+","+span, r } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
@@ -482,14 +494,17 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	public void register( int index ) {
 		double a ;
 		String key ;
+		MessageCatalog m ;
 
 		a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
-		ApplicationHelper.registerDMS( key, a ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
-		ApplicationHelper.registerHMS( key, a ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-		ApplicationHelper.registerHMS( key, CAACoordinateTransformation.MapTo0To360Range( a+180/*12h*/ ) ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_DIAL_DEGREE ) ;
+		AstrolabeRegistry.registerDMS( key, a ) ;
+		key = m.message( ApplicationConstant.LK_DIAL_HOUR ) ;
+		AstrolabeRegistry.registerHMS( key, a ) ;
+		key = m.message( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
+		AstrolabeRegistry.registerHMS( key, CAACoordinateTransformation.MapTo0To360Range( a+180/*12h*/ ) ) ;
 	}
 }

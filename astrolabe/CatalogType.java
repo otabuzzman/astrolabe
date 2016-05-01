@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -125,7 +126,7 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 
 	public Hashtable<String, CatalogRecord> read( Reader catalog ) {
 		Hashtable<String, CatalogRecord> r = new Hashtable<String, CatalogRecord>() ;
-		java.util.Vector<double[]> l ;
+		List<double[]> l ;
 		CatalogRecord record ;
 		Geometry body ;
 		boolean ok ;

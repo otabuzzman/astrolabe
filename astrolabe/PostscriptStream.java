@@ -5,6 +5,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.prefs.BackingStoreException;
 
 public class PostscriptStream extends FilterOutputStream {
@@ -23,11 +24,11 @@ public class PostscriptStream extends FilterOutputStream {
 
 	private Hashtable<String, String> prolog = new Hashtable<String, String>() ;
 
-	private final int precision = ApplicationHelper.getPreferencesKV(
-			ApplicationHelper.getClassNode( this, null, null ),
+	private final int precision = Configuration.getValue(
+			Configuration.getClassNode( this, null, null ),
 			ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
-	private final int scanline = ApplicationHelper.getPreferencesKV(
-			ApplicationHelper.getClassNode( this, null, null ),
+	private final int scanline = Configuration.getValue(
+			Configuration.getClassNode( this, null, null ),
 			ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
 	public PostscriptStream( OutputStream out ) {
@@ -182,8 +183,8 @@ public class PostscriptStream extends FilterOutputStream {
 		ucBlock[144] = new UcBlock( "100000..10FFFF", 0x100000, 0x10FFFF, "Supplementary Private Use Area-B" ) ;
 
 		ucEncodingVectors = new Hashtable<String, String>() ;
-		String vector = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ),
+		String vector = Configuration.getValue(
+				Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ),
 				ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = DEFAULT_FONTNAME ;
@@ -193,10 +194,10 @@ public class PostscriptStream extends FilterOutputStream {
 		}
 		try {
 			ucEncodingVectors.put( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, vector ) ;
-			String[] encoding = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
+			String[] encoding = Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
 			for ( int e=0 ; e<encoding.length ; e++ ) {
 				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
-					ucEncodingVectors.put( encoding[e], ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
+					ucEncodingVectors.put( encoding[e], Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
 				}
 			}
 		} catch ( BackingStoreException e ) {
@@ -213,12 +214,12 @@ public class PostscriptStream extends FilterOutputStream {
 		return numberFormat.format( number ) ;
 	} 
 
-	public java.util.Vector<java.util.Vector<Object>> ucFET( String string ) {        
+	public List<List<Object>> ucFET( String string ) {        
 		int block = -1, pblock = -1,
 		chart = -1, pchart = -1, code = -1 , tcc ;
 		String fe[], rt = "", t = "" ;
-		java.util.Vector<java.util.Vector<Object>> FET = new java.util.Vector<java.util.Vector<Object>>() ;
-		java.util.Vector<Object> fet ;
+		List<List<Object>> FET = new java.util.Vector<List<Object>>() ;
+		List<Object> fet ;
 		java.text.StringCharacterIterator rti, si = new java.text.StringCharacterIterator( string ) ;
 
 		for ( char sc=si.first() ; sc!=java.text.StringCharacterIterator.DONE; sc=si.next() ) {
@@ -354,8 +355,10 @@ public class PostscriptStream extends FilterOutputStream {
 	private void print( String def ) {
 		try {
 			write( def.getBytes() ) ;
+			flush() ;
+			flush() ;
 		} catch ( IOException e ) {
-			throw new RuntimeException() ;
+			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
@@ -791,7 +794,7 @@ public class PostscriptStream extends FilterOutputStream {
 		dsc.beginProlog() ;
 
 		try {
-			fontname = ApplicationHelper.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
+			fontname = Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
 			if ( fontname == null ) {
 				fontname = new String[0] ;
 			}
@@ -799,13 +802,13 @@ public class PostscriptStream extends FilterOutputStream {
 				push( "/"+fontname[f] ) ;
 
 				node = ApplicationConstant.PN_POSTSCRIPT_TYPE3+"/"+fontname[f] ;
-				procedure = ApplicationHelper.getClassNode( this, null, node ).keys() ;
+				procedure = Configuration.getClassNode( this, null, node ).keys() ;
 
 				operator.dict( procedure.length ) ;
 				operator.begin() ;
 				for ( int p=0 ; p<procedure.length ; p++ ) {
 					emitProcedureDefintion( procedure[p],
-							ApplicationHelper.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
+							Configuration.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
 				}
 				operator.currentdict() ;
 				operator.end() ;
@@ -822,13 +825,13 @@ public class PostscriptStream extends FilterOutputStream {
 		prolog.clear() ;
 		try {
 			node = ApplicationConstant.PN_POSTSCRIPT_PROLOG ;
-			procedure = ApplicationHelper.getClassNode( this, null, node ).keys() ;
+			procedure = Configuration.getClassNode( this, null, node ).keys() ;
 			if ( procedure == null ) {
 				procedure = new String[0] ;
 			}
 			for ( int p=0 ; p<procedure.length ; p++ ) {
 				emitProcedureDefintion( procedure[p],
-						ApplicationHelper.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
+						Configuration.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
 				prolog.put( procedure[p], procedure[p] ) ;
 			}
 		} catch ( BackingStoreException e ) {

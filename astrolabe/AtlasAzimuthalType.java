@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.mapping.Mapping;
@@ -48,7 +49,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		double a, b, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
 		double overlap, spanDe, originDe, extentDe ;
 		double de, dde, sde, ra, dim[] ;
-		java.util.Vector<Vector> dp ;
+		List<Vector> dp ;
 		AtlasPage atlasPage ;
 		Vector vc, vb, vt ;
 		double[] xy, eq ;
@@ -64,8 +65,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		setChartpagerealx( chartPage.realx() ) ;
 		setChartpagerealy( chartPage.realy() ) ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-		overlap = ApplicationHelper.getPreferencesKV( node,
+		node = Configuration.getClassNode( this, getName(), null ) ;
+		overlap = Configuration.getValue( node,
 				ApplicationConstant.PK_ATLAS_OVERLAP, DEFAULT_OVERLAP ) ;
 
 		try {
@@ -399,7 +400,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		String mapn ;
 		Writer xmlw ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+		node = Configuration.getClassNode( this, getName(), null ) ;
 
 		// map file creation:
 		// 1. make AtlasStereographic.map (e.g.)
@@ -407,7 +408,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
 		// 4. remove required attribute from field definitions for Phi and Theta
 		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
-		mapn = ApplicationHelper.getPreferencesKV( node,
+		mapn = Configuration.getValue( node,
 				ApplicationConstant.PK_ATLAS_URLMODELMAP, getClass().getSimpleName()+".map" ) ;
 
 		try {
@@ -440,8 +441,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 	}
 
-	private java.util.Vector<Vector> page( double ra, double de, double a, double b ) {
-		java.util.Vector<Vector> r = new java.util.Vector<Vector>() ;
+	private List<Vector> page( double ra, double de, double a, double b ) {
+		List<Vector> r = new java.util.Vector<Vector>() ;
 		Vector v0, v1, v2, v3, v4 ; // radius vector v0, edge vectors
 		Vector vp0, vp1, vp2, vp3 ; // point vectors
 		double m90[] = new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ; // rotation matrix, plane xy, 90 degrees counter-clockwise
@@ -494,7 +495,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		return r ;
 	}
 
-	private Vector pageCenter( java.util.Vector<Vector> page ) {
+	private Vector pageCenter( List<Vector> page ) {
 		Vector v0, v2, v20, vc ;
 
 		v0 = page.get( 0 ) ;
@@ -508,7 +509,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		return vc ;
 	}
 
-	private double[] pageEdge( java.util.Vector<Vector> page ) {
+	private double[] pageEdge( List<Vector> page ) {
 		double[] r = new double[2] ;
 		Vector v0, va, vb ;
 
@@ -582,15 +583,18 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 	}
 
 	private astrolabe.model.Circle checkerDeToModel( String name, double de ) {
+		MessageCatalog m ;
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleParallel cP ;
 		astrolabe.model.Annotation a ;
 		astrolabe.model.AnnotationStraight aS ;
 		astrolabe.model.Text tGen ;
 		String designator, indicator, tVal ;
-		java.util.Vector<astrolabe.model.Text> tDMS ;
+		List<astrolabe.model.Text> tDMS ;
 		int[] rDMS ;
 		DMS dms ;
+
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
 
@@ -620,12 +624,12 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 
 		cP.addAnnotation( a ) ;
 
-		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
+		designator = m.message( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
-		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ) ;
+		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_DEGREES ) ) ;
 		try {
 			AstrolabeFactory.modelOf( tGen, false ) ;
 		} catch ( ParameterNotValidException e ) {
@@ -633,11 +637,11 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 		tDMS.add( tGen ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
-		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_MINUTES ) ) ;
+		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_MINUTES ) ) ;
 		try {
 			AstrolabeFactory.modelOf( tGen, false ) ;
 		} catch ( ParameterNotValidException e ) {
@@ -645,11 +649,11 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 		tDMS.add( tGen ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
-		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_SECONDS ) ) ;
+		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_SECONDS ) ) ;
 		try {
 			AstrolabeFactory.modelOf( tGen, false ) ;
 		} catch ( ParameterNotValidException e ) {
@@ -657,7 +661,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 		tDMS.add( tGen ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
 		tVal = ".{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
@@ -674,7 +678,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
 			tGen = tDMS.get( t ) ;
 			if ( t == rDMS[0] ) {
-				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
+				indicator = m.message( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
 				tVal = tGen.getValue() ;
 				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
 			}
@@ -695,6 +699,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 	}
 
 	private astrolabe.model.Circle checkerRAToModel( String name, double ra ) {
+		MessageCatalog m ;
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleMeridian cM ;
 		astrolabe.model.Annotation a ;
@@ -702,11 +707,13 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		astrolabe.model.Text tGen ;
 		astrolabe.model.Superscript tSup ;
 		String designator, indicator, tVal ;
-		java.util.Vector<astrolabe.model.Text> tDMS ;
+		List<astrolabe.model.Text> tDMS ;
 		int[] rDMS ;
 		DMS dms ;
 		double cMEnd ;
 		Preferences node ;
+
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
 
@@ -736,8 +743,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 
 		cM.addAnnotation( a ) ;
 
-		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
+		designator = m.message( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
@@ -750,10 +757,10 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ) ;
+		tSup.setValue( m.message( ApplicationConstant.LK_HMS_HOURS ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
@@ -766,10 +773,10 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_MINUTES ) ) ;
+		tSup.setValue( m.message( ApplicationConstant.LK_HMS_MINUTES ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
@@ -782,10 +789,10 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_SECONDS ) ) ;
+		tSup.setValue( m.message( ApplicationConstant.LK_HMS_SECONDS ) ) ;
 		tGen.addSuperscript( tSup ) ;
 
-		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
+		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
 		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
@@ -802,7 +809,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
 			tGen = tDMS.get( t ) ;
 			if ( t == rDMS[0] ) {
-				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
+				indicator = m.message( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
 				tVal = tGen.getValue() ;
 				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
 			}
@@ -812,8 +819,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		try {
 			AstrolabeFactory.modelOf( aS, false ) ;
 
-			node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-			cMEnd = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
+			node = Configuration.getClassNode( this, getName(), null ) ;
+			cMEnd = Configuration.getValue( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
 			cM.getAngle().getRational().setValue( ra ) ;
 			cM.getBegin().getImmediate().getRational().setValue( chart.getNorthern()?-90:90 ) ;
 			cM.getEnd().getImmediate().getRational().setValue( cMEnd ) ;
@@ -861,8 +868,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		String[] iuP ;
 		double[] iuV ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-		iuP = ApplicationHelper.getPreferencesKV( node,
+		node = Configuration.getClassNode( this, getName(), null ) ;
+		iuP = Configuration.getValue( node,
 				ApplicationConstant.PK_ATLAS_INTERVALUNITSH, DEFAULT_INTERVALUNITSH ).split( ":" ) ;
 		iuV = new double[ iuP.length ] ;
 		for ( int iu=0 ; iu<iuP.length ; iu++ ) {
@@ -877,8 +884,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		String[] iuP ;
 		double[] iuV ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-		iuP = ApplicationHelper.getPreferencesKV( node,
+		node = Configuration.getClassNode( this, getName(), null ) ;
+		iuP = Configuration.getValue( node,
 				ApplicationConstant.PK_ATLAS_INTERVALUNITSD, DEFAULT_INTERVALUNITSD ).split( ":" ) ;
 		iuV = new double[ iuP.length ] ;
 		for ( int iu=0 ; iu<iuP.length ; iu++ ) {

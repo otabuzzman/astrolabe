@@ -39,7 +39,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void setup( Peer peer, Projector projector ) throws ParameterNotValidException {
+		MessageCatalog m ;
 		String key ;
+
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		peer.setupCompanion( this ) ;
 		try {
@@ -50,13 +53,13 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 		this.projector = projector ;
 
-		interval = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), null ),
+		interval = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_CIRCLE_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		al = AstrolabeFactory.valueOf( getAngle() ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-		ApplicationHelper.registerDMS( key, al ) ;
+		key = m.message( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, al ) ;
 
 		try {
 			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
@@ -73,7 +76,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			} catch ( ParameterNotValidException ee ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
 				log.warn( msg ) ;
 
@@ -97,7 +100,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			} catch ( ParameterNotValidException ee ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
 				log.warn( msg ) ;
 
@@ -170,16 +173,16 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return new double[] { a.x, a.y } ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list ) {
+	public List<double[]> list( List<Double> list ) {
 		return list( null, begin, end, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double shift ) {
+	public List<double[]> list( List<Double> list, double shift ) {
 		return list( null, begin, end, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double begin, double end, double shift ) {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list( List<Double> list, double begin, double end, double shift ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double g ;
 
 		r.add( project( begin, shift ) ) ;
@@ -203,15 +206,15 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return r ;
 	}
 
-	public java.util.Vector<double[]> list() {
+	public List<double[]> list() {
 		return list( null, begin, end, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( double shift ) {
+	public List<double[]> list( double shift ) {
 		return list( null, begin, end, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( double begin, double end, double shift ) {
+	public List<double[]> list( double begin, double end, double shift ) {
 		return list( null, begin, end, shift ) ;
 	}
 
@@ -434,7 +437,18 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			if ( getAnnotation() != null ) {
 				try {
-					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+					PostscriptEmitter annotation ;
+
+					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+						ps.operator.gsave() ;
+
+						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+						annotation.headPS( ps ) ;
+						annotation.emitPS( ps ) ;
+						annotation.tailPS( ps ) ;
+
+						ps.operator.grestore() ;
+					}
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -446,11 +460,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) throws ParameterNotValidException {
+		MessageCatalog m ;
 		double blC, blAl, blBe ;
 		double rdGa[], rdDe ;
 		double gnGa[], gnDe ;
 		double[] rdaz, gnaz ;
 		double[] r ;
+
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		rdGa = new double[2] ;
 		gnGa = new double[2] ;
@@ -474,7 +491,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
 				throw new ParameterNotValidException( msg ) ;
 			}
@@ -498,7 +515,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
 				throw new ParameterNotValidException( msg ) ;
 			}
@@ -523,7 +540,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
 				throw new ParameterNotValidException( msg ) ;
 			}
@@ -560,7 +577,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
 				throw new ParameterNotValidException( msg ) ;
 			}

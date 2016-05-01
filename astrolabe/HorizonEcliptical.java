@@ -19,6 +19,7 @@ public class HorizonEcliptical extends HorizonType {
 
 		CAA2DCoordinate c ;
 		double epoch, eq[] = new double[2] ;
+		MessageCatalog m ;
 		String key ;
 
 		this.projector = projector ;
@@ -30,10 +31,12 @@ public class HorizonEcliptical extends HorizonType {
 		eq[1] = c.Y() ;
 		la = eq[1] ;
 
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
-		ApplicationHelper.registerDMS( key, e ) ;
-		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la ) ;		
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		key = m.message( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
+		AstrolabeRegistry.registerDMS( key, e ) ;
+		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, la ) ;		
 	}
 
 	public double[] project( double l, double b ) {

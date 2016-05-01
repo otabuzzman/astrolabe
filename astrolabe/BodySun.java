@@ -4,6 +4,7 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.logging.Log;
@@ -12,7 +13,9 @@ import org.exolab.castor.xml.ValidationException;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+import caa.CAACoordinateTransformation;
 import caa.CAADate;
+import caa.CAASun;
 
 @SuppressWarnings("serial")
 public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitter, Baseline {
@@ -89,7 +92,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		if ( ! ( jdAy<jdOy ) ) {
 			String msg ;
 
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
 
 			throw new ParameterNotValidException( msg ) ;
@@ -97,11 +100,11 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 		this.projector = projector ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), getType() ) ;
+		node = Configuration.getClassNode( this, getName(), getType() ) ;
 
-		interval = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
+		interval = Configuration.getValue( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
 		if ( getStretch() ) {
-			stretch = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
+			stretch = Configuration.getValue( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
 		} else {
 			stretch = 0 ;
 		}
@@ -126,7 +129,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			} catch ( ParameterNotValidException e ) {
 				String msg ;
 
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "\""+circle+"\"", null } ) ;
 				log.warn( msg ) ;
 
@@ -153,10 +156,10 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		Geometry fov ;
 		astrolabe.model.BodySun peer ;
 		BodySun body ;
-		java.util.Vector<int[]> idlist ;
-		java.util.Vector<Double> jdlist ;
+		List<int[]> idlist ;
+		List<Double> jdlist ;
 		double jdAe, jdOe ;
-		java.util.Vector<double[]> l ;
+		List<double[]> l ;
 		double[] xy ;
 
 		if ( cut ) {
@@ -278,7 +281,18 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 			if ( getAnnotation() != null ) {
 				try {
-					ApplicationHelper.emitPS( ps, getAnnotation() ) ;
+					PostscriptEmitter annotation ;
+
+					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+						ps.operator.gsave() ;
+
+						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+						annotation.headPS( ps ) ;
+						annotation.emitPS( ps ) ;
+						annotation.tailPS( ps ) ;
+
+						ps.operator.grestore() ;
+					}
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -383,16 +397,16 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		return Double.NaN ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list ) {
+	public List<double[]> list( List<Double> list ) {
 		return list( list, jdAy, jdOy, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double shift ) {
+	public List<double[]> list( List<Double> list, double shift ) {
 		return list( list, jdAy, jdOy, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( java.util.Vector<Double> list, double jdA, double jdO, double shift ) {
-		java.util.Vector<double[]> r = new java.util.Vector<double[]>() ;
+	public List<double[]> list( List<Double> list, double jdA, double jdO, double shift ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		double g ;
 
 		r.add( project( jdA, shift ) ) ;
@@ -416,15 +430,15 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		return r ;
 	}
 
-	public java.util.Vector<double[]> list() {
+	public List<double[]> list() {
 		return list( null, jdAy, jdOy, 0 ) ;
 	}
 
-	public java.util.Vector<double[]> list( double shift ) {
+	public List<double[]> list( double shift ) {
 		return list( null, jdAy, jdOy, shift ) ;
 	}
 
-	public java.util.Vector<double[]> list( double jdA, double jdO, double shift ) {
+	public List<double[]> list( double jdA, double jdO, double shift ) {
 		return list( null, jdA, jdO, shift ) ;
 	}
 
@@ -458,5 +472,30 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 	public double mapIndexToRange( int index, double jdA, double jdO ) {
 		return BodyPlanet.gap( index, interval, jdA , jdO ) ;
+	}
+
+	public static double meanEclipticLongitude( double JD ) {
+		double rho, rho2, rho3, rho4, rho5 ;
+
+		rho = ( JD-2451545 )/365250 ;
+		rho2 = rho*rho ;
+		rho3 = rho2*rho ;
+		rho4 = rho3*rho ;
+		rho5 = rho4*rho ;
+
+		return CAACoordinateTransformation.MapTo0To360Range(
+				280.4664567+360007.6982779*rho+0.03032028*rho2+rho3/49931-rho4/15300-rho5/2000000 ) ;
+	}
+
+	public static double meanEclipticLatitude( double JD ) {
+		return 0 ;
+	}
+
+	public static double trueEclipticLongitude( double JD ) {
+		return CAASun.GeometricEclipticLongitude( JD ) ;
+	}
+
+	public static double trueEclipticLatitude( double JD ) {
+		return CAASun.GeometricEclipticLatitude( JD ) ;
 	}
 }

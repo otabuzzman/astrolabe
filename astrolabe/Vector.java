@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.util.List;
+
 public class Vector {
 
 	public double x = 0 ;
@@ -123,5 +125,19 @@ public class Vector {
 
 	public double[] toArray() {
 		return new double[] { x, y, z } ;
+	}
+
+	public static double length( List<double[]> list ) {
+		Vector a, b ;
+		double l = 0 ;
+
+		b = new Vector( list.get( 0 ) ) ;
+		for ( int i=1 ; i<list.size() ; i++ ) {
+			a = new Vector( list.get( i ) ) ;
+			l = l+a.sub( b ).abs() ;
+			b = new Vector( a ) ;
+		}
+
+		return l ;
 	}
 }

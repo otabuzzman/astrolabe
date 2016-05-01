@@ -47,14 +47,14 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+		node = Configuration.getClassNode( this, getName(), null ) ;
 
-		unit = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
+		unit = Configuration.getValue( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
 		scale = java.lang.Math.min( page.sizex(), page.sizey() )/2/Math.goldensection*page.getReal()/100*getScale()/100 ;
 
-		halo = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
-		halomin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
-		halomax = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
+		halo = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
+		halomin = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
+		halomax = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALO, new Double( halo ) ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALOMIN, new Double( halomin ) ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALOMAX, new Double( halomax ) ) ;
