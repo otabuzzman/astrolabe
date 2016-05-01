@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import org.exolab.castor.xml.ValidationException;
-
 @SuppressWarnings("serial")
 public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEmitter {
 
@@ -10,19 +8,14 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 	public AtlasPage() {
 	}
 
-	public AtlasPage( Peer peer ) throws ParameterNotValidException {
+	public AtlasPage( Peer peer ) {
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		ps.operator.mark() ;
 
 		ps.push( getP0x() ) ;
@@ -34,17 +27,13 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		ps.push( getP3x() ) ;
 		ps.push( getP3y() ) ;
 
-		try {
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+		ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
-			ps.operator.closepath() ;
-			ps.operator.stroke() ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		ps.operator.closepath() ;
+		ps.operator.stroke() ;
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public void register() {
@@ -63,37 +52,34 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		Registry.registerNumber( key, getPcp() ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_FCP ) ;
 		Registry.registerNumber( key, getFcp() ) ;
-		try {
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P0RA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P0DE ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P1RA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P1DE ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P2RA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P2DE ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P3RA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_P3DE ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_ORA ) ;
-			AstrolabeRegistry.registerHMS( key, AstrolabeFactory.valueOf( getOrigin().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_ODE ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getOrigin().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_TDE ) ;
-			Registry.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_BRA ) ;
-			AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getBottom().getPhi() ) ) ;
-			key = m.message( ApplicationConstant.LK_ATLASPAGE_BDE ) ;
-			Registry.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P0RA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P0DE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P1RA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P1DE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP1().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P2RA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P2DE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP2().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P3RA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_P3DE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_ORA ) ;
+		AstrolabeRegistry.registerHMS( key, AstrolabeFactory.valueOf( getOrigin().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_ODE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getOrigin().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_TDE ) ;
+		Registry.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_BRA ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getBottom().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_BDE ) ;
+		Registry.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
 	}
 }

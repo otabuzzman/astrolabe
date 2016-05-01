@@ -2,10 +2,6 @@
 package astrolabe;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import fri.patterns.interpreter.parsergenerator.Lexer;
 import fri.patterns.interpreter.parsergenerator.Parser;
@@ -21,8 +17,6 @@ import fri.patterns.interpreter.parsergenerator.syntax.SyntaxException;
 import fri.patterns.interpreter.parsergenerator.syntax.builder.SyntaxSeparation;
 
 public class ParserSubstitute extends ReflectSemantic {
-
-	private final static Log log = LogFactory.getLog( ParserSubstitute.class ) ;
 
 	private Lexer lexer ;
 	private Parser parser ;
@@ -147,19 +141,13 @@ public class ParserSubstitute extends ReflectSemantic {
 			if ( value.toString().matches( "\".*\"" ) )
 				// value is a "`stringdef`"
 				return value.toString().substring( 1, value.toString().length()-1 ) ;
-			try {
-				// value is a valid registry key
-				return Registry.retrieve( value.toString() ) ;
-			} catch ( ParameterNotValidException pe ) {
-				String msg ;
-
-				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "\""+value.toString()+"\"", null } ) ;
-				log.warn( msg ) ;
-
+			Object objectFACTOR = Registry.retrieve( value.toString() ) ;
+			if ( objectFACTOR == null )
 				// value is not a registry key
 				return Double.valueOf( 0 ) ;
-			}
+			else
+				// value is a valid registry key
+				return objectFACTOR ;
 		}
 	}
 
@@ -208,12 +196,12 @@ public class ParserSubstitute extends ReflectSemantic {
 		parser.setDebug( false ) ;		
 	}
 
-	public String parse( String string ) throws ParameterNotValidException {
+	public String parse( String string ) {
 		try {
 			lexer.setInput( string ) ;
 			parser.parse( lexer, this ) ;
 		} catch ( IOException e ) {
-			throw new ParameterNotValidException() ;
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		return new String( parser.getResult().toString() ) ;
@@ -234,10 +222,6 @@ public class ParserSubstitute extends ReflectSemantic {
 				}
 			}
 
-			try {
-				System.err.println( new ParserSubstitute().parse( argv[0] ) ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			System.err.println( new ParserSubstitute().parse( argv[0] ) ) ;
 	}
 }

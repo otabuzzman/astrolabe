@@ -373,8 +373,6 @@ public final class ApplicationConstant {
 	public final static String AV_ANNOTATION_BOTTOMMIDDLE	= "bottommiddle" ;
 	public final static String AV_ANNOTATION_BOTTOMRIGHT	= "bottomright" ;
 
-	public final static String AV_BODY_AREA			= "area" ;
-	public final static String AV_BODY_SIGN			= "sign" ;
 	public final static String AV_BODY_DIVIDING		= AV_GENERAL_DIVIDING ;
 	public final static String AV_BODY_GRAPHICAL	= AV_GENERAL_GRAPHICAL ;
 
@@ -425,43 +423,36 @@ public final class ApplicationConstant {
 	public final static String PK_BODY_INTERVAL		= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH		= "stretch" ;
 
-	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;
-	public final static String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
-	public final static String PN_POSTSCRIPT_TYPE3		= "type3" ;
-	public final static String PN_POSTSCRIPT_PROLOG		= "prolog" ;
-	public final static String PN_POSTSCRIPT_UNICODE	= "unicode" ;
-	public final static String PK_POSTSCRIPT_DEFAULT	= "default" ;
-
 	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
 
 	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
 
-	// postscript prolog definitions
-	public final static String PS_PROLOG_LIM0			= "LIM0" ;
-	public final static String PS_PROLOG_ACOS			= "acos" ;
-	public final static String PS_PROLOG_ASIN			= "asin" ;
-	public final static String PS_PROLOG_HALO			= "halo" ;
-	public final static String PS_PROLOG_LINE			= "line" ;
-	public final static String PS_PROLOG_LISTREDUCE		= "listreduce" ;
-	public final static String PS_PROLOG_MATROT90CC		= "matrot90cc" ;
-	public final static String PS_PROLOG_MATROT90C		= "matrot90c" ;
-	public final static String PS_PROLOG_MATROT180CC	= "matrot180cc" ;
-	public final static String PS_PROLOG_MATROT180C		= "matrot180c" ;
-	public final static String PS_PROLOG_MATROTARB		= "matrotarb" ;
-	public final static String PS_PROLOG_PAGESIZE		= "pagesize" ;
-	public final static String PS_PROLOG_PATHLENGTH		= "pathlength" ;
-	public final static String PS_PROLOG_PATHREVERSE	= "pathreverse" ;
-	public final static String PS_PROLOG_PATHSHIFT		= "pathshift" ;
-	public final static String PS_PROLOG_PATHSHOW		= "pathshow" ;
-	public final static String PS_PROLOG_POLYLINE		= "polyline" ;
-	public final static String PS_PROLOG_SETENCODING	= "setencoding" ;
-	public final static String PS_PROLOG_TRUNCATEF		= "truncatef" ;
-	public final static String PS_PROLOG_VABS			= "vabs" ;
-	public final static String PS_PROLOG_VADD			= "vadd" ;
-	public final static String PS_PROLOG_VANGLE			= "vangle" ;
-	public final static String PS_PROLOG_VAPPLY			= "vapply" ;
-	public final static String PS_PROLOG_VDOT			= "vdot" ;
-	public final static String PS_PROLOG_VMUL			= "vmul" ;
-	public final static String PS_PROLOG_VSCALE			= "vscale" ;
-	public final static String PS_PROLOG_VSUB			= "vsub" ;
+	// postscript custom definitions
+	public final static String PS_CUSTOM_LIM0			= "LIM0" ;
+	public final static String PS_CUSTOM_ACOS			= "acos" ;
+	public final static String PS_CUSTOM_ASIN			= "asin" ;
+	public final static String PS_CUSTOM_HALO			= "halo" ;
+	public final static String PS_CUSTOM_LINE			= "line" ;
+	public final static String PS_CUSTOM_LISTREDUCE		= "listreduce" ;
+	public final static String PS_CUSTOM_MATROT90CC		= "matrot90cc" ;
+	public final static String PS_CUSTOM_MATROT90C		= "matrot90c" ;
+	public final static String PS_CUSTOM_MATROT180CC	= "matrot180cc" ;
+	public final static String PS_CUSTOM_MATROT180C		= "matrot180c" ;
+	public final static String PS_CUSTOM_MATROTARB		= "matrotarb" ;
+	public final static String PS_CUSTOM_PAGESIZE		= "pagesize" ;
+	public final static String PS_CUSTOM_PATHLENGTH		= "pathlength" ;
+	public final static String PS_CUSTOM_PATHREVERSE	= "pathreverse" ;
+	public final static String PS_CUSTOM_PATHSHIFT		= "pathshift" ;
+	public final static String PS_CUSTOM_PATHSHOW		= "pathshow" ;
+	public final static String PS_CUSTOM_POLYLINE		= "polyline" ;
+	public final static String PS_CUSTOM_SETENCODING	= "setencoding" ;
+	public final static String PS_CUSTOM_TRUNCATEF		= "truncatef" ;
+	public final static String PS_CUSTOM_VABS			= "vabs" ;
+	public final static String PS_CUSTOM_VADD			= "vadd" ;
+	public final static String PS_CUSTOM_VANGLE			= "vangle" ;
+	public final static String PS_CUSTOM_VAPPLY			= "vapply" ;
+	public final static String PS_CUSTOM_VDOT			= "vdot" ;
+	public final static String PS_CUSTOM_VMUL			= "vmul" ;
+	public final static String PS_CUSTOM_VSCALE			= "vscale" ;
+	public final static String PS_CUSTOM_VSUB			= "vsub" ;
 }

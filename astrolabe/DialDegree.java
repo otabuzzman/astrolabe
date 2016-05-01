@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
 
-import org.exolab.castor.xml.ValidationException;
-
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -52,19 +50,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	private double unit ;
 
-	public DialDegree( Peer peer, Baseline baseline ) throws ParameterNotValidException {
+	public DialDegree( Peer peer, Baseline baseline ) {
 		this( peer, baseline, 1 ) ;
 	}
 
-	public DialDegree( Peer peer, Baseline baseline, double unit ) throws ParameterNotValidException {
+	public DialDegree( Peer peer, Baseline baseline, double unit ) {
 		Preferences node ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		this.baseline = baseline ;	
 		this.unit = unit ;
@@ -78,9 +71,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 			bl = getBaseline() ;
 			blm = bl.replaceFirst( ".", bl.substring( 0, 1 ).toUpperCase() ) ;
-			headPSBaseline = c.getDeclaredMethod( "headPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
-			emitPSBaseline = c.getDeclaredMethod( "emitPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
-			tailPSBaseline = c.getDeclaredMethod( "tailPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.PostscriptStream" ) } ) ;
+			headPSBaseline = c.getDeclaredMethod( "headPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.AstrolabePostscriptStream" ) } ) ;
+			emitPSBaseline = c.getDeclaredMethod( "emitPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.AstrolabePostscriptStream" ) } ) ;
+			tailPSBaseline = c.getDeclaredMethod( "tailPSBaseline"+blm, new Class[] { Class.forName( "astrolabe.AstrolabePostscriptStream" ) } ) ;
 
 			blf = blm.toUpperCase() ;
 			ds = c.getDeclaredField( "DEFAULT_"+blf+"_SPACE" ).getDouble( this ) ;
@@ -107,7 +100,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		try {
 			headPSBaseline.invoke( this, new Object[] { ps } ) ;
 		} catch ( IllegalAccessException e ) {
@@ -117,7 +110,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		List<double[]> v ;
 		double[] xy ;
 
@@ -138,33 +131,25 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		try {
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
 		if ( getAnnotation() != null ) {
-			try {
-				PostscriptEmitter annotation ;
+			PostscriptEmitter annotation ;
 
-				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					ps.operator.gsave() ;
+			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+				ps.operator.gsave() ;
 
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
+				annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+				annotation.headPS( ps ) ;
+				annotation.emitPS( ps ) ;
+				annotation.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
-				}
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
+				ps.operator.grestore() ;
 			}
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 		try {
 			tailPSBaseline.invoke( this, new Object[] { ps } ) ;
 		} catch ( IllegalAccessException e ) {
@@ -175,25 +160,25 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	@SuppressWarnings("unused")
-	private void headPSBaselineNone( PostscriptStream ps ) {
+	private void headPSBaselineNone( AstrolabePostscriptStream ps ) {
 	}
 
 	@SuppressWarnings("unused")
-	private void headPSBaselineLine( PostscriptStream ps ) {
+	private void headPSBaselineLine( AstrolabePostscriptStream ps ) {
 		ps.operator.setlinewidth( thickness ) ;
 	}
 
 	@SuppressWarnings("unused")
-	private void headPSBaselineRail( PostscriptStream ps ) {
+	private void headPSBaselineRail( AstrolabePostscriptStream ps ) {
 		ps.operator.setlinewidth( linewidth ) ;
 	}
 
 	@SuppressWarnings("unused")
-	private void emitPSBaselineNone( PostscriptStream ps ) {
+	private void emitPSBaselineNone( AstrolabePostscriptStream ps ) {
 	}
 
 	@SuppressWarnings("unused")
-	private void emitPSBaselineLine( PostscriptStream ps ) throws ParameterNotValidException {
+	private void emitPSBaselineLine( AstrolabePostscriptStream ps ) {
 		List<double[]> v ;
 		double b, e ;
 		int ns ;
@@ -216,15 +201,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
 			ps.operator.dup();
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-			ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
 			ps.operator.gsave() ;
@@ -241,7 +226,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	@SuppressWarnings("unused")
-	private void emitPSBaselineRail( PostscriptStream ps ) throws ParameterNotValidException {
+	private void emitPSBaselineRail( AstrolabePostscriptStream ps ) {
 		List<double[]> vDFw = null, vDRv = null, rvDRv ;
 		double b, e, s, span ;
 		int nss = 0 ;
@@ -262,15 +247,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;
@@ -288,15 +273,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;
@@ -318,7 +303,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 					ps.operator.closepath() ;
 					ps.operator.fill() ;
 				} else { // subunit unfilled
@@ -334,7 +319,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
@@ -344,14 +329,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
+					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
 				}
 			}
 		} catch ( ParameterNotValidException ee ) {
-			if ( nss%2 == 0 ) { // close unfilled subunit
+			if ( nss%2 == 0 && // close unfilled subunit
+					vDFw != null ) {
 				List<double[]> vector ;
 				double[] xy ;
 
@@ -363,15 +349,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				xy = (double[]) vector.get( 0 ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
-				ps.custom( ApplicationConstant.PS_PROLOG_LINE ) ;
+				ps.custom( ApplicationConstant.PS_CUSTOM_LINE ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;
@@ -389,18 +375,18 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	@SuppressWarnings("unused")
-	private void tailPSBaselineNone( PostscriptStream ps ) {
+	private void tailPSBaselineNone( AstrolabePostscriptStream ps ) {
 	}
 
 	@SuppressWarnings("unused")
-	private void tailPSBaselineLine( PostscriptStream ps ) {
+	private void tailPSBaselineLine( AstrolabePostscriptStream ps ) {
 	}
 
 	@SuppressWarnings("unused")
-	private void tailPSBaselineRail( PostscriptStream ps ) {
+	private void tailPSBaselineRail( AstrolabePostscriptStream ps ) {
 	}
 
-	private void emitPSGraduation( PostscriptStream ps ) {
+	private void emitPSGraduation( AstrolabePostscriptStream ps ) {
 		int ns ;
 		double s, a ;
 		Vector bc, ec, bd ;
@@ -420,7 +406,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			xy = baseline.project( mapIndexToScale( 0, s ) ) ;
 			bd = new Vector( xy[0], xy[1] ) ;
 			bc.sub( bd ) ;
-		} catch ( ParameterNotValidException e ) {} // cannot happen with index 0
+		} catch ( ParameterNotValidException e ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { e.toString(), "" } ) ;
+
+			throw new RuntimeException( msg ) ;
+		}
 
 		if ( Math.isLim0( ec.abs() ) && Math.isLim0( bc.abs() ) ) {
 			ns = 1 ;
@@ -446,22 +439,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 			ps.operator.gsave() ;
 
-			try {
-				g = new GraduationSpan( getGraduationSpan(), o, t ) ;
-				try { // half
-					if ( isIndexAligned( ns, getGraduationHalf().getSpan() ) ) {
-						g = new GraduationHalf( getGraduationHalf(), o, t ) ;
-					}
-				} catch ( NullPointerException e ) {}
-				try { // full
-					if ( isIndexAligned( ns, getGraduationFull().getSpan() ) ) {
-						g = new GraduationFull( getGraduationFull(), o, t ) ;
-					}
-				} catch ( NullPointerException e ) {}
-				g.headPS( ps ) ;
-				g.emitPS( ps ) ;
-				g.tailPS( ps ) ;
-			} catch ( ParameterNotValidException ee ) {} // GraduationSpan, GraduationSpan (if present), GraduationSpan (if present) validated in constructor
+			g = new GraduationSpan( getGraduationSpan(), o, t ) ;
+			if ( getGraduationHalf() != null ) {
+				if ( isIndexAligned( ns, getGraduationHalf().getSpan() ) ) {
+					g = new GraduationHalf( getGraduationHalf(), o, t ) ;
+				}
+			}
+			if ( getGraduationFull() != null ) {
+				if ( isIndexAligned( ns, getGraduationFull().getSpan() ) ) {
+					g = new GraduationFull( getGraduationFull(), o, t ) ;
+				}
+			}
+			g.headPS( ps ) ;
+			g.emitPS( ps ) ;
+			g.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
 		}
@@ -472,11 +463,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		r = Math.truncate( baseline.mapIndexToScale( index, span*unit ) ) ;
 		if ( ! baseline.probe( r ) || r>360 ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { index+","+span, r } ) ;
-			throw new ParameterNotValidException( msg ) ;
+			throw new ParameterNotValidException( Double.toString( r ) ) ;
 		}
 
 		return r ;

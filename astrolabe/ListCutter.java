@@ -20,10 +20,10 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		this.fov = new GeometryFactory().createGeometry( fov ) ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		double[] xy ;
 
 		for ( List<double[]> l : segmentsInterior() ) {
@@ -33,34 +33,32 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			try {
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-				// halo stroke
-				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
+			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
+			ps.operator.grestore() ;
+
 			ps.operator.gsave() ;
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public List<List<double[]>> segmentsIntersecting( boolean interior ) {

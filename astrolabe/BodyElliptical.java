@@ -3,31 +3,24 @@ package astrolabe;
 
 import java.util.List;
 
-import org.exolab.castor.xml.ValidationException;
-
 @SuppressWarnings("serial")
 public class BodyElliptical extends astrolabe.model.BodyElliptical implements PostscriptEmitter, Baseline {
 
-	public BodyElliptical( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public BodyElliptical( Peer peer, Projector projector ) {
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 	}
 
-	public void emitPS(PostscriptStream ps) {
+	public void emitPS(AstrolabePostscriptStream ps) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void headPS(PostscriptStream ps) {
+	public void headPS(AstrolabePostscriptStream ps) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void tailPS(PostscriptStream ps) {
+	public void tailPS(AstrolabePostscriptStream ps) {
 		// TODO Auto-generated method stub
 
 	}

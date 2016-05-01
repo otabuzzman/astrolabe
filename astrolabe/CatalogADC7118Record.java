@@ -15,6 +15,8 @@ public class CatalogADC7118Record implements CatalogRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
+	public final static int CR_LENGTH = 96 ;
+
 	public String Name    ; //  NGC or IC designation (preceded by I)
 	public String Type    ; // *Object classification
 	public String RAh     ; //  Right Ascension 2000 (hours)
@@ -30,7 +32,11 @@ public class CatalogADC7118Record implements CatalogRecord {
 	public String n_mag   ; //  [p] 'p' if mag is photographic (blue)
 	public String Desc    ; // *Description of the object
 
-	public CatalogADC7118Record( String data ) throws ParameterNotValidException {
+	public CatalogADC7118Record( String data ) throws ParameterNotValidException, NumberFormatException {
+		if ( data.length() != CR_LENGTH ) {
+			throw new ParameterNotValidException(  Integer.toString( data.length() ) ) ;
+		}
+
 		Name    = data.substring(0, 5 ).trim() ;
 		Type    = data.substring(6, 9 ).trim() ;
 		RAh     = data.substring(10, 12 ).trim() ;
@@ -47,18 +53,14 @@ public class CatalogADC7118Record implements CatalogRecord {
 		Desc    = data.substring(46, 96 ).trim() ;
 
 		// validation
-		try {
-			RAh() ;
-			RAm() ;
-			DEd() ;
-			DEm() ;
-			mag() ; // continue new methods
-		} catch ( NumberFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		RAh() ;
+		RAm() ;
+		DEd() ;
+		DEm() ;
+		mag() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
@@ -92,11 +94,7 @@ public class CatalogADC7118Record implements CatalogRecord {
 		model.getBodyStellar().setPosition( pm ) ;
 		ceq.delete() ;
 
-		try {
-			model.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		model.validate() ;
 
 		return model ;
 	}

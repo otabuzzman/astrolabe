@@ -1,11 +1,8 @@
 
 package astrolabe;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.prefs.Preferences;
-
-import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
@@ -26,15 +23,10 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private double margin ;
 	private double rise ;
 
-	public AnnotationStraight( Peer peer ) throws ParameterNotValidException {
+	public AnnotationStraight( Peer peer ) {
 		Preferences node ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
@@ -47,43 +39,37 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		rise = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		Layout layout ;
 		Frame frame ;
 		int nt, ne ;
 		double size ;
 		Text text ;
 
-		try {
-			size = new Text( getText( 0 ) ).size() ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		size = new Text( getText( 0 ) ).size() ;
+
 		if ( ! ( size>0 ) )
 			return ;
 
 		ps.operator.gsave() ;
 
 		if ( getFrame() != null ) {
-			try {
-				frame = new Frame( getFrame() ) ;
+			layout = (Layout) AstrolabeRegistry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
+			frame = new Frame( getFrame(), layout ) ;
 
-				frame.headPS( ps ) ;
-				frame.emitPS( ps ) ;
-				frame.tailPS( ps ) ;
-			} catch ( ParameterNotValidException e ) {} // Registry.retrieve()
+			frame.headPS( ps ) ;
+			frame.emitPS( ps ) ;
+			frame.tailPS( ps ) ;
 		}
 
 		ps.array( true ) ;
 		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
 			try {
-				try {
-					text = new Text( getText( nt ) ) ;
-				} catch ( ParameterNotValidException e ) { // should not happen
-					throw new RuntimeException( e.toString() ) ;
-				}
+				text = new Text( getText( nt ) ) ;
+
 				emitPS( ps, text, text.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
@@ -165,10 +151,10 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		ps.operator.grestore() ;
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public static void emitPS( PostscriptStream ps, Text text, double size, double shift,
+	public static void emitPS( AstrolabePostscriptStream ps, Text text, double size, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
 		List<List<Object>> FET ;
 		List<Object> fet ;
@@ -176,29 +162,22 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 		t = text.getValue() ;
 		if ( t.length()==0 ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { text.getValue(), "\"\"" } ) ;
-			throw new ParameterNotValidException( msg ) ;
+			throw new ParameterNotValidException( Integer.toString( t.length() ) ) ;
 		}
 
 		FET = ps.ucFET( t ) ;
-		try {
-			for ( int e=0 ; e<FET.size() ; e++ ) {
-				fet = FET.get( e ) ;
-				ps.array( true ) ;
-				ps.push( (String) fet.get( 0 ) ) ;
-				ps.push( (String[]) fet.get( 1 ) ) ;
-				ps.push( size ) ;
-				ps.push( shift ) ;
-				ps.push( true ) ;
-				ps.push( true ) ;
-				ps.push( (String) fet.get( 2 ) ) ;
-				ps.array( false ) ;
-			}
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
+
+		for ( int e=0 ; e<FET.size() ; e++ ) {
+			fet = FET.get( e ) ;
+			ps.array( true ) ;
+			ps.push( (String) fet.get( 0 ) ) ;
+			ps.push( (String[]) fet.get( 1 ) ) ;
+			ps.push( size ) ;
+			ps.push( shift ) ;
+			ps.push( true ) ;
+			ps.push( true ) ;
+			ps.push( (String) fet.get( 2 ) ) ;
+			ps.array( false ) ;
 		}
 
 		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {

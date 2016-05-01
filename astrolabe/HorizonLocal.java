@@ -15,7 +15,7 @@ public class HorizonLocal extends HorizonType {
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonLocal( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		String key ;
@@ -30,14 +30,17 @@ public class HorizonLocal extends HorizonType {
 		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
 		AstrolabeRegistry.registerDMS( key, la ) ;
 
-		try {			
+		if ( ( (astrolabe.model.HorizonLocal) peer ).getLongitude() == null ) {
+			lo = 0 ;
+		} else {
 			lo = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getLongitude() ) ;
 			key = m.message( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
 			AstrolabeRegistry.registerDMS( key, lo ) ;
-		} catch ( ParameterNotValidException e ) {
-			lo = 0 ;
 		}
-		try {
+
+		if ( ( (astrolabe.model.HorizonLocal) peer ).getDate() == null ) {
+			ST = 0 ;
+		} else {
 			CAA2DCoordinate c ;
 			double lt, ra0, lo0, la0, e, jd ;
 			CAADate d ;
@@ -55,7 +58,7 @@ public class HorizonLocal extends HorizonType {
 
 			lo0 = BodySun.meanEclipticLongitude( jd ) ;
 			la0 = BodySun.meanEclipticLatitude( jd ) ;
-			epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ; 
+			epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ; 
 			e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 			c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
@@ -64,8 +67,6 @@ public class HorizonLocal extends HorizonType {
 			ST = CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
 			key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			AstrolabeRegistry.registerHMS( key, ST ) ;
-		} catch ( ParameterNotValidException e ) {
-			ST = 0 ;
 		}
 	}
 

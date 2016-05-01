@@ -14,7 +14,7 @@ public class HorizonEcliptical extends HorizonType {
 
 	private double e ; // mean obliquity of ecliptic
 
-	public HorizonEcliptical( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonEcliptical( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		CAA2DCoordinate c ;
@@ -24,7 +24,8 @@ public class HorizonEcliptical extends HorizonType {
 
 		this.projector = projector ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
 		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;

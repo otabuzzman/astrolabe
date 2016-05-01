@@ -38,7 +38,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 	private Baseline circle ;
 
-	public BodySun( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public BodySun( Peer peer, Projector projector ) {
 		String circle ;
 		Preferences node ; 
 		CAADate date ;
@@ -46,15 +46,11 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		long y ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		date = new CAADate() ;
 
-		epochG = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+
 		date.Set( epochG, true ) ;
 		y = date.Year() ;
 		date.Set( y, 1, 1, 0, 0, 0, true ) ;
@@ -89,15 +85,6 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 		date.delete() ;
 
-		if ( ! ( jdAy<jdOy ) ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
-
-			throw new ParameterNotValidException( msg ) ;
-		}
-
 		this.projector = projector ;
 
 		node = Configuration.getClassNode( this, getName(), getType() ) ;
@@ -110,35 +97,26 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		}
 
 		try {
-			Class<?> c ;
-
-			c = Class.forName( "astrolabe.ApplicationHelper" ) ;
-
-			eclipticLongitude = c.getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
-			eclipticLatitude = c.getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
-		} catch ( ClassNotFoundException e ) {
-			throw new RuntimeException( e.toString() ) ;
+			eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
+			eclipticLatitude = getClass().getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
 		} catch ( NoSuchMethodException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
 		circle = ( (astrolabe.model.BodySun) peer ).getCircle() ;
 		if ( circle != null ) {
-			try {
-				this.circle = (Baseline) Registry.retrieve( circle ) ;
-			} catch ( ParameterNotValidException e ) {
+			this.circle = (Baseline) Registry.retrieve( circle ) ;
+			if ( this.circle == null ) {
 				String msg ;
 
 				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 				msg = MessageFormat.format( msg, new Object[] { "\""+circle+"\"", null } ) ;
 				log.warn( msg ) ;
-
-				this.circle = null ;
 			}
 		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementImportance importance ;
 
 		importance = new ElementImportance( getImportance() ) ;
@@ -147,11 +125,11 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		importance.tailPS( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		emitPS( ps, true ) ;
 	}
 
-	public void emitPS( PostscriptStream ps, boolean cut ) {
+	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
 		Geometry fov ;
 		astrolabe.model.BodySun peer ;
@@ -163,14 +141,9 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		double[] xy ;
 
 		if ( cut ) {
-			try {
-				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-			} catch ( ParameterNotValidException ee ) {
-				try {
-					fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-				} catch ( ParameterNotValidException eu ) {
-					throw new RuntimeException( eu.toString() ) ;
-				}
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			if ( fov == null ) {
+				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			}
 
 			jdlist = new java.util.Vector<Double>() ;
@@ -197,22 +170,27 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 				peer.setStretch( getStretch() ) ;
 				peer.setType( getType() ) ;
+				peer.setImportance( getImportance() ) ;
 				peer.setCircle( getCircle() ) ;
 
 				peer.setDialDay( getDialDay() ) ;
 				peer.setAnnotation( getAnnotation() ) ;
 
 				try {
-					body = new BodySun( peer, projector ) ;
+					peer.validate() ;
+				} catch ( ValidationException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 
-					ps.operator.gsave();
+				body = new BodySun( peer, projector ) ;
 
-					body.headPS( ps ) ;
-					body.emitPS( ps, false ) ;
-					body.tailPS( ps ) ;
+				ps.operator.gsave();
 
-					ps.operator.grestore() ;
-				} catch ( ParameterNotValidException e ) {}
+				body.headPS( ps ) ;
+				body.emitPS( ps, false ) ;
+				body.tailPS( ps ) ;
+
+				ps.operator.grestore() ;
 			}
 		} else {
 			if ( circle==null ) {
@@ -223,28 +201,25 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
-				try {
-					ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-					// halo stroke
-					ps.operator.currentlinewidth() ;
-					ps.operator.dup();
-					ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-					ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-					ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-					ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
-					ps.operator.mul( 2 ) ;
-					ps.operator.add() ;
-					ps.operator.gsave() ;
-					ps.operator.setlinewidth() ;
-					ps.operator.setlinecap( 2 ) ;
-					ps.operator.setgray( 1 ) ;
-					ps.operator.stroke() ;
-					ps.operator.grestore() ;
+				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
+				// halo stroke
+				ps.operator.currentlinewidth() ;
+				ps.operator.dup();
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+				ps.operator.mul( 2 ) ;
+				ps.operator.add() ;
+				ps.operator.gsave() ;
+				ps.operator.setlinewidth() ;
+				ps.operator.setlinecap( 2 ) ;
+				ps.operator.setgray( 1 ) ;
+				ps.operator.stroke() ;
+				ps.operator.grestore() ;
+
 				ps.operator.gsave() ;
 				ps.operator.stroke() ;
 				ps.operator.grestore() ;
@@ -254,12 +229,10 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 					ps.operator.gsave() ;
 
-					try {
-						dial = new DialDay( getDialDay(), this ) ;
-						dial.headPS( ps ) ;
-						dial.emitPS( ps ) ;
-						dial.tailPS( ps ) ;
-					} catch ( ParameterNotValidException e ) {} // DialDay validated in constructor
+					dial = new DialDay( getDialDay(), this ) ;
+					dial.headPS( ps ) ;
+					dial.emitPS( ps ) ;
+					dial.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
@@ -268,39 +241,33 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					PostscriptEmitter dial ;
 
 					ps.operator.gsave() ;
-					try {
-						dial = new DialDay( getDialDay(), this ) ;
-						dial.headPS( ps ) ;
-						dial.emitPS( ps ) ;
-						dial.tailPS( ps ) ;
-					} catch ( ParameterNotValidException e ) {} // DialDay validated in constructor
+					dial = new DialDay( getDialDay(), this ) ;
+					dial.headPS( ps ) ;
+					dial.emitPS( ps ) ;
+					dial.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
 			}
 
 			if ( getAnnotation() != null ) {
-				try {
-					PostscriptEmitter annotation ;
+				PostscriptEmitter annotation ;
 
-					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-						ps.operator.gsave() ;
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
 
-						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
-						annotation.headPS( ps ) ;
-						annotation.emitPS( ps ) ;
-						annotation.tailPS( ps ) ;
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
 
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
+					ps.operator.grestore() ;
 				}
 			}
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public double[] project( double jd ) {

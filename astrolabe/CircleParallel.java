@@ -34,22 +34,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	public CircleParallel() {
 	}
 
-	public CircleParallel( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public CircleParallel( Peer peer, Projector projector ) {
 		setup( peer, projector ) ;
 	}
 
-	public void setup( Peer peer, Projector projector ) throws ParameterNotValidException {
-		MessageCatalog m ;
+	public void setup( Peer peer, Projector projector ) {
 		String key ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		this.projector = projector ;
 
@@ -58,57 +50,56 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				ApplicationConstant.PK_CIRCLE_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		al = AstrolabeFactory.valueOf( getAngle() ) ;
-		key = m.message( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
+		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
 		AstrolabeRegistry.registerDMS( key, al ) ;
 
-		try {
-			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
-		} catch ( ParameterNotValidException e ) {
+		if ( getBegin().getImmediate() == null ) {
 			Object circle ;
 			boolean leading ;
 
-			circle = Registry.retrieve( getBegin().getReference().getCircle() ) ;
 			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 			try {
+				circle = Registry.retrieve( getBegin().getReference().getCircle() ) ;
 				begin = circle instanceof CircleParallel?
 						intersect( (CircleParallel) circle, leading ):
 							intersect( (CircleMeridian) circle, leading ) ;
-			} catch ( ParameterNotValidException ee ) {
+			} catch ( ParameterNotValidException e ) {
 				String msg ;
 
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
+				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+getBegin().getReference().getCircle()+"\"" } ) ;
 				log.warn( msg ) ;
 
 				begin = 0 ;
 			}
-		} finally {
-			begin = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
+		} else {
+			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;
 		}
-		try {
-			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
-		} catch ( ParameterNotValidException e ) {
+		begin = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
+
+		if ( getEnd().getImmediate() == null ) {
 			Object circle ;
 			boolean leading ;
 
-			circle = Registry.retrieve( getEnd().getReference().getCircle() ) ;
 			leading = getEnd().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
 			try {
+				circle = Registry.retrieve( getEnd().getReference().getCircle() ) ;
 				end = circle instanceof CircleParallel?
 						intersect( (CircleParallel) circle, leading ):
 							intersect( (CircleMeridian) circle, leading ) ;
-			} catch ( ParameterNotValidException ee ) {
+			} catch ( ParameterNotValidException e ) {
 				String msg ;
 
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "\""+getBegin().getReference().getCircle()+"\"", ee.toString() } ) ;
+				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+				msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+getEnd().getReference().getCircle()+"\"" } ) ;
 				log.warn( msg ) ;
 
 				end = 360 ;
 			}
-		} finally {
-			end = CAACoordinateTransformation.MapTo0To360Range( end ) ;
+		} else {
+			end = AstrolabeFactory.valueOf( getEnd().getImmediate() ) ;
 		}
+		end = CAACoordinateTransformation.MapTo0To360Range( end ) ;
 
 		if ( getName() != null ) {
 			Registry.register( getName(), this ) ;
@@ -218,7 +209,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return list( null, begin, end, shift ) ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementImportance importance ;
 
 		importance = new ElementImportance( getImportance() ) ;
@@ -227,21 +218,17 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		importance.tailPS( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		Geometry fov, circle ;
 
-		try {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		circle = new GeometryFactory().createLineString(
 				new JTSCoordinateArraySequence( list() ) ) ;
 
 		emitPS( ps, !fov.covers( circle ) ) ;
 	}
 
-	public void emitPS( PostscriptStream ps, boolean cut ) {
+	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
 		Geometry fov ;
 		astrolabe.model.CircleParallel peer ;
@@ -256,11 +243,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		String ns ;
 
 		if ( cut ) {
-			try {
-				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
 				peer = new astrolabe.model.CircleParallel() ;
@@ -288,14 +271,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 						new JTSCoordinate( fov.getEnvelope().getCoordinates()[0] ),
 						new JTSCoordinate( fov.getEnvelope().getCoordinates()[2] ) )+":" ;
 
-				try {
-					peer.getAngle().getRational().setValue( al ) ;
-					peer.getBegin().getImmediate().getRational().setValue( lob[0] ) ;
-					peer.getEnd().getImmediate().getRational().setValue( loe[0] ) ;
-					AstrolabeFactory.modelOf( peer ) ;
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
+				peer.getAngle().getRational().setValue( al ) ;
+				peer.getBegin().getImmediate().getRational().setValue( lob[0] ) ;
+				peer.getEnd().getImmediate().getRational().setValue( loe[0] ) ;
+				AstrolabeFactory.modelOf( peer, false ) ;
 
 				peer.setImportance( getImportance() ) ;
 
@@ -312,7 +291,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 								tC = new astrolabe.model.Text() ;
 								tC.setName( ns+tM.getName() ) ;
 								tC.setValue( tM.getValue() ) ;
-								AstrolabeFactory.modelOf( tC ) ;
+								AstrolabeFactory.modelOf( tC, false ) ;
 
 								tC.setName( tM.getName() ) ;
 
@@ -322,7 +301,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 								aCC.addText( tC ) ;
 							}
 
-							AstrolabeFactory.modelOf( aCC ) ;
+							AstrolabeFactory.modelOf( aCC, false ) ;
 
 							aCC.setName( aCM.getName() ) ;
 							// setPurpose already done by AstrolabeFactory.modelOf()
@@ -344,7 +323,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 								tC = new astrolabe.model.Text() ;
 								tC.setName( ns+tM.getName() ) ;
 								tC.setValue( tM.getValue() ) ;
-								AstrolabeFactory.modelOf( tC ) ;
+								AstrolabeFactory.modelOf( tC, false ) ;
 
 								tC.setName( tM.getName() ) ;
 
@@ -354,7 +333,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 								aSC.addText( tC ) ;
 							}
 
-							AstrolabeFactory.modelOf( aSC ) ;
+							AstrolabeFactory.modelOf( aSC, false ) ;
 
 							aSC.setName( aSM.getName() ) ;
 							// setPurpose already done by AstrolabeFactory.modelOf()
@@ -368,22 +347,22 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 							aC.setAnnotationStraight( aSC ) ;
 						}
 						peer.addAnnotation( aC ) ;
+
+						peer.validate() ;
 					}
-				} catch ( ParameterNotValidException e ) { // AstrolabeFactory.modelOf()
+				} catch ( ValidationException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
 
-				try {
-					circle = new CircleParallel( peer, projector ) ;
+				circle = new CircleParallel( peer, projector ) ;
 
-					ps.operator.gsave() ;
+				ps.operator.gsave() ;
 
-					circle.headPS( ps ) ;
-					circle.emitPS( ps, false ) ;
-					circle.tailPS( ps ) ;
+				circle.headPS( ps ) ;
+				circle.emitPS( ps, false ) ;
+				circle.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
-				} catch ( ParameterNotValidException e ) {}
+				ps.operator.grestore() ;
 			}
 		} else {
 			l = list() ;
@@ -393,81 +372,68 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			try {
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-				// halo stroke
-				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
+			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
+			ps.operator.grestore() ;
+
 			ps.operator.gsave() ;
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 
 			if ( getDial() != null ) {
-				try {
-					PostscriptEmitter dial ;
+				PostscriptEmitter dial ;
 
-					ps.operator.gsave() ;
+				ps.operator.gsave() ;
 
-					dial = AstrolabeFactory.companionOf( getDial(), (Baseline) this ) ;
-					dial.headPS( ps ) ;
-					dial.emitPS( ps ) ;
-					dial.tailPS( ps ) ;
+				dial = AstrolabeFactory.companionOf( getDial(), (Baseline) this ) ;
+				dial.headPS( ps ) ;
+				dial.emitPS( ps ) ;
+				dial.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
+				ps.operator.grestore() ;
 			}
 
 			if ( getAnnotation() != null ) {
-				try {
-					PostscriptEmitter annotation ;
+				PostscriptEmitter annotation ;
 
-					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-						ps.operator.gsave() ;
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
 
-						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
-						annotation.headPS( ps ) ;
-						annotation.emitPS( ps ) ;
-						annotation.tailPS( ps ) ;
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
 
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
+					ps.operator.grestore() ;
 				}
 			}
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) throws ParameterNotValidException {
-		MessageCatalog m ;
 		double blC, blAl, blBe ;
 		double rdGa[], rdDe ;
 		double gnGa[], gnDe ;
 		double[] rdaz, gnaz ;
 		double[] r ;
-
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		rdGa = new double[2] ;
 		gnGa = new double[2] ;
@@ -489,11 +455,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			// intersection test
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
-				String msg ;
-
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
-				throw new ParameterNotValidException( msg ) ;
+				throw new ParameterNotValidException( "+" ) ;
 			}
 
 			rdDe = 180-Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
@@ -513,11 +475,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			// intersection test
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
-				String msg ;
-
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
-				throw new ParameterNotValidException( msg ) ;
+				throw new ParameterNotValidException( "+" ) ;
 			}
 
 			rdDe = Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
@@ -538,11 +496,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			// intersection test
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
-				String msg ;
-
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
-				throw new ParameterNotValidException( msg ) ;
+				throw new ParameterNotValidException( "+" ) ;
 			}
 
 			if ( blC>0 ) {
@@ -575,11 +529,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			// intersection test
 			if ( blGa<0?!( gnB>( rdB-blC ) ):!( rdB>( gnB-blC ) ) ) {
-				String msg ;
-
-				msg = m.message( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "", "" } ) ;
-				throw new ParameterNotValidException( msg ) ;
+				throw new ParameterNotValidException( "+" ) ;
 			}
 
 			rdDe = Math.lawOfEdgeCosineSolveAngle( gnB, rdB, blC) ;
@@ -702,7 +652,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		gnho = gn.projector.unconvert( gneq ) ;//dotDot().unconvert( gneq ) ;
 
 		if ( ! gn.probe( CAACoordinateTransformation.MapTo0To360Range( gnho[0] ) ) ) {
-			throw new ParameterNotValidException( new Double( gnho[0] ).toString() ) ;
+			throw new ParameterNotValidException( Double.toString( gnho[0] ) ) ;
 		}
 
 		return leading?rdhoO[0]:rdhoA[0] ;
@@ -755,7 +705,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		gnal = leading?gn.transformMeridianAl( inaz[3] ):gn.transformMeridianAl( inaz[2] ) ;
 
 		if ( ! gn.probe( gnal ) ) {
-			throw new ParameterNotValidException( new Double( gnal ).toString() ) ;
+			throw new ParameterNotValidException( Double.toString( gnal ) ) ;
 		}
 
 		return leading?rdhoO[0]:rdhoA[0] ;

@@ -30,7 +30,7 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static Atlas companionOf( astrolabe.model.Atlas at ) throws ParameterNotValidException {
+	public static Atlas companionOf( astrolabe.model.Atlas at ) {
 		astrolabe.model.AtlasStereographic atS ;
 		astrolabe.model.AtlasOrthographic atO ;
 		astrolabe.model.AtlasEquidistant atE ;
@@ -48,7 +48,7 @@ public final class AstrolabeFactory {
 		return atlas ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Chart ch ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Chart ch ) {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
 		astrolabe.model.ChartEquidistant chE ;
@@ -66,7 +66,7 @@ public final class AstrolabeFactory {
 		return chart ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, Projector p ) {
 		astrolabe.model.HorizonLocal hoLo ;
 		astrolabe.model.HorizonEquatorial hoEq ;
 		astrolabe.model.HorizonEcliptical hoEc ;
@@ -85,7 +85,7 @@ public final class AstrolabeFactory {
 		return horizon ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, Projector p ) {
 		astrolabe.model.CircleParallel clP ;
 		astrolabe.model.CircleMeridian clM ;
 		astrolabe.model.CircleSouthernPolar clSP ;
@@ -110,7 +110,7 @@ public final class AstrolabeFactory {
 		return circle ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Dial dl, Baseline baseline ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Dial dl, Baseline baseline ) {
 		astrolabe.model.DialDegree dlD ;
 		PostscriptEmitter dial ;
 
@@ -123,7 +123,7 @@ public final class AstrolabeFactory {
 		return dial ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Annotation an ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Annotation an ) {
 		astrolabe.model.AnnotationStraight anS ;
 		PostscriptEmitter annotation ;
 
@@ -136,7 +136,7 @@ public final class AstrolabeFactory {
 		return annotation ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p ) {
 		astrolabe.model.BodyStellar bdS ;
 		astrolabe.model.BodyAreal bdA ;
 		astrolabe.model.BodyPlanet bdP ;
@@ -164,7 +164,7 @@ public final class AstrolabeFactory {
 		return body ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p ) {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
@@ -186,118 +186,120 @@ public final class AstrolabeFactory {
 		return catalog ;
 	}
 
-	public static void modelOf( HorizonType horizon ) throws ParameterNotValidException {
-		modelOf( horizon, true ) ;
+	public static void modelOf( HorizonType horizon ) throws ValidationException {
+		if ( ! modelOf( horizon, true ) ) {
+			throw new ValidationException( horizon.getClass().getSimpleName() ) ;
+		}
 	}
 
-	public static void modelOf( HorizonType horizon, boolean validate ) throws ParameterNotValidException {
+	public static boolean modelOf( HorizonType horizon, boolean validate ) {
 		Preferences node ;
 
 		node = Configuration.getClassNode( horizon, horizon.getName(), null ) ;
 		horizon.setupPeer( node ) ;
 
-		if ( validate )
+		if ( validate ) {
 			try {
 				horizon.validate() ;
 			} catch ( ValidationException e ) {
-				throw new ParameterNotValidException( e.toString() ) ;
+				return false ;
 			}
+		}
+
+		return true ;
 	}
 
-	public static void modelOf( CircleType circle ) throws ParameterNotValidException {
-		modelOf( circle, true ) ;
+	public static void modelOf( CircleType circle ) throws ValidationException {
+		if ( ! modelOf( circle, true ) ) {
+			throw new ValidationException( circle.getClass().getSimpleName() ) ;
+		}
 	}
 
-	public static void modelOf( CircleType circle, boolean validate ) throws ParameterNotValidException {
+	public static boolean modelOf( CircleType circle, boolean validate ) {
 		Preferences node ;
 
 		node = Configuration.getClassNode( circle, circle.getName(), null ) ;
 		circle.setupPeer( node ) ;
 
-		if ( validate )
+		if ( validate ) {
 			try {
 				circle.validate() ;
 			} catch ( ValidationException e ) {
-				throw new ParameterNotValidException( e.toString() ) ;
+				return false ;
 			}
-	}
-
-	public static void modelOf( AnnotationType annotation ) throws ParameterNotValidException {
-		modelOf( annotation, true ) ;
-	}
-
-	public static void modelOf( AnnotationType annotation, boolean validate ) throws ParameterNotValidException {
-		Preferences node ;
-
-		if ( annotation == null ) {
-			throw new ParameterNotValidException( AnnotationType.class.toString()+":"+null ) ;
 		}
+
+		return true ;
+	}
+
+	public static void modelOf( AnnotationType annotation ) throws ValidationException {
+		if ( ! modelOf( annotation, true ) ) {
+			throw new ValidationException( annotation.getClass().getSimpleName() ) ;
+		}
+	}
+
+	public static boolean modelOf( AnnotationType annotation, boolean validate ) {
+		Preferences node ;
 
 		node = Configuration.getClassNode( annotation, annotation.getName(), null ) ;
 		annotation.setupPeer( node ) ;
 
-		if ( validate )
+		if ( validate ) {
 			try {
 				annotation.validate() ;
 			} catch ( ValidationException e ) {
-				throw new ParameterNotValidException( e.toString() ) ;
+				return false ;
 			}
-	}
-
-	public static void modelOf( TextType text ) throws ParameterNotValidException {
-		modelOf( text, true ) ;
-	}
-
-	public static void modelOf( TextType text, boolean validate ) throws ParameterNotValidException {
-		Preferences node ;
-
-		if ( text == null ) {
-			throw new ParameterNotValidException( TextType.class.toString()+":"+null ) ;
 		}
+
+		return true ;
+	}
+
+	public static void modelOf( TextType text ) throws ValidationException {
+		if ( ! modelOf( text, true ) ) {
+			throw new ValidationException( text.getClass().getSimpleName() ) ;
+		}
+	}
+
+	public static boolean modelOf( TextType text, boolean validate ) {
+		Preferences node ;
 
 		node = Configuration.getClassNode( text, text.getName(), null ) ;
 		text.setupPeer( node ) ;
 
-		if ( validate )
+		if ( validate ) {
 			try {
 				text.validate() ;
 			} catch ( ValidationException e ) {
-				throw new ParameterNotValidException( e.toString() ) ;
+				return false ;
 			}
-	}
-
-	public static double valueOf( DateType date ) throws ParameterNotValidException {
-		double r ;
-
-		if ( date == null ) {
-			throw new ParameterNotValidException( DateType.class.toString()+":"+null ) ;
 		}
 
+		return true ;
+	}
+
+	public static double valueOf( DateType date ) {
+		double r ;
+
 		if ( date.getJD() == null ) {
-			r = AstrolabeFactory.valueOf( date.getCalendar() ) ;
+			r = valueOf( date.getCalendar() ) ;
 		} else {
-			r = AstrolabeFactory.valueOf( date.getJD() ) ;
+			r = valueOf( date.getJD() ) ;
 		}
 
 		return r ;
 	}
 
-	public static double valueOf( CalendarType calendar ) throws ParameterNotValidException {
+	public static double valueOf( CalendarType calendar ) {
 		double r ;
 		CAADate d ;
 		long[] c ;
-		double t ;
+		double t = 0 ;
 
-		if ( calendar == null ) {
-			throw new ParameterNotValidException( CalendarType.class.toString()+":"+null ) ;
-		}
+		c = valueOf( calendar.getYMD() ) ;
 
-		c = AstrolabeFactory.valueOf( calendar.getYMD() ) ;
-
-		if ( calendar.getTime() == null ) {
-			t = 0 ;
-		} else {
-			t = AstrolabeFactory.valueOf( calendar.getTime() ) ;
+		if ( calendar.getTime() != null ) {
+			t = valueOf( calendar.getTime() ) ;
 		}
 
 		d = new CAADate( c[0], c[1], c[2]+t, true ) ;
@@ -307,28 +309,20 @@ public final class AstrolabeFactory {
 		return r ;
 	}
 
-	public static double valueOf( TimeType time ) throws ParameterNotValidException {
+	public static double valueOf( TimeType time ) {
 		double r = 0 ;
 
-		if ( time == null ) {
-			throw new ParameterNotValidException( TimeType.class.toString()+":"+null ) ;
-		}
-
-		try {
-			r = AstrolabeFactory.valueOf( time.getRational() ) ;
-		} catch ( ParameterNotValidException e ) {
+		if ( time.getRational() == null ) {
 			r = AstrolabeFactory.valueOf( time.getHMS() ) ;
+		} else {
+			r = AstrolabeFactory.valueOf( time.getRational() ) ;
 		}
 
 		return r ;
 	}
 
-	public static List<double[]> valueOf( SphericalType[] spherical ) throws ParameterNotValidException {
+	public static List<double[]> valueOf( SphericalType[] spherical ) {
 		List<double[]> r = new java.util.Vector<double[]>() ;
-
-		if ( spherical == null ) {
-			throw new ParameterNotValidException( SphericalType[].class.toString()+":"+null ) ;
-		}
 
 		for ( int n=0 ; n<spherical.length ; n++ ) {
 			r.add( valueOf( spherical[n] ) ) ;
@@ -337,96 +331,63 @@ public final class AstrolabeFactory {
 		return r ;
 	}
 
-	public static double[] valueOf( SphericalType spherical ) throws ParameterNotValidException {
+	public static double[] valueOf( SphericalType spherical ) {
 		double[] r = { 1, 0, 0 } ;
 
-		if ( spherical == null ) {
-			throw new ParameterNotValidException( SphericalType.class.toString()+":"+null ) ;
-		}
-
-		r[1] = AstrolabeFactory.valueOf( spherical.getPhi() ) ;
-		r[2] = AstrolabeFactory.valueOf( spherical.getTheta() ) ;
-
-		try {
+		if ( spherical.getR() != null ) {
 			r[0] = valueOf( spherical.getR() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		}
+		r[1] = valueOf( spherical.getPhi() ) ;
+		r[2] = valueOf( spherical.getTheta() ) ;
 
 		return r ;
 	}
 
-	public static double[] valueOf( PolarType polar ) throws ParameterNotValidException {
+	public static double[] valueOf( PolarType polar ) {
 		double[] r = { 1, 0 } ;
 
-		if ( polar == null ) {
-			throw new ParameterNotValidException( PolarType.class.toString()+":"+null ) ;
+		if ( polar.getR() != null ) {
+			r[0] = valueOf( polar.getR() ) ;
 		}
-
-		r[1] = AstrolabeFactory.valueOf( polar.getPhi() ) ;
-
-		try {
-			r[0] = AstrolabeFactory.valueOf( polar.getR() ) ;
-		} catch ( ParameterNotValidException e ) {} // optional
+		r[1] = valueOf( polar.getPhi() ) ;
 
 		return r ;
 	}
 
-	public static double[] valueOf( CartesianType cartesian ) throws ParameterNotValidException {
-		if ( cartesian == null ) {
-			throw new ParameterNotValidException( CartesianType.class.toString()+":"+null ) ;
-		}
-
+	public static double[] valueOf( CartesianType cartesian ) {
 		return new double[] { cartesian.getX(), cartesian.getY(), cartesian.hasZ()?cartesian.getZ():0 } ;
 	}
 
-	public static double valueOf( AngleType angle ) throws ParameterNotValidException {
+	public static double valueOf( AngleType angle ) {
 		double r ;
 
-		if ( angle == null ) {
-			throw new ParameterNotValidException( AngleType.class.toString()+":"+null ) ;
-		}
-
-		try {
-			r = AstrolabeFactory.valueOf( angle.getRational() ) ;
-		} catch ( ParameterNotValidException er ) {
-			try {
-				r = AstrolabeFactory.valueOf( angle.getDMS() ) ;
-			} catch ( ParameterNotValidException ed ) {
-				r = CAACoordinateTransformation.HoursToDegrees( AstrolabeFactory.valueOf( angle.getHMS() ) ) ;
+		if ( angle.getRational() == null ) {
+			if ( angle.getDMS() == null ) {
+				r = CAACoordinateTransformation.HoursToDegrees( valueOf( angle.getHMS() ) ) ;
+			} else {
+				r = valueOf( angle.getDMS() ) ;
 			}
+
+		} else {
+			r = valueOf( angle.getRational() ) ;
 		}
 
 		return r ;
 	}
 
-	public static long[] valueOf( YMDType ymd ) throws ParameterNotValidException {
-		if ( ymd == null ) {
-			throw new ParameterNotValidException( YMDType.class.toString()+":"+null ) ;
-		}
-
+	public static long[] valueOf( YMDType ymd ) {
 		return new long[] { ymd.getY(), ymd.getM(), ymd.getD() } ;
 	}
 
-	public static double valueOf( DMSType dms ) throws ParameterNotValidException {
-		if ( dms == null ) {
-			throw new ParameterNotValidException( DMSType.class.toString()+":"+null ) ;
-		}
-
+	public static double valueOf( DMSType dms ) {
 		return dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
 	}
 
-	public static double valueOf( HMSType hms ) throws ParameterNotValidException {
-		if ( hms == null ) {
-			throw new ParameterNotValidException( HMSType.class.toString()+":"+null ) ;
-		}
-
+	public static double valueOf( HMSType hms ) {
 		return hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ;
 	}
 
-	public static double valueOf( RationalType rational ) throws ParameterNotValidException {
-		if ( rational == null ) {
-			throw new ParameterNotValidException( RationalType.class.toString()+":"+null ) ;
-		}
-
+	public static double valueOf( RationalType rational ) {
 		return rational.getValue() ;
 	} 
 }

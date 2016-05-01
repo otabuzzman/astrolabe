@@ -10,18 +10,14 @@ public class AtlasStereographic extends AtlasAzimuthalType {
 	public AtlasStereographic() {
 	}
 
-	public AtlasStereographic( Peer peer ) throws ParameterNotValidException {
+	public AtlasStereographic( Peer peer ) {
 		super( peer ) ;
 
 		peerCS = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ; 
 	}
 
 	public ChartAzimuthalType getChartAzimuthalType() {
-		try {
-			return ( new ChartStereographic( peerCS ) ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		return ( new ChartStereographic( peerCS ) ) ;
 	}
 
 	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {

@@ -12,16 +12,16 @@ public class AstrolabeReader {
 	public AstrolabeReader() {
 	}
 
-	public Astrolabe read( Reader model ) throws ParameterNotValidException {
+	public Astrolabe read( Reader model ) {
 		astrolabe.model.Astrolabe al ;
 		Astrolabe a = null ;
 
 		try {
 			al = (astrolabe.model.Astrolabe) astrolabe.model.Astrolabe.unmarshal( model ) ;
 		} catch ( MarshalException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		a = new Astrolabe( al ) ;
@@ -29,7 +29,7 @@ public class AstrolabeReader {
 		return a ;
 	}
 
-	public Astrolabe read( String model ) throws ParameterNotValidException {
+	public Astrolabe read( String model ) {
 		StringReader r ;
 		Astrolabe a ;
 

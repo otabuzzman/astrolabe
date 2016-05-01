@@ -2,7 +2,7 @@
 package astrolabe;
 
 public interface PostscriptEmitter {
-	public void headPS( PostscriptStream ps ) ;
-	public void emitPS( PostscriptStream ps ) ;
-	public void tailPS( PostscriptStream ps ) ;
+	public void headPS( AstrolabePostscriptStream ps ) ;
+	public void emitPS( AstrolabePostscriptStream ps ) ;
+	public void tailPS( AstrolabePostscriptStream ps ) ;
 }

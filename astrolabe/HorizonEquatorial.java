@@ -6,7 +6,7 @@ public class HorizonEquatorial extends HorizonType {
 
 	private Projector projector ;
 
-	public HorizonEquatorial( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonEquatorial( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		this.projector = projector ;

@@ -1,10 +1,27 @@
 
 package astrolabe;
 
+import java.text.MessageFormat;
+
 import caa.CAACoordinateTransformation;
 import caa.CAADate;
 
 public class AstrolabeRegistry extends Registry {
+
+	public static Object retrieve( String key ) {
+		Object r ;
+
+		r = Registry.retrieve( key ) ;
+
+		if ( r == null ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "\""+key+"\"", "" } ) ;
+		}
+
+		return r ;
+	}
 
 	public static void registerYMD( String key, CAADate date ) {
 		String ind ;

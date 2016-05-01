@@ -17,12 +17,14 @@ import caa.CAAPrecession;
 
 public class CatalogADC6049Record implements CatalogRecord {
 
-	public List<String> RAhr  ; // Right ascension in decimal hours (J2000)
-	public List<String> DEdeg ; // Declination in degrees (J2000)
-	public String                   con   ; // Constellation abbreviation
-	public String                   type  ; // [OI] Type of point (Original or Interpolated)
+	public final static int CR_LENGTH = 29 ;
 
-	public CatalogADC6049Record( String data ) throws ParameterNotValidException {
+	public List<String>	RAhr  ; // Right ascension in decimal hours (J2000)
+	public List<String>	DEdeg ; // Declination in degrees (J2000)
+	public String		con   ; // Constellation abbreviation
+	public String		type  ; // [OI] Type of point (Original or Interpolated)
+
+	public CatalogADC6049Record( String data ) throws ParameterNotValidException, NumberFormatException {
 		BufferedReader b ;
 		String l, lv[] ;
 
@@ -33,6 +35,10 @@ public class CatalogADC6049Record implements CatalogRecord {
 			b = new BufferedReader( new StringReader( data ) ) ;
 
 			while ( ( l = b.readLine() ) != null ) {
+				if ( l.length() != CR_LENGTH ) {
+					throw new ParameterNotValidException(  Integer.toString( l.length() ) ) ;
+				}
+
 				lv = l.trim().split( "[ ]+" ) ;
 				RAhr.add( lv[0] ) ;
 				DEdeg.add( lv[1] ) ;
@@ -44,17 +50,13 @@ public class CatalogADC6049Record implements CatalogRecord {
 		}
 
 		// validation
-		try {
-			for ( int position=0 ; position<RAhr.size() ; position++ ) {
-				RAhr( position ) ;
-				DEdeg( position ) ;
-			} // continue new methods
-		} catch ( NumberFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+		for ( int position=0 ; position<RAhr.size() ; position++ ) {
+			RAhr( position ) ;
+			DEdeg( position ) ; // continue new methods
 		}
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
@@ -62,7 +64,6 @@ public class CatalogADC6049Record implements CatalogRecord {
 		model = new astrolabe.model.Body() ;
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
-		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_AREA ) ;
 		model.getBodyAreal().setImportance( ApplicationConstant.AV_BODY_DIVIDING ) ;
 		for ( int p=0 ; p<RAhr.size() ; p++ ) {
 			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
@@ -83,11 +84,7 @@ public class CatalogADC6049Record implements CatalogRecord {
 			ceq.delete() ;
 		}
 
-		try {
-			model.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		model.validate() ;
 
 		return model ;
 	}

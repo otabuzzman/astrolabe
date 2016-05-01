@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
@@ -19,7 +20,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 	private double epoch ;
 
-	public Astrolabe( Peer peer ) throws ParameterNotValidException {
+	public Astrolabe( Peer peer ) {
 		String pn ;
 		FileInputStream pr ;
 		Locale dl ;
@@ -28,11 +29,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		String key ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		try {
 			pn = ApplicationConstant.GC_APPLICATION ;
@@ -40,11 +36,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			pr = new FileInputStream( pn ) ;
 			Preferences.importPreferences( pr ) ;
 		} catch ( FileNotFoundException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvalidPreferencesFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
+			throw new RuntimeException( e.toString() ) ;
 		}
 
 		ln = getLocale() ;
@@ -66,25 +62,34 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		d.delete() ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
-		ps.emitDSCHeader() ;
-		ps.emitDSCProlog() ;
+	public void headPS( AstrolabePostscriptStream ps ) {
+		try {
+			ps.emitDSCHeader() ;
+			ps.emitDSCProlog() ;
+		} catch ( ParameterNotValidException e ) {
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { e.toString(), "" } ) ;
+
+			throw new RuntimeException( msg ) ;
+		}
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int at=0 ; at<getAtlasCount() ; at++ ) {
 			Atlas atlas ;
 
-			try {
-				atlas = AstrolabeFactory.companionOf( getAtlas( at ) ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			atlas = AstrolabeFactory.companionOf( getAtlas( at ) ) ;
 
 			// Atlas interface
-			atlas.addAllAtlasPage() ;
-			for ( astrolabe.model.Chart atlasPage : atlas.toModel() ) {
-				addChart( atlasPage ) ;
+			try {
+				atlas.addAllAtlasPage() ;
+				for ( astrolabe.model.Chart atlasPage : atlas.toModel() ) {
+					addChart( atlasPage ) ;
+				}
+			} catch ( ValidationException e ) {
+				throw new RuntimeException( e.toString() ) ;
 			}
 
 			// AuxiliaryEmitter interface
@@ -105,11 +110,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			PostscriptEmitter chart ;
 
-			try {
-				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
 
 			ps.operator.gsave() ;
 
@@ -121,7 +122,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 		ps.emitDSCTrailer() ;
 	}
 
@@ -133,7 +134,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		String viewerDecl ;
 		Process viewerProc ;
 		TeeOutputStream out ;
-		PostscriptStream ps ;
+		AstrolabePostscriptStream ps ;
 
 		try {
 			f = new File( argv[0] ) ;
@@ -162,7 +163,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				}
 			}
 
-			ps = new PostscriptStream( out ) ;
+			ps = new AstrolabePostscriptStream( out ) ;
 
 			astrolabe.headPS( ps ) ;
 			astrolabe.emitPS( ps ) ;

@@ -59,7 +59,7 @@ public class DialDay extends DialDegree {
 			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_DECEMBER
 	} ;
 
-	public DialDay( Peer peer, Baseline baseline ) throws ParameterNotValidException {
+	public DialDay( Peer peer, Baseline baseline ) {
 		super( peer, baseline, 0 ) ;
 
 		this.baseline = baseline ;
@@ -70,11 +70,7 @@ public class DialDay extends DialDegree {
 
 		r = baseline.mapIndexToScale( index, span ) ;
 		if ( ! baseline.probe( r ) ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { index+","+span, r } ) ;
-			throw new ParameterNotValidException( msg ) ;
+			throw new ParameterNotValidException( Double.toString( r ) ) ;
 		}
 
 		return r ;
@@ -111,9 +107,9 @@ public class DialDay extends DialDegree {
 		String dn, dns, mn, mns, key ;
 		double jd, eot ;
 
-		try {
-			m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
+		try {
 			jd = mapIndexToScale( index, getGraduationSpan().getSpan() ) ;
 
 			d.Set( jd, true ) ;
@@ -147,7 +143,14 @@ public class DialDay extends DialDegree {
 
 			key = m.message( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
 			AstrolabeRegistry.registerHMS( key, eot ) ;
-		} catch ( ParameterNotValidException e ) {}
+		} catch ( ParameterNotValidException e ) { // mapIndexToScale
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { e.toString(), "" } ) ;
+
+			throw new RuntimeException( msg ) ;
+		}
 
 		d.delete() ;
 	}

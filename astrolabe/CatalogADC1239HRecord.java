@@ -96,12 +96,12 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 	public String   SpType    ; //  Spectral type
 	public String r_SpType    ; // *[1234GKSX]? Source of spectral type
 
-	public CatalogADC1239HRecord( String data ) throws ParameterNotValidException {
+	public CatalogADC1239HRecord( String data ) throws ParameterNotValidException, NumberFormatException {
 		String[] token ;
 
 		token = data.split( "\\|" ) ;
 		if ( token.length != CR_TOKEN ) {
-			throw new ParameterNotValidException( new Integer( token.length ).toString() ) ;
+			throw new ParameterNotValidException( Integer.toString( token.length ) ) ;
 		}
 
 		Catalog   = token[0].trim() ;
@@ -184,18 +184,14 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		r_SpType  = token[77].trim() ;
 
 		// validation
-		try {
-			RAhms() ;
-			DEdms() ;
-			Vmag() ; 
-			pmRA() ;
-			pmDE() ; // continue new methods
-		} catch ( NumberFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		RAhms() ;
+		DEdms() ;
+		Vmag() ; 
+		pmRA() ;
+		pmDE() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
@@ -232,11 +228,7 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		cpm.delete() ;
 		ceq.delete() ;
 
-		try {
-			model.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		model.validate() ;
 
 		return model ;
 	}

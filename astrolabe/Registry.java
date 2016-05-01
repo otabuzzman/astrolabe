@@ -2,7 +2,6 @@
 package astrolabe;
 
 import java.lang.ThreadGroup;
-import java.text.MessageFormat;
 import java.util.Hashtable;
 
 public class Registry {
@@ -10,7 +9,7 @@ public class Registry {
 	private final static Hashtable<String, Object> global = new Hashtable<String, Object>() ;
 	private final static Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
 
-	public static Object retrieve( String key ) throws ParameterNotValidException {
+	public static Object retrieve( String key ) {
 		Object r ;
 
 		if ( global.containsKey( key ) ) {
@@ -22,11 +21,11 @@ public class Registry {
 		return r ;
 	} 
 
-	public static Object retrieveGlobal( String key ) throws ParameterNotValidException {
+	public static Object retrieveGlobal( String key ) {
 		return retrieve( global, key ) ;
 	}
 
-	public static Object retrieveLocal( String key ) throws ParameterNotValidException {
+	public static Object retrieveLocal( String key ) {
 		Object r = null ;
 		ThreadGroup registry ;
 
@@ -41,17 +40,11 @@ public class Registry {
 		return r ;
 	}
 
-	private static Object retrieve( Hashtable<String, Object> registry, String key ) throws ParameterNotValidException {
+	private static Object retrieve( Hashtable<String, Object> registry, String key ) {
 		Object r = null ;
 
 		if ( registry.containsKey( key ) ) {
 			r = registry.get( key ) ;
-		} else {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "\""+key+"\"", null } ) ;
-			throw new ParameterNotValidException( msg ) ;
 		}
 
 		return r ;

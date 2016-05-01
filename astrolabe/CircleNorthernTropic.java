@@ -6,10 +6,11 @@ import caa.CAANutation;
 @SuppressWarnings("serial")
 public class CircleNorthernTropic extends CircleParallel {
 
-	public CircleNorthernTropic( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public CircleNorthernTropic( Peer peer, Projector projector ) {
 		double epoch, ra ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+
 		ra = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 		if ( ( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational() == null ) {

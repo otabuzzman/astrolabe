@@ -24,16 +24,16 @@ public class ElementPracticality implements PostscriptEmitter {
 		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		if ( colorRGB == null )
 			ps.operator.setgray( colorGray ) ;
 		else
 			ps.operator.setrgbcolor( colorRGB[0], colorRGB[0], colorRGB[0] ) ;
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 }

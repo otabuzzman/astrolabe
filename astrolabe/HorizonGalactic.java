@@ -12,7 +12,7 @@ public class HorizonGalactic extends HorizonType {
 	private double la ;
 	private double ST ;
 
-	public HorizonGalactic( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonGalactic( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		CAA2DCoordinate c ;

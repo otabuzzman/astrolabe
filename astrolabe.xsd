@@ -17,7 +17,8 @@
 		<xs:attribute name="locale" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="([a-z][a-z])|([a-z][a-z]_[A-Z][A-Z])"/>
+					<xs:pattern value="([a-z][a-z])"/>
+					<xs:pattern value="([a-z][a-z]_[A-Z][A-Z])"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -62,14 +63,21 @@
 		<xs:attribute name="practicality" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="none|seldom|sometimes|frequent|always"/>
+					<xs:pattern value="none"/>
+					<xs:pattern value="seldom"/>
+					<xs:pattern value="sometimes"/>
+					<xs:pattern value="frequent"/>
+					<xs:pattern value="always"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+					<xs:pattern value="canonical"/>
+					<xs:pattern value="cardinal"/>
+					<xs:pattern value="dividing"/>
+					<xs:pattern value="graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -89,7 +97,8 @@
 		<xs:attribute name="size" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="a[0-5]|[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
+					<xs:pattern value="a[0-5]"/>
+					<xs:pattern value="[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -104,7 +113,8 @@
 		<xs:attribute name="layout" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="[a-zA-Z]+|(((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*)x((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*))"/>
+					<xs:pattern value="[a-zA-Z]+"/>
+					<xs:pattern value="(((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*)x((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*))"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -154,7 +164,8 @@
 		<xs:attribute name="checker" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="(([1-9]|([1-9][0-9]+))x([2-9]|([1-9][0-9]+)))|(([2-9]|([1-9][0-9]+))x([1-9]|([1-9][0-9]+)))"/>
+					<xs:pattern value="(([1-9]|([1-9][0-9]+))x([2-9]|([1-9][0-9]+)))"/>
+					<xs:pattern value="(([2-9]|([1-9][0-9]+))x([1-9]|([1-9][0-9]+)))"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -266,7 +277,11 @@
 		<xs:attribute name="practicality" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="none|seldom|sometimes|frequent|always"/>
+					<xs:pattern value="none"/>
+					<xs:pattern value="seldom"/>
+					<xs:pattern value="sometimes"/>
+					<xs:pattern value="frequent"/>
+					<xs:pattern value="always"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -320,7 +335,10 @@
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+					<xs:pattern value="canonical"/>
+					<xs:pattern value="cardinal"/>
+					<xs:pattern value="dividing"/>
+					<xs:pattern value="graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -356,7 +374,8 @@
 		<xs:attribute name="node" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="chasing|leading"/>
+					<xs:pattern value="chasing"/>
+					<xs:pattern value="leading"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -410,7 +429,9 @@
 		<xs:attribute name="baseline" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="none|line|rail"/>
+					<xs:pattern value="none"/>
+					<xs:pattern value="line"/>
+					<xs:pattern value="rail"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -488,14 +509,25 @@
 		<xs:attribute name="anchor" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(\{.+\})"/>
+					<xs:pattern value="topleft"/>
+					<xs:pattern value="topmiddle"/>
+					<xs:pattern value="topright"/>
+					<xs:pattern value="middleleft"/>
+					<xs:pattern value="middle"/>
+					<xs:pattern value="middleright"/>
+					<xs:pattern value="bottomleft"/>
+					<xs:pattern value="bottommiddle"/>
+					<xs:pattern value="bottomright"/>
+					<xs:pattern value="(\{.+\})"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="reverse" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="true|false|(\{.+\})"/>
+					<xs:pattern value="true"/>
+					<xs:pattern value="false"/>
+					<xs:pattern value="(\{.+\})"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -518,14 +550,24 @@
 								<xs:attribute name="anchor" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(\{.+\})"/>
+											<xs:pattern value="topleft"/>
+											<xs:pattern value="topmiddle"/>
+											<xs:pattern value="topright"/>
+											<xs:pattern value="middleleft"/>
+											<xs:pattern value="middle"/>
+											<xs:pattern value="middleright"/>
+											<xs:pattern value="bottomleft"/>
+											<xs:pattern value="bottommiddle"/>
+											<xs:pattern value="bottomright"/>
+											<xs:pattern value="(\{.+\})"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
 								<xs:attribute name="number" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:pattern value="([1-9][0-9]*)|(\{.+\})"/>
+											<xs:pattern value="([1-9][0-9]*)"/>
+											<xs:pattern value="(\{.+\})"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
@@ -559,7 +601,11 @@
 			<xs:element ref="Superscript" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="value" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string"/>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Text">
 		<xs:complexType>
@@ -568,7 +614,19 @@
 					<xs:attribute name="purpose" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="none|bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|zenit|(mag([x]|(-?[0-9]+)))|(\{.+\})"/>
+								<xs:pattern value="none"/>
+								<xs:pattern value="bodylettering[07]"/>
+								<xs:pattern value="titlelettering"/>
+								<xs:pattern value="textlettering"/>
+								<xs:pattern value="circlelettering"/>
+								<xs:pattern value="diallettering"/>
+								<xs:pattern value="dialcardinal"/>
+								<xs:pattern value="dialfraction"/>
+								<xs:pattern value="guidance"/>
+								<xs:pattern value="obscure"/>
+								<xs:pattern value="zenit"/>
+								<xs:pattern value="(mag([x]|(-?[0-9]+)))"/>
+								<xs:pattern value="(\{.+\})"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -629,17 +687,13 @@
 			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="area|sign"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+					<xs:pattern value="canonical"/>
+					<xs:pattern value="cardinal"/>
+					<xs:pattern value="dividing"/>
+					<xs:pattern value="graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -662,7 +716,10 @@
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+					<xs:pattern value="canonical"/>
+					<xs:pattern value="cardinal"/>
+					<xs:pattern value="dividing"/>
+					<xs:pattern value="graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -674,7 +731,13 @@
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mercury|venus|mars|jupiter|saturn|uranus|neptune"/>
+								<xs:pattern value="mercury"/>
+								<xs:pattern value="venus"/>
+								<xs:pattern value="mars"/>
+								<xs:pattern value="jupiter"/>
+								<xs:pattern value="saturn"/>
+								<xs:pattern value="uranus"/>
+								<xs:pattern value="neptune"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -690,7 +753,8 @@
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mean|true"/>
+								<xs:pattern value="mean"/>
+								<xs:pattern value="true"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -781,7 +845,8 @@
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|[1-9][0-9]{0,6}(,[1-9][0-9]{0,6})*"/>
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="[1-9][0-9]{0,6}(,[1-9][0-9]{0,6})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -799,7 +864,8 @@
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -817,7 +883,8 @@
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*"/>
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -850,7 +917,8 @@
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*|I?[1-9][0-9]{0,3}(,I?[1-9][0-9]{0,3})*"/>
+								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="I?[1-9][0-9]{0,3}(,I?[1-9][0-9]{0,3})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>

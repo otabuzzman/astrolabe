@@ -1,21 +1,14 @@
 
 package astrolabe;
 
-import org.exolab.castor.xml.ValidationException;
-
 @SuppressWarnings("serial")
 abstract class HorizonType extends astrolabe.model.HorizonType implements PostscriptEmitter, Projector {
 
-	public HorizonType( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonType( Peer peer, Projector projector ) {
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementPracticality practicality ;
 
 		practicality = new ElementPracticality( getPracticality() ) ;
@@ -24,15 +17,11 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 		practicality.tailPS( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			PostscriptEmitter annotation ;
 
-			try {
-				annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
 
 			ps.operator.gsave() ;
 
@@ -46,11 +35,7 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
 			PostscriptEmitter circle ;
 
-			try {
-				circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -64,11 +49,7 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
 			PostscriptEmitter body ;
 
-			try {
-				body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -82,11 +63,7 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
 			PostscriptEmitter catalog ;
 
-			try {
-				catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -99,7 +76,7 @@ abstract class HorizonType extends astrolabe.model.HorizonType implements Postsc
 	}
 
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public double[] project( double[] ho ) {

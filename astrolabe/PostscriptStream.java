@@ -10,26 +10,31 @@ import java.util.prefs.BackingStoreException;
 
 public class PostscriptStream extends FilterOutputStream {
 
+	private final static String PK_POSTSCRIPT_PRECISION	= "precision" ;
+	private final static String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
+	private final static String PN_POSTSCRIPT_TYPE3		= "type3" ;
+	private final static String PN_POSTSCRIPT_CUSTOM	= "custom" ;
+	private final static String PN_POSTSCRIPT_UNICODE	= "unicode" ;
+	private final static String PK_POSTSCRIPT_DEFAULT	= "default" ;
+
 	private final static int DEFAULT_PRECISION = 6 ;
 	private final static int DEFAULT_SCANLINE = 254 ;
 
 	private final static String DEFAULT_FONTNAME = "/Times-Roman" ;
 	private final static String DEFAULT_CHARPROC = "/question" ;
 
-	public final PostscriptStream.Operator operator = new Operator();
-	public final PostscriptStream.DSC dsc = new DSC();
+	public final Operator operator = new Operator();
+	public final DSC dsc = new DSC();
 
-	private PostscriptStream.UcBlock ucBlock[] = null ;
+	private UcBlock ucBlock[] = null ;
 	private Hashtable<String, String> ucEncodingVectors = null ;
-
-	private Hashtable<String, String> prolog = new Hashtable<String, String>() ;
 
 	private final int precision = Configuration.getValue(
 			Configuration.getClassNode( this, null, null ),
-			ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
+			PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
 	private final int scanline = Configuration.getValue(
 			Configuration.getClassNode( this, null, null ),
-			ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
+			PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
 	public PostscriptStream( OutputStream out ) {
 		super( out ) ;
@@ -184,8 +189,8 @@ public class PostscriptStream extends FilterOutputStream {
 
 		ucEncodingVectors = new Hashtable<String, String>() ;
 		String vector = Configuration.getValue(
-				Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ),
-				ApplicationConstant.PK_POSTSCRIPT_DEFAULT, null ) ;
+				Configuration.getClassNode( this, null, PN_POSTSCRIPT_UNICODE ),
+				PK_POSTSCRIPT_DEFAULT, null ) ;
 		if ( vector == null ) {
 			vector = DEFAULT_FONTNAME ;
 			for ( int cs=0 ; cs<256 ; cs++ ) {
@@ -193,11 +198,11 @@ public class PostscriptStream extends FilterOutputStream {
 			}
 		}
 		try {
-			ucEncodingVectors.put( ApplicationConstant.PK_POSTSCRIPT_DEFAULT, vector ) ;
-			String[] encoding = Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).keys() ;
+			ucEncodingVectors.put( PK_POSTSCRIPT_DEFAULT, vector ) ;
+			String[] encoding = Configuration.getClassNode( this, null, PN_POSTSCRIPT_UNICODE ).keys() ;
 			for ( int e=0 ; e<encoding.length ; e++ ) {
 				if ( encoding[e].matches( "[0-9a-fA-F]{4}\\.\\.[0-9a-fA-F]{4}-[0-9]+" ) ) {
-					ucEncodingVectors.put( encoding[e], Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
+					ucEncodingVectors.put( encoding[e], Configuration.getClassNode( this, null, PN_POSTSCRIPT_UNICODE ).get( encoding[e], null ) ) ;
 				}
 			}
 		} catch ( BackingStoreException e ) {
@@ -231,7 +236,7 @@ public class PostscriptStream extends FilterOutputStream {
 					try {
 						fe = ( (String) ucEncodingVectors.get( ucBlock[pblock].block+"-"+new Integer( pchart ).toString() ) ).split( ":" ) ;
 					} catch ( NullPointerException e ) {
-						fe = ( (String) ucEncodingVectors.get( ApplicationConstant.PK_POSTSCRIPT_DEFAULT ) ).split( ":" ) ;
+						fe = ( (String) ucEncodingVectors.get( PK_POSTSCRIPT_DEFAULT ) ).split( ":" ) ;
 					}
 					tcc = 0 ;
 					rti = new java.text.StringCharacterIterator( rt ) ;
@@ -297,7 +302,7 @@ public class PostscriptStream extends FilterOutputStream {
 		return FET ;
 	} 
 
-	private static int ucSearch( PostscriptStream.UcBlock block[], int start, int end, int code ) {        
+	private static int ucSearch( UcBlock block[], int start, int end, int code ) {        
 		int m = ( start+end )/2 ;
 
 		if ( block[m].start < code ) {
@@ -333,13 +338,17 @@ public class PostscriptStream extends FilterOutputStream {
 		print( num+"\n" ) ;
 	} 
 
+	public void push( long num ) {        
+		print( num+"\n" ) ;
+	} 
+
 	public void push( double num ) {        
 		print( truncate( num )+"\n" ) ;
 	} 
 
 	public void push( String string ) throws ParameterNotValidException {        
 		if ( ! ( string.matches( "^/" ) || string.matches( "^(.*)$" ) ) ) {
-			throw new ParameterNotValidException( string ) ;
+			throw new ParameterNotValidException( "\""+string+"\"" ) ;
 		}
 		print( string+"\n" ) ;
 	} 
@@ -367,8 +376,12 @@ public class PostscriptStream extends FilterOutputStream {
 	}
 
 	public void custom( String def ) throws ParameterNotValidException {
-		if ( ! this.prolog.containsKey( "/"+def ) ) {
-			throw new ParameterNotValidException( "/"+def ) ;
+		String value ;
+
+		value = Configuration.getClassNode( this, null, PN_POSTSCRIPT_CUSTOM ).get( "/"+def, null ) ;
+
+		if ( value == null ) {
+			throw new ParameterNotValidException( "\""+def+"\"" ) ;
 		}
 
 		print( def+"\n" ) ;
@@ -567,6 +580,10 @@ public class PostscriptStream extends FilterOutputStream {
 			print( "put\n" ) ;
 		}
 
+		public void rand() {        
+			print( "rand\n" ) ;
+		}
+
 		public void restore( String save ) throws ParameterNotValidException {        
 			push( save ) ;
 			print( "restore\n" ) ;
@@ -671,6 +688,15 @@ public class PostscriptStream extends FilterOutputStream {
 
 		public void showpage() {        
 			print( "showpage\n" ) ;
+		}
+
+		public void srand() {        
+			print( "srand\n" ) ;
+		}
+
+		public void srand( long num ) {        
+			push( num ) ;
+			srand() ;
 		}
 
 		public void stringwidth() {        
@@ -788,26 +814,24 @@ public class PostscriptStream extends FilterOutputStream {
 		dsc.endComments() ;
 	}
 
-	public void emitDSCProlog() {
+	public void emitDSCProlog() throws ParameterNotValidException {
 		String node, fontname[], procedure[] ;
 
 		dsc.beginProlog() ;
 
 		try {
-			fontname = Configuration.getClassNode( this, null, ApplicationConstant.PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
-			if ( fontname == null ) {
-				fontname = new String[0] ;
-			}
+			fontname = Configuration.getClassNode( this, null, PN_POSTSCRIPT_TYPE3 ).childrenNames() ;
+
 			for ( int f=0 ; f<fontname.length ; f++ ) {
 				push( "/"+fontname[f] ) ;
 
-				node = ApplicationConstant.PN_POSTSCRIPT_TYPE3+"/"+fontname[f] ;
+				node = PN_POSTSCRIPT_TYPE3+"/"+fontname[f] ;
 				procedure = Configuration.getClassNode( this, null, node ).keys() ;
 
 				operator.dict( procedure.length ) ;
 				operator.begin() ;
 				for ( int p=0 ; p<procedure.length ; p++ ) {
-					emitProcedureDefintion( procedure[p],
+					emitCustomDefintion( procedure[p],
 							Configuration.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
 				}
 				operator.currentdict() ;
@@ -818,32 +842,24 @@ public class PostscriptStream extends FilterOutputStream {
 			}
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
-		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion or getClassNode failed
-			throw new RuntimeException( e.toString() ) ;
 		}
 
-		prolog.clear() ;
 		try {
-			node = ApplicationConstant.PN_POSTSCRIPT_PROLOG ;
+			node = PN_POSTSCRIPT_CUSTOM ;
 			procedure = Configuration.getClassNode( this, null, node ).keys() ;
-			if ( procedure == null ) {
-				procedure = new String[0] ;
-			}
+
 			for ( int p=0 ; p<procedure.length ; p++ ) {
-				emitProcedureDefintion( procedure[p],
+				emitCustomDefintion( procedure[p],
 						Configuration.getClassNode( this, null, node ).get( procedure[p], null ) ) ;
-				prolog.put( procedure[p], procedure[p] ) ;
 			}
 		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( ParameterNotValidException e ) { // emitProcedureDefintion or getClassNode failed
 			throw new RuntimeException( e.toString() ) ;
 		}
 
 		dsc.endProlog() ;
 	}
 
-	private void emitProcedureDefintion( String procedure, String definition ) throws ParameterNotValidException {
+	private void emitCustomDefintion( String procedure, String definition ) throws ParameterNotValidException {
 		String[] token ;
 
 		push( procedure ) ;

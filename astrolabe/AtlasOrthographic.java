@@ -10,18 +10,14 @@ public class AtlasOrthographic extends AtlasAzimuthalType {
 	public AtlasOrthographic() {
 	}
 
-	public AtlasOrthographic( Peer peer ) throws ParameterNotValidException {
+	public AtlasOrthographic( Peer peer ) {
 		super( peer ) ;
 
 		peerCO = ( (astrolabe.model.AtlasOrthographic) peer ).getChartOrthographic() ; 
 	}
 
 	public ChartAzimuthalType getChartAzimuthalType() {
-		try {
-			return ( new ChartOrthographic( peerCO ) ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		return ( new ChartOrthographic( peerCO ) ) ;
 	}
 
 	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {

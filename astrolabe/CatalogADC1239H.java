@@ -2,6 +2,8 @@
 package astrolabe;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
@@ -34,17 +37,15 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 		}
 	} ;
 
-	public CatalogADC1239H( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogADC1239H( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		String[] rv ;
-		double epoch ;
 
 		this.peer = (astrolabe.model.CatalogADC1239H) peer ;
 		this.projector = projector ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
-		this.epoch = epoch ;
+		this.epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC1239H) peer ).getRestrict() != null ) {
@@ -55,10 +56,10 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		List<BodyAreal> sign ;
 		astrolabe.model.BodyAreal bodySign ;
 		HashSet<String> headline ;
@@ -72,7 +73,9 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 
 		try {
 			catalog = read() ;
-		} catch ( ParameterNotValidException e ) {
+		} catch ( URISyntaxException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( MalformedURLException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
@@ -90,7 +93,6 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 			sv = peer.getSign( s ).getValue().split( "," ) ;
 			for ( int b=0 ; b<sv.length ; b++ ) {
 				bodySign = new astrolabe.model.BodyAreal() ;
-				bodySign.setType( ApplicationConstant.AV_BODY_SIGN ) ;
 				bodySign.setImportance( ApplicationConstant.AV_BODY_GRAPHICAL ) ;
 
 				bv = sv[b].split( ":" ) ;
@@ -100,7 +102,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 					}
 					try {
 						bodySign.addPosition( cr.toModel( epoch ).getBodyStellar().getPosition() ) ;
-					} catch ( ParameterNotValidException e ) {
+					} catch ( ValidationException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
 				}
@@ -110,10 +112,12 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 				}
 
 				try {
-					bodyAreal = new BodyAreal( bodySign, projector ) ;
-				} catch ( ParameterNotValidException e ) {
+					bodySign.validate() ;
+				} catch ( ValidationException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
+
+				bodyAreal = new BodyAreal( bodySign, projector ) ;
 
 				if ( peer.getSign( s ).getAnnotationCount()>0 ) {
 					if ( headline.size()==0 ) {
@@ -154,7 +158,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 				}
 
 				bodyStellar = new BodyStellar( bodyModel, projector ) ;
-			} catch ( ParameterNotValidException e ) {
+			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
@@ -168,7 +172,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {
@@ -195,7 +199,15 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 					String msg ;
 
 					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-					msg = MessageFormat.format( msg, new Object[] { "\""+l+"\"", "" } ) ;
+					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+l+"\"" } ) ;
+					log.warn( msg ) ;
+
+					continue ;
+				} catch ( NumberFormatException e ) {
+					String msg ;
+
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+l+"\"" } ) ;
 					log.warn( msg ) ;
 
 					continue ;

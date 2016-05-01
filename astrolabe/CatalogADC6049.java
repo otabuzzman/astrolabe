@@ -2,12 +2,15 @@
 package astrolabe;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
@@ -23,16 +26,14 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 
 	private String memory ;
 
-	public CatalogADC6049( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogADC6049( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		String[] rv ;
-		double epoch ;
 
 		this.projector = projector ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
-		this.epoch = epoch ;
+		this.epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC6049) peer ).getRestrict() != null ) {
@@ -45,10 +46,10 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 		memory = new String() ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		Hashtable<String, CatalogRecord> catalog ;
 		astrolabe.model.Annotation[] annotation ;
 		astrolabe.model.BodyAreal bodyModel ;
@@ -56,7 +57,9 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 
 		try {
 			catalog = read() ;
-		} catch ( ParameterNotValidException e ) {
+		} catch ( URISyntaxException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( MalformedURLException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
@@ -72,7 +75,7 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 				}
 
 				bodyAreal = new BodyAreal( bodyModel, projector ) ;
-			} catch ( ParameterNotValidException e ) {
+			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
@@ -86,7 +89,7 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {
@@ -130,7 +133,17 @@ public class CatalogADC6049 extends CatalogType implements PostscriptEmitter {
 						String msg ;
 
 						msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-						msg = MessageFormat.format( msg, new Object[] { "\""+rb+"\"", "" } ) ;
+						msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+rb+"\"" } ) ;
+						log.warn( msg ) ;
+
+						rb = rl ;
+
+						continue ;
+					} catch ( NumberFormatException e ) {
+						String msg ;
+
+						msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+						msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+rb+"\"" } ) ;
 						log.warn( msg ) ;
 
 						rb = rl ;

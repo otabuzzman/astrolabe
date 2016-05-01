@@ -15,6 +15,8 @@ public class CatalogADC5050Record implements CatalogRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
+	public final static int CR_LENGTH = 198 ;
+
 	public String HR         ; //  [1/9110]+ Harvard Revised Number = Bright Star Number
 	public String Name       ; //  Name, generally Bayer and/or Flamsteed name
 	public String DM         ; //  Durchmusterung Identification (zone in bytes 17-19)
@@ -69,7 +71,12 @@ public class CatalogADC5050Record implements CatalogRecord {
 	public String MultCnt    ; //  ? Number of components assigned to a multiple
 	public String NoteFlag   ; //  [*] a star indicates that there is a note (file notes.dat)
 
-	public CatalogADC5050Record( String data ) throws ParameterNotValidException {
+	public CatalogADC5050Record( String data ) throws ParameterNotValidException, NumberFormatException {
+
+		if ( data.length() != CR_LENGTH ) {
+			throw new ParameterNotValidException(  Integer.toString( data.length() ) ) ;
+		}
+
 		HR         = data.substring( 0, 4 ).trim() ;
 		Name       = data.substring( 4, 14 ).trim() ;
 		DM         = data.substring( 14, 25 ).trim() ;
@@ -125,22 +132,18 @@ public class CatalogADC5050Record implements CatalogRecord {
 		NoteFlag   = data.substring( 196, 197 ).trim() ;
 
 		// validation
-		try {
-			RAh() ;
-			RAm() ;
-			RAs() ;
-			DEd() ;
-			DEm() ;
-			DEs() ;
-			Vmag() ;
-			pmRA() ;
-			pmDE() ; // continue new methods
-		} catch ( NumberFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		RAh() ;
+		RAm() ;
+		RAs() ;
+		DEd() ;
+		DEm() ;
+		DEs() ;
+		Vmag() ;
+		pmRA() ;
+		pmDE() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
@@ -177,11 +180,7 @@ public class CatalogADC5050Record implements CatalogRecord {
 		cpm.delete() ;
 		ceq.delete() ;
 
-		try {
-			model.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		model.validate() ;
 
 		return model ;
 	}

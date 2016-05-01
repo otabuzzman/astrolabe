@@ -3,8 +3,6 @@ package astrolabe;
 
 import java.util.List;
 
-import org.exolab.castor.xml.ValidationException;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -14,17 +12,12 @@ public class ChartPage extends astrolabe.model.ChartPage {
 	private double[] size = new double[2] ;
 	private double[] real = new double[2] ;
 
-	public ChartPage( Peer peer ) throws ParameterNotValidException {
+	public ChartPage( Peer peer ) {
 		String sv, sd[], lv ;
 		List<double[]> cl ;
 		Geometry fov ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		sv = Configuration.getValue(
 				Configuration.getClassNode( this, getName(), null ),

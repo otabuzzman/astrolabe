@@ -8,6 +8,15 @@ import java.util.HashMap;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.castor.xml.BackwardCompatibilityContext;
+import org.castor.xml.InternalContext;
+import org.exolab.castor.xml.FieldValidator;
+import org.exolab.castor.xml.NodeType;
+import org.exolab.castor.xml.TypeValidator;
+import org.exolab.castor.xml.ValidationContext;
+import org.exolab.castor.xml.XMLClassDescriptor;
+import org.exolab.castor.xml.XMLFieldDescriptor;
+
 public class Peer {
 
 	public void setupPeer( Preferences node ) {
@@ -66,9 +75,9 @@ public class Peer {
 	public void setupCompanion( Object companion ) {
 		ParserAttribute parser ;
 		Method method[] , gm, sm ;
-		String gn, sn ;
+		String gn, sn, vs ;
 		Class<?>[] pt ;
-		Object v ;
+		Object vp ;
 
 		parser = new ParserAttribute() ;
 
@@ -82,11 +91,18 @@ public class Peer {
 					pt = new Class[] { gm.getReturnType() } ;
 					sn = gn.replaceFirst( "g", "s" ) ;
 					sm = companion.getClass().getMethod( sn, pt ) ;
-					v = gm.invoke( this, (Object[]) null ) ;
-					if ( v instanceof String )
-						sm.invoke( companion, parser.stringValue( (String) v ) ) ;
-					else
-						sm.invoke( companion, v ) ;
+					vp = gm.invoke( this, (Object[]) null ) ;
+					if ( vp instanceof String ) {
+						vs = parser.parse( (String) vp ) ;
+						if ( vs == null )
+							sm.invoke( companion, vp ) ;
+						else {
+							validate( sm.getName().substring( 3 ).toLowerCase(), vs ) ;
+
+							sm.invoke( companion, vs ) ;
+						}
+					} else
+						sm.invoke( companion, vp ) ;
 				} catch ( NoSuchMethodException e ) {
 					continue ;
 				} catch ( InvocationTargetException e ) {
@@ -95,6 +111,40 @@ public class Peer {
 					throw new RuntimeException( e.toString() ) ;
 				}
 			}
+		}
+	}
+
+	private void validate( String field, String value ) {
+		String cn, pn, sn, dn ;
+		Class<?> pCls ;
+		Constructor<?> pCon ;
+		XMLClassDescriptor dCls ;
+		XMLFieldDescriptor dFld ;
+		FieldValidator vFld ;
+		TypeValidator vTyp ;
+		ValidationContext vCnt ;
+		InternalContext iCnt ;
+
+		try {
+			cn = getClass().getName() ;
+			pn = cn.substring( 0, cn.lastIndexOf( ".") ) ;
+			sn = cn.substring( cn.lastIndexOf( ".")+1 ) ;
+			dn = pn+".descriptors."+sn+"Descriptor" ;
+
+			pCls = Class.forName( dn ) ;
+			pCon = pCls.getConstructor( (Class[]) null ) ;
+			dCls = (XMLClassDescriptor) pCon.newInstance( (Object[]) null ) ;
+			dFld = dCls.getFieldDescriptor( field, null, NodeType.Attribute ) ;
+			vFld = dFld.getValidator() ;
+			vTyp = vFld.getTypeValidator() ;
+			vCnt = new ValidationContext() ;
+			iCnt = new BackwardCompatibilityContext() ;
+			iCnt.setClassLoader( value.getClass().getClassLoader() ) ;
+			vCnt.setInternalContext( iCnt ) ;
+
+			vTyp.validate( value, vCnt ) ;
+		} catch ( Exception e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 }

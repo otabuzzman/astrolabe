@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import org.exolab.castor.xml.ValidationException;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -29,18 +27,13 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 
 	private Geometry fov ; // effective field-of-view
 
-	public CatalogType( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogType( Peer peer, Projector projector ) {
 		String[] sv ;
 		Geometry fovu, fove ;
 
 		this.projector = projector ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		select = new Hashtable<String, astrolabe.model.Annotation[]>() ;
 		if ( getSelect() != null ) {
@@ -53,33 +46,27 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		}
 
 		if ( getFov() == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		} else {
-			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) Registry.retrieve( getFov() ) ;
+			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
 			fov = fovu.intersection( fove ) ;
 		}
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
-	public Hashtable<String, CatalogRecord> read() throws ParameterNotValidException {
+	public Hashtable<String, CatalogRecord> read() throws URISyntaxException, MalformedURLException {
 		URI cati ;
 		URL catl ;
 		File catf ;
 
-		try {
-			cati = new URI( getUrl() ) ;
-			if ( cati.isAbsolute() ) {
-				catf = new File( cati ) ;	
-			} else {
-				catf = new File( cati.getPath() ) ;
-			}
-			catl = catf.toURL() ;
-		} catch ( URISyntaxException e ) { // URI constructor
-			throw new ParameterNotValidException( e.toString() ) ;
-		} catch ( MalformedURLException e ) { // URL constructor
-			throw new ParameterNotValidException( e.toString() ) ;
+		cati = new URI( getUrl() ) ;
+		if ( cati.isAbsolute() ) {
+			catf = new File( cati ) ;	
+		} else {
+			catf = new File( cati.getPath() ) ;
 		}
+		catl = catf.toURL() ;
 
 		return read( catl ) ;
 	}

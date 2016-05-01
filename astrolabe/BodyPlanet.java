@@ -3,7 +3,6 @@ package astrolabe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -30,22 +29,18 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 	private Method eclipticLongitude ;
 	private Method eclipticLatitude ;
 
-	public BodyPlanet( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public BodyPlanet( Peer peer, Projector projector ) {
 		Preferences node ; 
 		CAADate date ;
 		double epochG, epochL, epochA, epochO ;
 		long y ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		date = new CAADate() ;
 
-		epochG = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+
 		date.Set( epochG, true ) ;
 		y = date.Year() ;
 		date.Set( y, 1, 1, 0, 0, 0, true ) ;
@@ -80,15 +75,6 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 		date.delete() ;
 
-		if ( ! ( jdAy<jdOy ) ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
-
-			throw new ParameterNotValidException( msg ) ;
-		}
-
 		this.projector = projector ;
 
 		node = Configuration.getClassNode( this, getName(), getType() ) ;
@@ -114,7 +100,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		}
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementImportance importance ;
 
 		importance = new ElementImportance( getImportance() ) ;
@@ -123,11 +109,11 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		importance.tailPS( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		emitPS( ps, true ) ;
 	}
 
-	public void emitPS( PostscriptStream ps, boolean cut ) {
+	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
 		Geometry fov ;
 		astrolabe.model.BodyPlanet peer ;
@@ -139,14 +125,9 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		double[] xy ;
 
 		if ( cut ) {
-			try {
-				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-			} catch ( ParameterNotValidException ee ) {
-				try {
-					fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-				} catch ( ParameterNotValidException eu ) {
-					throw new RuntimeException( eu.toString() ) ;
-				}
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			if ( fov == null ) {
+				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			}
 
 			jdlist = new java.util.Vector<Double>() ;
@@ -172,22 +153,27 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				}
 
 				peer.setStretch( getStretch() ) ;
+				peer.setImportance( getImportance() ) ;
 				peer.setType( getType() ) ;
 
 				peer.setDialDay( getDialDay() ) ;
 				peer.setAnnotation( getAnnotation() ) ;
 
 				try {
-					body = new BodyPlanet( peer, projector ) ;
+					peer.validate() ;
+				} catch ( ValidationException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 
-					ps.operator.gsave();
+				body = new BodyPlanet( peer, projector ) ;
 
-					body.headPS( ps ) ;
-					body.emitPS( ps, false ) ;
-					body.tailPS( ps ) ;
+				ps.operator.gsave();
 
-					ps.operator.grestore() ;
-				} catch ( ParameterNotValidException e ) {}
+				body.headPS( ps ) ;
+				body.emitPS( ps, false ) ;
+				body.tailPS( ps ) ;
+
+				ps.operator.grestore() ;
 			}
 		} else {
 			l = list( jdAy, jdOy, 0 ) ;
@@ -197,28 +183,25 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			try {
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-				// halo stroke
-				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
+			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
+			ps.operator.grestore() ;
+
 			ps.operator.gsave() ;
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
@@ -228,38 +211,32 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 				ps.operator.gsave() ;
 
-				try {
-					dial = new DialDay( getDialDay(), this ) ;
-					dial.headPS( ps ) ;
-					dial.emitPS( ps ) ;
-					dial.tailPS( ps ) ;
-				} catch ( ParameterNotValidException e ) {} // DialDay validated in constructor
+				dial = new DialDay( getDialDay(), this ) ;
+				dial.headPS( ps ) ;
+				dial.emitPS( ps ) ;
+				dial.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
 
 			if ( getAnnotation() != null ) {
-				try {
-					PostscriptEmitter annotation ;
+				PostscriptEmitter annotation ;
 
-					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-						ps.operator.gsave() ;
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
 
-						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
-						annotation.headPS( ps ) ;
-						annotation.emitPS( ps ) ;
-						annotation.tailPS( ps ) ;
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
 
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
+					ps.operator.grestore() ;
 				}
 			}
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public double[] project( double jd ) {

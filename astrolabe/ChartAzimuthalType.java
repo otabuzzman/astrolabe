@@ -1,9 +1,8 @@
 
 package astrolabe;
 
+import java.util.Date;
 import java.util.prefs.Preferences;
-
-import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
@@ -26,26 +25,17 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	private ChartPage page ;
 
-	public ChartAzimuthalType( Peer peer ) throws ParameterNotValidException {
+	public ChartAzimuthalType( Peer peer ) {
 		double[] origin ;
 		Preferences node ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		page = new ChartPage( getChartPage() ) ;
 
-		try {
-			origin = AstrolabeFactory.valueOf( getOrigin() ) ;
-			this.origin[0] = origin[1] ;
-			this.origin[1] = origin[2] ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		origin = AstrolabeFactory.valueOf( getOrigin() ) ;
+		this.origin[0] = origin[1] ;
+		this.origin[1] = origin[2] ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
@@ -131,36 +121,36 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		return new double[] { RA, d } ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementPracticality practicality ;
 		ElementImportance importance ;
+		long seed ;
 
 		ps.dsc.beginSetup() ;
 
 		// Set pagesize
-		try {
-			ps.dict( true ) ;
-			ps.push( "/PageSize" ) ;
-			ps.array( true ) ;
-			ps.push( page.sizex()*unit ) ;
-			ps.push( page.sizey()*unit ) ;
-			ps.array( false ) ;
-			ps.dict( false ) ;
+		ps.dict( true ) ;
+		ps.push( "/PageSize" ) ;
+		ps.array( true ) ;
+		ps.push( page.sizex()*unit ) ;
+		ps.push( page.sizey()*unit ) ;
+		ps.array( false ) ;
+		ps.dict( false ) ;
 
-			ps.operator.setpagedevice() ;
-		} catch ( ParameterNotValidException e ) {}
+		ps.operator.setpagedevice() ;
 
 		// Set origin at center of page.
-		try {
-			ps.custom( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		ps.custom( ApplicationConstant.PS_CUSTOM_PAGESIZE ) ;
+
 		ps.operator.mul( .5 ) ;
 		ps.operator.exch() ;
 		ps.operator.mul( .5 ) ;
 		ps.operator.exch() ;
 		ps.operator.translate() ;
+
+		seed = new Date().getTime()/1000 ;
+		ps.operator.srand( seed ) ;
+
 		ps.dsc.endSetup() ;
 
 		ps.dsc.beginPageSetup() ;
@@ -182,7 +172,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dsc.page( getName(), 1 ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		if ( page.sizex()>page.realx() ) {
 			ps.operator.mark() ;
 
@@ -194,24 +184,17 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			ps.push( page.realy()/2 ) ;
 			ps.push( page.realx()/2 ) ;
 			ps.push( -page.realy()/2 ) ;
-			try {
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-				ps.operator.closepath() ;
-				ps.operator.stroke() ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+
+			ps.operator.closepath() ;
+			ps.operator.stroke() ;
 		}
 
 		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
 			PostscriptEmitter horizon ;
 
-			try {
-				horizon = AstrolabeFactory.companionOf( getHorizon( ho ), this ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
+			horizon = AstrolabeFactory.companionOf( getHorizon( ho ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -223,7 +206,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 		ps.operator.showpage() ;
 		ps.dsc.pageTrailer() ;
 	}

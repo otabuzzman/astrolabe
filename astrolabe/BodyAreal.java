@@ -14,17 +14,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	private List<double[]> outline ;
 
-	public BodyAreal( Peer peer, Projector projector ) throws ParameterNotValidException {
+	public BodyAreal( Peer peer, Projector projector ) {
 		PolygonSpherical polygon ;
 		MessageCatalog m ;
 		String key ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		this.projector = projector ;
 
@@ -43,7 +38,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		AstrolabeRegistry.registerDMS( key, polygon==null?0:polygon.area() ) ;		
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 		ElementImportance importance ;
 
 		importance = new ElementImportance( getImportance() ) ;
@@ -52,11 +47,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		importance.tailPS( ps ) ;
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		emitPS( ps, true ) ;
 	}
 
-	public void emitPS( PostscriptStream ps, boolean cut ) {
+	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
 		List<List<double[]>> segmentList ;
 		List<double[]> segment ;
@@ -71,14 +66,9 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		double a ;
 
 		if ( cut ) {
-			try {
-				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-			} catch ( ParameterNotValidException ee ) {
-				try {
-					fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-				} catch ( ParameterNotValidException eu ) {
-					throw new RuntimeException( eu.toString() ) ;
-				}
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			if ( fov == null ) {
+				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			}
 
 			cutter = new ListCutter( list(), fov ) ;
@@ -121,7 +111,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 				}
 
-				peer.setType( getType() ) ;
 				peer.setImportance( getImportance() ) ;
 
 				if ( is == ia ) {
@@ -129,16 +118,20 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				}
 
 				try {
-					body = new BodyAreal( peer, projector ) ;
+					peer.validate() ;
+				} catch ( ValidationException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
 
-					ps.operator.gsave();
+				body = new BodyAreal( peer, projector ) ;
 
-					body.headPS( ps ) ;
-					body.emitPS( ps, false ) ;
-					body.tailPS( ps ) ;
+				ps.operator.gsave();
 
-					ps.operator.grestore();
-				} catch ( ParameterNotValidException e ) {}
+				body.headPS( ps ) ;
+				body.emitPS( ps, false ) ;
+				body.tailPS( ps ) ;
+
+				ps.operator.grestore();
 			}
 		} else {
 			ps.operator.mark() ;
@@ -150,33 +143,30 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			try {
-				ps.custom( ApplicationConstant.PS_PROLOG_LISTREDUCE ) ;
-				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
-				// halo stroke
-				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_PROLOG_HALO ) ;
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setdash( 0 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+			ps.custom( ApplicationConstant.PS_CUSTOM_LISTREDUCE ) ;
+			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
-				ps.operator.gsave() ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;			
-			}
+			// halo stroke
+			ps.operator.currentlinewidth() ;
+			ps.operator.dup();
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+			ps.operator.mul( 2 ) ;
+			ps.operator.add() ;
+			ps.operator.gsave() ;
+			ps.operator.setlinewidth() ;
+			ps.operator.setlinecap( 2 ) ;
+			ps.operator.setdash( 0 ) ;
+			ps.operator.setgray( 1 ) ;
+			ps.operator.stroke() ;
+			ps.operator.grestore() ;
+
+			ps.operator.gsave() ;
+			ps.operator.stroke() ;
+			ps.operator.grestore() ;
 
 			lo = outline.get( outline.size()-1 ) ;
 			xy = projector.project( lo[1], lo[2] ) ;
@@ -191,27 +181,23 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			ps.operator.rotate( a ) ;
 
 			if ( getAnnotation() != null ) {
-				try {
-					PostscriptEmitter annotation ;
+				PostscriptEmitter annotation ;
 
-					for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-						ps.operator.gsave() ;
+				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					ps.operator.gsave() ;
 
-						annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
-						annotation.headPS( ps ) ;
-						annotation.emitPS( ps ) ;
-						annotation.tailPS( ps ) ;
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
 
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
+					ps.operator.grestore() ;
 				}
 			}
 		}
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public List<double[]> list() {

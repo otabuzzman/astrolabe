@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import org.exolab.castor.xml.ValidationException;
-
 @SuppressWarnings("serial")
 public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 
@@ -11,26 +9,14 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 	private double[] origin = new double[2] ; // bottom left x/y
 	private double[] extent = new double[2] ; // frame size x/y
 
-	public Frame( Peer peer ) throws ParameterNotValidException {
-		Layout layout ; 
+	public Frame( Peer peer, Layout layout ) {
 		double[] frame ;
 		int number ;
 
 		peer.setupCompanion( this ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
-
-		layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
 
 		number = new Double( getNumber() ).intValue() ;
-		if ( number>0 ) {
-			frame = layout.frame( number ) ;
-		} else {
-			throw new ParameterNotValidException() ;
-		}
+		frame = layout.frame( number ) ;
 
 		origin[0] = frame[0] ;
 		origin[1] = frame[1] ;
@@ -38,10 +24,10 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 		extent[1] = frame[3]-frame[1] ;
 	}
 
-	public void headPS( PostscriptStream ps ) {
+	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public void emitPS( PostscriptStream ps ) {
+	public void emitPS( AstrolabePostscriptStream ps ) {
 		String[] xyRaw ;
 		double[] xyVal ;
 
@@ -57,6 +43,6 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 		ps.operator.moveto( xyVal ) ;
 	}
 
-	public void tailPS( PostscriptStream ps ) {
+	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 }

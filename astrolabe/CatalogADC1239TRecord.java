@@ -76,12 +76,12 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 	public String   CPD       ; //  Cape Photographic DM <I/108>
 	public String   Remark    ; // *[JKLM] Notes
 
-	public CatalogADC1239TRecord( String data ) throws ParameterNotValidException {
+	public CatalogADC1239TRecord( String data ) throws ParameterNotValidException, NumberFormatException {
 		String[] token ;
 
 		token = data.split( "\\|" ) ;
-		if ( token.length != 58 ) {
-			throw new ParameterNotValidException( new Integer( token.length ).toString() ) ;
+		if ( token.length != CR_TOKEN ) {
+			throw new ParameterNotValidException( Integer.toString( token.length ) ) ;
 		}
 
 		Catalog   = token[0].trim() ;
@@ -144,19 +144,15 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		Remark    = token[57].trim() ;
 
 		// validation
-		try {
-			TYC() ;
-			RAhms() ;
-			DEdms() ;
-			Vmag() ; 
-			pmRA() ;
-			pmDE() ; // continue new methods
-		} catch ( NumberFormatException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		TYC() ;
+		RAhms() ;
+		DEdms() ;
+		Vmag() ; 
+		pmRA() ;
+		pmDE() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
+	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
@@ -193,11 +189,7 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		cpm.delete() ;
 		ceq.delete() ;
 
-		try {
-			model.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		model.validate() ;
 
 		return model ;
 	}
