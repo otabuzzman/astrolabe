@@ -6,8 +6,8 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 abstract class HorizonType extends astrolabe.model.HorizonType implements PostscriptEmitter, Projector {
 
-	public HorizonType( Object peer, Projector projector ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+	public HorizonType( Peer peer, Projector projector ) throws ParameterNotValidException {
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

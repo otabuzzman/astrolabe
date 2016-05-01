@@ -34,7 +34,7 @@ public class CatalogADC5050 extends CatalogType implements PostscriptEmitter {
 		}
 	} ;
 
-	public CatalogADC5050( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogADC5050( Peer peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		String[] rv ;

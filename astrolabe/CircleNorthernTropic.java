@@ -6,7 +6,7 @@ import caa.CAANutation;
 @SuppressWarnings("serial")
 public class CircleNorthernTropic extends CircleParallel {
 
-	public CircleNorthernTropic( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CircleNorthernTropic( Peer peer, Projector projector ) throws ParameterNotValidException {
 		double epoch, ra ;
 
 		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;

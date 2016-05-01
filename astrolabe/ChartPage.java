@@ -3,17 +3,21 @@ package astrolabe;
 
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 @SuppressWarnings("serial")
 public class ChartPage extends astrolabe.model.ChartPage {
 
 	private double[] size = new double[2] ;
 	private double[] real = new double[2] ;
 
-	public ChartPage( Object peer ) throws ParameterNotValidException {
+	public ChartPage( Peer peer ) throws ParameterNotValidException {
 		String sv, sd[], lv ;
 		java.util.Vector<double[]> cl ;
+		Geometry fov ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -49,7 +53,13 @@ public class ChartPage extends astrolabe.model.ChartPage {
 		cl.add( new double[] { -real[0]/2, real[1]/2 } ) ;
 		cl.add( new double[] { real[0]/2, real[1]/2 } ) ;
 		cl.add( new double[] { real[0]/2, -real[1]/2 } ) ;
-		ApplicationHelper.setFovGlobal( ApplicationHelper.jtsToPolygon( cl ) ) ;
+		cl.add( cl.get( 0 ) ) ;
+
+		fov = new GeometryFactory().createPolygon(
+				new GeometryFactory().createLinearRing(
+						new JTSCoordinateArraySequence( cl ) ), null ) ;
+
+		Registry.register( ApplicationConstant.GC_FOVUNI, fov ) ;
 	}
 
 	public double[] size() {

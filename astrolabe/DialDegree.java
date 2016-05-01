@@ -4,6 +4,7 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
@@ -50,14 +51,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	private double unit ;
 
-	public DialDegree( Object peer, Baseline baseline ) throws ParameterNotValidException {
+	public DialDegree( Peer peer, Baseline baseline ) throws ParameterNotValidException {
 		this( peer, baseline, 1 ) ;
 	}
 
-	public DialDegree( Object peer, Baseline baseline, double unit ) throws ParameterNotValidException {
+	public DialDegree( Peer peer, Baseline baseline, double unit ) throws ParameterNotValidException {
 		Preferences node ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -229,7 +230,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	@SuppressWarnings("unused")
 	private void emitPSBaselineRail( PostscriptStream ps ) throws ParameterNotValidException {
-		java.util.Vector<double[]> vDFw = null, vDRv = null ;
+		java.util.Vector<double[]> vDFw = null, vDRv = null, rvDRv ;
 		double b, e, s, span ;
 		int nss = 0 ;
 
@@ -292,8 +293,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ps.operator.stroke() ;
 				ps.operator.grestore() ;
 
-				vDRv = ApplicationHelper.createReverseVector( vDRv ) ;
-				vDFw.addAll( vDRv ) ;
+				rvDRv = new java.util.Vector<double[]>( vDRv ) ;
+				Collections.reverse( rvDRv ) ;
+				vDFw.addAll( rvDRv ) ;
 
 				if ( nss%2 == 0 ) { // subunit filled
 					double[] xy ;

@@ -10,7 +10,7 @@ public class AtlasEquidistant extends AtlasAzimuthalType {
 	public AtlasEquidistant() {
 	}
 
-	public AtlasEquidistant( Object peer ) throws ParameterNotValidException {
+	public AtlasEquidistant( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
 		peerCE = ( (astrolabe.model.AtlasEquidistant) peer ).getChartEquidistant() ; 
@@ -28,7 +28,7 @@ public class AtlasEquidistant extends AtlasAzimuthalType {
 		astrolabe.model.ChartEquidistant companionCE ;
 
 		companionCE = new astrolabe.model.ChartEquidistant() ;
-		ApplicationHelper.setupCompanionFromPeer( companionCE, peerCE ) ;
+		peerCE.setupCompanion( companionCE ) ;
 
 		chart.setChartEquidistant( companionCE ) ;
 

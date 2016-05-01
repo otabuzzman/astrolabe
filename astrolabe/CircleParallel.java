@@ -10,7 +10,7 @@ import org.exolab.castor.xml.ValidationException;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.LineString;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -34,15 +34,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	public CircleParallel() {
 	}
 
-	public CircleParallel( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CircleParallel( Peer peer, Projector projector ) throws ParameterNotValidException {
 		setup( peer, projector ) ;
 	}
 
-	public void setup( Object peer, Projector projector ) throws ParameterNotValidException {
+	public void setup( Peer peer, Projector projector ) throws ParameterNotValidException {
 		String key ;
-		Polygon fov ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -113,12 +112,17 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		}
 
 		if ( getFov() != null ) {
-			try {
-				fov = (Polygon) Registry.retrieve( getFov() ) ;
-			} catch ( ParameterNotValidException e ) {
-				fov = new GeometryFactory().createPolygon( null, null ) ;
+			LineString circle ;
+
+			circle = new GeometryFactory().createLineString(
+					new JTSCoordinateArraySequence( list() ) ) ;
+
+			if ( circle.isRing() ) {
+				Registry.register( getFov(),
+						new GeometryFactory().createPolygon(
+								new GeometryFactory().createLinearRing( circle.getCoordinateSequence() ), null ) ) ;
+			} else { // extend
 			}
-			Registry.register( getFov(), ApplicationHelper.extendFov( fov, list() ) ) ;		
 		}
 	}
 
@@ -221,12 +225,17 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		Geometry gf, gl ;
+		Geometry fov, circle ;
 
-		gf = ApplicationHelper.getFovGlobal() ;
-		gl = ApplicationHelper.jtsToPolygon( list() ) ;
+		try {
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+		circle = new GeometryFactory().createLineString(
+				new JTSCoordinateArraySequence( list() ) ) ;
 
-		emitPS( ps, !gf.covers( gl ) ) ;
+		emitPS( ps, !fov.covers( circle ) ) ;
 	}
 
 	public void emitPS( PostscriptStream ps, boolean cut ) {
@@ -241,10 +250,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		astrolabe.model.Text tC ;
 		List<double[]> l ;
 		double[] xy ;
-		String m ;
+		String ns ;
 
 		if ( cut ) {
-			fov = ApplicationHelper.getFovGlobal() ;
+			try {
+				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
 				peer = new astrolabe.model.CircleParallel() ;
@@ -265,11 +278,12 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				}
 
 				lob = projector.unproject( s.get( 0 ) ) ;
-				lob[0] = CAACoordinateTransformation.MapTo0To360Range( lob[0] ) ;
 				xy = s.get( s.size()-1 ) ;
-				m = ApplicationHelper.getFovNSMark( xy ) ;
 				loe = projector.unproject( xy ) ; 
-				loe[0] = CAACoordinateTransformation.MapTo0To360Range( loe[0] ) ;
+
+				ns = new JTSCoordinate( xy ).quadrant(
+						new JTSCoordinate( fov.getEnvelope().getCoordinates()[0] ),
+						new JTSCoordinate( fov.getEnvelope().getCoordinates()[2] ) )+":" ;
 
 				try {
 					peer.getAngle().getRational().setValue( al ) ;
@@ -289,11 +303,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 						aCM = annotation.getAnnotationCurved() ;
 						if ( aCM != null && aCM.getName() != null ) {
 							aCC = new astrolabe.model.AnnotationCurved() ;
-							aCC.setName( m+aCM.getName() ) ;
+							aCC.setName( ns+aCM.getName() ) ;
 
 							for ( astrolabe.model.Text tM : aCM.getText() ) {
 								tC = new astrolabe.model.Text() ;
-								tC.setName( m+tM.getName() ) ;
+								tC.setName( ns+tM.getName() ) ;
 								tC.setValue( tM.getValue() ) ;
 								AstrolabeFactory.modelOf( tC ) ;
 
@@ -321,11 +335,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 						aSM = annotation.getAnnotationStraight() ;
 						if ( aSM != null && aSM.getName() != null ) {
 							aSC = new astrolabe.model.AnnotationStraight() ;
-							aSC.setName( m+aSM.getName() ) ;
+							aSC.setName( ns+aSM.getName() ) ;
 
 							for ( astrolabe.model.Text tM : aSM.getText() ) {
 								tC = new astrolabe.model.Text() ;
-								tC.setName( m+tM.getName() ) ;
+								tC.setName( ns+tM.getName() ) ;
 								tC.setValue( tM.getValue() ) ;
 								AstrolabeFactory.modelOf( tC ) ;
 
@@ -670,7 +684,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		gneq[0] = gnST-gneq[0] ;//gn.dotDot().getST()-gneq[0] ;
 		gnho = gn.projector.unconvert( gneq ) ;//dotDot().unconvert( gneq ) ;
 
-		if ( ! gn.probe( gnho[0] ) ) {
+		if ( ! gn.probe( CAACoordinateTransformation.MapTo0To360Range( gnho[0] ) ) ) {
 			throw new ParameterNotValidException( new Double( gnho[0] ).toString() ) ;
 		}
 
@@ -735,17 +749,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public static boolean probe( double angle, double begin, double end ) {
-		boolean r ;
-		double b, e ;
-		double a ;
-
-		b = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
-		e = CAACoordinateTransformation.MapTo0To360Range( end ) ;
-		a = CAACoordinateTransformation.MapTo0To360Range( angle ) ;
-
-		r = b>e?a>=b||a<=e:a>=b&&a<=e ;
-
-		return r ;
+		return begin>end?angle>=begin||angle<=end:angle>=begin&&angle<=end ;
 	}
 
 	public double mapIndexToScale( int index ) {
@@ -817,13 +821,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 	public static double gap( int index, double interval, double begin, double end ) {
 		double r ;
-		double b, e ;
 		double d, g ;
 
-		b = CAACoordinateTransformation.MapTo0To360Range( begin ) ;
-		e = CAACoordinateTransformation.MapTo0To360Range( end ) ;		
-
-		d = b>e?360+e-b:e-b ;
+		d = begin>end?360+end-begin:end-begin ;
 		g = d-(int) ( d/interval )*interval ;
 
 		r = ( ( Math.isLim0( g )?interval:g )/2 )+index*interval ;

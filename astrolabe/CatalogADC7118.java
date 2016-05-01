@@ -33,7 +33,7 @@ public class CatalogADC7118 extends CatalogType implements PostscriptEmitter {
 		}
 	} ;
 
-	public CatalogADC7118( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogADC7118( Peer peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		String[] rv ;

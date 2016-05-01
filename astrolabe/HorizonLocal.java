@@ -15,7 +15,7 @@ public class HorizonLocal extends HorizonType {
 	private double ST ;
 	private double lo ;
 
-	public HorizonLocal( Object peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonLocal( Peer peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		String key ;

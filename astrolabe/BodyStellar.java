@@ -19,11 +19,11 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	private double x ;
 	private double y ;
 
-	public BodyStellar( Object peer, Projector projector ) throws ParameterNotValidException {
+	public BodyStellar( Peer peer, Projector projector ) throws ParameterNotValidException {
 		double[] lo, eq, xy ;
 		String key ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

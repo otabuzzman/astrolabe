@@ -28,13 +28,13 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 
 	private Geometry fov ; // effective field-of-view
 
-	public CatalogType( Object peer, Projector projector ) throws ParameterNotValidException {
+	public CatalogType( Peer peer, Projector projector ) throws ParameterNotValidException {
 		String[] sv ;
-		Geometry fovg, fovu ;
+		Geometry fovu, fove ;
 
 		this.projector = projector ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -51,14 +51,14 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 			}
 		}
 
-		fovg = new GeometryFactory().createGeometry( ApplicationHelper.getFovGlobal() ) ;
-		if ( getFov() != null ) {
-			fovu = (Geometry) Registry.retrieve( getFov() ) ;
-			fov = fovg.intersection( fovu ) ;
+		if ( getFov() == null ) {
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		} else {
-			fov = fovg ;
+			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) Registry.retrieve( getFov() ) ;
+			fov = fovu.intersection( fove ) ;
 		}
-		ApplicationHelper.setFovEffective( fov ) ;
+		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
 	public Hashtable<String, CatalogRecord> read() throws ParameterNotValidException {
@@ -133,9 +133,13 @@ abstract public class CatalogType extends astrolabe.model.CatalogType implements
 		while ( ( record = record( catalog ) ) != null ) {
 			l = record.list( projector ) ;
 			if ( l.size() == 1 ) {
-				ok = fov.covers( ApplicationHelper.jtsToPoint( l.get( 0 ) ) ) ;
+				ok = fov.covers( new GeometryFactory().createPoint(
+						new JTSCoordinate( l.get( 0 ) ) ) ) ;
 			} else {
-				body = ApplicationHelper.jtsToPolygon( l ) ;
+				l.add( l.get( 0 ) ) ;
+				body = new GeometryFactory().createPolygon(
+						new GeometryFactory().createLinearRing(
+								new JTSCoordinateArraySequence( l ) ), null ) ;
 
 				ok = fov.covers( body ) || fov.overlaps( body ) ;
 			}

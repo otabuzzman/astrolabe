@@ -25,10 +25,10 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private double margin ;
 	private double rise ;
 
-	public AnnotationStraight( Object peer ) throws ParameterNotValidException {
+	public AnnotationStraight( Peer peer ) throws ParameterNotValidException {
 		Preferences node ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

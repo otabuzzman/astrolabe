@@ -8,8 +8,8 @@ public class Text extends astrolabe.model.Text {
 
 	private final static double DEFAULT_PURPOSE = 3.8 ;
 
-	public Text( Object peer ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+	public Text( Peer peer ) throws ParameterNotValidException {
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

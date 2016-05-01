@@ -19,7 +19,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 	private double epoch ;
 
-	public Astrolabe( Object peer ) throws ParameterNotValidException {
+	public Astrolabe( Peer peer ) throws ParameterNotValidException {
 		String pn ;
 		FileInputStream pr ;
 		Locale dl ;
@@ -27,7 +27,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		CAADate d ;
 		String key ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

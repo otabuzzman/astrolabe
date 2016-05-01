@@ -11,12 +11,12 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 	private double[] origin = new double[2] ; // bottom left x/y
 	private double[] extent = new double[2] ; // frame size x/y
 
-	public Frame( Object peer ) throws ParameterNotValidException {
+	public Frame( Peer peer ) throws ParameterNotValidException {
 		Layout layout ; 
 		double[] frame ;
 		int number ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

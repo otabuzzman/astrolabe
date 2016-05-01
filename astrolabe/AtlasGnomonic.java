@@ -10,7 +10,7 @@ public class AtlasGnomonic extends AtlasAzimuthalType {
 	public AtlasGnomonic() {
 	}
 
-	public AtlasGnomonic( Object peer ) throws ParameterNotValidException {
+	public AtlasGnomonic( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
 		peerCG = ( (astrolabe.model.AtlasGnomonic) peer ).getChartGnomonic() ; 
@@ -28,7 +28,7 @@ public class AtlasGnomonic extends AtlasAzimuthalType {
 		astrolabe.model.ChartGnomonic companionCO ;
 
 		companionCO = new astrolabe.model.ChartGnomonic() ;
-		ApplicationHelper.setupCompanionFromPeer( companionCO, peerCG ) ;
+		peerCG.setupCompanion( companionCO ) ;
 
 		chart.setChartGnomonic( companionCO ) ;
 

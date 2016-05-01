@@ -59,7 +59,7 @@ public class DialDay extends DialDegree {
 			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_DECEMBER
 	} ;
 
-	public DialDay( Object peer, Baseline baseline ) throws ParameterNotValidException {
+	public DialDay( Peer peer, Baseline baseline ) throws ParameterNotValidException {
 		super( peer, baseline, 0 ) ;
 
 		this.baseline = baseline ;

@@ -69,7 +69,7 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		java.util.Vector<int[]> segmentsByIndex ;
 		List<double[]> segmentByXY ;
 		Geometry gRaw, gCut ;
-		Coordinate segmentByCoordinate[] ;
+		Coordinate[] segmentByCoordinate ;
 		double[] xyA, xyO ;
 
 		l = new java.util.Vector<List<double[]>>() ;
@@ -84,12 +84,16 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			segmentByXY = subList( segmentByIndex[0]>0?segmentByIndex[0]-1:0,
 					segmentByIndex[1]<size()-1?segmentByIndex[1]+2:size() ) ;
 
-			gRaw = ApplicationHelper.jtsToLineString( segmentByXY ) ;
+			gRaw = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( segmentByXY ) ) ;
 			gCut = gRaw.intersection( fov ) ;
 
 			segmentByCoordinate = gCut.getCoordinates() ;
-			xyA = ApplicationHelper.jtsToXY( segmentByCoordinate[0] ) ;
-			xyO = ApplicationHelper.jtsToXY( segmentByCoordinate[ segmentByCoordinate.length-1 ] ) ;
+			xyA = new double[] {
+					segmentByCoordinate[0].x,
+					segmentByCoordinate[0].y } ;
+			xyO = new double[] {
+					segmentByCoordinate[ segmentByCoordinate.length-1 ].x,
+					segmentByCoordinate[ segmentByCoordinate.length-1 ].y } ;
 
 			s = new java.util.Vector<double[]>() ;
 			s.add( xyA ) ;
@@ -183,6 +187,6 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	}
 
 	public boolean check( int index, boolean interior ) {
-		return interior==fov.contains( ApplicationHelper.jtsToPoint( get( index ) ) ) ;
+		return interior==fov.contains( new GeometryFactory().createPoint( new JTSCoordinate( get( index ) ) ) ) ;
 	}
 }

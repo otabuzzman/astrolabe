@@ -34,8 +34,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 	public AtlasAzimuthalType() {
 	}
 
-	public AtlasAzimuthalType( Object peer ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+	public AtlasAzimuthalType( Peer peer ) throws ParameterNotValidException {
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -125,7 +125,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				atlasPage.setP3y( xy[1] ) ;
 
 				eq = chart.unproject( atlasPage.getP0x(), atlasPage.getP0y() ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setP0( new astrolabe.model.P0() ) ;
 				atlasPage.getP0().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP0().setTheta( new astrolabe.model.Theta() ) ;
@@ -133,7 +132,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				modelOf( atlasPage.getP0().getTheta(), false, false, eq[1] ) ;
 
 				eq = chart.unproject( atlasPage.getP1x(), atlasPage.getP1y() ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setP1( new astrolabe.model.P1() ) ;
 				atlasPage.getP1().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP1().setTheta( new astrolabe.model.Theta() ) ;
@@ -141,7 +139,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				modelOf( atlasPage.getP1().getTheta(), false, false, eq[1] ) ;
 
 				eq = chart.unproject( atlasPage.getP2x(), atlasPage.getP2y() ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setP2( new astrolabe.model.P2() ) ;
 				atlasPage.getP2().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP2().setTheta( new astrolabe.model.Theta() ) ;
@@ -149,7 +146,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				modelOf( atlasPage.getP2().getTheta(), false, false, eq[1] ) ;
 
 				eq = chart.unproject( atlasPage.getP3x(), atlasPage.getP3y() ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setP3( new astrolabe.model.P3() ) ;
 				atlasPage.getP3().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP3().setTheta( new astrolabe.model.Theta() ) ;
@@ -162,7 +158,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				atlasPage.setOriginy( vc.y ) ;
 				eq = chart.unproject( vc.x, vc.y ) ;
 				eq[0] = CAACoordinateTransformation.DegreesToHours( eq[0] ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To24Range( eq[0] ) ;
 				atlasPage.setOrigin( new astrolabe.model.Origin() ) ;
 				atlasPage.getOrigin().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getOrigin().setTheta( new astrolabe.model.Theta() ) ;
@@ -176,7 +171,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				atlasPage.setTopx( vt.x ) ;
 				atlasPage.setTopy( vt.y ) ;
 				eq = chart.unproject( vt.x, vt.y ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setTop( new astrolabe.model.Top() ) ;
 				atlasPage.getTop().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getTop().setTheta( new astrolabe.model.Theta() ) ;
@@ -189,7 +183,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				atlasPage.setBottomx( vb.x ) ;
 				atlasPage.setBottomy( vb.y ) ;
 				eq = chart.unproject( vb.x, vb.y ) ;
-				eq[0] = CAACoordinateTransformation.MapTo0To360Range( eq[0] ) ;
 				atlasPage.setBottom( new astrolabe.model.Bottom() ) ;
 				atlasPage.getBottom().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getBottom().setTheta( new astrolabe.model.Theta() ) ;

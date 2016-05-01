@@ -772,9 +772,6 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="CatalogADC1239H">
-		<xs:annotation>
-			<xs:documentation>The Hipparcos Catalogue.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
@@ -793,9 +790,6 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="CatalogADC1239T">
-		<xs:annotation>
-			<xs:documentation>The Tycho Catalogue.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
@@ -814,9 +808,6 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="CatalogADC5050">
-		<xs:annotation>
-			<xs:documentation>The Bright Star Catalogue.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
@@ -835,9 +826,6 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="CatalogADC6049">
-		<xs:annotation>
-			<xs:documentation>Constellation Boundary Data. Equinox 2000.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
@@ -853,9 +841,6 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="CatalogADC7118">
-		<xs:annotation>
-			<xs:documentation>NGC 2000.0, The Complete New General Catalogue and Index Catalogue of Nebulae and Star Clusters.</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
@@ -893,7 +878,7 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Sign" type="SignType"/>
-	<!--Basistypen und -elemente-->
+	<!---->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" use="required">
 			<xs:simpleType>
@@ -902,11 +887,7 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Rational" type="RationalType"/>
-	<xs:element name="JD" type="RationalType">
-		<xs:annotation>
-			<xs:documentation>Julianischer Tag.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="JD" type="RationalType"/>
 	<xs:element name="r" type="RationalType"/>
 	<xs:complexType name="DMSType">
 		<xs:attribute name="deg" use="required">
@@ -983,18 +964,10 @@
 			<xs:element ref="Rational"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:element name="Angle" type="AngleType">
-		<xs:annotation>
-			<xs:documentation>Azimut bei CircleMeridian, Höhe bei CircleParallel.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="Angle" type="AngleType"/>
 	<xs:element name="Latitude" type="AngleType"/>
 	<xs:element name="Longitude" type="AngleType"/>
-	<xs:element name="HA" type="TimeType">
-		<xs:annotation>
-			<xs:documentation>Stundenwinkel.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="HA" type="TimeType"/>
 	<xs:element name="phi" type="AngleType"/>
 	<xs:element name="theta" type="AngleType"/>
 	<xs:complexType name="TimeType">
@@ -1003,11 +976,7 @@
 			<xs:element ref="Rational"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:element name="Time" type="TimeType">
-		<xs:annotation>
-			<xs:documentation>UTC</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="Time" type="TimeType"/>
 	<xs:complexType name="DateType">
 		<xs:choice>
 			<xs:element ref="Calendar"/>

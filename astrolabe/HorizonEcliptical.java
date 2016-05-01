@@ -14,7 +14,7 @@ public class HorizonEcliptical extends HorizonType {
 
 	private double e ; // mean obliquity of ecliptic
 
-	public HorizonEcliptical( Object peer, Projector projector ) throws ParameterNotValidException {
+	public HorizonEcliptical( Peer peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		CAA2DCoordinate c ;

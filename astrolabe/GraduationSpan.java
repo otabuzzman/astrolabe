@@ -19,10 +19,10 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	private Vector tangent ;
 	private Vector origin ;
 
-	public GraduationSpan( Object peer, double[] origin, double[] tangent ) throws ParameterNotValidException {
+	public GraduationSpan( Peer peer, double[] origin, double[] tangent ) throws ParameterNotValidException {
 		Preferences node ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartStereographic extends ChartAzimuthalType {
 
-	public ChartStereographic( Object peer ) throws ParameterNotValidException {
+	public ChartStereographic( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 

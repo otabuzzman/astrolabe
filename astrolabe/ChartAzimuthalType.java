@@ -26,11 +26,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	private ChartPage page ;
 
-	public ChartAzimuthalType( Object peer ) throws ParameterNotValidException {
+	public ChartAzimuthalType( Peer peer ) throws ParameterNotValidException {
 		double[] origin ;
 		Preferences node ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

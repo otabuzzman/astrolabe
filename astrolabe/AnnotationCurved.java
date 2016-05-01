@@ -26,10 +26,10 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 
 	private double distance ;
 
-	public AnnotationCurved( Object peer ) throws ParameterNotValidException {
+	public AnnotationCurved( Peer peer ) throws ParameterNotValidException {
 		Preferences node ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

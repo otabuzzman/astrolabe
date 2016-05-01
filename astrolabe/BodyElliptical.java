@@ -8,8 +8,8 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class BodyElliptical extends astrolabe.model.BodyElliptical implements PostscriptEmitter, Baseline {
 
-	public BodyElliptical( Object peer, Projector projector ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+	public BodyElliptical( Peer peer, Projector projector ) throws ParameterNotValidException {
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

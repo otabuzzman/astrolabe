@@ -25,13 +25,13 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	private double interval ;
 	private double stretch ;
 
-	public BodyMoon( Object peer, Projector projector ) throws ParameterNotValidException {
+	public BodyMoon( Peer peer, Projector projector ) throws ParameterNotValidException {
 		Preferences node ;
 		CAADate date ;
 		double epochG, epochL, epochA, epochO ;
 		long y ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -121,9 +121,14 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		double[] xy ;
 
 		if ( cut ) {
-			fov = ApplicationHelper.getFovEffective() ;
-			if ( fov == null ) {
-				fov = ApplicationHelper.getFovGlobal() ;
+			try {
+				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			} catch ( ParameterNotValidException ee ) {
+				try {
+					fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+				} catch ( ParameterNotValidException eu ) {
+					throw new RuntimeException( eu.toString() ) ;
+				}
 			}
 
 			jdlist = new java.util.Vector<Double>() ;

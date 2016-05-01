@@ -10,8 +10,8 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 	public AtlasPage() {
 	}
 
-	public AtlasPage( Object peer ) throws ParameterNotValidException {
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+	public AtlasPage( Peer peer ) throws ParameterNotValidException {
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {

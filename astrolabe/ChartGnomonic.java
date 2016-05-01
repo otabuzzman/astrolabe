@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartGnomonic extends ChartAzimuthalType {
 
-	public ChartGnomonic( Object peer ) throws ParameterNotValidException {
+	public ChartGnomonic( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 

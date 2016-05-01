@@ -193,7 +193,7 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = ApplicationHelper.getClassNode( horizon, horizon.getName(), null ) ;
-		ApplicationHelper.setupPeerFromClassNode( horizon, node ) ;
+		horizon.setupPeer( node ) ;
 
 		if ( validate )
 			try {
@@ -211,7 +211,7 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = ApplicationHelper.getClassNode( circle, circle.getName(), null ) ;
-		ApplicationHelper.setupPeerFromClassNode( circle, node ) ;
+		circle.setupPeer( node ) ;
 
 		if ( validate )
 			try {
@@ -233,7 +233,7 @@ public final class AstrolabeFactory {
 		}
 
 		node = ApplicationHelper.getClassNode( annotation, annotation.getName(), null ) ;
-		ApplicationHelper.setupPeerFromClassNode( annotation, node ) ;
+		annotation.setupPeer( node ) ;
 
 		if ( validate )
 			try {
@@ -255,7 +255,7 @@ public final class AstrolabeFactory {
 		}
 
 		node = ApplicationHelper.getClassNode( text, text.getName(), null ) ;
-		ApplicationHelper.setupPeerFromClassNode( text, node ) ;
+		text.setupPeer( node ) ;
 
 		if ( validate )
 			try {

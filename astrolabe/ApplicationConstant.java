@@ -9,13 +9,13 @@ public final class ApplicationConstant {
 	// general constants (GC_), patterns (GP_)
 	public final static String GC_APPLICATION	= "astrolabe" ;			// application name
 	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;		// native library
-	public final static String GC_NS_FOVG		= "fovg:" ;				// name space, application generated
-	public final static String GC_NS_FOVE		= "fove:" ;				// name space, application generated
 	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
 	public final static String GC_NS_ATL		= "atl:" ;				// name space, application generated
 	public final static String GC_NS_REG		= "reg:" ;				// name space, application generated
 	public final static String GC_EPOCHE		= GC_NS_REG+"epoch" ;	// class global model variable, internal usage
 	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global model variable, internal usage
+	public final static String GC_FOVUNI		= GC_NS_REG+"fovuni" ;	// class global model variable, internal usage
+	public final static String GC_FOVEFF		= GC_NS_REG+"foveff" ;	// class global model variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "\\{[^\\{\\}]+\\}" ;

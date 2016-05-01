@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
-import caa.CAACoordinateTransformation;
-
 import com.vividsolutions.jts.geom.Geometry;
 
 @SuppressWarnings("serial")
@@ -16,11 +14,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	private java.util.Vector<double[]> outline ;
 
-	public BodyAreal( Object peer, Projector projector ) throws ParameterNotValidException {
+	public BodyAreal( Peer peer, Projector projector ) throws ParameterNotValidException {
 		PolygonSpherical polygon ;
 		String key ;
 
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
+		peer.setupCompanion( this ) ;
 		try {
 			validate() ;
 		} catch ( ValidationException e ) {
@@ -66,17 +64,22 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		double a ;
 
 		if ( cut ) {
-			fov = ApplicationHelper.getFovEffective() ;
-			if ( fov == null ) {
-				fov = ApplicationHelper.getFovGlobal() ;
+			try {
+				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			} catch ( ParameterNotValidException ee ) {
+				try {
+					fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+				} catch ( ParameterNotValidException eu ) {
+					throw new RuntimeException( eu.toString() ) ;
+				}
 			}
+
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> segment : cutter.segmentsInterior() ) {
 				peer = new astrolabe.model.BodyAreal() ;
 
 				for ( double[] coordinate : segment ) {
 					lo = projector.unproject( coordinate ) ;
-					lo[0] = CAACoordinateTransformation.MapTo0To360Range( lo[0] ) ;
 
 					position = new astrolabe.model.Position() ;
 					// astrolabe.model.SphericalType

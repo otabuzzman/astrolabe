@@ -10,7 +10,7 @@ public class AtlasStereographic extends AtlasAzimuthalType {
 	public AtlasStereographic() {
 	}
 
-	public AtlasStereographic( Object peer ) throws ParameterNotValidException {
+	public AtlasStereographic( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
 		peerCS = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ; 
@@ -28,7 +28,7 @@ public class AtlasStereographic extends AtlasAzimuthalType {
 		astrolabe.model.ChartStereographic companionCS ;
 
 		companionCS = new astrolabe.model.ChartStereographic() ;
-		ApplicationHelper.setupCompanionFromPeer( companionCS, peerCS ) ;
+		peerCS.setupCompanion( companionCS ) ;
 
 		chart.setChartStereographic( companionCS ) ;
 

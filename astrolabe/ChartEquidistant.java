@@ -4,7 +4,7 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class ChartEquidistant extends ChartAzimuthalType {
 
-	public ChartEquidistant( Object peer ) throws ParameterNotValidException {
+	public ChartEquidistant( Peer peer ) throws ParameterNotValidException {
 		super( peer ) ;
 	}
 
