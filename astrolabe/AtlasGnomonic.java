@@ -4,28 +4,34 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class AtlasGnomonic extends AtlasAzimuthalType {
 
-	private astrolabe.model.ChartGnomonic chart ;
+	private astrolabe.model.ChartGnomonic peerCG ;
+
+	// castor requirement for (un)marshalling
+	public AtlasGnomonic() {
+	}
 
 	public AtlasGnomonic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
-		chart = ( (astrolabe.model.AtlasGnomonic) peer ).getChartGnomonic() ; 
+		peerCG = ( (astrolabe.model.AtlasGnomonic) peer ).getChartGnomonic() ; 
 	}
 
-	public ChartAzimuthalType chartAzimuthalType() {
+	public ChartAzimuthalType getChartAzimuthalType() {
 		try {
-			return ( new ChartGnomonic( chart ) ) ;
+			return ( new ChartGnomonic( peerCG ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Chart chart( astrolabe.model.ChartAzimuthalType chart ) {
-		astrolabe.model.Chart c ;
+	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
+		astrolabe.model.ChartGnomonic companionCO ;
 
-		c = new astrolabe.model.Chart() ;
-		c.setChartGnomonic( (astrolabe.model.ChartGnomonic) chart ) ;
+		companionCO = new astrolabe.model.ChartGnomonic() ;
+		ApplicationHelper.setupCompanionFromPeer( companionCO, peerCG ) ;
 
-		return c ;
+		chart.setChartGnomonic( companionCO ) ;
+
+		return companionCO ;
 	}
 }

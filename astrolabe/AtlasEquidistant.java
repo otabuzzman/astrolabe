@@ -4,28 +4,34 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class AtlasEquidistant extends AtlasAzimuthalType {
 
-	private astrolabe.model.ChartEquidistant chart ;
+	private astrolabe.model.ChartEquidistant peerCE ;
+
+	// castor requirement for (un)marshalling
+	public AtlasEquidistant() {
+	}
 
 	public AtlasEquidistant( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
-		chart = ( (astrolabe.model.AtlasEquidistant) peer ).getChartEquidistant() ; 
+		peerCE = ( (astrolabe.model.AtlasEquidistant) peer ).getChartEquidistant() ; 
 	}
 
-	public ChartAzimuthalType chartAzimuthalType() {
+	public ChartAzimuthalType getChartAzimuthalType() {
 		try {
-			return ( new ChartEquidistant( chart ) ) ;
+			return ( new ChartEquidistant( peerCE ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Chart chart( astrolabe.model.ChartAzimuthalType chart ) {
-		astrolabe.model.Chart c ;
+	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
+		astrolabe.model.ChartEquidistant companionCE ;
 
-		c = new astrolabe.model.Chart() ;
-		c.setChartEquidistant( (astrolabe.model.ChartEquidistant) chart ) ;
+		companionCE = new astrolabe.model.ChartEquidistant() ;
+		ApplicationHelper.setupCompanionFromPeer( companionCE, peerCE ) ;
 
-		return c ;
+		chart.setChartEquidistant( companionCE ) ;
+
+		return companionCE ;
 	}
 }

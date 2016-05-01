@@ -4,28 +4,34 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class AtlasStereographic extends AtlasAzimuthalType {
 
-	private astrolabe.model.ChartStereographic chart ;
+	private astrolabe.model.ChartStereographic peerCS ;
+
+	// castor requirement for (un)marshalling
+	public AtlasStereographic() {
+	}
 
 	public AtlasStereographic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
-		chart = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ; 
+		peerCS = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ; 
 	}
 
-	public ChartAzimuthalType chartAzimuthalType() {
+	public ChartAzimuthalType getChartAzimuthalType() {
 		try {
-			return ( new ChartStereographic( chart ) ) ;
+			return ( new ChartStereographic( peerCS ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Chart chart( astrolabe.model.ChartAzimuthalType chart ) {
-		astrolabe.model.Chart c ;
+	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
+		astrolabe.model.ChartStereographic companionCS ;
 
-		c = new astrolabe.model.Chart() ;
-		c.setChartStereographic( (astrolabe.model.ChartStereographic) chart ) ;
+		companionCS = new astrolabe.model.ChartStereographic() ;
+		ApplicationHelper.setupCompanionFromPeer( companionCS, peerCS ) ;
 
-		return c ;
+		chart.setChartStereographic( companionCS ) ;
+
+		return companionCS ;
 	}
 }

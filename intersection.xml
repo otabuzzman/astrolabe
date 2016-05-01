@@ -7,7 +7,8 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" viewport="64" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a0" real="64" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -19,9 +20,6 @@ astrolabe.xsd">
 			<!--fov-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="canonical" fov="catalog">
 							<Angle>
@@ -43,9 +41,6 @@ astrolabe.xsd">
 			</Horizon>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -167,7 +162,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -178,9 +174,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -220,7 +213,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -231,9 +225,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -273,7 +264,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -284,9 +276,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -326,7 +315,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -337,9 +327,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -379,7 +366,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -390,9 +378,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -432,7 +417,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -443,9 +429,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>
@@ -496,7 +479,8 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic pagesize="a4" viewport="92" layout="default" hemisphere="northern" scale="100">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a4" real="92" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0.0"/>
@@ -507,9 +491,6 @@ astrolabe.xsd">
 			</Origin>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Angle>

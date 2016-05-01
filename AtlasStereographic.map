@@ -135,11 +135,11 @@
 	<class cst:name="astrolabe.AtlasStereographic">
 		<description>Default mapping for class astrolabe.AtlasStereographic</description>
 		<map-to cst:xml="AtlasStereographic" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="pagesizex" cst:type="double">
-			<bind-xml name="pagesizex" node="attribute"/>
+		<field cst:name="chartpagerealx" cst:type="double">
+			<bind-xml name="chartpagerealx" node="attribute"/>
 		</field>
-		<field cst:name="pagesizey" cst:type="double">
-			<bind-xml name="pagesizey" node="attribute"/>
+		<field cst:name="chartpagerealy" cst:type="double">
+			<bind-xml name="chartpagerealy" node="attribute"/>
 		</field>
 		<field cst:name="checker" cst:type="java.lang.String" cst:required="true">
 			<bind-xml name="checker" node="attribute"/>

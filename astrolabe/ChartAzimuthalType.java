@@ -5,8 +5,6 @@ import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
-import com.vividsolutions.jts.geom.Polygon;
-
 @SuppressWarnings("serial")
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements PostscriptEmitter, Projector {
 
@@ -18,9 +16,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private final static String DEFAULT_IMPORTANCE = ".1:0" ;
 
 	private double unit ;
-	protected boolean northern ;
-
-	protected double[] pagesize = new double[2] ;
 	private double scale ;
 
 	private double[] origin = new double[2] ;
@@ -29,12 +24,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private double halomin ;
 	private double halomax ;
 
+	private ChartPage page ;
+
 	public ChartAzimuthalType( Object peer ) throws ParameterNotValidException {
-		Preferences node ;
-		String psa, psd[] ;
-		String layout ;
 		double[] origin ;
-		double ms, mv, mu ;
+		Preferences node ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
@@ -43,40 +37,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		if ( ( psa = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CHART_PAGESIZE ),
-				getPagesize(), null ) ) == null ) {
-			psd = getPagesize().split( "x" ) ;
-		} else {
-			psd = psa.split( "x" ) ;
-		}
-		pagesize[0] = new Double( psd[0] ).doubleValue() ;
-		pagesize[1] = new Double( psd[1] ).doubleValue() ;
-
-		ApplicationHelper.setFovGlobal( fov() ) ;
-
-		if ( ( layout = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CHART_LAYOUT ),
-				getLayout(), null ) ) == null ) {
-			layout = getLayout() ;
-		}
-		Registry.register( ApplicationConstant.GC_LAYOUT,
-				new Layout( layout, new double[] {
-						-pagesize[0]/2,
-						-pagesize[1]/2,
-						pagesize[0]/2,
-						pagesize[1]/2 } ) ) ;
-
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-
-		unit = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
-
-		mu = java.lang.Math.min( pagesize[0], pagesize[1] )/2/Math.goldensection ;
-		mv = getViewport()/100. ;
-		ms = getScale()/100. ;
-		scale = mu*mv*ms ;
-
-		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
+		page = new ChartPage( getChartPage() ) ;
 
 		try {
 			origin = AstrolabeFactory.valueOf( getOrigin() ) ;
@@ -85,6 +46,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+
+		unit = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
+		scale = java.lang.Math.min( page.sizex(), page.sizey() )/2/Math.goldensection*page.getReal()/100*getScale()/100 ;
 
 		halo = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
 		halomin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
@@ -167,20 +133,16 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public void headPS( PostscriptStream ps ) {
 		String practicality, importance ;
-		double pagesizex, pagesizey ;
 
 		ps.dsc.beginSetup() ;
 
 		// Set pagesize
 		try {
-			pagesizex = pagesize[0]*unit ;
-			pagesizey = pagesize[1]*unit ;
-
 			ps.dict( true ) ;
 			ps.push( "/PageSize" ) ;
 			ps.array( true ) ;
-			ps.push( pagesizex ) ;
-			ps.push( pagesizey ) ;
+			ps.push( page.sizex()*unit ) ;
+			ps.push( page.sizey()*unit ) ;
 			ps.array( false ) ;
 			ps.dict( false ) ;
 
@@ -219,12 +181,17 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		if ( 100.>getViewport() ) {
+		if ( page.sizex()>page.realx() ) {
 			ps.operator.mark() ;
-			for ( double[] xy : ApplicationHelper.jtsToVector( fov() ) ) {
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
-			}
+
+			ps.push( -page.realx()/2 ) ;
+			ps.push( -page.realy()/2 ) ;
+			ps.push( -page.realx()/2 ) ;
+			ps.push( page.realy()/2 ) ;
+			ps.push( page.realx()/2 ) ;
+			ps.push( page.realy()/2 ) ;
+			ps.push( page.realx()/2 ) ;
+			ps.push( -page.realy()/2 ) ;
 			try {
 				ps.custom( ApplicationConstant.PS_PROLOG_POLYLINE ) ;
 
@@ -242,11 +209,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public double[] hemisphereToPolar( double[] eq ) {
-		return northern?flipNorthern( eq ):flipSouthern( eq ) ;
+		return getNorthern()?flipNorthern( eq ):flipSouthern( eq ) ;
 	}
 
 	public double[] polarToHemisphere( double[] p ) {
-		return northern?flipNorthern( p ):flipSouthern( p ) ;
+		return getNorthern()?flipNorthern( p ):flipSouthern( p ) ;
 	}
 
 	private double[] flipNorthern( double[] eq ) {
@@ -275,25 +242,4 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	abstract double thetaToDistance( double de ) ;
 	abstract double distanceToTheta( double d ) ;
-
-	private Polygon fov() {
-		Polygon r ;
-		java.util.Vector<double[]> l ;
-		double viewport, fovx, fovy ;
-
-		viewport = getViewport() ;
-
-		fovx = ( pagesize[0]/2 )*viewport/100 ;
-		fovy = ( pagesize[1]/2 )*viewport/100 ;
-
-		l = new java.util.Vector<double[]>() ;
-		l.add( new double[] { -fovx, -fovy } ) ; // bottom left
-		l.add( new double[] { -fovx, fovy } ) ; // top left
-		l.add( new double[] { fovx, fovy } ) ; // top right
-		l.add( new double[] { fovx, -fovy } ) ; // bottom right
-
-		r = ApplicationHelper.jtsToPolygon( l ) ;
-
-		return r ;
-	}
 }

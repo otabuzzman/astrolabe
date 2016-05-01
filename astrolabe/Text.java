@@ -8,6 +8,8 @@ public class Text extends astrolabe.model.Text {
 
 	private final static double DEFAULT_PURPOSE = 3.8 ;
 
+	private ParserAttribute parser ;
+
 	public Text( Object peer ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
@@ -15,15 +17,24 @@ public class Text extends astrolabe.model.Text {
 		} catch ( ValidationException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
+
+		parser = new ParserAttribute() ;
 	}
 
-	public double size() {
-		double size ;
+	public double purpose() {
+		String purpose ;
+		double value ;
 
-		size = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getPurpose(), ApplicationConstant.PN_TEXT_PURPOSE ),
-				getPurpose(), DEFAULT_PURPOSE ) ;
+		purpose = parser.stringValue( getPurpose() ) ;
 
-		return size ;
+		value = ApplicationHelper.getPreferencesKV(
+				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_TEXT_PURPOSE ),
+				purpose, DEFAULT_PURPOSE ) ;
+
+		return value ;
+	}
+
+	public String value() {
+		return parser.stringValue( getValue() ) ;
 	}
 }

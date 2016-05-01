@@ -7,7 +7,8 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic pagesize="a0" viewport="100" layout="default" scale="100" hemisphere="northern">
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a0" real="100" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -19,9 +20,6 @@ astrolabe.xsd">
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
@@ -45,9 +43,6 @@ astrolabe.xsd">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Latitude>
-						<Rational value="0.0"/>
-					</Latitude>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Angle>

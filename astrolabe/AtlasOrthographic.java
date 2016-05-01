@@ -4,28 +4,34 @@ package astrolabe;
 @SuppressWarnings("serial")
 public class AtlasOrthographic extends AtlasAzimuthalType {
 
-	private astrolabe.model.ChartOrthographic chart ;
+	private astrolabe.model.ChartOrthographic peerCO ;
+
+	// castor requirement for (un)marshalling
+	public AtlasOrthographic() {
+	}
 
 	public AtlasOrthographic( Object peer ) throws ParameterNotValidException {
 		super( peer ) ;
 
-		chart = ( (astrolabe.model.AtlasOrthographic) peer ).getChartOrthographic() ; 
+		peerCO = ( (astrolabe.model.AtlasOrthographic) peer ).getChartOrthographic() ; 
 	}
 
-	public ChartAzimuthalType chartAzimuthalType() {
+	public ChartAzimuthalType getChartAzimuthalType() {
 		try {
-			return ( new ChartOrthographic( chart ) ) ;
+			return ( new ChartOrthographic( peerCO ) ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
-	public astrolabe.model.Chart chart( astrolabe.model.ChartAzimuthalType chart ) {
-		astrolabe.model.Chart c ;
+	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
+		astrolabe.model.ChartOrthographic companionCO ;
 
-		c = new astrolabe.model.Chart() ;
-		c.setChartOrthographic( (astrolabe.model.ChartOrthographic) chart ) ;
+		companionCO = new astrolabe.model.ChartOrthographic() ;
+		ApplicationHelper.setupCompanionFromPeer( companionCO, peerCO ) ;
 
-		return c ;
+		chart.setChartOrthographic( companionCO ) ;
+
+		return companionCO ;
 	}
 }

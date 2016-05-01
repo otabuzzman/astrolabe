@@ -32,19 +32,47 @@
 	</xs:element>
 	<xs:complexType name="ChartAzimuthalType">
 		<xs:sequence>
+			<xs:element ref="ChartPage"/>
 			<xs:element ref="Origin"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
 			<xs:element ref="AtlasPage" minOccurs="0"/>
 		</xs:sequence>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value=""/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="scale" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minExclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="northern" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:element name="Chart">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="ChartStereographic"/>
+				<xs:element ref="ChartGnomonic"/>
+				<xs:element ref="ChartOrthographic"/>
+				<xs:element ref="ChartEquidistant"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ChartPageType">
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="pagesize" use="required">
+		<xs:attribute name="size" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="a[0-5]|[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="viewport" use="required">
+		<xs:attribute name="real" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
 					<xs:maxInclusive value="100"/>
@@ -59,32 +87,15 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="scale" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:double">
-					<xs:minExclusive value="0"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="hemisphere" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="northern|southern"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Chart">
+	<xs:element name="ChartPage" type="ChartPageType"/>
+	<xs:element name="Origin">
 		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="ChartStereographic"/>
-				<xs:element ref="ChartGnomonic"/>
-				<xs:element ref="ChartOrthographic"/>
-				<xs:element ref="ChartEquidistant"/>
-			</xs:choice>
+			<xs:complexContent>
+				<xs:extension base="SphericalType"/>
+			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="Origin" type="SphericalType"/>
 	<xs:element name="Extent" type="SphericalType"/>
 	<xs:element name="ChartStereographic" type="ChartAzimuthalType"/>
 	<xs:element name="ChartGnomonic" type="ChartAzimuthalType"/>
@@ -105,14 +116,14 @@
 				<xs:restriction base="xs:string"/>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="pagesizex" use="optional">
+		<xs:attribute name="chartpagerealx" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
 					<xs:minInclusive value="0"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="pagesizey" use="optional">
+		<xs:attribute name="chartpagerealy" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
 					<xs:minInclusive value="0"/>
@@ -225,10 +236,8 @@
 	</xs:element>
 	<xs:complexType name="HorizonType">
 		<xs:sequence>
-			<xs:element ref="Latitude"/>
-			<xs:element ref="Longitude" minOccurs="0"/>
-			<xs:element ref="Date" minOccurs="0"/>
-			<xs:element ref="Circle" maxOccurs="unbounded"/>
+			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Circle" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Body" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Catalog" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -255,7 +264,13 @@
 	<xs:element name="HorizonLocal">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="HorizonType"/>
+				<xs:extension base="HorizonType">
+					<xs:sequence>
+						<xs:element ref="Latitude"/>
+						<xs:element ref="Longitude" minOccurs="0"/>
+						<xs:element ref="Date" minOccurs="0"/>
+					</xs:sequence>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -452,11 +467,17 @@
 		<xs:attribute name="anchor" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright"/>
+					<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(@\{[^\}]+\}@)"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="reverse" type="xs:boolean" use="required"/>
+		<xs:attribute name="reverse" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="true|false|(@\{[^\}]+\}@)"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Annotation">
 		<xs:complexType>
@@ -476,11 +497,17 @@
 								<xs:attribute name="anchor" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright"/>
+											<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(@\{[^\}]+\}@)"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
-								<xs:attribute name="number" type="xs:positiveInteger" use="required"/>
+								<xs:attribute name="number" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:pattern value="([1-9][0-9]*)|(@\{[^\}]+\}@)"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -520,7 +547,7 @@
 					<xs:attribute name="purpose" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible|zenit|(mag([x]|(-?[0-9]+)))"/>
+								<xs:pattern value="none|bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible|zenit|(mag([x]|(-?[0-9]+)))|(@\{[^\}]+\}@)"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -926,16 +953,8 @@
 			<xs:documentation>Azimut bei CircleMeridian, Höhe bei CircleParallel.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="Latitude" type="AngleType">
-		<xs:annotation>
-			<xs:documentation>Nur bei HorizonLocal relevant.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="Longitude" type="AngleType">
-		<xs:annotation>
-			<xs:documentation>Nur bei HorizonLocal relevant.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="Latitude" type="AngleType"/>
+	<xs:element name="Longitude" type="AngleType"/>
 	<xs:element name="HA" type="TimeType">
 		<xs:annotation>
 			<xs:documentation>Stundenwinkel.</xs:documentation>

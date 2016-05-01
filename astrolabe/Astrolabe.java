@@ -72,8 +72,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		int chartpage ;
-
 		// Atlas processing.
 		for ( int at=0 ; at<getAtlasCount() ; at++ ) {
 			Atlas atlas ;
@@ -127,6 +125,25 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 				horizon.headPS( ps ) ;
 				horizon.emitPS( ps ) ;
+
+				// AnnotationStraight processing.
+				for ( int an=0 ; an<( (astrolabe.model.HorizonType) horizon ).getAnnotationStraightCount() ; an++ ) {
+					PostscriptEmitter annotation ;
+
+					ps.operator.gsave() ;
+
+					try {
+						annotation = new AnnotationStraight( ( (astrolabe.model.HorizonType) horizon ).getAnnotationStraight( an ) ) ;
+					} catch ( ParameterNotValidException e ) {
+						throw new RuntimeException( e.toString() ) ;
+					}
+
+					annotation.headPS( ps ) ;
+					annotation.emitPS( ps ) ;
+					annotation.tailPS( ps ) ;
+
+					ps.operator.grestore() ;
+				}
 
 				// Circle processing.
 				for ( int cl=0 ; cl<( (astrolabe.model.HorizonType) horizon ).getCircleCount() ; cl++ ) {

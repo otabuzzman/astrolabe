@@ -32,7 +32,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		this.projector = projector ;
 
-		size = new Text( getText() ).size() ;
+		size = new Text( getText() ).purpose() ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
@@ -72,7 +72,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 			ps.operator.moveto() ;
 
 			ps.array( true ) ;
-			AnnotationStraight.emitPS( ps, getText(), size, 0, 0, 0, 0, 0 ) ;
+			AnnotationStraight.emitPS( ps, new Text( getText() ), size, 0, 0, 0, 0, 0 ) ;
 			ps.array( false ) ;									// p, p, text
 
 			ps.operator.dup() ;

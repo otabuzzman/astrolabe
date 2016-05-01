@@ -42,15 +42,15 @@ public class DMS extends astrolabe.model.DMS {
 		}
 		p = java.lang.Math.pow( 10, e ) ;
 
-		d = java.lang.Math.abs( value ) ;
-		deg = (int) d ;
+		d = ( java.lang.Math.abs( value*3600. )*p+.5 )/p ;
+		deg = (int) d/3600 ;
 		setDeg( sign?-deg:deg ) ;
 
-		m = 60*( d-deg ) ;
+		m = ( d-deg*3600 )/60 ;
 		min = (int) m ;
 		setMin( sign?-min:min ) ;
 
-		s = 60*( m-min ) ;
+		s = d-deg*3600-min*60 ;
 		sec = (int) s ;
 		frc = (int) ( ( s-sec )*p ) ;
 		setSec( sign?-( sec+frc/p ):( sec+frc/p ) ) ;

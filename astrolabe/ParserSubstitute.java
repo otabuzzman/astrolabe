@@ -20,9 +20,9 @@ import fri.patterns.interpreter.parsergenerator.syntax.Syntax;
 import fri.patterns.interpreter.parsergenerator.syntax.SyntaxException;
 import fri.patterns.interpreter.parsergenerator.syntax.builder.SyntaxSeparation;
 
-public class AttributeSyntax extends ReflectSemantic {
+public class ParserSubstitute extends ReflectSemantic {
 
-	private final static Log log = LogFactory.getLog( AttributeSyntax.class ) ;
+	private final static Log log = LogFactory.getLog( ParserSubstitute.class ) ;
 
 	private Lexer lexer ;
 	private Parser parser ;
@@ -44,6 +44,7 @@ public class AttributeSyntax extends ReflectSemantic {
 		{ "TERM", "FACTOR" },
 		{ "TERM", "TERM", "'*'", "FACTOR" },
 		{ "TERM", "TERM", "'/'", "FACTOR" },
+		{ "TERM", "TERM", "'%'", "FACTOR" },
 		{ "FACTOR", "`number`" },
 		{ "FACTOR", "`stringdef`" },
 		{ "FACTOR", "verbatim" },
@@ -73,17 +74,26 @@ public class AttributeSyntax extends ReflectSemantic {
 	}
 
 	public Object CONDITION( Object CONDITION, Object operator, Object EXPRESSION ) {
+		boolean longCONDITION = CONDITION instanceof Long ;
+		boolean longEXPRESSION = EXPRESSION instanceof Long ;
+
 		if ( operator.equals( "<" ) )
-			return new Boolean( ( (Double) CONDITION ).doubleValue()<( (Double) EXPRESSION ).doubleValue() ) ;
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )<
+					( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
 		if ( operator.equals( ">" ) )
-			return new Boolean( ( (Double) CONDITION ).doubleValue()>( (Double) EXPRESSION ).doubleValue() ) ;
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )>
+			( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
 		if ( operator.equals( "<=" ) )
-			return new Boolean( ( (Double) CONDITION ).doubleValue()<=( (Double) EXPRESSION ).doubleValue() ) ;
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )<=
+				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
 		if ( operator.equals( ">=" ) )
-			return new Boolean( ( (Double) CONDITION ).doubleValue()>=( (Double) EXPRESSION ).doubleValue() ) ;
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )>=
+				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
 		if ( operator.equals( "==" ) )
-			return new Boolean( ( (Double) CONDITION ).doubleValue()==( (Double) EXPRESSION ).doubleValue() ) ;
-		return new Boolean( ( (Double) CONDITION ).doubleValue()!=( (Double) EXPRESSION ).doubleValue() ) ;
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )==
+				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+		return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )!=
+			( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
 	}
 
 	public Object EXPRESSION( Object TERM ) {
@@ -91,9 +101,19 @@ public class AttributeSyntax extends ReflectSemantic {
 	}
 
 	public Object EXPRESSION( Object EXPRESSION, Object operator, Object TERM ) {
+		boolean longEXPRESSION = EXPRESSION instanceof Long ;
+		boolean longTERM = TERM instanceof Long ;
+		Double result ;
+
 		if ( operator.equals( "+" ) )
-			return new Double( ( (Double) EXPRESSION ).doubleValue()+( (Double) TERM ).doubleValue() ) ;
-		return new Double( ( (Double) EXPRESSION ).doubleValue()-( (Double) TERM ).doubleValue() ) ;
+			result = new Double( ( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() )+
+					( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() ) ) ;
+		else 
+			result = new Double( ( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() )-
+					( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() ) ) ;
+		if ( longEXPRESSION || longTERM )
+			return new Long( result.longValue() ) ;
+		return result ;
 	}
 
 	public Object TERM( Object FACTOR ) {
@@ -101,9 +121,22 @@ public class AttributeSyntax extends ReflectSemantic {
 	}
 
 	public Object TERM( Object TERM, Object operator, Object FACTOR ) {
+		boolean longTERM = TERM instanceof Long ;
+		boolean longFACTOR = FACTOR instanceof Long ;
+		Double result ;
+
 		if ( operator.equals( "*" ) )
-			return new Double( ( (Double) TERM ).doubleValue()*( (Double) FACTOR ).doubleValue() ) ;
-		return new Double( ( (Double) TERM ).doubleValue()/( (Double) FACTOR ).doubleValue() ) ;
+			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )*
+					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
+		else if ( operator.equals( "/" ) )
+			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )/
+					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
+		else
+			result = new Double( ( longTERM?( (Long) TERM ).longValue():( (Double) TERM ).doubleValue() )%
+					( longFACTOR?( (Long) FACTOR ).longValue():( (Double) FACTOR ).doubleValue() ) ) ;
+		if ( longTERM || longFACTOR )
+			return new Long( result.longValue() ) ;
+		return result ;
 	}
 
 	public Object FACTOR( Object value ) {
@@ -131,6 +164,8 @@ public class AttributeSyntax extends ReflectSemantic {
 	}
 
 	public Object FACTOR( Object minus, Object FACTOR ) {
+		if ( FACTOR instanceof Long )
+			return new Long( -( (Long) FACTOR ).longValue() ) ;
 		return new Double( -( (Double) FACTOR ).doubleValue() ) ;
 	}
 
@@ -146,7 +181,7 @@ public class AttributeSyntax extends ReflectSemantic {
 		return verbatim.toString()+rune.toString() ;
 	}
 
-	public AttributeSyntax() {
+	public ParserSubstitute() {
 		SyntaxSeparation synSep ;
 		ParserTables prsTab ;
 		LexerBuilder lexBld ;
@@ -173,12 +208,12 @@ public class AttributeSyntax extends ReflectSemantic {
 		parser.setDebug( false ) ;		
 	}
 
-	public String parse( String string ) {
+	public String parse( String string ) throws ParameterNotValidException {
 		try {
 			lexer.setInput( string ) ;
 			parser.parse( lexer, this ) ;
 		} catch ( IOException e ) {
-			throw new RuntimeException() ;
+			throw new ParameterNotValidException() ;
 		}
 
 		return new String( parser.getResult().toString() ) ;
@@ -188,13 +223,21 @@ public class AttributeSyntax extends ReflectSemantic {
 		if ( argv.length%2 == 0 )
 			System.exit( 1 ) ;
 
-		for ( int a=1 ; a<argv.length-1 ; a++ )
+		for ( int a=1 ; a<argv.length-1 ; a=a+2 )
 			try {
-				ApplicationHelper.registerNumber( argv[1], new Double( argv[a+1] ) ) ;
-			} catch ( NumberFormatException e ) {
-				ApplicationHelper.registerName( argv[1], new String( argv[a+1] ) ) ;
+				ApplicationHelper.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
+			} catch ( NumberFormatException el ) {
+				try {
+					ApplicationHelper.registerNumber( argv[a], new Double( argv[a+1] ) ) ;
+				} catch ( NumberFormatException ed ) {
+					ApplicationHelper.registerName( argv[a], new String( argv[a+1] ) ) ;
+				}
 			}
 
-			System.err.println( new AttributeSyntax().parse( argv[0] ) ) ;
+			try {
+				System.err.println( new ParserSubstitute().parse( argv[0] ) ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
 	}
 }

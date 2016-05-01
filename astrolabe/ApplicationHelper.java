@@ -62,7 +62,6 @@ public final class ApplicationHelper {
 		String ind ;
 
 		h = CAACoordinateTransformation.RadiansToHours( hms ) ;
-		h = new Rational( h ).getValue() ;
 		hDMS = new DMS( h ) ;
 
 		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
@@ -86,7 +85,6 @@ public final class ApplicationHelper {
 		String ind ;
 
 		d = CAACoordinateTransformation.RadiansToDegrees( dms ) ;
-		d = new Rational( d ).getValue() ;
 		dDMS = new DMS( d ) ;
 
 		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
@@ -575,7 +573,7 @@ public final class ApplicationHelper {
 			}
 			if ( keys.contains( key ) ) {
 				Registry.register( "node", node.name() ) ;
-				r = AnnotationStraight.substitute( node.get( key, def ) ) ;
+				r = new ParserAttribute().stringValue( node.get( key, def ) ) ;
 			} else {
 				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
 			}

@@ -186,32 +186,46 @@ public final class AstrolabeFactory {
 	}
 
 	public static void modelOf( HorizonType horizon ) throws ParameterNotValidException {
+		modelOf( horizon, true ) ;
+	}
+
+	public static void modelOf( HorizonType horizon, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
 		node = ApplicationHelper.getClassNode( horizon, horizon.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( horizon, node ) ;
 
-		try {
-			horizon.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		if ( validate )
+			try {
+				horizon.validate() ;
+			} catch ( ValidationException e ) {
+				throw new ParameterNotValidException( e.toString() ) ;
+			}
 	}
 
 	public static void modelOf( CircleType circle ) throws ParameterNotValidException {
+		modelOf( circle, true ) ;
+	}
+
+	public static void modelOf( CircleType circle, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
 		node = ApplicationHelper.getClassNode( circle, circle.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( circle, node ) ;
 
-		try {
-			circle.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		if ( validate )
+			try {
+				circle.validate() ;
+			} catch ( ValidationException e ) {
+				throw new ParameterNotValidException( e.toString() ) ;
+			}
 	}
 
 	public static void modelOf( AnnotationType annotation ) throws ParameterNotValidException {
+		modelOf( annotation, true ) ;
+	}
+
+	public static void modelOf( AnnotationType annotation, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( annotation == null ) {
@@ -221,14 +235,19 @@ public final class AstrolabeFactory {
 		node = ApplicationHelper.getClassNode( annotation, annotation.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( annotation, node ) ;
 
-		try {
-			annotation.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		if ( validate )
+			try {
+				annotation.validate() ;
+			} catch ( ValidationException e ) {
+				throw new ParameterNotValidException( e.toString() ) ;
+			}
 	}
 
 	public static void modelOf( TextType text ) throws ParameterNotValidException {
+		modelOf( text, true ) ;
+	}
+
+	public static void modelOf( TextType text, boolean validate ) throws ParameterNotValidException {
 		Preferences node ;
 
 		if ( text == null ) {
@@ -238,11 +257,12 @@ public final class AstrolabeFactory {
 		node = ApplicationHelper.getClassNode( text, text.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( text, node ) ;
 
-		try {
-			text.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
+		if ( validate )
+			try {
+				text.validate() ;
+			} catch ( ValidationException e ) {
+				throw new ParameterNotValidException( e.toString() ) ;
+			}
 	}
 
 	public static double valueOf( DateType date ) throws ParameterNotValidException {

@@ -18,7 +18,7 @@ public final class ApplicationConstant {
 	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global model variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
-	public final static String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;
+	public final static String LP_SUBSTITUTE = "@\\{[^\\}]+\\}@" ;
 
 	public final static String LK_ASTROLABE_EPOCH = "substitue.astrolabe.epoch" ;
 
@@ -346,17 +346,17 @@ public final class ApplicationConstant {
 	public final static String LP_ADC6049_NOMINATIVE	= "message.adc6049.{0}.latin.nominative" ;
 	public final static String LP_ADC6049_GENITIVE		= "message.adc6049.{0}.latin.genitive" ;
 
-	public final static String LK_HMS_HOURS		= "messsage.hms.hours" ;
-	public final static String LK_HMS_MINUTES	= "messsage.hms.minutes" ;
-	public final static String LK_HMS_SECONDS	= "messsage.hms.seconds" ;
+	public final static String LK_HMS_HOURS		= "message.hms.hours" ;
+	public final static String LK_HMS_MINUTES	= "message.hms.minutes" ;
+	public final static String LK_HMS_SECONDS	= "message.hms.seconds" ;
 
-	public final static String LK_DMS_DEGREES	= "messsage.dms.degrees" ;
-	public final static String LK_DMS_MINUTES	= "messsage.dms.minutes" ;
-	public final static String LK_DMS_SECONDS	= "messsage.dms.seconds" ;
+	public final static String LK_DMS_DEGREES	= "message.dms.degrees" ;
+	public final static String LK_DMS_MINUTES	= "message.dms.minutes" ;
+	public final static String LK_DMS_SECONDS	= "message.dms.seconds" ;
 
 	// attribute values (AV_), patterns (AP_)
-	public final static String AV_CHART_NORTHERN = "northern" ;
-	public final static String AV_CHART_SOUTHERN = "southern" ;
+	public final static String AV_ATLAS_NORTHERN = "northern" ;
+	public final static String AV_ATLAS_SOUTHERN = "southern" ;
 
 	public final static String AV_CIRCLE_CHASING = "chasing" ;
 	public final static String AV_CIRCLE_LEADING = "leading" ;
@@ -392,11 +392,9 @@ public final class ApplicationConstant {
 	public final static String PK_CHART_HALOMAX			= "halomax" ;
 	public final static String PK_CHART_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
 	public final static String PK_CHART_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
-	public final static String PN_CHART_PAGESIZE		= "pagesize" ;
-	public final static String PN_CHART_LAYOUT			= "layout" ;
 
-	public final static String PK_ATLAS_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
-	public final static String PK_ATLAS_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
+	public final static String PN_CHARTPAGE_LAYOUT		= "layout" ;
+
 	public final static String PK_ATLAS_URLMODELMAP		= "urlModelMap" ;
 	public final static String PK_ATLAS_OVERLAP			= "overlap" ;
 	public final static String PK_ATLAS_LIMITDE			= "limitDe" ;

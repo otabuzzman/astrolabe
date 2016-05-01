@@ -30,7 +30,7 @@
 					<map>
 						<!--keys must equal to method names in model class.-->
 						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
-						<entry key="setReverse,java.lang.Boolean" value="false"/>
+						<entry key="setReverse,java.lang.String" value="false"/>
 						<entry key="setRadiant,java.lang.Boolean" value="false"/>
 					</map>
 					<!--Q I, top-->
@@ -126,7 +126,7 @@
 					<map>
 						<!--keys must equal to method names in model class.-->
 						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
-						<entry key="setReverse,java.lang.Boolean" value="false"/>
+						<entry key="setReverse,java.lang.String" value="false"/>
 						<entry key="setDistance,java.lang.Double" value="0"/>
 					</map>
 				</node>
@@ -390,17 +390,17 @@
 					<entry key="practicality" value="0"/>
 					<entry key="importance" value=".1:0"/>
 				</map>
-				<node name="pagesize">
-					<map>
-						<!--keys must equal to allowed values for pagesize atttribue in XSD.-->
-						<entry key="a0" value="840x1188"/>
-						<entry key="a1" value="594x840"/>
-						<entry key="a2" value="420x594"/>
-						<entry key="a3" value="297x420"/>
-						<entry key="a4" value="210x297"/>
-						<entry key="a5" value="148x210"/>
-					</map>
-				</node>
+			</node>
+			<node name="ChartPage">
+				<map>
+					<!--keys must equal to allowed values for size atttribue in XSD.-->
+					<entry key="a0" value="840x1188"/>
+					<entry key="a1" value="594x840"/>
+					<entry key="a2" value="420x594"/>
+					<entry key="a3" value="297x420"/>
+					<entry key="a4" value="210x297"/>
+					<entry key="a5" value="148x210"/>
+				</map>
 				<node name="layout">
 					<map>
 						<entry key="default" value="100x100"/>
@@ -410,10 +410,7 @@
 			</node>
 			<node name="AtlasStereographic">
 				<map>
-					<entry key="practicality" value="0"/>
-					<entry key="importance" value=".4:0"/>
 					<entry key="urlModelMap" value="@{node}@.map"/>
-					<entry key="urlModelXML" value="@{node}@.xml"/>
 					<!--percent-->
 					<entry key="overlap" value="10"/>
 					<!--degrees-->
@@ -425,15 +422,11 @@
 				</map>
 				<node name="northern">
 					<map>
-						<entry key="practicality" value="0:0:.58"/>
-						<entry key="urlModelXML" value="Atlas-@{node}@.xml"/>
 						<entry key="limitDe" value="89."/>
 					</map>
 				</node>
 				<node name="southern">
 					<map>
-						<entry key="practicality" value=".58:0:0"/>
-						<entry key="urlModelXML" value="Atlas-@{node}@.xml"/>
 						<entry key="limitDe" value="-89."/>
 					</map>
 				</node>
@@ -699,6 +692,7 @@
 				<node name="purpose">
 					<map>
 						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
+						<entry key="none" value="-1"/>
 						<entry key="bodylettering0" value="3.0"/>
 						<entry key="bodylettering7" value="1.4"/>
 						<entry key="titlelettering" value="5.8"/>

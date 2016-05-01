@@ -17,6 +17,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private final static double DEFAULT_MARGIN = 1.2 ;
 	private final static double DEFAULT_RISE = 1.2 ;
 
+	private ParserAttribute parser ;
+
 	private double subscriptshrink ;
 	private double subscriptshift ;
 	private double superscriptshrink ;
@@ -35,6 +37,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
+		parser = new ParserAttribute() ;
+
 		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
 		subscriptshrink = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
@@ -50,25 +54,26 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		Layout layout ;
 		Frame frame ;
 		int nt, ne ;
 		double size ;
 		Text text ;
+		boolean reverse ;
+		String anchor ;
 
 		try {
-			size = new Text( getText( 0 ) ).size() ;
+			size = new Text( getText( 0 ) ).purpose() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+		if ( ! ( size>0 ) )
+			return ;
 
 		ps.operator.gsave() ;
 
 		if ( getFrame() != null ) {
 			try {
-				layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
-
-				frame = new Frame( getFrame(), layout ) ;
+				frame = new Frame( getFrame() ) ;
 
 				frame.headPS( ps ) ;
 				frame.emitPS( ps ) ;
@@ -84,7 +89,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 				} catch ( ParameterNotValidException e ) { // should not happen
 					throw new RuntimeException( e.toString() ) ;
 				}
-				emitPS( ps, text, text.size(), 0,
+				emitPS( ps, text, text.purpose(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;
@@ -105,52 +110,54 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.operator.rotate( 90 ) ;
 		}
 
-		if ( getReverse() ) {
+		reverse = parser.booleanValue( getReverse() ) ;
+		if ( reverse ) {
 			ps.operator.rotate( 180 ) ;
 		}
 
-		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+		anchor = parser.stringValue( getAnchor() ) ;
+		if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -size/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
@@ -168,13 +175,13 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void tailPS( PostscriptStream ps ) {
 	}
 
-	public static void emitPS( PostscriptStream ps, astrolabe.model.TextType text, double size, double shift,
+	public static void emitPS( PostscriptStream ps, Text text, double size, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
 		java.util.Vector<java.util.Vector<Object>> FET ;
 		java.util.Vector<Object> fet ;
 		String t ;
 
-		t = substitute( text.getValue() ) ;
+		t = text.value() ;
 		if ( t.length()==0 ) {
 			String msg ;
 
@@ -202,39 +209,15 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 
 		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
-			emitPS( ps, text.getSubscript( d ),
+			emitPS( ps, new Text( text.getSubscript( d ) ),
 					size*subscriptshrink, shift+size*subscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 
 		for ( int u=0 ; u<text.getSuperscriptCount() ; u++ ) {
-			emitPS( ps, text.getSuperscript( u ),
+			emitPS( ps, new Text( text.getSuperscript( u ) ),
 					size*superscriptshrink, shift+size*superscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
-	}
-
-	public static String substitute( String string ) {
-		String s, l, t, v ;
-		java.util.regex.Pattern p ;
-		java.util.regex.Matcher m ;
-		AttributeSyntax e ;
-
-		t = new String( string ) ;
-
-		p = java.util.regex.Pattern.compile( ApplicationConstant.LP_SUBSTITUTE ) ;
-		m = p.matcher( t ) ;
-
-		e = new AttributeSyntax() ;
-
-		while ( m.find( 0 ) ) {
-			s = t.substring( m.start(), m.end() ) ;
-			l = s.substring( 2, s.length()-2 ) ;
-			v = e.parse( l ) ;
-			t = m.replaceFirst( v ) ;
-			m = p.matcher( t ) ;
-		}
-
-		return t ;
 	}
 }
