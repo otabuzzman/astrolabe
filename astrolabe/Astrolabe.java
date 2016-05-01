@@ -72,14 +72,39 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		// Chart processing.
-		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
-			Companion chart ;
+		int chartpage ;
+
+		// Atlas processing.
+		for ( int at=0 ; at<getAtlasCount() ; at++ ) {
+			Atlas atlas ;
 
 			ps.operator.gsave() ;
 
 			try {
-				chart = AstrolabeFactory.companionOf( getChart( ch ), this ) ;
+				atlas = AstrolabeFactory.companionOf( getAtlas( at ) ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			for ( astrolabe.model.Chart atlasPage : atlas.toModel() ) {
+				addChart( atlasPage ) ;
+			}
+
+			ps.operator.gsave() ;
+
+			atlas.headAUX() ;
+			atlas.emitAUX() ;
+			atlas.tailAUX() ;
+		}
+
+		// Chart processing.
+		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
+			PostscriptEmitter chart ;
+
+			ps.operator.gsave() ;
+
+			try {
+				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
@@ -99,6 +124,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
+
 				horizon.headPS( ps ) ;
 				horizon.emitPS( ps ) ;
 
@@ -114,6 +140,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 					} catch ( ParameterNotValidException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
+
 					circle.headPS( ps ) ;
 					circle.emitPS( ps ) ;
 					circle.tailPS( ps ) ;
@@ -167,12 +194,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			} // Horizon processing.
 
 			chart.tailPS( ps ) ;
-
-			try {
-				chart.addToModel( new Object[] { this } ) ;
-			} catch ( ParameterNotValidException e ) {}
-
-			chart.emitAUX() ;
 
 			ps.operator.grestore() ;
 		} // Chart processing.

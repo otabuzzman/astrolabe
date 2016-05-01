@@ -41,10 +41,10 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		}
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_STERADIAN ) ;
-		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area(), 2 ) ;
+		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area() ) ;
 		rad1 = CAACoordinateTransformation.DegreesToRadians( 1 ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area()/( rad1*rad1 ), 2 ) ;		
+		ApplicationHelper.registerDMS( key, polygon==null?0:polygon.area()/( rad1*rad1 ) ) ;		
 	}
 
 	public void headPS( PostscriptStream ps ) {

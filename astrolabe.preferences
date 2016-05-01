@@ -8,30 +8,6 @@
 			<map/>
 			<node name="model">
 				<map/>
-				<node name="ChartStereographic">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setPagesize,java.lang.String" value="a4"/>
-						<entry key="setViewport,java.lang.Double" value="100"/>
-						<entry key="setLayout,java.lang.String" value="default"/>
-						<entry key="setScale,java.lang.Double" value="100"/>
-						<entry key="setHemisphere,java.lang.String" value="northern"/>
-					</map>
-					<node name="atl:northern">
-						<map>
-							<entry key="setViewport,java.lang.Double" value="82"/>
-							<entry key="setLayout,java.lang.String" value="atlaspage"/>
-							<entry key="setHemisphere,java.lang.String" value="northern"/>
-						</map>
-					</node>
-					<node name="atl:southern">
-						<map>
-							<entry key="setViewport,java.lang.Double" value="82"/>
-							<entry key="setLayout,java.lang.String" value="atlaspage"/>
-							<entry key="setHemisphere,java.lang.String" value="southern"/>
-						</map>
-					</node>
-				</node>
 				<node name="HorizonEquatorial">
 					<map>
 						<!--keys must equal to method names in model class.-->
@@ -432,7 +408,7 @@
 					</map>
 				</node>
 			</node>
-			<node name="Atlas">
+			<node name="AtlasStereographic">
 				<map>
 					<entry key="practicality" value="0"/>
 					<entry key="importance" value=".4:0"/>

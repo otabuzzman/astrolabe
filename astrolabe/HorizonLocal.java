@@ -31,12 +31,12 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 		la = AstrolabeFactory.valueOf( getLatitude() ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la, 2 ) ;
+		ApplicationHelper.registerDMS( key, la ) ;
 
 		try {			
 			lo = AstrolabeFactory.valueOf( getLongitude() ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
-			ApplicationHelper.registerDMS( key, lo, 2 ) ;
+			ApplicationHelper.registerDMS( key, lo ) ;
 		} catch ( ParameterNotValidException e ) {
 			lo = 0 ;
 		}
@@ -53,7 +53,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 			lt = lt+( lo>Math.rad180?lo-Math.rad360:lo ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
-			ApplicationHelper.registerHMS( key, lt, 2 ) ;
+			ApplicationHelper.registerHMS( key, lt ) ;
 
 			lo0 = ApplicationHelper.meanEclipticLongitude( jd ) ;
 			la0 = ApplicationHelper.meanEclipticLatitude( jd ) ;
@@ -63,7 +63,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 			ST = ApplicationHelper.mapTo0To24Range( ra0+lt-Math.rad180/*12h*/ ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-			ApplicationHelper.registerHMS( key, ST, 2 ) ;
+			ApplicationHelper.registerHMS( key, ST ) ;
 		} catch ( ParameterNotValidException e ) {
 			ST = 0 ;
 		}

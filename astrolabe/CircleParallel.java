@@ -58,7 +58,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 		al = AstrolabeFactory.valueOf( getAngle() ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-		ApplicationHelper.registerDMS( key, al, 2 ) ;
+		ApplicationHelper.registerDMS( key, al ) ;
 
 		try {
 			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;

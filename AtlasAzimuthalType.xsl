@@ -6,7 +6,7 @@
 
 	<xsl:output method="html" encoding="UTF-8"/>
 
-	<xsl:template xmlns:ns="http://www.chartaecaeli.eu/astrolabe/model" match="/ns:Atlas">
+	<xsl:template xmlns:ns="http://www.chartaecaeli.eu/astrolabe/model" match="/ns:{$atlas}">
 		<xsl:value-of select="@pagesizex"/><xsl:text> </xsl:text>
 		<xsl:value-of select="@pagesizey"/><xsl:text> </xsl:text>
 		

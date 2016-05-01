@@ -35,9 +35,9 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		ST = eq[0] ;
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
-		ApplicationHelper.registerDMS( key, e, 2 ) ;
+		ApplicationHelper.registerDMS( key, e ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la, 2 ) ;		
+		ApplicationHelper.registerDMS( key, la ) ;		
 	}
 
 	public double[] project( double[] ec ) {

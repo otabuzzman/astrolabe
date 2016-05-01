@@ -4,9 +4,16 @@
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
 			<xs:element ref="Epoch"/>
+			<xs:element ref="Atlas" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Chart" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="name" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value=""/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="locale" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -27,7 +34,7 @@
 		<xs:sequence>
 			<xs:element ref="Origin"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
-			<xs:element ref="Atlas" minOccurs="0"/>
+			<xs:element ref="AtlasPage" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="pagesize" use="required">
@@ -71,9 +78,9 @@
 		<xs:complexType>
 			<xs:choice>
 				<xs:element ref="ChartStereographic"/>
+				<xs:element ref="ChartGnomonic"/>
 				<xs:element ref="ChartOrthographic"/>
 				<xs:element ref="ChartEquidistant"/>
-				<xs:element ref="ChartGnomonic"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -83,7 +90,7 @@
 	<xs:element name="ChartGnomonic" type="ChartAzimuthalType"/>
 	<xs:element name="ChartOrthographic" type="ChartAzimuthalType"/>
 	<xs:element name="ChartEquidistant" type="ChartAzimuthalType"/>
-	<xs:complexType name="AtlasType">
+	<xs:complexType name="AtlasAzimuthalType">
 		<xs:sequence>
 			<xs:element ref="Origin"/>
 			<xs:element ref="Extent"/>
@@ -91,7 +98,6 @@
 				<xs:element name="SpanDe" type="AngleType"/>
 				<xs:element name="SpanRA" type="AngleType"/>
 			</xs:choice>
-			<xs:element ref="Catalog" maxOccurs="unbounded"/>
 			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" use="optional">
@@ -122,7 +128,60 @@
 		</xs:attribute>
 		<xs:attribute name="marshal" type="xs:anyURI" use="optional"/>
 	</xs:complexType>
-	<xs:element name="Atlas" type="AtlasType"/>
+	<xs:element name="Atlas">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="AtlasStereographic"/>
+				<xs:element ref="AtlasGnomonic"/>
+				<xs:element ref="AtlasOrthographic"/>
+				<xs:element ref="AtlasEquidistant"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AtlasStereographic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AtlasAzimuthalType">
+					<xs:sequence>
+						<xs:element ref="ChartStereographic"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AtlasGnomonic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AtlasAzimuthalType">
+					<xs:sequence>
+						<xs:element ref="ChartGnomonic"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AtlasOrthographic">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AtlasAzimuthalType">
+					<xs:sequence>
+						<xs:element ref="ChartOrthographic"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AtlasEquidistant">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AtlasAzimuthalType">
+					<xs:sequence>
+						<xs:element ref="ChartEquidistant"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="AtlasPageType">
 		<xs:sequence>
 			<xs:element name="P0" type="SphericalType"/>
@@ -134,30 +193,30 @@
 			<xs:element name="Bottom" type="SphericalType"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="scale" type="xs:double" use="optional"/>
-		<xs:attribute name="p0x" type="xs:double" use="optional"/>
-		<xs:attribute name="p0y" type="xs:double" use="optional"/>
-		<xs:attribute name="p1x" type="xs:double" use="optional"/>
-		<xs:attribute name="p1y" type="xs:double" use="optional"/>
-		<xs:attribute name="p2x" type="xs:double" use="optional"/>
-		<xs:attribute name="p2y" type="xs:double" use="optional"/>
-		<xs:attribute name="p3x" type="xs:double" use="optional"/>
-		<xs:attribute name="p3y" type="xs:double" use="optional"/>
-		<xs:attribute name="originx" type="xs:double" use="optional"/>
-		<xs:attribute name="originy" type="xs:double" use="optional"/>
-		<xs:attribute name="topx" type="xs:double" use="optional"/>
-		<xs:attribute name="topy" type="xs:double" use="optional"/>
-		<xs:attribute name="bottomx" type="xs:double" use="optional"/>
-		<xs:attribute name="bottomy" type="xs:double" use="optional"/>
-		<xs:attribute name="tcp" type="xs:positiveInteger" use="optional"/>
-		<xs:attribute name="bcp" type="xs:positiveInteger" use="optional"/>
-		<xs:attribute name="pcp" type="xs:positiveInteger" use="optional"/>
-		<xs:attribute name="fcp" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="scale" type="xs:double" use="required"/>
+		<xs:attribute name="p0x" type="xs:double" use="required"/>
+		<xs:attribute name="p0y" type="xs:double" use="required"/>
+		<xs:attribute name="p1x" type="xs:double" use="required"/>
+		<xs:attribute name="p1y" type="xs:double" use="required"/>
+		<xs:attribute name="p2x" type="xs:double" use="required"/>
+		<xs:attribute name="p2y" type="xs:double" use="required"/>
+		<xs:attribute name="p3x" type="xs:double" use="required"/>
+		<xs:attribute name="p3y" type="xs:double" use="required"/>
+		<xs:attribute name="originx" type="xs:double" use="required"/>
+		<xs:attribute name="originy" type="xs:double" use="required"/>
+		<xs:attribute name="topx" type="xs:double" use="required"/>
+		<xs:attribute name="topy" type="xs:double" use="required"/>
+		<xs:attribute name="bottomx" type="xs:double" use="required"/>
+		<xs:attribute name="bottomy" type="xs:double" use="required"/>
+		<xs:attribute name="num" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="col" type="xs:int" use="optional"/>
+		<xs:attribute name="row" type="xs:int" use="optional"/>
+		<xs:attribute name="tcp" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="bcp" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="pcp" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="fcp" type="xs:positiveInteger" use="required"/>
 	</xs:complexType>
 	<xs:element name="AtlasPage">
-		<xs:annotation>
-			<xs:documentation>Automatisch generiert falls Atlas-Element in ChartType vorhanden ist</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AtlasPageType"/>

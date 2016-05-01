@@ -1,19 +1,14 @@
 
 package astrolabe;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
-import caa.CAACoordinateTransformation;
-
 import com.vividsolutions.jts.geom.Polygon;
 
 @SuppressWarnings("serial")
-abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements Companion, Projector {
+abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements PostscriptEmitter, Projector {
 
 	private final static double DEFAULT_UNIT = 2.834646 ;
 	private final static double DEFAULT_HALO = 4 ;
@@ -23,9 +18,9 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private final static String DEFAULT_IMPORTANCE = ".1:0" ;
 
 	private double unit ;
-	private boolean northern ;
+	protected boolean northern ;
 
-	private double[] pagesize = new double[2] ;
+	protected double[] pagesize = new double[2] ;
 	private double scale ;
 
 	private double[] origin = new double[2] ;
@@ -83,9 +78,13 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		northern = getHemisphere().equals( ApplicationConstant.AV_CHART_NORTHERN ) ;
 
-		origin = AstrolabeFactory.valueOf( getOrigin() ) ;
-		this.origin[0] = origin[1] ;
-		this.origin[1] = origin[2] ;
+		try {
+			origin = AstrolabeFactory.valueOf( getOrigin() ) ;
+			this.origin[0] = origin[1] ;
+			this.origin[1] = origin[2] ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		halo = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
 		halomin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
@@ -93,6 +92,10 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		Registry.register( ApplicationConstant.PK_CHART_HALO, new Double( halo ) ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALOMIN, new Double( halomin ) ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALOMAX, new Double( halomax ) ) ;
+
+		if ( getAtlasPage() != null ) {
+			( (AtlasPage) getAtlasPage() ).register() ;
+		}
 	}
 
 	public double[] project( double RA, double d ) {
@@ -216,8 +219,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		PostscriptEmitter atlas ;
-
 		if ( 100.>getViewport() ) {
 			ps.operator.mark() ;
 			for ( double[] xy : ApplicationHelper.jtsToVector( fov() ) ) {
@@ -233,137 +234,11 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 				throw new RuntimeException( e.toString() ) ;
 			}
 		}
-
-		if ( getAtlas() != null ) {
-			ps.operator.gsave() ;
-
-			try {
-				atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-
-			atlas.headPS( ps ) ;
-			atlas.emitPS( ps ) ;
-			atlas.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
 		ps.operator.showpage() ;
 		ps.dsc.pageTrailer() ;
-	}
-
-	public void addToModel( Object[] modelWithArgs ) throws ParameterNotValidException {
-		astrolabe.model.AstrolabeType astrolabe ;
-		astrolabe.model.Chart c ;
-		astrolabe.model.ChartAzimuthalType cA ;
-		String atlasName, classNameAbs, classNameRel ;
-		Method methodSetClass ;
-		astrolabe.model.Horizon h ;
-		astrolabe.model.HorizonEquatorial hE ;
-		double oRA, ode ;
-		Atlas atlas ;
-
-		if ( getAtlas() == null ) {
-			String msg ;
-
-			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "getAtlas()", null } ) ;
-
-			throw new ParameterNotValidException( msg ) ;
-		}
-		if ( getAtlas().getName() != null ) {
-			atlasName = ApplicationConstant.GC_NS_ATL+getAtlas().getName() ;
-		} else {
-			atlasName = null ;
-		}
-
-		astrolabe = (astrolabe.model.AstrolabeType) modelWithArgs[0] ;
-
-		try {
-			atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		for ( AtlasPage atlasPage : atlas.volume() ) {
-			hE = new astrolabe.model.HorizonEquatorial() ;
-			hE.setName( atlasName ) ;
-			// astrolabe.model.AngleType
-			hE.setLatitude( new astrolabe.model.Latitude() ) ;
-			hE.getLatitude().setRational( new astrolabe.model.Rational() ) ;
-			hE.getLatitude().getRational().setValue( 90 ) ;
-			atlas.addToModel( new Object[] { hE, atlasPage } ) ;
-
-			h = new astrolabe.model.Horizon() ;
-			h.setHorizonEquatorial( hE ) ;
-
-			classNameRel = getClass().getSimpleName() ;
-			classNameAbs = "astrolabe.model."+classNameRel ;
-			try {
-				cA = (astrolabe.model.ChartAzimuthalType) Class.forName( classNameAbs ).newInstance() ;
-				cA.setName( atlasName ) ;
-				cA.addHorizon( h ) ;
-
-				c = new astrolabe.model.Chart() ;
-
-				methodSetClass = c.getClass().getDeclaredMethod( "set"+classNameRel, new Class[] { Class.forName( classNameAbs ) } ) ;
-				methodSetClass.invoke( c, new Object[] { cA } ) ;
-
-				AstrolabeFactory.modelOf( hE ) ;
-
-				oRA = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[0] ) ;
-				ode = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[1] ) ;
-
-				cA.setOrigin( new astrolabe.model.Origin() ) ;
-				// astrolabe.model.SphericalType
-				cA.getOrigin().setR( new astrolabe.model.R() ) ;
-				cA.getOrigin().getR().setValue( 1 ) ;
-				// astrolabe.model.AngleType
-				cA.getOrigin().setPhi( new astrolabe.model.Phi() ) ;
-				cA.getOrigin().getPhi().setRational( new astrolabe.model.Rational() ) ;
-				cA.getOrigin().getPhi().getRational().setValue( oRA ) ;  
-				// astrolabe.model.AngleType
-				cA.getOrigin().setTheta( new astrolabe.model.Theta() ) ;
-				cA.getOrigin().getTheta().setRational( new astrolabe.model.Rational() ) ;
-				cA.getOrigin().getTheta().getRational().setValue( ode ) ;  
-
-				AstrolabeFactory.modelOf( cA ) ;
-
-				cA.setScale( atlasPage.scale ) ;
-
-				astrolabe.addChart( c ) ;
-			} catch ( InstantiationException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			} catch ( NoSuchMethodException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			} catch ( ClassNotFoundException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			} catch ( InvocationTargetException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			} catch ( IllegalAccessException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-		}
-	}
-
-	public void emitAUX() {
-		Companion atlas ;
-
-		if ( getAtlas() != null ) {
-			try {
-				atlas = new Atlas( getAtlas(), this, pagesize, northern ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-
-			atlas.emitAUX() ;
-		}
 	}
 
 	public double[] hemisphereToPolar( double[] eq ) {

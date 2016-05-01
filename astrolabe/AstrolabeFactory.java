@@ -9,7 +9,6 @@ import astrolabe.model.AngleType;
 import astrolabe.model.AnnotationType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
-import astrolabe.model.ChartAzimuthalType;
 import astrolabe.model.CircleType;
 import astrolabe.model.DateType;
 import astrolabe.model.DMSType;
@@ -30,11 +29,29 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static Companion companionOf( astrolabe.model.Chart ch, astrolabe.model.AstrolabeType parent ) throws ParameterNotValidException {
+	public static Atlas companionOf( astrolabe.model.Atlas at ) throws ParameterNotValidException {
+		astrolabe.model.AtlasStereographic atS ;
+		astrolabe.model.AtlasOrthographic atO ;
+		astrolabe.model.AtlasEquidistant atE ;
+		Atlas atlas ;
+
+		if ( ( atS = at.getAtlasStereographic() ) != null ) {
+			atlas = new AtlasStereographic( atS ) ;
+		} else if ( ( atO = at.getAtlasOrthographic() ) != null ) {
+			atlas = new AtlasOrthographic( atO ) ;
+		} else if ( ( atE = at.getAtlasEquidistant() ) != null ) {
+			atlas = new AtlasEquidistant( atE ) ;
+		} else { // at.getAtlasGnomonic() != null
+			atlas = new AtlasGnomonic( at.getAtlasGnomonic() ) ;
+		}
+		return atlas ;
+	}
+
+	public static PostscriptEmitter companionOf( astrolabe.model.Chart ch ) throws ParameterNotValidException {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
 		astrolabe.model.ChartEquidistant chE ;
-		Companion chart ;
+		PostscriptEmitter chart ;
 
 		if ( ( chS = ch.getChartStereographic() ) != null ) {
 			chart = new ChartStereographic( chS ) ;
@@ -166,19 +183,6 @@ public final class AstrolabeFactory {
 		}
 
 		return catalog ;
-	}
-
-	public static void modelOf( ChartAzimuthalType chart ) throws ParameterNotValidException {
-		Preferences node ;
-
-		node = ApplicationHelper.getClassNode( chart, chart.getName(), null ) ;
-		ApplicationHelper.setupPeerFromClassNode( chart, node ) ;
-
-		try {
-			chart.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 	}
 
 	public static void modelOf( HorizonType horizon ) throws ParameterNotValidException {
@@ -362,8 +366,12 @@ public final class AstrolabeFactory {
 
 		try {
 			r = CAACoordinateTransformation.DegreesToRadians( AstrolabeFactory.valueOf( angle.getRational() ) ) ;
-		} catch ( ParameterNotValidException e ) {
-			r = AstrolabeFactory.valueOf( angle.getDMS() ) ;
+		} catch ( ParameterNotValidException er ) {
+			try {
+				r = AstrolabeFactory.valueOf( angle.getDMS() ) ;
+			} catch ( ParameterNotValidException ed ) {
+				r = AstrolabeFactory.valueOf( angle.getHMS() ) ;
+			}
 		}
 
 		return r ;

@@ -22,6 +22,10 @@ public class Rational extends astrolabe.model.Rational {
 	}
 
 	public Rational( double value, int precision ) {
+		setup( value, precision ) ;
+	}
+
+	public void setup( double value, int precision ) {
 		Preferences node ;
 		double d, p ;
 		int e ;

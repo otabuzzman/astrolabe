@@ -58,8 +58,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		az = AstrolabeFactory.valueOf( getAngle() ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-		ApplicationHelper.registerDMS( key, az, 2 ) ;
-		ApplicationHelper.registerHMS( key, az, 2 ) ;
+		ApplicationHelper.registerDMS( key, az ) ;
+		ApplicationHelper.registerHMS( key, az ) ;
 
 		try {
 			begin = AstrolabeFactory.valueOf( getBegin().getImmediate() ) ;

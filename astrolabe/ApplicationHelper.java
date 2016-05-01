@@ -48,15 +48,15 @@ public final class ApplicationHelper {
 	public static void registerYMD( String key, CAADate date ) {
 		String ind ;
 
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFYEAR ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICATOR_YMD_NUMBEROFYEAR ) ;
 		registerNumber( key+ind, date.Year() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFMONTH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICATOR_YMD_NUMBEROFMONTH ) ;
 		registerNumber( key+ind, date.Month() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_YMD_NUMBEROFDAY ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_YMD_NUMBEROFDAY ) ;
 		registerNumber( key+ind, date.Day() ) ;
 	}
 
-	public static void registerHMS( String key, double hms, double precision ) {
+	public static void registerHMS( String key, double hms ) {
 		double h ;
 		DMS hDMS ;
 		String ind ;
@@ -65,22 +65,22 @@ public final class ApplicationHelper {
 		h = new Rational( h ).getValue() ;
 		hDMS = new DMS( h ) ;
 
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
 		registerNumber( key+ind, hDMS.deg() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURMINUTES ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
 		registerNumber( key+ind, hDMS.min() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURSECONDS ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
 		registerNumber( key+ind, hDMS.sec() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURFRACTION ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
 		registerNumber( key+ind, hDMS.frc() ) ;
 
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_MATH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
 		registerName( key+ind, hDMS.sign()?"-":"" ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_BOTH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
 		registerName( key+ind, hDMS.sign()?"-":"+" ) ;
 	}
 
-	public static void registerDMS( String key, double dms, double precision ) {
+	public static void registerDMS( String key, double dms ) {
 		double d ;
 		DMS dDMS ;
 		String ind ;
@@ -89,18 +89,18 @@ public final class ApplicationHelper {
 		d = new Rational( d ).getValue() ;
 		dDMS = new DMS( d ) ;
 
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
 		registerNumber( key+ind, dDMS.deg() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEMINUTES ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
 		registerNumber( key+ind, dDMS.min() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREESECONDS ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
 		registerNumber( key+ind, dDMS.sec() ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEFRACTION ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
 		registerNumber( key+ind, dDMS.frc() ) ;
 
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_MATH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
 		registerName( key+ind, dDMS.sign()?"-":"" ) ;
-		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_SIG_BOTH ) ;
+		ind = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
 		registerName( key+ind, dDMS.sign()?"-":"+" ) ;
 	}
 
@@ -125,20 +125,20 @@ public final class ApplicationHelper {
 		Registry.register( key, new String( value ) ) ;
 	}
 
-	public static void registerAngle( String key, double value, int precision ) {
+	public static void registerAngle( String key, double value ) {
 		double a ;
 
 		a = mapTo0To360Range( value ) ;
 
-		registerDMS( key, a, precision ) ;
+		registerDMS( key, a ) ;
 	}
 
-	public static void registerTime( String key, double value, int precision ) {
+	public static void registerTime( String key, double value ) {
 		double t ;
 
 		t = mapTo0To24Range( value ) ;
 
-		registerHMS( key, t, precision ) ;
+		registerHMS( key, t ) ;
 	}
 
 	public static double jdOfNow() {

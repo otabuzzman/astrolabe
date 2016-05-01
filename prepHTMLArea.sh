@@ -2,22 +2,18 @@
 #
 
 # Aufruf bei einem Atlas:
-# xsltproc <xsl> <xml> | ./prepHTMLArea.sh <img-src> <area-href> <area-class>
+# xsltproc --param atlas <class> <xsl> <xml> | ./prepHTMLArea.sh <img-src> <area-href> <area-class>
 #
-# xsltproc <xsl> <xml-northern> | ./prepHTMLArea.sh <img-src> <area-href> <area-class-northern>
+# xsltproc --param atlas <AtlasStereographic> AtlasAzimuthalType.xsl Atlas-northern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094
 #
-# xsltproc <xsl> <xml-southern> | ./prepHTMLArea.sh <img-src> <area-href> <area-class-southern>
-#
-# xsltproc Atlas.xsl Atlas-northern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094
-#
-# xsltproc Atlas.xsl Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder940000
+# xsltproc --param atlas "'AtlasStereographic'" AtlasAzimuthalType.xsl Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder940000
 #
 
 # Aufruf bei zwei Atlassen (nebeneinander):
 # xsltproc <xsl> <xml-northern> <xml-southern> |\
 #	./prepHTMLArea.sh <img-src> <area-href> <area-class-northern> <area-class-southern>
 #
-# xsltproc atlas.xsl Atlas-northern.xml Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094 iborder940000
+# xsltproc --param atlas "'AtlasStereographic'" AtlasAzimuthalType.xsl Atlas-northern.xml Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094 iborder940000
 #
 
 img_src=$1 ; shift

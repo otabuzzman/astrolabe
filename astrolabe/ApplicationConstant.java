@@ -7,14 +7,15 @@ public final class ApplicationConstant {
 	}
 
 	// general constants (GC_), patterns (GP_)
-	public final static String GC_APPLICATION	= "astrolabe" ;		// application name
-	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;	// native library
-	public final static String GC_NS_FOVG		= "fovg:" ;			// name space, application generated
-	public final static String GC_NS_FOVE		= "fove:" ;			// name space, application generated
-	public final static String GC_NS_CUT		= "cut:" ;			// name space, application generated
-	public final static String GC_NS_ATL		= "atl:" ;			// name space, application generated
-	public final static String GC_EPOCHE		= "epoch" ;			// class global model variable
-	public final static String GC_LAYOUT		= "layout" ;		// class global model variable
+	public final static String GC_APPLICATION	= "astrolabe" ;			// application name
+	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;		// native library
+	public final static String GC_NS_FOVG		= "fovg:" ;				// name space, application generated
+	public final static String GC_NS_FOVE		= "fove:" ;				// name space, application generated
+	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
+	public final static String GC_NS_ATL		= "atl:" ;				// name space, application generated
+	public final static String GC_NS_REG		= "reg:" ;				// name space, application generated
+	public final static String GC_EPOCHE		= GC_NS_REG+"epoch" ;	// class global model variable, internal usage
+	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global model variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "@\\{[\\p{Alnum}\\p{L}]*\\}@" ;
@@ -47,6 +48,26 @@ public final class ApplicationConstant {
 	public final static String LK_DIAL_NAMEOFMONTHSHORT	= "substitute.dial.day.nameofmonthshort" ;
 	public final static String LK_DIAL_JULIANDAY		= "substitute.dial.day.julianday" ;
 	public final static String LK_DIAL_EQUATIONOFTIME	= "substitute.dial.day.equationoftime" ;
+
+	public final static String LK_ATLASPAGE_NUM		= "substitute.atlaspage.num" ;
+	public final static String LK_ATLASPAGE_TCP		= "substitute.atlaspage.tcp" ;
+	public final static String LK_ATLASPAGE_BCP		= "substitute.atlaspage.bcp" ;
+	public final static String LK_ATLASPAGE_PCP		= "substitute.atlaspage.pcp" ;
+	public final static String LK_ATLASPAGE_FCP		= "substitute.atlaspage.fcp" ;
+	public final static String LK_ATLASPAGE_P0RA	= "substitute.atlaspage.p0ra" ;
+	public final static String LK_ATLASPAGE_P0DE	= "substitute.atlaspage.p0de" ;
+	public final static String LK_ATLASPAGE_P1RA	= "substitute.atlaspage.p1ra" ;
+	public final static String LK_ATLASPAGE_P1DE	= "substitute.atlaspage.p1de" ;
+	public final static String LK_ATLASPAGE_P2RA	= "substitute.atlaspage.p2ra" ;
+	public final static String LK_ATLASPAGE_P2DE	= "substitute.atlaspage.p2de" ;
+	public final static String LK_ATLASPAGE_P3RA	= "substitute.atlaspage.p3ra" ;
+	public final static String LK_ATLASPAGE_P3DE	= "substitute.atlaspage.p3de" ;
+	public final static String LK_ATLASPAGE_ORA		= "substitute.atlaspage.ora" ;
+	public final static String LK_ATLASPAGE_ODE		= "substitute.atlaspage.ode" ;
+	public final static String LK_ATLASPAGE_TRA		= "substitute.atlaspage.tra" ;
+	public final static String LK_ATLASPAGE_TDE		= "substitute.atlaspage.tde" ;
+	public final static String LK_ATLASPAGE_BRA		= "substitute.atlaspage.bra" ;
+	public final static String LK_ATLASPAGE_BDE		= "substitute.atlaspage.bde" ;
 
 	public final static String LK_ADC1239H_CATALOG		= "substitute.adc1239h.Catalog" ;
 	public final static String LK_ADC1239H_HIP			= "substitute.adc1239h.HIP" ;
@@ -257,31 +278,22 @@ public final class ApplicationConstant {
 	public final static String LK_ADC7118_N_MAG		= "substitute.adc7118.n_mag" ;
 	public final static String LK_ADC7118_DESC		= "substitute.adc7118.Desc" ;
 
-	public final static String LK_YMD_NUMBEROFYEAR	= "substitute.indicator.ymd.numberofyear" ;
-	public final static String LK_YMD_NUMBEROFMONTH	= "substitute.indicator.ymd.numberofmonth" ;
-	public final static String LK_YMD_NUMBEROFDAY	= "substitute.indicator.ymd.numberofday" ;
+	public final static String LK_INDICATOR_YMD_NUMBEROFYEAR	= "substitute.indicator.ymd.numberofyear" ;
+	public final static String LK_INDICATOR_YMD_NUMBEROFMONTH	= "substitute.indicator.ymd.numberofmonth" ;
+	public final static String LK_INDICTAOR_YMD_NUMBEROFDAY		= "substitute.indicator.ymd.numberofday" ;
 
-	public final static String LK_HMS_HOURS			= "substitute.indicator.hms.hours" ;
-	public final static String LK_HMS_HOURMINUTES	= "substitute.indicator.hms.hourminutes" ;
-	public final static String LK_HMS_HOURSECONDS	= "substitute.indicator.hms.hourseconds" ;
-	public final static String LK_HMS_HOURFRACTION	= "substitute.indicator.hms.hourfraction" ;
+	public final static String LK_INDICTAOR_HMS_HOURS			= "substitute.indicator.hms.hours" ;
+	public final static String LK_INDICTAOR_HMS_HOURMINUTES		= "substitute.indicator.hms.hourminutes" ;
+	public final static String LK_INDICTAOR_HMS_HOURSECONDS		= "substitute.indicator.hms.hourseconds" ;
+	public final static String LK_INDICTAOR_HMS_HOURFRACTION	= "substitute.indicator.hms.hourfraction" ;
 
-	public final static String LK_DMS_DEGREES			= "substitute.indicator.dms.degrees" ;
-	public final static String LK_DMS_DEGREEMINUTES		= "substitute.indicator.dms.degreeminutes" ;
-	public final static String LK_DMS_DEGREESECONDS		= "substitute.indicator.dms.degreeseconds" ;
-	public final static String LK_DMS_DEGREEFRACTION	= "substitute.indicator.dms.degreefraction" ;
+	public final static String LK_INDICTAOR_DMS_DEGREES			= "substitute.indicator.dms.degrees" ;
+	public final static String LK_INDICTAOR_DMS_DEGREEMINUTES	= "substitute.indicator.dms.degreeminutes" ;
+	public final static String LK_INDICTAOR_DMS_DEGREESECONDS	= "substitute.indicator.dms.degreeseconds" ;
+	public final static String LK_INDICTAOR_DMS_DEGREEFRACTION	= "substitute.indicator.dms.degreefraction" ;
 
-	public final static String LK_SIG_MATH	= "substitute.indicator.sig.math" ;
-	public final static String LK_SIG_BOTH	= "substitute.indicator.sig.both" ;
-
-	// locale annotation keys (LK_)
-	public final static String LK_TEXT_HMS_HOURS	= "annotation.text.hms.hours" ;
-	public final static String LK_TEXT_HMS_MINUTES	= "annotation.text.hms.minutes" ;
-	public final static String LK_TEXT_HMS_SECONDS	= "annotation.text.hms.seconds" ;
-
-	public final static String LK_TEXT_DMS_DEGREES	= "annotation.text.dms.degrees" ;
-	public final static String LK_TEXT_DMS_MINUTES	= "annotation.text.dms.minutes" ;
-	public final static String LK_TEXT_DMS_SECONDS	= "annotation.text.dms.seconds" ;
+	public final static String LK_INDICTAOR_SIG_MATH	= "substitute.indicator.sig.math" ;
+	public final static String LK_INDICTAOR_SIG_BOTH	= "substitute.indicator.sig.both" ;
 
 	// locale message keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LK_MESSAGE_PARAMETERNOTAVLID = "message.parameternotvalid" ;
@@ -333,6 +345,14 @@ public final class ApplicationConstant {
 	public final static String LP_ADC6049_ABBREVIATION	= "message.adc6049.{0}.latin.abbreviation" ;
 	public final static String LP_ADC6049_NOMINATIVE	= "message.adc6049.{0}.latin.nominative" ;
 	public final static String LP_ADC6049_GENITIVE		= "message.adc6049.{0}.latin.genitive" ;
+
+	public final static String LK_HMS_HOURS		= "messsage.hms.hours" ;
+	public final static String LK_HMS_MINUTES	= "messsage.hms.minutes" ;
+	public final static String LK_HMS_SECONDS	= "messsage.hms.seconds" ;
+
+	public final static String LK_DMS_DEGREES	= "messsage.dms.degrees" ;
+	public final static String LK_DMS_MINUTES	= "messsage.dms.minutes" ;
+	public final static String LK_DMS_SECONDS	= "messsage.dms.seconds" ;
 
 	// attribute values (AV_), patterns (AP_)
 	public final static String AV_CHART_NORTHERN = "northern" ;

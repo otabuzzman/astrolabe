@@ -484,10 +484,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		a = baseline.mapIndexToScale( index, getGraduationSpan().getSpan()*unit ) ;
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_DEGREE ) ;
-		ApplicationHelper.registerDMS( key, a, 2 ) ;
+		ApplicationHelper.registerDMS( key, a ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_HOUR ) ;
-		ApplicationHelper.registerTime( key, a, 2 ) ;
+		ApplicationHelper.registerTime( key, a ) ;
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-		ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/, 2 ) ;
+		ApplicationHelper.registerTime( key, a+Math.rad180/*12h*/ ) ;
 	}
 }

@@ -24,6 +24,10 @@ public class DMS extends astrolabe.model.DMS {
 	}
 
 	public DMS( double value, int precision ) {
+		setup( value, precision ) ;
+	}
+
+	public void setup( double value, int precision ) {
 		Preferences node ;
 		double d, m, s, p ;
 		int e ;

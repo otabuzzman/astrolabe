@@ -31,9 +31,9 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		ST = eq[0] ;
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		ApplicationHelper.registerDMS( key, la, 2 ) ;		
+		ApplicationHelper.registerDMS( key, la ) ;		
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-		ApplicationHelper.registerHMS( key, ST, 2 ) ;
+		ApplicationHelper.registerHMS( key, ST ) ;
 	}
 
 	public double[] project( double[] ga ) {

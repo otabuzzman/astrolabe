@@ -46,13 +46,13 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 			y = xy[1] ;
 
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_AZIMUTH ) ;
-			ApplicationHelper.registerDMS( key, lo[1], 2 ) ;
+			ApplicationHelper.registerDMS( key, lo[1] ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_ALTITUDE ) ;
-			ApplicationHelper.registerDMS( key, lo[2], 2 ) ;
+			ApplicationHelper.registerDMS( key, lo[2] ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_RIGHTASCENSION ) ;
-			ApplicationHelper.registerDMS( key, eq[0], 2 ) ;
+			ApplicationHelper.registerDMS( key, eq[0] ) ;
 			key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_BODY_DECLINATION ) ;
-			ApplicationHelper.registerDMS( key, eq[1], 2 ) ;
+			ApplicationHelper.registerDMS( key, eq[1] ) ;
 		} catch ( ParameterNotValidException e ) {}
 	}
 
