@@ -53,7 +53,7 @@ public class Registry {
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { null, "\""+key+"\"" } ) ;
+			msg = MessageFormat.format( msg, new Object[] { "\""+key+"\"", null } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
 

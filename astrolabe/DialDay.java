@@ -73,7 +73,7 @@ public class DialDay extends DialDegree {
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { r, index+","+span } ) ;
+			msg = MessageFormat.format( msg, new Object[] { index+","+span, r } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
 

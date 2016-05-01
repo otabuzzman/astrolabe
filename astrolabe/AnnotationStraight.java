@@ -2,17 +2,12 @@
 package astrolabe;
 
 import java.text.MessageFormat;
-import java.util.Hashtable;
 import java.util.prefs.Preferences;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
-
-	private final static Log log = LogFactory.getLog( AnnotationStraight.class ) ;
 
 	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
 	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
@@ -184,7 +179,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "\"\"", text.getValue() } ) ;
+			msg = MessageFormat.format( msg, new Object[] { text.getValue(), "\"\"" } ) ;
 			throw new ParameterNotValidException( msg ) ;
 		}
 
@@ -220,37 +215,23 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	}
 
 	public static String substitute( String string ) {
-		return substitute( string, new Hashtable<String, String>() ) ;
-	}
-
-	public static String substitute( String string, Hashtable<String, String> registry ) {
-		String s, k, t, v ;
+		String s, l, t, v ;
 		java.util.regex.Pattern p ;
 		java.util.regex.Matcher m ;
+		AttributeSyntax e ;
 
 		t = new String( string ) ;
 
 		p = java.util.regex.Pattern.compile( ApplicationConstant.LP_SUBSTITUTE ) ;
 		m = p.matcher( t ) ;
 
+		e = new AttributeSyntax() ;
+
 		while ( m.find( 0 ) ) {
 			s = t.substring( m.start(), m.end() ) ;
-			k = s.substring( 2, s.length()-2 ) ;
-			try {
-				v = registry.get( k ) ;
-				if ( v == null ) {
-					v = (String) Registry.retrieve( k ) ;
-				}
-				t = m.replaceFirst( v ) ;
-			} catch ( ParameterNotValidException e ) {
-				String msg ;
-
-				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { "\""+t+"\"", "\""+string+"\"" } ) ;
-				log.warn( msg ) ;
-
-				t = m.replaceFirst( "" ) ;
-			}
+			l = s.substring( 2, s.length()-2 ) ;
+			v = e.parse( l ) ;
+			t = m.replaceFirst( v ) ;
 			m = p.matcher( t ) ;
 		}
 

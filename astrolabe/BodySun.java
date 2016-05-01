@@ -66,7 +66,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { jdOy, jdAy } ) ;
+			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
 
 			throw new ParameterNotValidException( msg ) ;
 		}
@@ -104,7 +104,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				String msg ;
 
 				msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { null, "\""+circle+"\"" } ) ;
+				msg = MessageFormat.format( msg, new Object[] { "\""+circle+"\"", null } ) ;
 				log.warn( msg ) ;
 
 				this.circle = null ;

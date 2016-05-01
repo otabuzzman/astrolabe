@@ -17,7 +17,7 @@
 # xsltproc <xsl> <xml-northern> <xml-southern> |\
 #	./prepHTMLArea.sh <img-src> <area-href> <area-class-northern> <area-class-southern>
 #
-# xsltproc atlas-stereographic.xsl Atlas-northern.xml Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094 iborder940000
+# xsltproc atlas.xsl Atlas-northern.xml Atlas-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094 iborder940000
 #
 
 img_src=$1 ; shift

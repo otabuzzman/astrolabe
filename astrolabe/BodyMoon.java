@@ -54,7 +54,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { jdOy, jdAy } ) ;
+			msg = MessageFormat.format( msg, new Object[] { "jdOy>jdAy", "" } ) ;
 
 			throw new ParameterNotValidException( msg ) ;
 		}

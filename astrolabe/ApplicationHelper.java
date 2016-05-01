@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -115,11 +114,11 @@ public final class ApplicationHelper {
 	}
 
 	public static void registerNumber( String key, double value ) {
-		Registry.register( key, (Object) new Double( value ).toString() ) ;
+		Registry.register( key, (Object) new Double( value ) ) ;
 	}
 
 	public static void registerNumber( String key, long value ) {
-		Registry.register( key, (Object) new Long( value ).toString() ) ;
+		Registry.register( key, (Object) new Long( value ) ) ;
 	}
 
 	public static void registerName( String key, String value ) {
@@ -562,7 +561,6 @@ public final class ApplicationHelper {
 	public static String getPreferencesKV( Preferences node, String key, String def ) {
 		String r ;
 		HashSet<String> keys ;
-		Hashtable<String, String> registry ;
 
 		if ( node == null ) {
 			r = def ;
@@ -576,10 +574,8 @@ public final class ApplicationHelper {
 				throw new RuntimeException( e.toString() ) ;
 			}
 			if ( keys.contains( key ) ) {
-				registry = new Hashtable<String, String>() ;
-				registry.put( "node", node.name() ) ;
-
-				r = AnnotationStraight.substitute( node.get( key, def ), registry ) ;
+				Registry.register( "node", node.name() ) ;
+				r = AnnotationStraight.substitute( node.get( key, def ) ) ;
 			} else {
 				r = ApplicationHelper.getPreferencesKV( node.parent(), key, def ) ;
 			}
@@ -965,7 +961,7 @@ public final class ApplicationHelper {
 		Q = ( xy[0] >= 0 && xy[1] >= 0 ) ? 1 :				// QI
 			( xy[0] < 0 && xy[1] >= 0 ) ? 2 :				// QII
 				( xy[0] < 0 && xy[1] < 0 ) ? 3 : 4 ;		// QIII, QIV
-//					( xy[0] > 0 && xy[1] < 0 ) ? 4 : 0 ;	// QIV
+		//					( xy[0] > 0 && xy[1] < 0 ) ? 4 : 0 ;	// QIV
 
 		nsQ = Q==1?"I":Q==2?"II":Q==3?"III":Q==4?"IV":"" ;
 

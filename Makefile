@@ -14,12 +14,11 @@ vpath %.class $(APPL)/model
 CAA = caa-1.17
 
 CLASSPATH = ./lib/castor-0.9.6.jar \
-	./lib/commons-logging-api.jar \
-	./lib/commons-cli-1.0.jar \
-	./lib/jakarta-oro-2.0.8.jar \
+	./lib/jts-1.8.jar \
+	./lib/jtsio-1.8.jar \
+	./lib/runcc.jar \
 	./lib/xercesImpl.jar \
-	./jts-1.8.0/lib/jts-1.8.jar \
-	./jts-1.8.0/lib/jtsio-1.8.jar
+	./lib/commons-logging-1.1.1.jar
 
 .xml.ps:
 	@time $(JDK)/bin/java \
@@ -38,7 +37,7 @@ CLASSPATH = ./lib/castor-0.9.6.jar \
 	@$(JDK)/bin/java \
 		-classpath $(subst $(space),\;, \
 		$(CLASSPATH)) \
-		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<) -o $@
+		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<)) -o $@
 
 all: $(APPL)/model
 
@@ -46,7 +45,6 @@ $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
 	@$(JDK)/bin/java \
 		-classpath $(subst $(space),\;, \
-		./castor-0.9.6-srcgen-ant-task.jar \
 		$(CLASSPATH)) \
 		org.exolab.castor.builder.SourceGenerator -i $<
 	@touch $@
