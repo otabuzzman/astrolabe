@@ -114,7 +114,10 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			for ( int is=0 ; is<segmentList.size() ; is++ ) {
 				segment = segmentList.get( is ) ;
 				peer = new astrolabe.model.BodyAreal() ;
-				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				if ( getName() == null )
+					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
+				else
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 
 				peer.setImportance( getImportance() ) ;
 

@@ -26,8 +26,8 @@ public class Artefact extends astrolabe.model.Artefact implements PostscriptEmit
 			ps.operator.gsave() ;
 
 			companion.headPS( ps ) ;
-			companion.headPS( ps ) ;
-			companion.headPS( ps ) ;
+			companion.emitPS( ps ) ;
+			companion.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
 		}

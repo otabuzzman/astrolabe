@@ -59,8 +59,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		AstrolabeRegistry.registerYMD( key, d ) ;
 
 		d.delete() ;
-
-		Registry.register( ApplicationConstant.GC_PARSER, new ParserAttribute() ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {

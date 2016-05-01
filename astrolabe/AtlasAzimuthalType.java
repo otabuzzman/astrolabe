@@ -232,7 +232,10 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		atlasPage = (AtlasPage) getAtlasPage( atlaspage ) ;
 
 		hE = new astrolabe.model.HorizonEquatorial() ;
-		hE.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		if ( getName() == null )
+			hE.setName( ApplicationConstant.GC_NS_ATL ) ;
+		else
+			hE.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
 		AstrolabeFactory.modelOf( hE, false ) ;
 
 		h = new astrolabe.model.Horizon() ;
@@ -544,7 +547,10 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		astrolabe.model.Annotation a ;
 
 		cP = new astrolabe.model.CircleParallel() ;
-		cP.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		if ( getName() == null )
+			cP.setName( ApplicationConstant.GC_NS_ATL ) ;
+		else
+			cP.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
 		AstrolabeFactory.modelOf( cP, false ) ;
 
 		c = new astrolabe.model.Circle() ;
@@ -582,7 +588,10 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		Preferences node ;
 
 		cM = new astrolabe.model.CircleMeridian() ;
-		cM.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		if ( getName() == null )
+			cM.setName( ApplicationConstant.GC_NS_ATL ) ;
+		else
+			cM.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
 		AstrolabeFactory.modelOf( cM, false ) ;
 
 		c = new astrolabe.model.Circle() ;

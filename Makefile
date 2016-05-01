@@ -68,13 +68,12 @@ astrolabe.pdf: astrolabe.xml
 catalogADC1239H.pdf: catalogADC1239H.xml
 catalogADC1239T.pdf: catalogADC1239T.xml
 catalogADC5050.pdf: catalogADC5050.xml
+catalogADC5109.pdf: catalogADC5109.xml
 catalogADC6049.pdf: catalogADC6049.xml
 catalogADC7118.pdf: catalogADC7118.xml
+catalogADC7237.pdf: catalogADC7237.xml
 
-wallpaper.pdf: wallpaper.xml
-
-intersection.pdf: intersection.xml
-
+.SECONDARY: atlas-stereographic-nostar.ps
+atlas-stereographic-nostar.pdf: atlas-stereographic-nostar.xml
 .SECONDARY: atlas-stereographic.ps
 atlas-stereographic.pdf: atlas-stereographic.xml
-

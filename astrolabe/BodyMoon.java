@@ -123,7 +123,10 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 				jdOe = jdlist.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodyMoon() ;
-				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				if ( getName() == null )
+					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
+				else
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 
 				peer.setStretch( getStretch() ) ;
 				peer.setImportance( getImportance() ) ;

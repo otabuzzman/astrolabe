@@ -246,7 +246,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 				try {
 					peer = new astrolabe.model.CircleMeridian() ;
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+					if ( getName() == null )
+						peer.setName( ApplicationConstant.GC_NS_CUT ) ;
+					else
+						peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 					AstrolabeFactory.modelOf( peer, false ) ;
 
 					peer.setImportance( getImportance() ) ;
@@ -297,7 +300,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
 
 			AstrolabeRegistry.registerJTSCoordinate(
-					ApplicationConstant.LK_CIRCLE_CURRENTPOINT, new JTSCoordinate( l.get( l.size()-1 ) ) ) ;
+					MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_CIRCLE_CURRENTPOINT ),
+					new JTSCoordinate( l.get( l.size()-1 ) ) ) ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;

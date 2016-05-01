@@ -25,18 +25,22 @@ public class JTSCoordinate extends Coordinate {
 	public int boundary( Envelope box ) {
 		double minx, miny, maxx, maxy, curx, cury ;
 
-		minx = java.lang.Math.floor( box.getMinX()*1000. ) ;
-		miny = java.lang.Math.floor( box.getMinY()*1000. ) ;
-		maxx = java.lang.Math.floor( box.getMaxX()*1000. ) ;
-		maxy = java.lang.Math.floor( box.getMaxY()*1000. ) ;
+		minx = normalize( box.getMinX() ) ;
+		miny = normalize( box.getMinY() ) ;
+		maxx = normalize( box.getMaxX() ) ;
+		maxy = normalize( box.getMaxY() ) ;
 
-		curx = java.lang.Math.floor( x*1000. ) ;
-		cury = java.lang.Math.floor( y*1000. ) ;
+		curx = normalize( x ) ;
+		cury = normalize( y ) ;
 
 		return
 		cury == maxy ? 1 :
 			curx == maxx ? 2 :
 				cury == miny ? 3 :
 					curx == minx ? 4 : 0 ;
+	}
+
+	private static double normalize( double value ) {
+		return java.lang.Math.floor( value+.5 ) ;
 	}
 }

@@ -20,7 +20,7 @@ public class Script extends astrolabe.model.Script {
 
 		size = Configuration.getValue(
 				Configuration.getClassNode( this, getName(), ApplicationConstant.PN_TEXT_PURPOSE ),
-				getPurpose(), 0 ) ;
+				getPurpose(), 0. ) ;
 		if ( size==0 ) {
 			try {
 				size = Double.valueOf( getPurpose() ) ;

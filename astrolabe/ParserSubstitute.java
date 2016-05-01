@@ -4,6 +4,7 @@ package astrolabe;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 
 import fri.patterns.interpreter.parsergenerator.Lexer;
 import fri.patterns.interpreter.parsergenerator.Parser;
@@ -144,24 +145,37 @@ public class ParserSubstitute extends ReflectSemantic {
 	public Object FACTOR( Object value ) {
 		try {
 			// value is a "`number`"
-			try {
-				// value is a long "`number`"
-				return Long.valueOf( value.toString() ) ;
-			} catch ( NumberFormatException eL ) {
-				// value is a double "`number`"
-				return Double.valueOf( value.toString() ) ;
-			}
-		} catch ( NumberFormatException eD ) {
+			return valueNumber( value ) ;
+		} catch ( NumberFormatException eV ) {
 			if ( value.toString().matches( "\".*\"" ) )
 				// value is a "`stringdef`"
 				return value.toString().substring( 1, value.toString().length()-1 ) ;
 			Object objectFACTOR = Registry.retrieve( value.toString() ) ;
-			if ( objectFACTOR == null )
-				// value is not a registry key
-				return Double.valueOf( 0 ) ;
-			else
+			if ( objectFACTOR != null ) {
 				// value is a valid registry key
-				return objectFACTOR ;
+				try {
+					return valueNumber( objectFACTOR ) ;
+				} catch ( NumberFormatException eO ) {
+					return objectFACTOR ;
+				}
+			}
+			// value is invalid
+			String msg ;
+
+			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+			msg = MessageFormat.format( msg, new Object[] { "\""+value.toString()+"\"", "" } ) ;
+
+			throw new RuntimeException ( msg ) ;
+		}
+	}
+
+	private static Object valueNumber( Object value ) throws NumberFormatException {
+		try {
+			// value is a long "`number`"
+			return Long.valueOf( value.toString() ) ;
+		} catch ( NumberFormatException e ) {
+			// value is a double "`number`"
+			return Double.valueOf( value.toString() ) ;
 		}
 	}
 

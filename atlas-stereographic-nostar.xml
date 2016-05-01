@@ -34,10 +34,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			</AnnotationParallel>
 			<AnnotationMeridian checker="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
 					</Script>
-					<Script value="{azimutstdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>
@@ -179,10 +179,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			</AnnotationParallel>
 			<AnnotationMeridian checker="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
 					</Script>
-					<Script value="{azimutstdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>

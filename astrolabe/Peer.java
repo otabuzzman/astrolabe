@@ -80,6 +80,10 @@ public class Peer {
 		Object vp ;
 
 		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
+		if ( parser == null ) {
+			parser = new ParserAttribute() ;
+			Registry.register( ApplicationConstant.GC_PARSER, parser ) ;
+		}
 
 		method = getClass().getMethods() ;
 		for ( int m=0 ; m<method.length ; m++ ) {

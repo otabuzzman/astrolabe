@@ -34,7 +34,10 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 		try {
 			for ( String segment : getValue().split( "," ) ) {
 				peer = new astrolabe.model.BodyAreal() ;
-				peer.setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
+				if ( getName() == null )
+					peer.setName( ApplicationConstant.GC_NS_SGN ) ;
+				else
+					peer.setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
 				AstrolabeFactory.modelOf( peer, false ) ;
 
 				for ( String ident : segment.split( ":" ) ) {
@@ -49,8 +52,15 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 					try {
 						body = new astrolabe.model.Body() ;
 						body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-						body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
+						if ( getName() == null )
+							body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN ) ;
+						else
+							body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
 						AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
+
+						body.getBodyStellar().setScript( new astrolabe.model.Script() ) ;
+						body.getBodyStellar().getScript().setPurpose( "none" ) ;
+						body.getBodyStellar().getScript().setValue( "" ) ;
 
 						record.toModel( body ) ;
 
@@ -67,7 +77,8 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 				}
 
 				companion = new BodyAreal( peer, projector ) ;
-				companion.setAnnotation( 0, getAnnotation() ) ;
+				if ( getAnnotation() != null )
+					companion.addAnnotation( getAnnotation() ) ;
 
 				ps.operator.gsave() ;
 

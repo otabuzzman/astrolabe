@@ -140,7 +140,10 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				jdOe = jdlist.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodyPlanet() ;
-				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				if ( getName() == null )
+					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
+				else
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 
 				peer.setStretch( getStretch() ) ;
 				peer.setImportance( getImportance() ) ;

@@ -141,9 +141,6 @@
 		<field cst:name="chartpagerealy" cst:type="double">
 			<bind-xml name="chartpagerealy" node="attribute"/>
 		</field>
-		<field cst:name="checker" cst:type="java.lang.String" cst:required="true">
-			<bind-xml name="checker" node="attribute"/>
-		</field>
 		<field cst:name="origin" cst:type="astrolabe.model.Origin" cst:required="true">
 			<bind-xml name="Origin" node="element"/>
 		</field>

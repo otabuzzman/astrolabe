@@ -50,7 +50,7 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 			}
 		}
 
-		script = ( (astrolabe.model.CatalogADC1239H) peer ).getScript() ;
+		script = ( (astrolabe.model.CatalogADC7118) peer ).getScript() ;
 
 		catalogT = new Hashtable<String, CatalogRecord>() ;
 		catalogL = new java.util.Vector<String>() ;
@@ -138,14 +138,11 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 
 			body = new astrolabe.model.Body() ;
 			body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-			body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
+			if ( getName() == null )
+				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT ) ;
+			else
+				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
 			AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
-
-			try {
-				record.toModel( body ) ;
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
 
 			body.getBodyStellar().setScript( script ) ;
 			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
@@ -155,6 +152,12 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 				body.getBodyStellar().setAnnotation( select[select.length-1].getAnnotation() ) ;
 				if ( select[select.length-1].getScript() != null )
 					body.getBodyStellar().setScript( select[select.length-1].getScript() ) ;
+			}
+
+			try {
+				record.toModel( body ) ;
+			} catch ( ValidationException e ) {
+				throw new RuntimeException( e.toString() ) ;
 			}
 
 			bodyStellar = new BodyStellar( body.getBodyStellar(), projector ) ;

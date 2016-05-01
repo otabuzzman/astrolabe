@@ -156,7 +156,10 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				jdOe = jdlist.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodySun() ;
-				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				if ( getName() == null )
+					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
+				else
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 
 				peer.setStretch( getStretch() ) ;
 				peer.setType( getType() ) ;

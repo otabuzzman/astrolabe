@@ -34,10 +34,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			</AnnotationParallel>
 			<AnnotationMeridian checker="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
 					</Script>
-					<Script value="{azimutstdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>
@@ -30800,7 +30800,7 @@ astrolabe.xsd" name="atlas-stereographic">
 										</AnnotationStraight>
 									</Annotation>
 								</Select>
-								<Script purpose="{Vmag&#x0026;-1?4.64:Vmag&#x0026;0?3.74:Vmag&#x0026;1?3.02:Vmag&#x0026;2?2.43:Vmag&#x0026;3?1.96:Vmag&#x0026;4?1.58:Vmag&#x0026;5?1.27:Vmag&#x0026;6?1.03:0.83:}" value="&#xf811;"/>
+								<Script purpose="{Vmag&#x003c;-1?4.64:Vmag&#x003c;0?3.74:Vmag&#x003c;1?3.02:Vmag&#x003c;2?2.43:Vmag&#x003c;3?1.96:Vmag&#x003c;4?1.58:Vmag&#x003c;5?1.27:Vmag&#x003c;6?1.03:0.83}" value="&#xf811;"/>
 							</CatalogADC5050>
 						</Catalog>
 					</HorizonEquatorial>
@@ -30836,10 +30836,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			</AnnotationParallel>
 			<AnnotationMeridian checker="5">
 				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="h"/>
 					</Script>
-					<Script value="{azimutstdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
 						<Superscript value="m"/>
 					</Script>
 				</AnnotationStraight>
@@ -61602,7 +61602,7 @@ astrolabe.xsd" name="atlas-stereographic">
 										</AnnotationStraight>
 									</Annotation>
 								</Select>
-								<Script purpose="{Vmag&#x0026;-1?4.64:Vmag&#x0026;0?3.74:Vmag&#x0026;1?3.02:Vmag&#x0026;2?2.43:Vmag&#x0026;3?1.96:Vmag&#x0026;4?1.58:Vmag&#x0026;5?1.27:Vmag&#x0026;6?1.03:0.83:}" value="&#xf811;"/>
+								<Script purpose="{Vmag&#x003c;-1?4.64:Vmag&#x003c;0?3.74:Vmag&#x003c;1?3.02:Vmag&#x003c;2?2.43:Vmag&#x003c;3?1.96:Vmag&#x003c;4?1.58:Vmag&#x003c;5?1.27:Vmag&#x003c;6?1.03:0.83}" value="&#xf811;"/>
 							</CatalogADC5050>
 						</Catalog>
 					</HorizonEquatorial>

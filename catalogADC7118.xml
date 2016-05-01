@@ -48,7 +48,7 @@ astrolabe.xsd">
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VII/118/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
 						<CatalogADC7118 name="7118" fov="chart" url="lib/cat/7118/ngc2000.dat.gz" restrict="mag1,mag2,mag3,mag4,mag5,mag6">
-							<Script purpose="{mag&#x0026;-1?4.64:mag&#x0026;0?3.74:mag&#x0026;1?3.02:mag&#x0026;2?2.43:mag&#x0026;3?1.96:mag&#x0026;4?1.58:mag&#x0026;5?1.27:mag&#x0026;6?1.03:mag&#x0026;7?0.83:mag&#x0026;8?0.67:mag&#x0026;9?0.54:mag&#x0026;10?0.43:mag&#x0026;11?0.35:mag&#x0026;12?0.28:mag&#x0026;13?0.22:mag&#x0026;14?0.18:0.14:}" value="&#xf811;"/>
+							<Script purpose="{mag&#x003c;-1?4.64:mag&#x003c;0?3.74:mag&#x003c;1?3.02:mag&#x003c;2?2.43:mag&#x003c;3?1.96:mag&#x003c;4?1.58:mag&#x003c;5?1.27:mag&#x003c;6?1.03:mag&#x003c;7?0.83:mag&#x003c;8?0.67:mag&#x003c;9?0.54:mag&#x003c;10?0.43:mag&#x003c;11?0.35:mag&#x003c;12?0.28:mag&#x003c;13?0.22:mag&#x003c;14?0.18:0.14}" value="&#xf811;"/>
 						</CatalogADC7118>
 					</Catalog>
 				</HorizonEquatorial>

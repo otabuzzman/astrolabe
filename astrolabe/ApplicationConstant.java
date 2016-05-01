@@ -427,8 +427,8 @@ public final class ApplicationConstant {
 	public final static String LK_INDICTAOR_SIG_MATH	= "substitute.indicator.sig.math" ;
 	public final static String LK_INDICTAOR_SIG_BOTH	= "substitute.indicator.sig.both" ;
 
-	public final static String LK_INDICTAOR_JTSCOORDINATE_QUADRANT	= "substitue.indicator.jtscoordinate.quadrant" ;
-	public final static String LK_INDICTAOR_JTSCOORDINATE_BOUNDARY	= "substitue.indicator.jtscoordinate.boundary" ;
+	public final static String LK_INDICTAOR_JTSCOORDINATE_QUADRANT	= "substitute.indicator.jtscoordinate.quadrant" ;
+	public final static String LK_INDICTAOR_JTSCOORDINATE_BOUNDARY	= "substitute.indicator.jtscoordinate.boundary" ;
 
 	// locale message keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LK_MESSAGE_PARAMETERNOTAVLID = "message.parameternotvalid" ;
