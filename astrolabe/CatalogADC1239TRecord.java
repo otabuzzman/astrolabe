@@ -157,24 +157,37 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 
 	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
+		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
-		double[] pv ;
 		CAA2DCoordinate cpm, ceq ;
+
+		tm = new astrolabe.model.Text() ;
+		tm.setPurpose( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+		tm.setValue( DEFAULT_STAR ) ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
 		model.getBodyStellar().setName( TYC() ) ;
-		model.getBodyStellar().setGlyph( DEFAULT_STAR ) ;
-		model.getBodyStellar().setType( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
 		model.getBodyStellar().setTurn( 0 ) ;
 		model.getBodyStellar().setSpin( 0 ) ;
+		model.getBodyStellar().setText( tm ) ;
 
 		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
 				epoch-2451545., RAhms(), DEdms(), pmRA()/1000., pmDE()/1000. ) ;
 		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 		pm = new astrolabe.model.Position() ;
-		pv = new double[] { 1, CAACoordinateTransformation.HoursToDegrees( ceq.X() ), ceq.Y() } ;
-		AstrolabeFactory.modelOf( pv, pm ) ;
+		// astrolabe.model.SphericalType
+		pm.setR( new astrolabe.model.R() ) ;
+		pm.getR().setValue( 1 ) ;
+		// astrolabe.model.AngleType
+		pm.setPhi( new astrolabe.model.Phi() ) ;
+		pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
+		pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
+		// astrolabe.model.AngleType
+		pm.setTheta( new astrolabe.model.Theta() ) ;
+		pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
+		pm.getTheta().getRational().setValue( ceq.Y() ) ;  
+
 		model.getBodyStellar().setPosition( pm ) ;
 		cpm.delete() ;
 		ceq.delete() ;

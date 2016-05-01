@@ -66,42 +66,42 @@ astrolabe.xsd">
 							<Dial>
 								<DialHour baseline="rail" reflect="false">
 									<GraduationSpan span=".5" division="3">
-										<AnnotationStraight purpose="dialfraction" anchor="middleleft" radiant="false" reverse="false">
-											<Text value="30">
+										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+											<Text purpose="dialfraction" value="30">
 												<Superscript value="m"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<GraduationHalf span="1">
-										<AnnotationStraight purpose="dialcardinal" anchor="middleleft" radiant="false" reverse="false">
-											<Text value="@{wertstd}@">
+										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+											<Text purpose="dialcardinal" value="@{wertstd}@">
 												<Superscript value="h"/>
 											</Text>
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
-										<AnnotationCurved purpose="diallettering" anchor="bottommiddle" reverse="false" distance="1.04">
-											<Text value="Rektaszension (&#x0394;&#x03b1; 10">
+										<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
+											<Text purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
 												<Superscript value="m"/>
 											</Text>
-											<Text value=")"/>
+											<Text purpose="diallettering" value=")"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialHour>
 							</Dial>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="12.5">
-									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
+									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="50">
-									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								<AnnotationCurved anchor="topright" reverse="false" distance="50">
+									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
-								<AnnotationCurved purpose="guidance" anchor="topright" reverse="false" distance="87.5">
-									<Text value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
+									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleParallel>
@@ -140,8 +140,8 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26">
-									<Text value="&#x00c4;quator"/>
+								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26">
+									<Text purpose="circlelettering" value="&#x00c4;quator"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleParallel>
@@ -299,8 +299,8 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="26.5">
-									<Text value="S&#x00fc;dlicher Sonnenwendekreis"/>
+								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26.5">
+									<Text purpose="circlelettering" value="S&#x00fc;dlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleSouthernTropic>
@@ -322,8 +322,8 @@ astrolabe.xsd">
 								</Immediate>
 							</End>
 							<Annotation>
-								<AnnotationCurved purpose="circlelettering" anchor="topmiddle" reverse="false" distance="27">
-									<Text value="N&#x00f6;rdlicher Sonnenwendekreis"/>
+								<AnnotationCurved anchor="topmiddle" reverse="false" distance="27">
+									<Text purpose="circlelettering" value="N&#x00f6;rdlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleNorthernTropic>
@@ -433,13 +433,13 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
-										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
-											<Text value="@{wertgrd}@&#x00b0;"/>
+										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
-											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
@@ -583,13 +583,13 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
-										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
-											<Text value="@{wertgrd}@&#x00b0;"/>
+										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
-											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
@@ -733,13 +733,13 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
-										<AnnotationStraight purpose="guidance" anchor="bottomleft" radiant="false" reverse="true">
-											<Text value="@{wertgrd}@&#x00b0;"/>
+										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
-										<AnnotationCurved purpose="guidance" anchor="middleleft" reverse="false" distance="10">
-											<Text value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>

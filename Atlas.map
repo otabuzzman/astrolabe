@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping xmlns="http://castor.exolab.org/" xmlns:cst="http://castor.exolab.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="mapping">
 	<description>Castor generated mapping file</description>
+	<class cst:name="astrolabe.model.Top">
+		<description>Default mapping for class astrolabe.model.Top</description>
+		<map-to cst:xml="Top" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
+			<bind-xml name="phi" node="element"/>
+		</field>
+		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
+			<bind-xml name="theta" node="element"/>
+		</field>
+		<field cst:name="r" cst:type="astrolabe.model.R">
+			<bind-xml name="r" node="element"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.Theta">
+		<description>Default mapping for class astrolabe.model.Theta</description>
+		<map-to cst:xml="theta" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="DMS" cst:type="astrolabe.model.DMS">
+			<bind-xml name="DMS" node="element"/>
+		</field>
+		<field cst:name="HMS" cst:type="astrolabe.model.HMS">
+			<bind-xml name="HMS" node="element"/>
+		</field>
+		<field cst:name="rational" cst:type="astrolabe.model.Rational">
+			<bind-xml name="Rational" node="element"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.P2">
+		<description>Default mapping for class astrolabe.model.P2</description>
+		<map-to cst:xml="P2" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
+			<bind-xml name="phi" node="element"/>
+		</field>
+		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
+			<bind-xml name="theta" node="element"/>
+		</field>
+		<field cst:name="r" cst:type="astrolabe.model.R">
+			<bind-xml name="r" node="element"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.HMS">
+		<description>Default mapping for class astrolabe.model.HMS</description>
+		<map-to cst:xml="HMS" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="hrs" cst:type="int" cst:required="true">
+			<bind-xml name="hrs" node="attribute"/>
+		</field>
+		<field cst:name="min" cst:type="int" cst:required="true">
+			<bind-xml name="min" node="attribute"/>
+		</field>
+		<field cst:name="sec" cst:type="double" cst:required="true">
+			<bind-xml name="sec" node="attribute"/>
+		</field>
+	</class>
 	<class cst:name="astrolabe.Atlas">
 		<description>Default mapping for class astrolabe.Atlas</description>
 		<map-to cst:xml="Atlas" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
@@ -16,36 +68,26 @@
 		<field cst:name="extent" cst:type="astrolabe.model.Extent" cst:required="true">
 			<bind-xml name="Extent" node="element"/>
 		</field>
-		<field cst:name="atlasPage" cst:type="astrolabe.AtlasPage" cst:collection="array">
+		<field cst:name="atlasPage" cst:type="astrolabe.model.AtlasPage" cst:collection="array">
 			<bind-xml name="AtlasPage" node="element"/>
 		</field>
 	</class>
-	<class cst:name="astrolabe.model.Theta">
-		<description>Default mapping for class astrolabe.model.Theta</description>
-		<map-to cst:xml="theta" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+	<class cst:name="astrolabe.model.Phi">
+		<description>Default mapping for class astrolabe.model.Phi</description>
+		<map-to cst:xml="phi" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
 		<field cst:name="DMS" cst:type="astrolabe.model.DMS">
 			<bind-xml name="DMS" node="element"/>
 		</field>
-		<field cst:name="rational" cst:type="astrolabe.model.Rational" cst:required="true">
+		<field cst:name="HMS" cst:type="astrolabe.model.HMS">
+			<bind-xml name="HMS" node="element"/>
+		</field>
+		<field cst:name="rational" cst:type="astrolabe.model.Rational">
 			<bind-xml name="Rational" node="element"/>
 		</field>
 	</class>
-	<class cst:name="astrolabe.model.Extent">
-		<description>Default mapping for class astrolabe.model.Extent</description>
-		<map-to cst:xml="Extent" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
-			<bind-xml name="phi" node="element"/>
-		</field>
-		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
-			<bind-xml name="theta" node="element"/>
-		</field>
-		<field cst:name="r" cst:type="astrolabe.model.R">
-			<bind-xml name="r" node="element"/>
-		</field>
-	</class>
-	<class cst:name="astrolabe.model.P0">
-		<description>Default mapping for class astrolabe.model.P0</description>
-		<map-to cst:xml="P0" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+	<class cst:name="astrolabe.model.Origin">
+		<description>Default mapping for class astrolabe.model.Origin</description>
+		<map-to cst:xml="Origin" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
 		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
 			<bind-xml name="phi" node="element"/>
 		</field>
@@ -104,6 +146,18 @@
 		<field cst:name="bottomy" cst:type="double">
 			<bind-xml name="bottomy" node="attribute"/>
 		</field>
+		<field cst:name="tcp" cst:type="int">
+			<bind-xml name="tcp" node="attribute"/>
+		</field>
+		<field cst:name="bcp" cst:type="int">
+			<bind-xml name="bcp" node="attribute"/>
+		</field>
+		<field cst:name="pcp" cst:type="int">
+			<bind-xml name="pcp" node="attribute"/>
+		</field>
+		<field cst:name="fcp" cst:type="int">
+			<bind-xml name="fcp" node="attribute"/>
+		</field>
 		<field cst:name="p0" cst:type="astrolabe.model.P0" cst:required="true">
 			<bind-xml name="P0" node="element"/>
 		</field>
@@ -126,26 +180,6 @@
 			<bind-xml name="Bottom" node="element"/>
 		</field>
 	</class>
-	<class cst:name="astrolabe.model.Phi">
-		<description>Default mapping for class astrolabe.model.Phi</description>
-		<map-to cst:xml="phi" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="rational" cst:type="astrolabe.model.Rational" cst:required="true">
-			<bind-xml name="Rational" node="element"/>
-		</field>
-	</class>
-	<class cst:name="astrolabe.model.Bottom">
-		<description>Default mapping for class astrolabe.model.Bottom</description>
-		<map-to cst:xml="Bottom" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
-			<bind-xml name="phi" node="element"/>
-		</field>
-		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
-			<bind-xml name="theta" node="element"/>
-		</field>
-		<field cst:name="r" cst:type="astrolabe.model.R">
-			<bind-xml name="r" node="element"/>
-		</field>
-	</class>
 	<class cst:name="astrolabe.model.P1">
 		<description>Default mapping for class astrolabe.model.P1</description>
 		<map-to cst:xml="P1" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
@@ -159,36 +193,9 @@
 			<bind-xml name="r" node="element"/>
 		</field>
 	</class>
-	<class cst:name="astrolabe.model.Rational">
-		<description>Default mapping for class astrolabe.model.Rational</description>
-		<map-to cst:xml="Rational" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="value" cst:type="double" cst:required="true">
-			<bind-xml name="value" node="attribute"/>
-		</field>
-	</class>
-	<class cst:name="astrolabe.model.P2">
-		<description>Default mapping for class astrolabe.model.P2</description>
-		<map-to cst:xml="P2" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
-			<bind-xml name="phi" node="element"/>
-		</field>
-		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
-			<bind-xml name="theta" node="element"/>
-		</field>
-		<field cst:name="r" cst:type="astrolabe.model.R">
-			<bind-xml name="r" node="element"/>
-		</field>
-	</class>
-	<class cst:name="astrolabe.model.R">
-		<description>Default mapping for class astrolabe.model.R</description>
-		<map-to cst:xml="r" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
-		<field cst:name="value" cst:type="double" cst:required="true">
-			<bind-xml name="value" node="attribute"/>
-		</field>
-	</class>
-	<class cst:name="astrolabe.model.Origin">
-		<description>Default mapping for class astrolabe.model.Origin</description>
-		<map-to cst:xml="Origin" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+	<class cst:name="astrolabe.model.P0">
+		<description>Default mapping for class astrolabe.model.P0</description>
+		<map-to cst:xml="P0" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
 		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
 			<bind-xml name="phi" node="element"/>
 		</field>
@@ -212,9 +219,49 @@
 			<bind-xml name="r" node="element"/>
 		</field>
 	</class>
-	<class cst:name="astrolabe.model.Top">
-		<description>Default mapping for class astrolabe.model.Top</description>
-		<map-to cst:xml="Top" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+	<class cst:name="astrolabe.DMS">
+		<description>Default mapping for class astrolabe.DMS</description>
+		<map-to cst:xml="DMS" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="deg" cst:type="int" cst:required="true">
+			<bind-xml name="deg" node="attribute"/>
+		</field>
+		<field cst:name="min" cst:type="int" cst:required="true">
+			<bind-xml name="min" node="attribute"/>
+		</field>
+		<field cst:name="sec" cst:type="double" cst:required="true">
+			<bind-xml name="sec" node="attribute"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.Rational">
+		<description>Default mapping for class astrolabe.Rational</description>
+		<map-to cst:xml="Rational" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="value" cst:type="double" cst:required="true">
+			<bind-xml name="value" node="attribute"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.Bottom">
+		<description>Default mapping for class astrolabe.model.Bottom</description>
+		<map-to cst:xml="Bottom" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
+			<bind-xml name="phi" node="element"/>
+		</field>
+		<field cst:name="theta" cst:type="astrolabe.model.Theta" cst:required="true">
+			<bind-xml name="theta" node="element"/>
+		</field>
+		<field cst:name="r" cst:type="astrolabe.model.R">
+			<bind-xml name="r" node="element"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.R">
+		<description>Default mapping for class astrolabe.model.R</description>
+		<map-to cst:xml="r" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
+		<field cst:name="value" cst:type="double" cst:required="true">
+			<bind-xml name="value" node="attribute"/>
+		</field>
+	</class>
+	<class cst:name="astrolabe.model.Extent">
+		<description>Default mapping for class astrolabe.model.Extent</description>
+		<map-to cst:xml="Extent" cst:ns-uri="http://www.chartaecaeli.eu/astrolabe/model"/>
 		<field cst:name="phi" cst:type="astrolabe.model.Phi" cst:required="true">
 			<bind-xml name="phi" node="element"/>
 		</field>

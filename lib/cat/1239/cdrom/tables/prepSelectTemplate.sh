@@ -32,10 +32,11 @@ gawk -v "cat=${cat:=1}" 'BEGIN{FS="|" ;
 	greek["ups"]="&#x03c5;" ;
 	greek["zet"]="&#x03b6;"}
 
-function xmlText( value, element ) {
+function xmlText( purpose, value, element ) {
+	p=sprintf("purpose=\"%s\"",purpose) ;
 	v=sprintf("value=\"%s\"",value) ;
-	if(element~/^$/){r=sprintf("<Text %s/>",v)}
-	else{r=sprintf("<Text %s>%s</Text>",v,element)}
+	if(element~/^$/){r=sprintf("<Text %s %s/>",p,v)}
+	else{r=sprintf("<Text %s %s>%s</Text>",p,v,element)}
 	return r ;
 }
 
@@ -46,10 +47,11 @@ function xmlSuperscript( value, element ) {
 	return r ;
 }
 
-function xmlAnnotationStraight( purpose, anchor, reverse, radiant, element ) {
-	p=sprintf("purpose=\"%s\"",purpose) ; a=sprintf("anchor=\"%s\"",anchor) ;
-	rev=sprintf("reverse=\"%s\"",reverse) ; rad=sprintf("radiant=\"%s\"",radiant) ;
-	return sprintf("<AnnotationStraight %s %s %s %s>%s</AnnotationStraight>",p,a,rev,rad,element) ;
+function xmlAnnotationStraight( anchor, reverse, radiant, element ) {
+	a=sprintf("anchor=\"%s\"",anchor) ;
+	rev=sprintf("reverse=\"%s\"",reverse) ;
+	rad=sprintf("radiant=\"%s\"",radiant) ;
+	return sprintf("<AnnotationStraight %s %s %s>%s</AnnotationStraight>",a,rev,rad,element) ;
 }
 
 function xmlAnnotation( element ) {
@@ -78,8 +80,8 @@ function xmlSelect( value, element ) {
 # Variable, Konstellation und ggf. Common Name
 $cat>0 && $11~/^[A-Z]/{
 	split($11,n,/_/) ;
-	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bodylettering7","bottomleft","false","false",xmlText(n[1] " " n[2],""))) \
-		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("bodylettering0","middleleft","false","false",xmlText($12,""))):"")) ;
+	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bottomleft","false","false",xmlText("bodylettering7",n[1] " " n[2],""))) \
+		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("middleleft","false","false",xmlText("bodylettering0",$12,""))):"")) ;
 	next ;
 }
 
@@ -92,16 +94,16 @@ $cat>0 && ( $9~/..*/ || $11~/^[a-z]/ ){
 	if(m>1){nbay=substr(n[1],1,m-1) ; nidx=substr(n[1],m)+0}
 	else{nbay=n[1] ; nidx=0}
 	if(length(nbay)==3){nbay=greek[nbay]}
-	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bodylettering7","bottomleft","false","false",
-		xmlText(($11~/^[a-z]/?"V":"") nbay,nidx>0?xmlSuperscript(nidx,""):"") xmlText((n[3]~/..*/?" (" n[3] ") ":" ") n[2],""))) \
-		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("bodylettering0","middleleft","false","false",xmlText($12,""))):"")) ;
+	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bottomleft","false","false",
+		xmlText("bodylettering7",($11~/^[a-z]/?"V":"") nbay,nidx>0?xmlSuperscript(nidx,""):"") xmlText("bodylettering7",(n[3]~/..*/?" (" n[3] ") ":" ") n[2],""))) \
+		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("middleleft","false","false",xmlText("bodylettering0",$12,""))):"")) ;
 	next ;
 }
 
 # Flamsteed, Komponente, Konstellation und ggf. Common Name
 $cat>0 && $8~/..*/{
 	split($8,n,/_/) ;
-	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bodylettering7","bottomleft","false","false",xmlText(n[1] (n[3]~/..*/?" (" n[3] ") ":" ") n[2],""))) \
-		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("bodylettering0","middleleft","false","false",xmlText($12,""))):"")) ;
+	print xmlSelect($cat, xmlAnnotation(xmlAnnotationStraight("bottomleft","false","false",xmlText("bodylettering7",n[1] (n[3]~/..*/?" (" n[3] ") ":" ") n[2],""))) \
+		($12~/..*/?xmlAnnotation(xmlAnnotationStraight("middleleft","false","false",xmlText("bodylettering0",$12,""))):"")) ;
 }
 '

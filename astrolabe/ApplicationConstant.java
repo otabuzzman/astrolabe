@@ -405,7 +405,8 @@ public final class ApplicationConstant {
 	public final static String PK_ANNOTATION_SUPERSCRIPTSHRINK	= "superscriptshrink" ;
 	public final static String PK_ANNOTATION_MARGIN				= "margin" ;
 	public final static String PK_ANNOTATION_RISE				= PK_GENERAL_RISE ;
-	public final static String PN_ANNOTATION_PURPOSE			= "purpose" ;
+
+	public final static String PN_TEXT_PURPOSE		= "purpose" ;
 
 	public final static String PK_BODY_INTERVAL		= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH		= "stretch" ;

@@ -4,8 +4,8 @@ package astrolabe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
@@ -184,14 +184,16 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 	public static void main( String[] argv ) {
 		File f ;
-		FileReader m ;
+		FileInputStream s ;
+		InputStreamReader r ;
 		Astrolabe a ;
 		PostscriptStream ps ;
 
 		try {
 			f = new File( argv[0] ) ;
-			m = new FileReader( f ) ;
-			a = new AstrolabeReader().read( m ) ;
+			s = new FileInputStream( f ) ;
+			r = new InputStreamReader( s, "UTF-8" ) ;
+			a = new AstrolabeReader().read( r ) ;
 
 			ps = new PostscriptStream( System.out, a.getName() ) ;
 

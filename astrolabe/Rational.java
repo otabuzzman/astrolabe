@@ -13,6 +13,10 @@ public class Rational extends astrolabe.model.Rational {
 	private int deg ;
 	private int frc ;
 
+	// castor requirement for (un)marshalling
+	public Rational() {
+	}
+
 	public Rational( double value ) {
 		this( value, -1 ) ;
 	}

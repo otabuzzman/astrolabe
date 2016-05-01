@@ -243,14 +243,28 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		astrolabe.model.Annotation aC = null ;
 		astrolabe.model.AnnotationCurved aCM, aCC ; // model/cut annotation
 		astrolabe.model.AnnotationStraight aSM, aSC ; // model/cut annotation
+		astrolabe.model.Text tC ;
 		List<double[]> l ;
 		double[] xy ;
+		String m ;
 
 		if ( cut ) {
 			fov = ApplicationHelper.getFovGlobal() ;
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
 				peer = new astrolabe.model.CircleParallel() ;
+				// astrolabe.model.AngleType
+				peer.setAngle( new astrolabe.model.Angle() ) ;
+				peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
+
+				peer.setBegin( new astrolabe.model.Begin() ) ;
+				// astrolabe.model.AngleType
+				peer.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+				peer.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+				peer.setEnd( new astrolabe.model.End() ) ;
+				// astrolabe.model.AngleType
+				peer.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+				peer.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
 				if ( getName() != null ) {
 					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 				}
@@ -258,6 +272,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				lob = projector.unproject( s.get( 0 ) ) ;
 				lob[0] = ApplicationHelper.mapTo0To360Range( lob[0] ) ;
 				xy = s.get( s.size()-1 ) ;
+				m = ApplicationHelper.getFovNSMark( xy ) ;
 				loe = projector.unproject( xy ) ; 
 				loe[0] = ApplicationHelper.mapTo0To360Range( loe[0] ) ;
 
@@ -265,67 +280,88 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 					a = CAACoordinateTransformation.RadiansToDegrees( al ) ;
 					ab = CAACoordinateTransformation.RadiansToDegrees( lob[0] ) ;
 					ae = CAACoordinateTransformation.RadiansToDegrees( loe[0] ) ;
-					AstrolabeFactory.modelOf( a, ab, ae, peer ) ;
+					peer.getAngle().getRational().setValue( a ) ;
+					peer.getBegin().getImmediate().getRational().setValue( ab ) ;
+					peer.getEnd().getImmediate().getRational().setValue( ae ) ;
+					AstrolabeFactory.modelOf( peer ) ;
 				} catch ( ParameterNotValidException e ) {
 					throw new RuntimeException( e.toString() ) ;
-				}
-
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 				}
 
 				peer.setImportance( getImportance() ) ;
 
 				peer.setDial( getDial() ) ;
 
-				for ( astrolabe.model.Annotation annotation : getAnnotation() ) {
-					aCM = annotation.getAnnotationCurved() ;
-					if ( aCM != null && aCM.getName() != null ) {
-						aCC = new astrolabe.model.AnnotationCurved() ;
-						aCC.setName( ApplicationHelper.getFovNSMark( xy )+aCM.getName() ) ;
-						aCC.setText( aCM.getText() ) ;
+				try {
+					for ( astrolabe.model.Annotation annotation : getAnnotation() ) {
+						aCM = annotation.getAnnotationCurved() ;
+						if ( aCM != null && aCM.getName() != null ) {
+							aCC = new astrolabe.model.AnnotationCurved() ;
+							aCC.setName( m+aCM.getName() ) ;
 
-						try {
+							for ( astrolabe.model.Text tM : aCM.getText() ) {
+								tC = new astrolabe.model.Text() ;
+								tC.setName( m+tM.getName() ) ;
+								tC.setValue( tM.getValue() ) ;
+								AstrolabeFactory.modelOf( tC ) ;
+
+								tC.setName( tM.getName() ) ;
+
+								tC.setSubscript( tM.getSubscript() ) ;
+								tC.setSuperscript( tM.getSuperscript() ) ;
+
+								aCC.addText( tC ) ;
+							}
+
 							AstrolabeFactory.modelOf( aCC ) ;
-						} catch ( ParameterNotValidException e ) {
-							throw new RuntimeException( e.toString() ) ;
+
+							aCC.setName( aCM.getName() ) ;
+							// setPurpose already done by AstrolabeFactory.modelOf()
+							// aCC.setPurpose( aCM.getPurpose() ) ;
+							// setAnchor already done by AstrolabeFactory.modelOf()
+							// aCC.setAnchor( aCM.getAnchor() ) ;
+							aCC.setReverse( aCM.getReverse() ) ;
+							aCC.setDistance( aCM.getDistance() ) ;
+
+							aC = new astrolabe.model.Annotation() ;
+							aC.setAnnotationCurved( aCC ) ;
 						}
+						aSM = annotation.getAnnotationStraight() ;
+						if ( aSM != null && aSM.getName() != null ) {
+							aSC = new astrolabe.model.AnnotationStraight() ;
+							aSC.setName( m+aSM.getName() ) ;
 
-						aCC.setName( aCM.getName() ) ;
-						// setPurpose already done by AstrolabeFactory.modelOf()
-						// aCC.setPurpose( aCM.getPurpose() ) ;
-						// setAnchor already done by AstrolabeFactory.modelOf()
-						// aCC.setAnchor( aCM.getAnchor() ) ;
-						aCC.setReverse( aCM.getReverse() ) ;
-						aCC.setDistance( aCM.getDistance() ) ;
+							for ( astrolabe.model.Text tM : aSM.getText() ) {
+								tC = new astrolabe.model.Text() ;
+								tC.setName( m+tM.getName() ) ;
+								tC.setValue( tM.getValue() ) ;
+								AstrolabeFactory.modelOf( tC ) ;
 
-						aC = new astrolabe.model.Annotation() ;
-						aC.setAnnotationCurved( aCC ) ;
-					}
-					aSM = annotation.getAnnotationStraight() ;
-					if ( aSM != null && aSM.getName() != null ) {
-						aSC = new astrolabe.model.AnnotationStraight() ;
-						aSC.setName( ApplicationHelper.getFovNSMark( xy )+aSM.getName() ) ;
-						aSC.setText( aSM.getText() ) ;
+								tC.setName( tM.getName() ) ;
 
-						try {
+								tC.setSubscript( tM.getSubscript() ) ;
+								tC.setSuperscript( tM.getSuperscript() ) ;
+
+								aSC.addText( tC ) ;
+							}
+
 							AstrolabeFactory.modelOf( aSC ) ;
-						} catch ( ParameterNotValidException e ) {
-							throw new RuntimeException( e.toString() ) ;
+
+							aSC.setName( aSM.getName() ) ;
+							// setPurpose already done by AstrolabeFactory.modelOf()
+							// aSC.setPurpose( aSM.getPurpose() ) ;
+							// setAnchor already done by AstrolabeFactory.modelOf()
+							// aSC.setAnchor( aSM.getAnchor() ) ;
+							aSC.setReverse( aSM.getReverse() ) ;
+							aSC.setRadiant( aSM.getRadiant() ) ;
+
+							aC = new astrolabe.model.Annotation() ;
+							aC.setAnnotationStraight( aSC ) ;
 						}
-
-						aSC.setName( aSM.getName() ) ;
-						// setPurpose already done by AstrolabeFactory.modelOf()
-						// aSC.setPurpose( aSM.getPurpose() ) ;
-						// setAnchor already done by AstrolabeFactory.modelOf()
-						// aSC.setAnchor( aSM.getAnchor() ) ;
-						aSC.setReverse( aSM.getReverse() ) ;
-						aSC.setRadiant( aSM.getRadiant() ) ;
-
-						aC = new astrolabe.model.Annotation() ;
-						aC.setAnnotationStraight( aSC ) ;
+						peer.addAnnotation( aC ) ;
 					}
-					peer.addAnnotation( aC ) ;
+				} catch ( ParameterNotValidException e ) { // AstrolabeFactory.modelOf()
+					throw new RuntimeException( e.toString() ) ;
 				}
 
 				try {

@@ -15,6 +15,10 @@ public class DMS extends astrolabe.model.DMS {
 	private int sec ;
 	private int frc ;
 
+	// castor requirement for (un)marshalling
+	public DMS() {
+	}
+
 	public DMS( double value ) {
 		this( value, -1 ) ;
 	}

@@ -128,35 +128,35 @@ astrolabe.xsd">
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
 						<CatalogADC6049 fov="catalog" url="lib/cat/6049/bound_20.dat.gz">
 							<Annotation>
-								<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomleft" radiant="false">
-									<Text value="@{abk&#x00fc;rzung}@"/>
+								<AnnotationStraight reverse="false" anchor="bottomleft" radiant="false">
+									<Text purpose="bodylettering0" value="@{abk&#x00fc;rzung}@"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Select value="AQL,AUR,CAM,LEO,ORI,PSC,SER1,SEX,UMI,VIR,LIB,CRV,CRT,PUP,LEP,CAP,SGR,CET">
 								<Annotation>
-									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="bottomright" radiant="false">
-										<Text value="@{abk&#x00fc;rzung}@"/>
+									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
+										<Text purpose="bodylettering0" value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="LAC,SCT,SER2,ANT,PSA">
 								<Annotation>
-									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topright" radiant="false">
-										<Text value="@{abk&#x00fc;rzung}@"/>
+									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
+										<Text purpose="bodylettering0" value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="SCO,SCL">
 								<Annotation>
-									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topleft" radiant="false">
-										<Text value="@{abk&#x00fc;rzung}@"/>
+									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
+										<Text purpose="bodylettering0" value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="CMI,CNC,MON">
 								<Annotation>
-									<AnnotationStraight purpose="bodylettering0" reverse="false" anchor="topleft" radiant="false">
-										<Text value="@{abk&#x00fc;rzung}@"/>
+									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
+										<Text purpose="bodylettering0" value="@{abk&#x00fc;rzung}@"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
@@ -481,8 +481,8 @@ astrolabe.xsd">
 							<Dial>
 								<DialDegree reflect="true" baseline="rail">
 									<GraduationSpan span="10" division="1">
-										<AnnotationStraight purpose="dialcardinal" reverse="false" anchor="middleleft" radiant="false">
-											<Text value="@{wertgrd}@">
+										<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
+											<Text purpose="dialcardinal" value="@{wertgrd}@">
 												<Superscript value="&#x00b0;"/>
 											</Text>
 										</AnnotationStraight>

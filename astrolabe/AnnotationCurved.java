@@ -16,8 +16,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private final static double DEFAULT_MARGIN = 1.2 ;
 	private final static double DEFAULT_RISE = 1.2 ;
 
-	private final static double DEFAULT_PURPOSE = 3.8 ;
-
 	private double subscriptshrink ;
 	private double subscriptshift ;
 	private double superscriptshrink ;
@@ -25,8 +23,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 
 	private double margin ;
 	private double rise ;
-
-	private double size ;
 
 	private double distance ;
 
@@ -50,10 +46,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		margin = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
 		rise = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
 
-		size = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_ANNOTATION_PURPOSE ),
-				getPurpose(), DEFAULT_PURPOSE ) ;
-
 		distance = getDistance() ;
 	}
 
@@ -62,13 +54,26 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 
 	public void emitPS( PostscriptStream ps ) {
 		int nt, ne ;
+		double size ;
+		Text text ;
+
+		try {
+			size = new Text( getText( 0 ) ).size() ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
 		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
 			try {
-				AnnotationStraight.emitPS( ps, getText( nt ), size, 0,
+				try {
+					text = new Text( getText( nt ) ) ;
+				} catch ( ParameterNotValidException e ) { // should not happen
+					throw new RuntimeException( e.toString() ) ;
+				}
+				AnnotationStraight.emitPS( ps, text, text.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;

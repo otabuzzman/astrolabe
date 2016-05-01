@@ -192,6 +192,10 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
+		// map file creation:
+		// 1. make Atlas.map
+		// 2. remove unused class definitions from Atlas.map
+		// 3. remove package model from class definitions Atlas, AtlasPage, DMS and Rational
 		mapn = ApplicationHelper.getPreferencesKV( node,
 				ApplicationConstant.PK_ATLAS_URLMODELMAP, getClass().getSimpleName()+".map" ) ;
 
@@ -211,6 +215,9 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 			marshaller.setMapping( mapping );
 			marshaller.setEncoding( charset ) ;
 
+			// suppress xsi:type attribute (implies xmlns:xsi attribute) in marshaller output
+			marshaller.setSuppressXSIType( true ) ;
+
 			marshaller.marshal( this );
 
 			xmls.flush() ;
@@ -227,8 +234,8 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 	}
 
 	public java.util.Vector<AtlasPage> volume() {
-		java.util.Vector<AtlasPage> r = new java.util.Vector<AtlasPage>() ;
-		int nra, nde ; // number of pages per single declination, number of page rows, current total nop
+		java.util.Vector<AtlasPage> volume = new java.util.Vector<AtlasPage>() ;
+		int nra, nde, grid[], page ; // number of pages per single declination, number of page rows
 		double a, b, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
 		double overlap, spanDe, originDe, extentDe ;
 		double de, dde, sde, ra, dim[] ;
@@ -255,6 +262,9 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		sde = ( dde-spanDe )/( nde-1 ) ;
 		de = originDe-spanDe ;
 
+		grid = new int[nde] ;
+		page = 1 ;
+
 		for ( int cde=0 ; cde<nde ; cde++ ) {
 			rad = projector.project( 0, de )[0] ;
 			b = rad-projector.project( 0, de+spanDe )[0] ;
@@ -263,11 +273,15 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 			tan = ( a/2*( 1-overlap/100. ) )/rad ;
 			nra = (int) ( Math.rad180/java.lang.Math.atan( tan ) ) ;
 
+			grid[cde] = nra ;
+
 			for ( int cra=0 ; cra<nra ; cra++ ) {
 				ra = Math.rad360/nra*cra ;
 
 				dp = page( ra, de, a, b, northern ) ;
 				atlaspage = new AtlasPage() ;
+
+				atlaspage.num = page++ ;
 
 				atlaspage.col = cra ;
 				atlaspage.row = cde ;
@@ -294,7 +308,7 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 				atlaspage.oeq[0] = ApplicationHelper.mapTo0To360Range( atlaspage.oeq[0] ) ;
 
 				// declination in middle of atlas page bottom
-				dim = pageEdges( dp ) ;
+				dim = pageEdge( dp ) ;
 				vb = new Vector( vc ) ;
 				vb.scale( vc.abs()+dim[1]/2 ) ;
 				atlaspage.bxy[0] = vb.x ;
@@ -313,13 +327,15 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 				// atlas page scale
 				atlaspage.scale = pagesize[0]/dim[0]*100 ;
 
-				r.add( atlaspage ) ;
+				volume.add( atlaspage ) ;
 			}
 
 			de = de-sde ;
 		}
 
-		return r ;
+		pageConnect( grid, volume ) ;
+
+		return volume ;
 	}
 
 	private java.util.Vector<Vector> page( double ra, double de, double a, double b, boolean northern ) {
@@ -390,7 +406,7 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		return vc ;
 	}
 
-	private double[] pageEdges( java.util.Vector<Vector> page ) {
+	private double[] pageEdge( java.util.Vector<Vector> page ) {
 		double[] r = new double[2] ;
 		Vector v0, va, vb ;
 
@@ -404,6 +420,57 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		r[1] = vb.abs() ;
 
 		return r ;
+	}
+
+	private void pageConnect( int[] grid, java.util.Vector<AtlasPage> volume ) {
+		int pl ; // lower page index relative to declination ring
+		AtlasPage pcAP, plAP, pfAP ; // current, lower, lower following atlas page
+		AtlasPage pc0AP ; // first atlas page of current declination ring
+		int nde, nra ; // number of declination rings, number of pages in current declination ring
+
+		// 1st pass: connect upper/lower pages
+		nde = grid.length ;
+		for ( int dec=0 ; dec<nde-1 ; dec++ ) { // for each declination ring
+			for ( int rac=0 ; rac<grid[dec] ; rac++ ) { // for each RA page in declination ring
+				pcAP = volume.get( pageIndex( grid, dec, rac ) ) ;
+				// fare#75: lower page of first in declination ring is always the first page in that declination ring.
+				// thus set to 0 when rac equals 0 because the given computation of pl fails if oeq[0] equals rad360.
+				if ( rac > 0 ) {
+					pl = (int) ( pcAP.oeq[0]*grid[dec+1]/Math.rad360 ) ;
+				} else {
+					pl = 0 ;
+				}
+				// look ahead one page in lower ring, set its tcp to current num in advance in case that page will be skipped
+				if ( pl < grid[dec+1]-1 ) {
+					pfAP = volume.get( pageIndex( grid, dec+1, pl+1 ) ) ;
+					pfAP.tcp = pcAP.num ;
+				}
+				plAP = volume.get( pageIndex( grid, dec+1, pl ) ) ;
+				pcAP.bcp = plAP.num ;
+				plAP.tcp = pcAP.num ;
+			}
+		}
+		// 2nd pass: connect previous/following pages
+		for ( int dec=0 ; dec<nde ; dec++ ) {
+			nra = grid[dec] ;
+			pc0AP = volume.get( pageIndex( grid, dec, 0 ) ) ;
+			for ( int rac=0 ; rac<nra ; rac++ ) {
+				pcAP = volume.get( pageIndex( grid, dec, rac ) ) ;
+				pcAP.fcp = pc0AP.num+( rac+nra+1 )%nra ;
+				pcAP.pcp = pc0AP.num+( rac+nra-1 )%nra ;
+			}
+		}
+	}
+
+	private int pageIndex( int[] grid, int ide, int ira ) {
+		int index = 0 ;
+
+		for ( int cde=0 ; cde<ide ; cde++ ) {
+			index += grid[cde] ;
+		}
+		index += ira ;
+
+		return index ;
 	}
 
 	private astrolabe.model.Circle checkerDeToModel( double de ) {
@@ -424,14 +491,28 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 		c = new astrolabe.model.Circle() ;
 		c.setCircleParallel( cP ) ;
+		// astrolabe.model.AngleType
+		cP.setAngle( new astrolabe.model.Angle() ) ;
+		cP.getAngle().setRational( new astrolabe.model.Rational() ) ;
+
+		cP.setBegin( new astrolabe.model.Begin() ) ;
+		// astrolabe.model.AngleType
+		cP.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+		cP.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cP.setEnd( new astrolabe.model.End() ) ;
+		// astrolabe.model.AngleType
+		cP.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+		cP.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
 
 		aS = new astrolabe.model.AnnotationStraight() ;
 		if ( getName() != null ) {
 			name = ApplicationConstant.GC_NS_ATL+getName() ;
-
-			cP.setName( name ) ;
-			aS.setName( name ) ;
+		} else {
+			name = null ;
 		}
+
+		cP.setName( name ) ;
+		aS.setName( name ) ;
 
 		a = new astrolabe.model.Annotation() ;
 		a.setAnnotationStraight( aS ) ;
@@ -442,25 +523,49 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ;
 		tVal = "@{"+designator+indicator+"}@" ;
 		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_DEGREES ) ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEMINUTES ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = "@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_MINUTES ) ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREESECONDS ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = "@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_TEXT_DMS_SECONDS ) ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREEFRACTION ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = ".@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		cPAng = CAACoordinateTransformation.RadiansToDegrees( de ) ;
@@ -479,7 +584,10 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 		try {
 			AstrolabeFactory.modelOf( aS ) ;
-			AstrolabeFactory.modelOf( cPAng, 0, 360, cP ) ;
+			cP.getAngle().getRational().setValue( cPAng ) ;
+			cP.getBegin().getImmediate().getRational().setValue( 0 ) ;
+			cP.getEnd().getImmediate().getRational().setValue( 360 ) ;
+			AstrolabeFactory.modelOf( cP ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -507,14 +615,28 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 		c = new astrolabe.model.Circle() ;
 		c.setCircleMeridian( cM ) ;
+		// astrolabe.model.AngleType
+		cM.setAngle( new astrolabe.model.Angle() ) ;
+		cM.getAngle().setRational( new astrolabe.model.Rational() ) ;
+
+		cM.setBegin( new astrolabe.model.Begin() ) ;
+		// astrolabe.model.AngleType
+		cM.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+		cM.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+		cM.setEnd( new astrolabe.model.End() ) ;
+		// astrolabe.model.AngleType
+		cM.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+		cM.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
 
 		aS = new astrolabe.model.AnnotationStraight() ;
 		if ( getName() != null ) {
 			name = ApplicationConstant.GC_NS_ATL+getName() ;
-
-			cM.setName( name ) ;
-			aS.setName( name ) ;
+		} else {
+			name = null ;
 		}
+
+		cM.setName( name ) ;
+		aS.setName( name ) ;
 
 		a = new astrolabe.model.Annotation() ;
 		a.setAnnotationStraight( aS ) ;
@@ -525,7 +647,13 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURS ) ;
 		tVal = "@{"+designator+indicator+"}@" ;
 		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
@@ -533,9 +661,15 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURMINUTES ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = "@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
@@ -543,9 +677,15 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURSECONDS ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = "@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		tSup = new astrolabe.model.Superscript() ;
@@ -553,9 +693,15 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_HMS_HOURFRACTION ) ;
-		tGen = new astrolabe.model.Text() ;
 		tVal = "@{"+designator+indicator+"}@" ;
+		tGen = new astrolabe.model.Text() ;
+		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
+		try {
+			AstrolabeFactory.modelOf( tGen ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 		tDMS.add( tGen ) ;
 
 		cMAng = CAACoordinateTransformation.RadiansToDegrees( ra ) ;
@@ -577,7 +723,10 @@ public class Atlas extends astrolabe.model.Atlas implements Companion {
 
 			node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 			cMEnd = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
-			AstrolabeFactory.modelOf( cMAng, northern?-90:90, cMEnd, cM ) ;
+			cM.getAngle().getRational().setValue( cMAng ) ;
+			cM.getBegin().getImmediate().getRational().setValue( northern?-90:90 ) ;
+			cM.getEnd().getImmediate().getRational().setValue( cMEnd ) ;
+			AstrolabeFactory.modelOf( cM ) ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}

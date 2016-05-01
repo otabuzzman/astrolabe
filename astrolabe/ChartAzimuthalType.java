@@ -292,6 +292,10 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		for ( AtlasPage atlasPage : atlas.volume() ) {
 			hE = new astrolabe.model.HorizonEquatorial() ;
 			hE.setName( atlasName ) ;
+			// astrolabe.model.AngleType
+			hE.setLatitude( new astrolabe.model.Latitude() ) ;
+			hE.getLatitude().setRational( new astrolabe.model.Rational() ) ;
+			hE.getLatitude().getRational().setValue( 90 ) ;
 			atlas.addToModel( new Object[] { hE, atlasPage } ) ;
 
 			h = new astrolabe.model.Horizon() ;
@@ -313,7 +317,21 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 				oRA = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[0] ) ;
 				ode = CAACoordinateTransformation.RadiansToDegrees( atlasPage.oeq[1] ) ;
-				AstrolabeFactory.modelOf( new double[] { 1, oRA, ode }, cA ) ;
+
+				cA.setOrigin( new astrolabe.model.Origin() ) ;
+				// astrolabe.model.SphericalType
+				cA.getOrigin().setR( new astrolabe.model.R() ) ;
+				cA.getOrigin().getR().setValue( 1 ) ;
+				// astrolabe.model.AngleType
+				cA.getOrigin().setPhi( new astrolabe.model.Phi() ) ;
+				cA.getOrigin().getPhi().setRational( new astrolabe.model.Rational() ) ;
+				cA.getOrigin().getPhi().getRational().setValue( oRA ) ;  
+				// astrolabe.model.AngleType
+				cA.getOrigin().setTheta( new astrolabe.model.Theta() ) ;
+				cA.getOrigin().getTheta().setRational( new astrolabe.model.Rational() ) ;
+				cA.getOrigin().getTheta().getRational().setValue( ode ) ;  
+
+				AstrolabeFactory.modelOf( cA ) ;
 
 				cA.setScale( atlasPage.scale ) ;
 

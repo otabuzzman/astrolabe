@@ -89,14 +89,20 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 					phi = CAACoordinateTransformation.RadiansToDegrees( lo[0] ) ;
 					the = CAACoordinateTransformation.RadiansToDegrees( lo[1] ) ;
 
-					try {
-						position = new astrolabe.model.Position() ;
-						AstrolabeFactory.modelOf( new double[] { 1, phi, the }, position ) ;
+					position = new astrolabe.model.Position() ;
+					// astrolabe.model.SphericalType
+					position.setR( new astrolabe.model.R() ) ;
+					position.getR().setValue( 1 ) ;
+					// astrolabe.model.AngleType
+					position.setPhi( new astrolabe.model.Phi() ) ;
+					position.getPhi().setRational( new astrolabe.model.Rational() ) ;
+					position.getPhi().getRational().setValue( phi ) ;  
+					// astrolabe.model.AngleType
+					position.setTheta( new astrolabe.model.Theta() ) ;
+					position.getTheta().setRational( new astrolabe.model.Rational() ) ;
+					position.getTheta().getRational().setValue( the ) ;  
 
-						peer.addPosition( position ) ;
-					} catch ( ParameterNotValidException e ) {
-						throw new RuntimeException( e.toString() ) ;
-					}
+					peer.addPosition( position ) ;
 				}
 
 				if ( getName() != null ) {

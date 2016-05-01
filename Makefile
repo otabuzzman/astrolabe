@@ -1,8 +1,7 @@
 APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
-JDK14     = /cygdrive/c/j2sdk1.4.2
-JDK15     = /cygdrive/c/programme/java/jre1.5.0_17
+JDK     = /cygdrive/c/programme/java/jre1.5.0_17
 
 .PHONY: all clean tidy
 .SUFFIXES: .pdf .ps .xml .class .map
@@ -11,6 +10,8 @@ empty =
 space = $(empty) $(empty)
 
 vpath %.class $(APPL)/model
+
+CAA = caa-1.17
 
 CLASSPATH = ./lib/castor-0.9.6.jar \
 	./lib/commons-logging-api.jar \
@@ -21,36 +22,29 @@ CLASSPATH = ./lib/castor-0.9.6.jar \
 	./jts-1.8.0/lib/jtsio-1.8.jar
 
 .xml.ps:
-	@( pagesize=`grep Chart.*pagesize= $< |\
-		sed -e 's,.*pagesize=",,' -e 's,".*,,'` ; set $$pagesize ;\
-		if test $$# -gt 1 ; then \
-			echo "pagesizes in $< are $$*" ; else \
-			echo "pagesize in $< is $$1" ; fi )
-	@time ( PATH=/cygdrive/c/programme/gs/gs8.54/bin:caa-1.17:$$PATH \
-		$(JDK15)/bin/java \
+	@time $(JDK)/bin/java \
+			-Djava.library.path=./$(CAA) \
 			-classpath $(subst $(space),\;, \
 			./astrolabe \
 			./astrolabe/model \
-			./caa-1.17/caa-1.17.jar \
+			./$(CAA) \
 			$(CLASSPATH)) \
-			astrolabe.Astrolabe ./$< >$@ )
+			astrolabe.Astrolabe ./$< >$@
 
 .ps.pdf:
-	@echo "pagesize=$${pagesize:-a4}"
-	@time ( PATH=/cygdrive/c/programme/gs/gs8.54/bin:$$PATH \
-		gswin32c -q -dBATCH -dNOPAUSE -sPAPERSIZE=$${pagesize:-a4} -sDEVICE=pdfwrite -sOutputFile=$@ $< )
+	@time $${GS:-gswin32c} -q -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$@ $<
 
 .class.map:
-	@$(JDK15)/bin/java \
+	@$(JDK)/bin/java \
 		-classpath $(subst $(space),\;, \
 		$(CLASSPATH)) \
-		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<)) -o $@
+		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<) -o $@
 
 all: $(APPL)/model
 
 $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
-	@$(JDK15)/bin/java \
+	@$(JDK)/bin/java \
 		-classpath $(subst $(space),\;, \
 		./castor-0.9.6-srcgen-ant-task.jar \
 		$(CLASSPATH)) \
@@ -64,8 +58,8 @@ clean:
 
 tidy: clean
 	rm -rf *.ps *.pdf
-		
-		
+
+	
 
 astrolabe.pdf: astrolabe.xml
 
@@ -82,3 +76,4 @@ intersection.pdf: intersection.xml
 .SECONDARY: atlas-stereographic.ps
 atlas-stereographic.pdf: atlas-stereographic.xml
 
+atlaspage-template.pdf: atlaspage-template.xml

@@ -18,6 +18,7 @@ import astrolabe.model.HorizonType;
 import astrolabe.model.RationalType;
 import astrolabe.model.PolarType;
 import astrolabe.model.SphericalType;
+import astrolabe.model.TextType;
 import astrolabe.model.TimeType;
 import astrolabe.model.YMDType;
 
@@ -168,21 +169,10 @@ public final class AstrolabeFactory {
 	}
 
 	public static void modelOf( ChartAzimuthalType chart ) throws ParameterNotValidException {
-		modelOf( new double[] { 1, 0, 90 }, chart ) ;
-	}
-
-	public static void modelOf( double[] origin, ChartAzimuthalType chart ) throws ParameterNotValidException {
 		Preferences node ;
-
-		if ( chart == null ) {
-			throw new ParameterNotValidException( ChartAzimuthalType.class.toString()+":"+null ) ;
-		}
 
 		node = ApplicationHelper.getClassNode( chart, chart.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( chart, node ) ;
-
-		chart.setOrigin( new astrolabe.model.Origin() ) ;
-		modelOf( origin, chart.getOrigin() ) ;
 
 		try {
 			chart.validate() ;
@@ -192,21 +182,10 @@ public final class AstrolabeFactory {
 	}
 
 	public static void modelOf( HorizonType horizon ) throws ParameterNotValidException {
-		modelOf( 90, horizon ) ;
-	}
-
-	public static void modelOf( double latitude, HorizonType horizon ) throws ParameterNotValidException {
 		Preferences node ;
-
-		if ( horizon == null ) {
-			throw new ParameterNotValidException( HorizonType.class.toString()+":"+null ) ;
-		}
 
 		node = ApplicationHelper.getClassNode( horizon, horizon.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( horizon, node ) ;
-
-		horizon.setLatitude( new astrolabe.model.Latitude() ) ;
-		modelOf( latitude, horizon.getLatitude() ) ;
 
 		try {
 			horizon.validate() ;
@@ -216,29 +195,10 @@ public final class AstrolabeFactory {
 	}
 
 	public static void modelOf( CircleType circle ) throws ParameterNotValidException {
-		modelOf( 0, 0, 0, circle ) ;
-	}
-
-	public static void modelOf( double angle, double begin, double end, CircleType circle ) throws ParameterNotValidException {
 		Preferences node ;
-
-		if ( circle == null ) {
-			throw new ParameterNotValidException( CircleType.class.toString()+":"+null ) ;
-		}
 
 		node = ApplicationHelper.getClassNode( circle, circle.getName(), null ) ;
 		ApplicationHelper.setupPeerFromClassNode( circle, node ) ;
-
-		circle.setAngle( new astrolabe.model.Angle() ) ;
-		modelOf( angle, circle.getAngle() ) ;
-
-		circle.setBegin( new astrolabe.model.Begin() ) ;
-		circle.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-		modelOf( begin, circle.getBegin().getImmediate() ) ;
-
-		circle.setEnd( new astrolabe.model.End() ) ;
-		circle.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-		modelOf( end, circle.getEnd().getImmediate() ) ;
 
 		try {
 			circle.validate() ;
@@ -264,41 +224,18 @@ public final class AstrolabeFactory {
 		}
 	}
 
-	public static void modelOf( double value, AngleType angle ) throws ParameterNotValidException {
-		if ( angle == null ) {
-			throw new ParameterNotValidException( AngleType.class.toString()+":"+null ) ;
+	public static void modelOf( TextType text ) throws ParameterNotValidException {
+		Preferences node ;
+
+		if ( text == null ) {
+			throw new ParameterNotValidException( TextType.class.toString()+":"+null ) ;
 		}
 
-		angle.setRational( new astrolabe.model.Rational() ) ;
-		angle.getRational().setValue( value ) ;
+		node = ApplicationHelper.getClassNode( text, text.getName(), null ) ;
+		ApplicationHelper.setupPeerFromClassNode( text, node ) ;
 
 		try {
-			angle.validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
-	}
-
-	public static void modelOf( double[] value, SphericalType spherical ) throws ParameterNotValidException {
-		modelOf( value[0], value[1], value[2], spherical ) ;
-	}
-
-	public static void modelOf( double r, double phi, double theta, SphericalType spherical ) throws ParameterNotValidException {
-		if ( spherical == null ) {
-			throw new ParameterNotValidException( SphericalType.class.toString()+":"+null ) ;
-		}
-
-		spherical.setR( new astrolabe.model.R() ) ;
-		spherical.getR().setValue( r ) ;
-
-		spherical.setPhi( new astrolabe.model.Phi() ) ;
-		modelOf( phi, spherical.getPhi() ) ;
-
-		spherical.setTheta( new astrolabe.model.Theta() ) ;
-		modelOf( theta, spherical.getTheta() ) ;
-
-		try {
-			spherical.validate() ;
+			text.validate() ;
 		} catch ( ValidationException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}

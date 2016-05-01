@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.prefs.Preferences;
-
 import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
@@ -13,9 +11,6 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	@SuppressWarnings("unused")
 	private Projector projector ;
 
-	private final static double DEFAULT_SIZE = 2.2 ;
-	private final static String DEFAULT_STAR = "\uf811" ;
-
 	private double size ;
 
 	private double turn ;
@@ -25,7 +20,6 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	private double y ;
 
 	public BodyStellar( Object peer, Projector projector ) throws ParameterNotValidException {
-		Preferences node ;
 		double[] lo, eq, xy ;
 		String key ;
 
@@ -36,15 +30,9 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-
 		this.projector = projector ;
 
-		size = ApplicationHelper.getPreferencesKV( node, getType(), 0. ) ;
-		if ( ! ( size>0 ) ) {
-			size = DEFAULT_SIZE ;
-			setGlyph( DEFAULT_STAR ) ;
-		}
+		size = new Text( getText() ).size() ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
@@ -72,15 +60,10 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		astrolabe.model.TextType text ;
-
 		try {
 			ps.push( x ) ;
 			ps.push( y ) ;
 			ps.operator.moveto() ;
-
-			text = new astrolabe.model.TextType() ;
-			text.setValue( getGlyph() ) ;
 
 			ps.operator.currentpoint() ;
 			ps.operator.copy( 2 ) ;
@@ -89,7 +72,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 			ps.operator.moveto() ;
 
 			ps.array( true ) ;
-			AnnotationStraight.emitPS( ps, text, size, 0, 0, 0, 0, 0 ) ;
+			AnnotationStraight.emitPS( ps, getText(), size, 0, 0, 0, 0, 0 ) ;
 			ps.array( false ) ;									// p, p, text
 
 			ps.operator.dup() ;

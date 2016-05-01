@@ -13,7 +13,7 @@
 						<!--keys must equal to method names in model class.-->
 						<entry key="setPagesize,java.lang.String" value="a4"/>
 						<entry key="setViewport,java.lang.Double" value="100"/>
-						<entry key="setLayout,java.lang.String" value="100x100"/>
+						<entry key="setLayout,java.lang.String" value="default"/>
 						<entry key="setScale,java.lang.Double" value="100"/>
 						<entry key="setHemisphere,java.lang.String" value="northern"/>
 					</map>
@@ -53,62 +53,10 @@
 				<node name="AnnotationStraight">
 					<map>
 						<!--keys must equal to method names in model class.-->
-						<entry key="setPurpose,java.lang.String" value="guidance"/>
 						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
 						<entry key="setReverse,java.lang.Boolean" value="false"/>
 						<entry key="setRadiant,java.lang.Boolean" value="false"/>
 					</map>
-					<!--Q I-IV, inside fov-->
-					<node name="atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="I:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="I:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="II:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="II:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="III:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="III:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="IV:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
-					<node name="IV:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
-						</map>
-					</node>
 					<!--Q I, top-->
 					<node name="It:atl:northern">
 						<map>
@@ -175,15 +123,181 @@
 							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
 						</map>
 					</node>
+					<!--Q IV, right-->
+					<node name="IVr:atl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="middleleft"/>
+						</map>
+					</node>
+					<node name="IVr:atl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="middleleft"/>
+						</map>
+					</node>
+					<!--Q I, right-->
+					<node name="Ir:atl:northern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="middleleft"/>
+						</map>
+					</node>
+					<node name="Ir:atl:southern">
+						<map>
+							<entry key="setAnchor,java.lang.String" value="middleleft"/>
+						</map>
+					</node>
 				</node>
 				<node name="AnnotationCurved">
 					<map>
 						<!--keys must equal to method names in model class.-->
-						<entry key="setPurpose,java.lang.String" value="circlelettering"/>
 						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
 						<entry key="setReverse,java.lang.Boolean" value="false"/>
 						<entry key="setDistance,java.lang.Double" value="0"/>
 					</map>
+				</node>
+				<node name="Text">
+					<map>
+						<entry key="setPurpose,java.lang.String" value="textlettering"/>
+					</map>
+					<!--ns atl: from  class Atlas-->
+					<node name="atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--ns'es for "Q I-IV, inside fov" from class CircleParallel, CircleMeridian-->
+					<node name="I:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="I:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="II:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="II:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="III:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="III:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="IV:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<node name="IV:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="invisible"/>
+						</map>
+					</node>
+					<!--Q I, top-->
+					<node name="It:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="It:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q II, top-->
+					<node name="IIt:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IIt:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q II, left-->
+					<node name="IIl:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IIl:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q III, left-->
+					<node name="IIIl:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IIIl:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q III, bottom-->
+					<node name="IIIb:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IIIb:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q IV, bottom-->
+					<node name="IVb:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IVb:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q IV, right-->
+					<node name="IVr:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="IVr:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<!--Q I, right-->
+					<node name="Ir:atl:northern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
+					<node name="Ir:atl:southern">
+						<map>
+							<entry key="setPurpose,java.lang.String" value="guidance"/>
+						</map>
+					</node>
 				</node>
 			</node>
 			<node name="PostscriptStream">
@@ -278,6 +392,8 @@
 						<entry key="2200..22FF-0" value="/Symbol:/universal /.notdef /partialdiff /existential /.notdef /emptyset /Delta /gradient /element /notelement /.notdef /suchthat /.notdef /.notdef /.notdef /product /.notdef /summation /minus /.notdef /.notdef /fraction /.notdef /asteriskmath /.notdef /bullet /radical /.notdef /.notdef /proportional /infinity /.notdef /angle /.notdef /.notdef /bar /.notdef /.notdef /.notdef /logicaland /logicalor /intersection /union /integral /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /therefore /.notdef /colon /.notdef /.notdef /.notdef /.notdef /.notdef /similar /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /congruent /.notdef /.notdef /approxequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /notequal /equivalence /.notdef /.notdef /lessequal /greaterequal /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /propersubset /propersuperset /notsubset /.notdef /reflexsubset /reflexsuperset /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /circleplus /.notdef /circlemultiply /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /perpendicular /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /dotmath /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="2300..23FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /angleleft /angleright /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /parenlefttp /parenleftex /parenleftbt /parenrighttp /parenrightex /parenrightbt /bracketlefttp /bracketleftex /bracketleftbt /bracketrighttp /bracketrightex /bracketrightbt /bracelefttp /braceleftmid /braceleftbt /braceex /bracerighttp /bracerightmid /bracerightbt /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<entry key="2600..26FF-0" value="/Symbol:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /spade /.notdef /.notdef /club /.notdef /heart /diamond /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
+						<!--Justinian-->
+						<entry key="E000..F8FF-23" value="/Justinian:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /space /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /A /B /C /D /E /F /G /H /I /J /K /L /M /N /O /P /Q /R /S /T /U /V /W /X /Y /Z /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /a /b /c /d /e /f /g /h /i /j /k /l /m /n /o /p /q /r /s /t /u /v /w /x /y /z /.notdef /.notdef /.notdef /.notdef /.notdef"/>
 						<!--0xf810: /sight-->
 						<!--0xf811: /object-->
 						<entry key="E000..F8FF-24" value="/Astrolabe:/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /sight /object /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef"/>
@@ -312,7 +428,7 @@
 				<node name="layout">
 					<map>
 						<entry key="default" value="100x100"/>
-						<entry key="atlaspage" value="9:82:9x9:82:2.6:2.6:2.6:1.2"/>
+						<entry key="atlaspage" value="9:82:9x4.5:4.5:82:2.6:2.6:2.6:1.2"/>
 					</map>
 				</node>
 			</node>
@@ -591,20 +707,6 @@
 					<entry key="margin" value="1.2"/>
 					<entry key="rise" value="1.2"/>
 				</map>
-				<node name="purpose">
-					<map>
-						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
-						<entry key="bodylettering0" value="3.0"/>
-						<entry key="bodylettering7" value="1.4"/>
-						<entry key="circlelettering" value="3.8"/>
-						<entry key="diallettering" value="2.4"/>
-						<entry key="dialcardinal" value="3.8"/>
-						<entry key="dialfraction" value="2.6"/>
-						<entry key="guidance" value="1.6"/>
-						<entry key="obscure" value=".2"/>
-						<entry key="invisible" value="0"/>
-					</map>
-				</node>
 			</node>
 			<node name="AnnotationCurved">
 				<map>
@@ -615,11 +717,16 @@
 					<entry key="margin" value="1.2"/>
 					<entry key="rise" value="1.2"/>
 				</map>
+			</node>
+			<node name="Text">
+				<map/>
 				<node name="purpose">
 					<map>
 						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
 						<entry key="bodylettering0" value="3.0"/>
 						<entry key="bodylettering7" value="1.4"/>
+						<entry key="titlelettering" value="5.8"/>
+						<entry key="textlettering" value="4.4"/>
 						<entry key="circlelettering" value="3.8"/>
 						<entry key="diallettering" value="2.4"/>
 						<entry key="dialcardinal" value="3.8"/>
@@ -627,6 +734,27 @@
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
 						<entry key="invisible" value="0"/>
+						<entry key="zenit" value="4.2"/>
+						<!--magx*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
+						<entry key="mag-1" value="4.64"/>
+						<entry key="mag0" value="3.74"/>
+						<entry key="mag1" value="3.02"/>
+						<entry key="mag2" value="2.43"/>
+						<entry key="mag3" value="1.96"/>
+						<entry key="mag4" value="1.58"/>
+						<entry key="mag5" value="1.27"/>
+						<entry key="mag6" value="1.03"/>
+						<entry key="mag7" value=".83"/>
+						<entry key="mag8" value=".67"/>
+						<entry key="mag9" value=".54"/>
+						<entry key="mag10" value=".43"/>
+						<entry key="mag11" value=".35"/>
+						<entry key="mag12" value=".28"/>
+						<entry key="mag13" value=".22"/>
+						<entry key="mag14" value=".18"/>
+						<entry key="mag15" value=".14"/>
+						<!--faint object or magnitude unavailable-->
+						<entry key="magx" value=".12"/>
 					</map>
 				</node>
 			</node>
@@ -641,31 +769,6 @@
 					<entry key="bottomleft" value="0:0"/>
 					<entry key="bottommiddle" value=".5:0"/>
 					<entry key="bottomright" value="1:0"/>
-				</map>
-			</node>
-			<node name="BodyStellar">
-				<map>
-					<entry key="zenit" value="4.2"/>
-					<!--magx*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
-					<entry key="mag-1" value="4.64"/>
-					<entry key="mag0" value="3.74"/>
-					<entry key="mag1" value="3.02"/>
-					<entry key="mag2" value="2.43"/>
-					<entry key="mag3" value="1.96"/>
-					<entry key="mag4" value="1.58"/>
-					<entry key="mag5" value="1.27"/>
-					<entry key="mag6" value="1.03"/>
-					<entry key="mag7" value=".83"/>
-					<entry key="mag8" value=".67"/>
-					<entry key="mag9" value=".54"/>
-					<entry key="mag10" value=".43"/>
-					<entry key="mag11" value=".35"/>
-					<entry key="mag12" value=".28"/>
-					<entry key="mag13" value=".22"/>
-					<entry key="mag14" value=".18"/>
-					<entry key="mag15" value=".14"/>
-					<!--faint object or magnitude unavailable-->
-					<entry key="magx" value=".12"/>
 				</map>
 			</node>
 			<node name="BodyAreal">

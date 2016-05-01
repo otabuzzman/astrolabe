@@ -56,20 +56,27 @@ public class CatalogADC6049Record implements CatalogRecord {
 	public astrolabe.model.Body toModel( double epoch ) throws ParameterNotValidException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Position pm ;
-		double[] pv ;
 		CAA2DCoordinate ceq ;
 
 		model = new astrolabe.model.Body() ;
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
 		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_AREA ) ;
-		pv = new double[] { 1, 0, 0 } ;
 		for ( int p=0 ; p<RAhr.size() ; p++ ) {
 			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
 			pm = new astrolabe.model.Position() ;
-			pv[1] = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
-			pv[2] = ceq.Y() ;
-			AstrolabeFactory.modelOf( pv, pm ) ;
+			// astrolabe.model.SphericalType
+			pm.setR( new astrolabe.model.R() ) ;
+			pm.getR().setValue( 1 ) ;
+			// astrolabe.model.AngleType
+			pm.setPhi( new astrolabe.model.Phi() ) ;
+			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
+			pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
+			// astrolabe.model.AngleType
+			pm.setTheta( new astrolabe.model.Theta() ) ;
+			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
+			pm.getTheta().getRational().setValue( ceq.Y() ) ;  
+
 			model.getBodyAreal().addPosition( pm ) ;
 			ceq.delete() ;
 		}

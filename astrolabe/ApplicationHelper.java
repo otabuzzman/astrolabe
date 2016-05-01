@@ -962,10 +962,10 @@ public final class ApplicationHelper {
 		int e ; // edge (1/top, 2/right, 3/bottom, 4/left)
 		String ns, nsQ, nse ;
 
-		Q = ( xy[0] > 0 && xy[1] > 0 ) ? 1 :				// QI
-			( xy[0] < 0 && xy[1] > 0 ) ? 2 :				// QII
-				( xy[0] < 0 && xy[1] < 0 ) ? 3 :			// QIII
-					( xy[0] > 0 && xy[1] < 0 ) ? 4 : 0 ;	// QIV
+		Q = ( xy[0] >= 0 && xy[1] >= 0 ) ? 1 :				// QI
+			( xy[0] < 0 && xy[1] >= 0 ) ? 2 :				// QII
+				( xy[0] < 0 && xy[1] < 0 ) ? 3 : 4 ;		// QIII, QIV
+//					( xy[0] > 0 && xy[1] < 0 ) ? 4 : 0 ;	// QIV
 
 		nsQ = Q==1?"I":Q==2?"II":Q==3?"III":Q==4?"IV":"" ;
 

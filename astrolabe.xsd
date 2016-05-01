@@ -149,6 +149,10 @@
 		<xs:attribute name="topy" type="xs:double" use="optional"/>
 		<xs:attribute name="bottomx" type="xs:double" use="optional"/>
 		<xs:attribute name="bottomy" type="xs:double" use="optional"/>
+		<xs:attribute name="tcp" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="bcp" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="pcp" type="xs:positiveInteger" use="optional"/>
+		<xs:attribute name="fcp" type="xs:positiveInteger" use="optional"/>
 	</xs:complexType>
 	<xs:element name="AtlasPage">
 		<xs:annotation>
@@ -386,13 +390,6 @@
 			<xs:element ref="Text" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="purpose" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="bodylettering[07]|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 		<xs:attribute name="anchor" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -454,9 +451,24 @@
 			<xs:element ref="Subscript" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Superscript" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
-	<xs:element name="Text" type="TextType"/>
+	<xs:element name="Text">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TextType">
+					<xs:attribute name="purpose" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible|zenit|(mag([x]|(-?[0-9]+)))"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="Subscript" type="TextType"/>
 	<xs:element name="Superscript" type="TextType"/>
 	<xs:element name="Body">
@@ -475,23 +487,10 @@
 	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Text"/>
 			<xs:element ref="Position"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="zenit|(mag([x]|(-?[0-9]+)))"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="glyph" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="."/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 		<xs:attribute name="turn" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
@@ -859,6 +858,7 @@
 	<xs:complexType name="AngleType">
 		<xs:choice>
 			<xs:element ref="DMS"/>
+			<xs:element ref="HMS"/>
 			<xs:element ref="Rational"/>
 		</xs:choice>
 	</xs:complexType>
