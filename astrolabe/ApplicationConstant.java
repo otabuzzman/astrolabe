@@ -382,6 +382,7 @@ public final class ApplicationConstant {
 	public final static String PK_GENERAL_INTERVAL		= "interval" ;
 	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
 	public final static String PK_GENERAL_PRECISION		= "precision" ;
+	public final static String PK_GENERAL_IMPORTANCE	= "importnace" ;
 
 	public final static String PK_ASTROLABE_VIEWER		= "viewer" ;
 
@@ -407,6 +408,8 @@ public final class ApplicationConstant {
 	public final static String PK_DIAL_THICKNESS	= "thickness" ;
 	public final static String PK_DIAL_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
 
+	public final static String PK_SIGN_IMPORTANCE	= PK_GENERAL_IMPORTANCE ;
+
 	public final static String PK_GRADUATION_SPACE		= PK_GENERAL_SPACE ;
 	public final static String PK_GRADUATION_LINELENGTH	= "linelength" ;
 	public final static String PK_GRADUATION_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
@@ -426,6 +429,8 @@ public final class ApplicationConstant {
 	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
 
 	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
+
+	public final static String PK_CATALOGADC6049RECORD_IMPORTANCE = PK_GENERAL_IMPORTANCE ;
 
 	// postscript custom definitions
 	public final static String PS_CUSTOM_LIM0			= "LIM0" ;

@@ -804,6 +804,7 @@
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Select" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Artefact" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="fov" use="optional">
@@ -841,9 +842,6 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
-					<xs:sequence>
-						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -876,9 +874,6 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
-					<xs:sequence>
-						<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -922,6 +917,13 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="ArtefactType">
+		<xs:sequence>
+			<xs:element ref="Sign" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="Artefact" type="ArtefactType"/>
 	<xs:complexType name="SignType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
@@ -933,19 +935,8 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="headline" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[1-9][0-9]*(,[1-9][0-9]*)*"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Sign" type="SignType"/>
-	<xs:complexType name="CatalogRecordType">
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-	</xs:complexType>
-	<xs:element name="CatalogRecord" type="CatalogRecordType"/>
 	<!---->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" use="required">

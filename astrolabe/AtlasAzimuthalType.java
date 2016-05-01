@@ -21,15 +21,12 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
+abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 	private final static double DEFAULT_OVERLAP = 10. ;
 	private final static double DEFAULT_LIMITDE	= 0 ;
 	private final static String DEFAULT_INTERVALUNITSH = "21600:10800:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1" ;
 	private final static String DEFAULT_INTERVALUNITSD = "324000:216000:108000:72000:36000:18000:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1" ;
-
-	private ChartAzimuthalType chart ;
-	private ChartPage chartPage ;
 
 	// castor requirement for (un)marshalling
 	public AtlasAzimuthalType() {
@@ -41,20 +38,30 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 	public void addAllAtlasPage() throws ValidationException {
 		int nra, nde, grid[], num ; // number of pages per single declination, number of page rows
-		double a, b, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
+		double a, b, rab, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
 		double overlap, spanDe, originDe, extentDe ;
 		double de, dde, sde, ra, dim[] ;
+		astrolabe.model.ChartAzimuthalType chartAzimuthalType ;
+		boolean northern ;
+		ChartPage chartPage ;
+		double chartPageX, chartPageY ;
+		Projector projector ;
 		List<Vector> dp ;
 		AtlasPage atlasPage ;
 		Vector vc, vb, vt ;
 		double[] xy, eq ;
 		Preferences node ;
 
-		chart = getChartAzimuthalType() ;
-		chartPage = new ChartPage( chart.getChartPage() ) ;
+		chartAzimuthalType = getChartAzimuthalType() ;
+		northern = chartAzimuthalType.getNorthern() ;
+		chartPage = new ChartPage( chartAzimuthalType.getChartPage() ) ;
+		chartPageX = chartPage.realx() ;
+		chartPageY = chartPage.realy() ;
 
-		setChartpagerealx( chartPage.realx() ) ;
-		setChartpagerealy( chartPage.realy() ) ;
+		projector = projector() ;
+
+		setChartpagerealx( chartPageX ) ;
+		setChartpagerealy( chartPageY ) ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 		overlap = Configuration.getValue( node,
@@ -65,6 +72,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 		spanDe = AstrolabeFactory.valueOf( getAtlasAzimuthalTypeChoice().getSpanDe() ) ;
 
+		rab = chartPageX/chartPageY ;
+
 		dde = originDe-extentDe ;
 		nde = (int) ( dde/spanDe+1 ) ;
 		sde = ( dde-spanDe )/( nde-1 ) ;
@@ -74,9 +83,9 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		num = 1 ;
 
 		for ( int cde=0 ; cde<nde ; cde++ ) {
-			rad = chart.project( 0, de )[0] ;
-			b = rad-chart.project( 0, de+spanDe )[0] ;
-			a = b*( chartPage.realx()/chartPage.realy() ) ;
+			rad = projector.project( 0, de )[0] ;
+			b = rad-projector.project( 0, de+spanDe )[0] ;
+			a = b*rab ;
 
 			tan = ( a/2*( 1-overlap/100. ) )/rad ;
 			nra = (int) ( 180/Math.atan( tan ) ) ;
@@ -86,7 +95,8 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 			for ( int cra=0 ; cra<nra ; cra++ ) {
 				ra = 360./nra*cra ;
 
-				dp = page( ra, de, a, b ) ;
+				xy = projector.project( ra, de ) ;
+				dp = page( xy, a, b, rab, northern ) ;
 				atlasPage = new AtlasPage() ;
 
 				atlasPage.setTcp( 0 ) ;
@@ -112,28 +122,28 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				atlasPage.setP3x( xy[0] ) ;
 				atlasPage.setP3y( xy[1] ) ;
 
-				eq = chart.unproject( atlasPage.getP0x(), atlasPage.getP0y() ) ;
+				eq = projector.unproject( atlasPage.getP0x(), atlasPage.getP0y() ) ;
 				atlasPage.setP0( new astrolabe.model.P0() ) ;
 				atlasPage.getP0().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP0().setTheta( new astrolabe.model.Theta() ) ;
 				modelOf( atlasPage.getP0().getPhi(), false, false, eq[0] ) ;
 				modelOf( atlasPage.getP0().getTheta(), false, false, eq[1] ) ;
 
-				eq = chart.unproject( atlasPage.getP1x(), atlasPage.getP1y() ) ;
+				eq = projector.unproject( atlasPage.getP1x(), atlasPage.getP1y() ) ;
 				atlasPage.setP1( new astrolabe.model.P1() ) ;
 				atlasPage.getP1().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP1().setTheta( new astrolabe.model.Theta() ) ;
 				modelOf( atlasPage.getP1().getPhi(), false, false, eq[0] ) ;
 				modelOf( atlasPage.getP1().getTheta(), false, false, eq[1] ) ;
 
-				eq = chart.unproject( atlasPage.getP2x(), atlasPage.getP2y() ) ;
+				eq = projector.unproject( atlasPage.getP2x(), atlasPage.getP2y() ) ;
 				atlasPage.setP2( new astrolabe.model.P2() ) ;
 				atlasPage.getP2().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP2().setTheta( new astrolabe.model.Theta() ) ;
 				modelOf( atlasPage.getP2().getPhi(), false, false, eq[0] ) ;
 				modelOf( atlasPage.getP2().getTheta(), false, false, eq[1] ) ;
 
-				eq = chart.unproject( atlasPage.getP3x(), atlasPage.getP3y() ) ;
+				eq = projector.unproject( atlasPage.getP3x(), atlasPage.getP3y() ) ;
 				atlasPage.setP3( new astrolabe.model.P3() ) ;
 				atlasPage.getP3().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getP3().setTheta( new astrolabe.model.Theta() ) ;
@@ -144,7 +154,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				vc = pageCenter( dp ) ;
 				atlasPage.setOriginx( vc.x ) ;
 				atlasPage.setOriginy( vc.y ) ;
-				eq = chart.unproject( vc.x, vc.y ) ;
+				eq = projector.unproject( vc.x, vc.y ) ;
 				eq[0] = CAACoordinateTransformation.DegreesToHours( eq[0] ) ;
 				atlasPage.setOrigin( new astrolabe.model.Origin() ) ;
 				atlasPage.getOrigin().setPhi( new astrolabe.model.Phi() ) ;
@@ -158,7 +168,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				vt.scale( vc.abs()-dim[1]/2 ) ;
 				atlasPage.setTopx( vt.x ) ;
 				atlasPage.setTopy( vt.y ) ;
-				eq = chart.unproject( vt.x, vt.y ) ;
+				eq = projector.unproject( vt.x, vt.y ) ;
 				atlasPage.setTop( new astrolabe.model.Top() ) ;
 				atlasPage.getTop().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getTop().setTheta( new astrolabe.model.Theta() ) ;
@@ -170,7 +180,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				vb.scale( vc.abs()+dim[1]/2 ) ;
 				atlasPage.setBottomx( vb.x ) ;
 				atlasPage.setBottomy( vb.y ) ;
-				eq = chart.unproject( vb.x, vb.y ) ;
+				eq = projector.unproject( vb.x, vb.y ) ;
 				atlasPage.setBottom( new astrolabe.model.Bottom() ) ;
 				atlasPage.getBottom().setPhi( new astrolabe.model.Phi() ) ;
 				atlasPage.getBottom().setTheta( new astrolabe.model.Theta() ) ;
@@ -178,7 +188,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				modelOf( atlasPage.getBottom().getTheta(), false, false, eq[1] ) ;
 
 				// atlas page scale
-				atlasPage.setScale( chartPage.realx()/dim[0]*100 ) ;
+				atlasPage.setScale( chartPageX/dim[0]*100 ) ;
 
 				atlasPage.validate() ;
 
@@ -191,15 +201,13 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		pageConnect( grid ) ;
 	}
 
-	public astrolabe.model.Chart[] toModel() throws ValidationException {
-		astrolabe.model.Chart[] model ;
+	public void toModel( astrolabe.model.ChartAzimuthalType chartAzimuthalType, int atlaspage ) {
 		double[] checkerTransform ;
 		double edgeBeg, edgeEnd ;
 		double p0de, tde, p1ra, p2ra ;
 		int checkerRA, checkerDe ;
+		boolean northern ;
 		AtlasPage atlasPage ;
-		astrolabe.model.Chart ch ;
-		astrolabe.model.ChartAzimuthalType cA ;
 		astrolabe.model.Horizon h ;
 		astrolabe.model.HorizonEquatorial hE ;
 		astrolabe.model.Circle c ;
@@ -208,105 +216,95 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		String name, checker[] ;
 		double ra, de ;
 
+		northern = getChartAzimuthalType().getNorthern() ;
+
 		name = ApplicationConstant.GC_NS_ATL+getName() ;
 
 		checker = getChecker().split( "x" ) ;
 		checkerRA = new Integer( checker[0] ).intValue() ;
 		checkerDe = new Integer( checker[1] ).intValue() ;
 
-		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+		atlasPage = (AtlasPage) getAtlasPage( atlaspage ) ;
 
-		for ( int m=0 ; m<getAtlasPageCount() ; m++ ) {
-			atlasPage = (AtlasPage) getAtlasPage( m ) ;
+		hE = new astrolabe.model.HorizonEquatorial() ;
+		hE.setName( name ) ;
 
-			hE = new astrolabe.model.HorizonEquatorial() ;
-			hE.setName( name ) ;
+		h = new astrolabe.model.Horizon() ;
+		h.setHorizonEquatorial( hE ) ;
 
-			h = new astrolabe.model.Horizon() ;
-			h.setHorizonEquatorial( hE ) ;
+		chartAzimuthalType.setScale( atlasPage.getScale() ) ;
+		chartAzimuthalType.setOrigin( atlasPage.getOrigin() ) ;
+		chartAzimuthalType.addHorizon( 0, h ) ;
+		chartAzimuthalType.setAtlasPage( atlasPage ) ;
 
-			ch = new astrolabe.model.Chart() ;
-			cA = setChartAzimuthalType( ch ) ;
-			cA.setScale( atlasPage.getScale() ) ;
-			cA.setOrigin( atlasPage.getOrigin() ) ;
-			cA.addHorizon( 0, h ) ;
-			cA.setAtlasPage( atlasPage ) ;
+		if ( checkerDe>1 ) { // CircleParallel
+			p0de = AstrolabeFactory.valueOf( atlasPage.getP0().getTheta() ) ;
+			tde = AstrolabeFactory.valueOf( atlasPage.getTop().getTheta() ) ;
 
-			if ( checkerDe>1 ) { // CircleParallel
-				p0de = AstrolabeFactory.valueOf( atlasPage.getP0().getTheta() ) ;
-				tde = AstrolabeFactory.valueOf( atlasPage.getTop().getTheta() ) ;
+			edgeBeg = northern?p0de:-p0de ;
+			edgeEnd = northern?tde:-tde ;
 
-				edgeBeg = chart.getNorthern()?p0de:-p0de ;
-				edgeEnd = chart.getNorthern()?tde:-tde ;
+			intervalNumber = checkerDe-2 ;
+			checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitD() ) ;
 
-				intervalNumber = checkerDe-2 ;
-				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitD() ) ;
-
-				de = checkerTransform[0] ;
-				hE.addCircle( checkerDeToModel( name, chart.getNorthern()?de:-de ) ) ;
-				circleNumber = intervalNumber+1 ;
-				for ( int i=1 ; i<circleNumber ; i++ ) {
-					de = checkerTransform[0]+i*checkerTransform[1] ;
-					c = checkerDeToModel( name, chart.getNorthern()?de:-de ) ;
-					hE.addCircle( c ) ;
-				}
-			}
-
-			if ( checkerRA>1 ) { // CircleMeridian
-				p1ra = AstrolabeFactory.valueOf( atlasPage.getP1().getPhi() ) ;
-				p2ra = AstrolabeFactory.valueOf( atlasPage.getP2().getPhi() ) ;
-
-				edgeBeg = atlasPage.getRow()>0?p1ra:p2ra ;
-				edgeEnd = atlasPage.getRow()>0?p2ra:p1ra ;
-				if ( edgeBeg>edgeEnd ) {
-					edgeEnd += 360 ;
-				}
-
-				intervalNumber = checkerRA-2 ;
-				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitH() ) ;
-
-				ra = checkerTransform[0] ;
-				ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
-				c = checkerRAToModel( name, ra ) ;
+			de = checkerTransform[0] ;
+			hE.addCircle( checkerDeToModel( name, northern?de:-de ) ) ;
+			circleNumber = intervalNumber+1 ;
+			for ( int i=1 ; i<circleNumber ; i++ ) {
+				de = checkerTransform[0]+i*checkerTransform[1] ;
+				c = checkerDeToModel( name, northern?de:-de ) ;
 				hE.addCircle( c ) ;
-				if ( atlasPage.getRow()>0 ) {
-					circleNumber = intervalNumber+1 ;
-				} else { // atlasPage.row == 0
-					flipCircleRange( c.getCircleMeridian() ) ;
-
-					circleNumber = java.lang.Math.ceil( 360/checkerTransform[1] ) ;
-				}
-				for ( int i=1 ; i<circleNumber ; i++ ) {
-					ra = checkerTransform[0]+i*checkerTransform[1] ;
-					ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
-					c = checkerRAToModel( name, ra ) ;
-					hE.addCircle( c ) ;
-					if ( atlasPage.getRow() == 0 ) {
-						flipCircleRange( c.getCircleMeridian() ) ;
-					}
-				}
 			}
-
-			if ( checkerDe == 1 && checkerRA == 1 ) {
-				hE.addCircle( new astrolabe.model.Circle() ) ;
-				hE.getCircle( 0 ).setCircleParallel( new astrolabe.model.CircleParallel() ) ;
-				hE.getCircle( 0 ).getCircleParallel().setAngle( new astrolabe.model.Angle() ) ;
-				hE.getCircle( 0 ).getCircleParallel().setBegin( new astrolabe.model.Begin() ) ;
-				hE.getCircle( 0 ).getCircleParallel().getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-				modelOf( hE.getCircle( 0 ).getCircleParallel().getBegin().getImmediate(), false, false, 0 ) ;
-				hE.getCircle( 0 ).getCircleParallel().setEnd( new astrolabe.model.End() ) ;
-				hE.getCircle( 0 ).getCircleParallel().getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-				modelOf( hE.getCircle( 0 ).getCircleParallel().getEnd().getImmediate(), false, false, 1./3600./100. ) ;
-			}
-
-			AstrolabeFactory.modelOf( hE, false ) ;
-
-			ch.validate() ;
-
-			model[m] = ch ;
 		}
 
-		return model ;
+		if ( checkerRA>1 ) { // CircleMeridian
+			p1ra = AstrolabeFactory.valueOf( atlasPage.getP1().getPhi() ) ;
+			p2ra = AstrolabeFactory.valueOf( atlasPage.getP2().getPhi() ) ;
+
+			edgeBeg = atlasPage.getRow()>0?p1ra:p2ra ;
+			edgeEnd = atlasPage.getRow()>0?p2ra:p1ra ;
+			if ( edgeBeg>edgeEnd ) {
+				edgeEnd += 360 ;
+			}
+
+			intervalNumber = checkerRA-2 ;
+			checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitH() ) ;
+
+			ra = checkerTransform[0] ;
+			ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
+			c = checkerRAToModel( name, ra, northern ) ;
+			hE.addCircle( c ) ;
+			if ( atlasPage.getRow()>0 ) {
+				circleNumber = intervalNumber+1 ;
+			} else { // atlasPage.row == 0
+				flipCircleRange( c.getCircleMeridian() ) ;
+
+				circleNumber = java.lang.Math.ceil( 360/checkerTransform[1] ) ;
+			}
+			for ( int i=1 ; i<circleNumber ; i++ ) {
+				ra = checkerTransform[0]+i*checkerTransform[1] ;
+				ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
+				c = checkerRAToModel( name, ra, northern ) ;
+				hE.addCircle( c ) ;
+				if ( atlasPage.getRow() == 0 ) {
+					flipCircleRange( c.getCircleMeridian() ) ;
+				}
+			}
+		}
+
+		if ( checkerDe == 1 && checkerRA == 1 ) {
+			hE.addCircle( new astrolabe.model.Circle() ) ;
+			hE.getCircle( 0 ).setCircleParallel( new astrolabe.model.CircleParallel() ) ;
+			hE.getCircle( 0 ).getCircleParallel().setAngle( new astrolabe.model.Angle() ) ;
+			hE.getCircle( 0 ).getCircleParallel().setBegin( new astrolabe.model.Begin() ) ;
+			hE.getCircle( 0 ).getCircleParallel().getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+			modelOf( hE.getCircle( 0 ).getCircleParallel().getBegin().getImmediate(), false, false, 0 ) ;
+			hE.getCircle( 0 ).getCircleParallel().setEnd( new astrolabe.model.End() ) ;
+			hE.getCircle( 0 ).getCircleParallel().getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+			modelOf( hE.getCircle( 0 ).getCircleParallel().getEnd().getImmediate(), false, false, 1./3600./100. ) ;
+		}
+
+		AstrolabeFactory.modelOf( hE, false ) ;
 	}
 
 	public void headAUX() {
@@ -346,8 +344,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		AtlasPage atlasPage ;
 
-		chart.headPS( ps ) ;
-
 		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
 			atlasPage = (AtlasPage) getAtlasPage( ap ) ;
 
@@ -359,15 +355,13 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 			ps.operator.grestore() ;
 		}
-
-		chart.tailPS( ps ) ;
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	abstract ChartAzimuthalType getChartAzimuthalType() ;
-	abstract astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) ;
+	abstract public astrolabe.model.ChartAzimuthalType getChartAzimuthalType() ;
+	abstract public Projector projector() ;
 
 	private void marshal( OutputStream xmls, String charset ) {
 		Preferences node ;
@@ -417,23 +411,21 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		}
 	}
 
-	private List<Vector> page( double ra, double de, double a, double b ) {
+	private List<Vector> page( double[] xy, double a, double b, double rab, boolean northern ) {
 		List<Vector> r = new java.util.Vector<Vector>() ;
 		Vector v0, v1, v2, v3, v4 ; // radius vector v0, edge vectors
 		Vector vp0, vp1, vp2, vp3 ; // point vectors
 		double m90[] = new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ; // rotation matrix, plane xy, 90 degrees counter-clockwise
 		double m90c[] = new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ; // rotation matrix, plane xy, 90 degrees clockwise
-		double x, rab, xy[] ;
+		double x ;
 
 		x = java.lang.Math.abs( a ) ;
-		rab = chartPage.realx()/chartPage.realy() ;
 
-		xy = chart.project( ra, de ) ;
 		v0 = new Vector( xy[0], xy[1] ) ;
 
 		v1 = new Vector( v0 )
 		.mul( -1 )
-		.apply( chart.getNorthern()?m90c:m90 )
+		.apply( northern?m90c:m90 )
 		.scale( x/2 ) ;
 
 		vp0 = new Vector( v0 )
@@ -441,7 +433,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 		v2 = new Vector( v1 )
 		.mul( -1 )
-		.apply( chart.getNorthern()?m90c:m90 )
+		.apply( northern?m90c:m90 )
 		.scale( 2*v1.abs()/rab ) ;
 
 		vp1 = new Vector( vp0 )
@@ -449,7 +441,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 		v3 = new Vector( v0 )
 		.mul( -1 )
-		.apply( chart.getNorthern()?m90:m90c )
+		.apply( northern?m90:m90c )
 		.scale( x/2 ) ;
 
 		vp3 = new Vector( v0 )
@@ -457,7 +449,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 		v4 = new Vector( v3 )
 		.mul( -1 )
-		.apply( chart.getNorthern()?m90:m90c )
+		.apply( northern?m90:m90c )
 		.scale( 2*v3.abs()/rab ) ;
 
 		vp2 = new Vector( vp3 )
@@ -650,7 +642,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		return c ;
 	}
 
-	private astrolabe.model.Circle checkerRAToModel( String name, double ra ) {
+	private astrolabe.model.Circle checkerRAToModel( String name, double ra, boolean northern ) {
 		MessageCatalog m ;
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleMeridian cM ;
@@ -757,7 +749,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		node = Configuration.getClassNode( this, getName(), null ) ;
 		cMEnd = Configuration.getValue( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
 		cM.getAngle().getRational().setValue( ra ) ;
-		cM.getBegin().getImmediate().getRational().setValue( chart.getNorthern()?-90:90 ) ;
+		cM.getBegin().getImmediate().getRational().setValue( northern?-90:90 ) ;
 		cM.getEnd().getImmediate().getRational().setValue( cMEnd ) ;
 		AstrolabeFactory.modelOf( cM, false ) ;
 

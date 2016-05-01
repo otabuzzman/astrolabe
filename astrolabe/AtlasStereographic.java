@@ -1,10 +1,14 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class AtlasStereographic extends AtlasAzimuthalType implements Atlas {
 
-	private astrolabe.model.ChartStereographic peerCS ;
+	private astrolabe.model.ChartStereographic chartAzimuthalType ;
+
+	private ChartStereographic companion ;
 
 	// castor requirement for (un)marshalling
 	public AtlasStereographic() {
@@ -13,21 +17,44 @@ public class AtlasStereographic extends AtlasAzimuthalType implements Atlas {
 	public AtlasStereographic( Peer peer ) {
 		super( peer ) ;
 
-		peerCS = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ; 
+		chartAzimuthalType = ( (astrolabe.model.AtlasStereographic) peer ).getChartStereographic() ;
+
+		companion = new ChartStereographic( chartAzimuthalType ) ;
 	}
 
-	public ChartAzimuthalType getChartAzimuthalType() {
-		return ( new ChartStereographic( peerCS ) ) ;
+	public astrolabe.model.Chart[] toModel() throws ValidationException {
+		astrolabe.model.Chart[] model ;
+		astrolabe.model.ChartStereographic chart ;
+
+		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+
+		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
+			model[ap] = new astrolabe.model.Chart() ;
+
+			chart = new astrolabe.model.ChartStereographic() ;
+			chartAzimuthalType.setupCompanion( chart ) ;
+
+			model[ap].setChartStereographic( chart ) ;
+
+			model[ap].validate() ;
+
+			super.toModel( chart, ap ) ;
+		}
+
+		return model ;
 	}
 
-	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
-		astrolabe.model.ChartStereographic companionCS ;
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		companion.headPS( ps ) ;
+		super.emitPS( ps );
+		companion.tailPS( ps ) ;
+	}
 
-		companionCS = new astrolabe.model.ChartStereographic() ;
-		peerCS.setupCompanion( companionCS ) ;
+	public astrolabe.model.ChartAzimuthalType getChartAzimuthalType() {
+		return chartAzimuthalType ;
+	}
 
-		chart.setChartStereographic( companionCS ) ;
-
-		return companionCS ;
+	public Projector projector() {
+		return companion ;
 	}
 }

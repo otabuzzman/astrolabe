@@ -99,7 +99,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 
 			cutter = new ListCutter( list(), fov ) ;
-			segmentList = cutter.segmentsInterior() ;
+			segmentList = cutter.segmentsIntersecting( true ) ;
 
 			lm = 0 ;
 			ia = 0 ;

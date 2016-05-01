@@ -772,6 +772,18 @@
 					<entry key="precision" value="6"/>
 				</map>
 			</node>
+			<node name="CatalogADC6049Record">
+				<map>
+					<!--value must be one of node ElementImportance-->
+					<entry key="importance" value="dividing"/>
+				</map>
+			</node>
+			<node name="Sign">
+				<map>
+					<!--value must be one of node ElementImportance-->
+					<entry key="importance" value="graphical"/>
+				</map>
+			</node>
 		</node>
 	</root>
 </preferences>

@@ -1,10 +1,14 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class AtlasGnomonic extends AtlasAzimuthalType implements Atlas {
 
-	private astrolabe.model.ChartGnomonic peerCG ;
+	private astrolabe.model.ChartGnomonic chartAzimuthalType ;
+
+	private ChartStereographic companion ;
 
 	// castor requirement for (un)marshalling
 	public AtlasGnomonic() {
@@ -13,21 +17,44 @@ public class AtlasGnomonic extends AtlasAzimuthalType implements Atlas {
 	public AtlasGnomonic( Peer peer ) {
 		super( peer ) ;
 
-		peerCG = ( (astrolabe.model.AtlasGnomonic) peer ).getChartGnomonic() ; 
+		chartAzimuthalType = ( (astrolabe.model.AtlasGnomonic) peer ).getChartGnomonic() ;
+
+		companion = new ChartStereographic( chartAzimuthalType ) ;
 	}
 
-	public ChartAzimuthalType getChartAzimuthalType() {
-		return ( new ChartGnomonic( peerCG ) ) ;
+	public astrolabe.model.Chart[] toModel() throws ValidationException {
+		astrolabe.model.Chart[] model ;
+		astrolabe.model.ChartGnomonic chart ;
+
+		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+
+		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
+			model[ap] = new astrolabe.model.Chart() ;
+
+			chart = new astrolabe.model.ChartGnomonic() ;
+			chartAzimuthalType.setupCompanion( chart ) ;
+
+			model[ap].setChartGnomonic( chart ) ;
+
+			model[ap].validate() ;
+
+			super.toModel( chart, ap ) ;
+		}
+
+		return model ;
 	}
 
-	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
-		astrolabe.model.ChartGnomonic companionCO ;
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		companion.headPS( ps ) ;
+		super.emitPS( ps );
+		companion.tailPS( ps ) ;
+	}
 
-		companionCO = new astrolabe.model.ChartGnomonic() ;
-		peerCG.setupCompanion( companionCO ) ;
+	public astrolabe.model.ChartAzimuthalType getChartAzimuthalType() {
+		return chartAzimuthalType ;
+	}
 
-		chart.setChartGnomonic( companionCO ) ;
-
-		return companionCO ;
+	public Projector projector() {
+		return companion ;
 	}
 }

@@ -1,10 +1,14 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class AtlasOrthographic extends AtlasAzimuthalType implements Atlas {
 
-	private astrolabe.model.ChartOrthographic peerCO ;
+	private astrolabe.model.ChartOrthographic chartAzimuthalType ;
+
+	private ChartStereographic companion ;
 
 	// castor requirement for (un)marshalling
 	public AtlasOrthographic() {
@@ -13,21 +17,44 @@ public class AtlasOrthographic extends AtlasAzimuthalType implements Atlas {
 	public AtlasOrthographic( Peer peer ) {
 		super( peer ) ;
 
-		peerCO = ( (astrolabe.model.AtlasOrthographic) peer ).getChartOrthographic() ; 
+		chartAzimuthalType = ( (astrolabe.model.AtlasOrthographic) peer ).getChartOrthographic() ;
+
+		companion = new ChartStereographic( chartAzimuthalType ) ;
 	}
 
-	public ChartAzimuthalType getChartAzimuthalType() {
-		return ( new ChartOrthographic( peerCO ) ) ;
+	public astrolabe.model.Chart[] toModel() throws ValidationException {
+		astrolabe.model.Chart[] model ;
+		astrolabe.model.ChartOrthographic chart ;
+
+		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+
+		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
+			model[ap] = new astrolabe.model.Chart() ;
+
+			chart = new astrolabe.model.ChartOrthographic() ;
+			chartAzimuthalType.setupCompanion( chart ) ;
+
+			model[ap].setChartOrthographic( chart ) ;
+
+			model[ap].validate() ;
+
+			super.toModel( chart, ap ) ;
+		}
+
+		return model ;
 	}
 
-	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
-		astrolabe.model.ChartOrthographic companionCO ;
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		companion.headPS( ps ) ;
+		super.emitPS( ps );
+		companion.tailPS( ps ) ;
+	}
 
-		companionCO = new astrolabe.model.ChartOrthographic() ;
-		peerCO.setupCompanion( companionCO ) ;
+	public astrolabe.model.ChartAzimuthalType getChartAzimuthalType() {
+		return chartAzimuthalType ;
+	}
 
-		chart.setChartOrthographic( companionCO ) ;
-
-		return companionCO ;
+	public Projector projector() {
+		return companion ;
 	}
 }

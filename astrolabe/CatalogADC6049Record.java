@@ -13,7 +13,9 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC6049Record {
+public class CatalogADC6049Record implements CatalogRecord {
+
+	private final static String DEFAULT_IMPORTANCE = ApplicationConstant.AV_BODY_DIVIDING ;
 
 	private final static int CR_LENGTH18 = 25 ;
 	private final static int CR_LENGTH20 = 29 ;
@@ -72,15 +74,21 @@ public class CatalogADC6049Record {
 		}
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
+	public astrolabe.model.Body toModel() throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
+		double epoch ;
+		String importance ;
 
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		importance = Configuration.getValue(
+				Configuration.getClassNode( this, con, null ),
+				ApplicationConstant.PK_CATALOGADC6049RECORD_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
 		model = new astrolabe.model.Body() ;
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
-		model.getBodyAreal().setImportance( ApplicationConstant.AV_BODY_DIVIDING ) ;
+		model.getBodyAreal().setImportance( importance ) ;
 		for ( int p=0 ; p<RAhr.size() ; p++ ) {
 			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
 			pm = new astrolabe.model.Position() ;

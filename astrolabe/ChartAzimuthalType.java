@@ -7,7 +7,7 @@ import java.util.prefs.Preferences;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements PostscriptEmitter, Projector {
+abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
 
 	private final static double DEFAULT_UNIT = 2.834646 ;
 	private final static double DEFAULT_HALO = 4 ;
@@ -190,20 +190,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			ps.operator.closepath() ;
 			ps.operator.stroke() ;
 		}
-
-		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
-			PostscriptEmitter horizon ;
-
-			horizon = AstrolabeFactory.companionOf( getHorizon( ho ), this ) ;
-
-			ps.operator.gsave() ;
-
-			horizon.headPS( ps ) ;
-			horizon.emitPS( ps ) ;
-			horizon.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
@@ -243,6 +229,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 				distanceToTheta( java.lang.Math.sqrt( xy[0]*xy[0]+xy[1]*xy[1] ) ) } ;
 	}
 
-	abstract double thetaToDistance( double de ) ;
-	abstract double distanceToTheta( double d ) ;
+	abstract public double thetaToDistance( double de ) ;
+	abstract public double distanceToTheta( double d ) ;
 }

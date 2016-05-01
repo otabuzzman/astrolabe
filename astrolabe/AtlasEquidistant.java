@@ -1,10 +1,14 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 @SuppressWarnings("serial")
 public class AtlasEquidistant extends AtlasAzimuthalType implements Atlas {
 
-	private astrolabe.model.ChartEquidistant peerCE ;
+	private astrolabe.model.ChartEquidistant chartAzimuthalType ;
+
+	private ChartStereographic companion ;
 
 	// castor requirement for (un)marshalling
 	public AtlasEquidistant() {
@@ -13,21 +17,44 @@ public class AtlasEquidistant extends AtlasAzimuthalType implements Atlas {
 	public AtlasEquidistant( Peer peer ) {
 		super( peer ) ;
 
-		peerCE = ( (astrolabe.model.AtlasEquidistant) peer ).getChartEquidistant() ; 
+		chartAzimuthalType = ( (astrolabe.model.AtlasEquidistant) peer ).getChartEquidistant() ;
+
+		companion = new ChartStereographic( chartAzimuthalType ) ;
 	}
 
-	public ChartAzimuthalType getChartAzimuthalType() {
-		return ( new ChartEquidistant( peerCE ) ) ;
+	public astrolabe.model.Chart[] toModel() throws ValidationException {
+		astrolabe.model.Chart[] model ;
+		astrolabe.model.ChartEquidistant chart ;
+
+		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+
+		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
+			model[ap] = new astrolabe.model.Chart() ;
+
+			chart = new astrolabe.model.ChartEquidistant() ;
+			chartAzimuthalType.setupCompanion( chart ) ;
+
+			model[ap].setChartEquidistant( chart ) ;
+
+			model[ap].validate() ;
+
+			super.toModel( chart, ap ) ;
+		}
+
+		return model ;
 	}
 
-	public astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) {
-		astrolabe.model.ChartEquidistant companionCE ;
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		companion.headPS( ps ) ;
+		super.emitPS( ps );
+		companion.tailPS( ps ) ;
+	}
 
-		companionCE = new astrolabe.model.ChartEquidistant() ;
-		peerCE.setupCompanion( companionCE ) ;
+	public astrolabe.model.ChartAzimuthalType getChartAzimuthalType() {
+		return chartAzimuthalType ;
+	}
 
-		chart.setChartEquidistant( companionCE ) ;
-
-		return companionCE ;
+	public Projector projector() {
+		return companion ;
 	}
 }

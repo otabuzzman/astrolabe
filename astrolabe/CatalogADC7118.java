@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -27,10 +28,10 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 
 	private HashSet<String> restrict ;
 
-	private List<CatalogADC7118Record> catalogT ;
+	private Hashtable<String, CatalogRecord> catalogT ;
+	private List<String> catalogL ;
 
 	private Projector projector ;
-	private double epoch ;
 
 	public CatalogADC7118( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
@@ -38,8 +39,6 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 		String[] rv ;
 
 		this.projector = projector ;
-
-		this.epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC7118) peer ).getRestrict() != null ) {
@@ -49,18 +48,25 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 			}
 		}
 
-		catalogT = new java.util.Vector<CatalogADC7118Record>() ;
+		catalogT = new Hashtable<String, CatalogRecord>() ;
+		catalogL = new java.util.Vector<String>() ;
 	}
 
 	public void addAllCatalogRecord() {
 		Reader catalogR ;
-		CatalogADC7118Record record ;
+		CatalogRecord record ;
 		List<double[]> bodyL ;
 		Geometry bodyG, fov ;
-		Comparator<CatalogADC7118Record> c = new Comparator<CatalogADC7118Record>() {
-			public int compare( CatalogADC7118Record a, CatalogADC7118Record b ) {
-				return a.mag()<b.mag()?-1:
-					a.mag()>b.mag()?1:
+		String ident ;
+		Comparator<String> c = new Comparator<String>() {
+			public int compare( String a, String b ) {
+				CatalogADC7118Record x, y ;
+
+				x = (CatalogADC7118Record) catalogT.get( a ) ;
+				y = (CatalogADC7118Record) catalogT.get( b ) ;
+
+				return x.mag()<y.mag()?-1:
+					x.mag()>y.mag()?1:
 						0 ;
 			}
 		} ;
@@ -93,7 +99,9 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 					continue ;
 			}
 
-			catalogT.add( record ) ;
+			ident = record.ident().get( 0 ) ;
+			catalogT.put( ident, record ) ;
+			catalogL.add( ident ) ;
 		}
 
 		try {
@@ -102,7 +110,15 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		Collections.sort( catalogT, c ) ;
+		Collections.sort( catalogL, c ) ;
+	}
+
+	public CatalogRecord getCatalogRecord( String ident ) {
+		return catalogT.get( ident ) ;
+	}
+
+	public CatalogRecord[] getCatalogRecord() {
+		return catalogT.values().toArray( new CatalogRecord[0] ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -113,11 +129,11 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 		BodyStellar bodyStellar ;
 		astrolabe.model.Select[] select ;
 
-		for ( CatalogADC7118Record record : catalogT ) {
+		for ( CatalogRecord record : catalogT.values() ) {
 			record.register() ;
 
 			try {
-				bodyModel = record.toModel( epoch ).getBodyStellar() ;
+				bodyModel = record.toModel().getBodyStellar() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
@@ -141,7 +157,7 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public CatalogADC7118Record record( java.io.Reader catalog ) {
+	public CatalogRecord record( java.io.Reader catalog ) {
 		CatalogADC7118Record r = null ;
 		char[] cl ;
 		String rl ;

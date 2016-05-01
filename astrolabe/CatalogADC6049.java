@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -26,10 +27,10 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 
 	private HashSet<String> restrict ;
 
-	private List<CatalogADC6049Record> catalogT ;
+	private Hashtable<String, CatalogRecord> catalogT ;
+	private List<String> catalogL ;
 
 	private Projector projector ;
-	private double epoch ;
 
 	private String _m = new String() ;
 	private int _ch = 0 ;
@@ -43,8 +44,6 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 
 		this.projector = projector ;
 
-		this.epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
-
 		restrict = new HashSet<String>() ;
 		if ( ( (astrolabe.model.CatalogADC6049) peer ).getRestrict() != null ) {
 			rv = ( (astrolabe.model.CatalogADC6049) peer ).getRestrict().split( "," ) ;
@@ -53,14 +52,16 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 			}
 		}
 
-		catalogT = new java.util.Vector<CatalogADC6049Record>() ;
+		catalogT = new Hashtable<String, CatalogRecord>() ;
+		catalogL = new java.util.Vector<String>() ;
 	}
 
 	public void addAllCatalogRecord() {
 		Reader catalogR ;
-		CatalogADC6049Record record ;
+		CatalogRecord record ;
 		List<double[]> bodyL ;
 		Geometry bodyG, fov ;
+		String ident ;
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
@@ -90,7 +91,9 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 					continue ;
 			}
 
-			catalogT.add( record ) ;
+			ident = record.ident().get( 0 ) ;
+			catalogT.put( ident, record ) ;
+			catalogL.add( ident ) ;
 		}
 
 		try {
@@ -98,6 +101,14 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 		} catch (IOException e) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+	}
+
+	public CatalogRecord getCatalogRecord( String ident ) {
+		return catalogT.get( ident ) ;
+	}
+
+	public CatalogRecord[] getCatalogRecord() {
+		return catalogT.values().toArray( new CatalogRecord[0] ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -108,11 +119,11 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 		BodyAreal bodyAreal ;
 		astrolabe.model.Select[] select ;
 
-		for ( CatalogADC6049Record record : catalogT ) {
+		for ( CatalogRecord record : catalogT.values() ) {
 			record.register() ;
 
 			try {
-				bodyModel = record.toModel( epoch ).getBodyAreal() ;
+				bodyModel = record.toModel().getBodyAreal() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
@@ -138,7 +149,7 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public CatalogADC6049Record record( java.io.Reader catalog ) {
+	public CatalogRecord record( java.io.Reader catalog ) {
 		CatalogADC6049Record r = null ;
 		char[] cl ;
 		int cn ;

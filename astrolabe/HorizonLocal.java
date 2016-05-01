@@ -7,7 +7,7 @@ import caa.CAADate;
 import caa.CAANutation;
 
 @SuppressWarnings("serial")
-public class HorizonLocal extends HorizonType {
+public class HorizonLocal extends HorizonType implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
 
@@ -67,6 +67,66 @@ public class HorizonLocal extends HorizonType {
 			ST = CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
 			key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 			AstrolabeRegistry.registerHMS( key, ST ) ;
+		}
+	}
+
+	public void emitPS( AstrolabePostscriptStream ps ) {
+		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
+			PostscriptEmitter annotation ;
+
+			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
+
+			ps.operator.gsave() ;
+
+			annotation.headPS( ps ) ;
+			annotation.emitPS( ps ) ;
+			annotation.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
+			PostscriptEmitter circle ;
+
+			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
+
+			ps.operator.gsave() ;
+
+			circle.headPS( ps ) ;
+			circle.emitPS( ps ) ;
+			circle.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
+			PostscriptEmitter body ;
+
+			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
+
+			ps.operator.gsave() ;
+
+			body.headPS( ps ) ;
+			body.emitPS( ps ) ;
+			body.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
+			Catalog catalog ;
+
+			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
+
+			catalog.addAllCatalogRecord() ;
+
+			ps.operator.gsave() ;
+
+			catalog.headPS( ps ) ;
+			catalog.emitPS( ps ) ;
+			catalog.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
 		}
 	}
 

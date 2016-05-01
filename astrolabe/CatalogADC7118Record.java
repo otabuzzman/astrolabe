@@ -9,7 +9,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
-public class CatalogADC7118Record {
+public class CatalogADC7118Record implements CatalogRecord {
 
 	private final static String DEFAULT_STAR = "\uf811" ;
 
@@ -58,11 +58,14 @@ public class CatalogADC7118Record {
 		mag() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel( double epoch ) throws ValidationException {
+	public astrolabe.model.Body toModel() throws ValidationException {
 		astrolabe.model.Body model ;
 		astrolabe.model.Text tm ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
+		double epoch ;
+
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 
 		tm = new astrolabe.model.Text() ;
 		tm.setPurpose( "mag"+( (int) ( mag()+100.5 )-100 ) ) ;

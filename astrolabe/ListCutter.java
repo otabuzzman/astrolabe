@@ -65,10 +65,11 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		List<List<double[]>> l ;
 		List<double[]> s ;
 		List<int[]> segmentsByIndex ;
-		List<double[]> segmentByXY ;
+		List<double[]> segmentByValue ;
 		Geometry gRaw, gCut ;
 		Coordinate[] segmentByCoordinate ;
 		double[] xyA, xyO ;
+		int ia, io ;
 
 		l = new java.util.Vector<List<double[]>>() ;
 
@@ -79,10 +80,16 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			segmentsExterior( segmentsByIndex ) ;
 		}
 		for ( int[] segmentByIndex : segmentsByIndex ) {
-			segmentByXY = subList( segmentByIndex[0]>0?segmentByIndex[0]-1:0,
-					segmentByIndex[1]<size()-1?segmentByIndex[1]+2:size() ) ;
+			ia = segmentByIndex[0]-1 ;
+			io = segmentByIndex[1]+1 ;
+			if ( ia<0 )
+				ia++ ;
+			if ( io>size()-1 )
+				io-- ;
 
-			gRaw = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( segmentByXY ) ) ;
+			segmentByValue = subList( ia, io+1 ) ;
+
+			gRaw = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( segmentByValue ) ) ;
 			gCut = gRaw.intersection( fov ) ;
 
 			segmentByCoordinate = gCut.getCoordinates() ;
@@ -95,9 +102,19 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 
 			s = new java.util.Vector<double[]>() ;
 			s.add( xyA ) ;
-			for ( double[] xy : segmentByXY ) {
-				s.add( xy ) ;
-			}
+
+			ia = segmentByIndex[0] ;
+			io = segmentByIndex[1] ;
+			if ( ia == 0 )
+				ia++ ;
+			if ( io == size()-1 )
+				io-- ;
+
+			if ( io>=ia )
+				for ( double[] xy : subList( ia, io+1 ) ) {
+					s.add( xy ) ;
+				}
+
 			s.add( xyO ) ;
 
 			l.add( s ) ;
