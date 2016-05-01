@@ -7,7 +7,7 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic scale="100" northern="true">
+		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
 			<ChartPage size="a0" real="100" layout="default"/>
 			<Origin>
 				<phi>
@@ -69,7 +69,7 @@ astrolabe.xsd">
 									</GraduationSpan>
 									<GraduationHalf span="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialcardinal" value="@{wertstd}@">
+											<Text purpose="dialcardinal" value="{wertstd}">
 												<Superscript value="h"/>
 											</Text>
 										</AnnotationStraight>
@@ -86,17 +86,17 @@ astrolabe.xsd">
 							</Dial>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
-									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="50">
-									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
-									<Text purpose="guidance" value="&#x03b4; @{h&#x00f6;hegrd}@&#x00b0;"/>
+									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleParallel>
@@ -429,7 +429,7 @@ astrolabe.xsd">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
+											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -579,7 +579,7 @@ astrolabe.xsd">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
+											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -729,7 +729,7 @@ astrolabe.xsd">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="@{wertgrd}@&#x00b0;"/>
+											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -802,12 +802,12 @@ astrolabe.xsd">
 							<Select value="mag0,mag1">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Text purpose="bodylettering0" value="@{Name}@"/>
+										<Text purpose="bodylettering0" value="{Name}"/>
 									</AnnotationStraight>
 								</Annotation>
 								<Annotation>
 									<AnnotationStraight anchor="topleft" reverse="false" radiant="false">
-										<Text purpose="bodylettering0" value="@{HR}@"/>
+										<Text purpose="bodylettering0" value="{HR}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>

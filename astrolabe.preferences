@@ -148,42 +148,42 @@
 					<!--ns'es for "Q I-IV, inside fov" from class CircleParallel, CircleMeridian-->
 					<node name="I:atl:northern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="I:atl:southern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="II:atl:northern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="II:atl:southern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="III:atl:northern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="III:atl:southern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="IV:atl:northern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<node name="IV:atl:southern">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="invisible"/>
+							<entry key="setPurpose,java.lang.String" value="none"/>
 						</map>
 					</node>
 					<!--Q I, top-->
@@ -276,23 +276,26 @@
 					</node>
 				</node>
 			</node>
-			<node name="PostscriptStream">
+			<node name="Astrolabe">
 				<map>
-					<entry key="viewer" value="gswin32c.exe -dNOPAUSE -dBATCH -q -"/>
-					<entry key="precision" value="6"/>
-					<entry key="scanline" value="254"/>
+					<entry key="viewer" value="gswin32c.exe -dBATCH -dNOPAUSE -q -"/>
 				</map>
-				<!--name attribute in Astrolabe element-->
 				<node name="astrolabe">
 					<map>
-						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=@{node}@.pdf -q -"/>
+						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile={node}.pdf -q -"/>
 					</map>
 				</node>
 				<node name="atlas-stereographic">
 					<map>
-						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=@{node}@.pdf -q -"/>
+						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile={node}.pdf -q -"/>
 					</map>
 				</node>
+			</node>
+			<node name="PostscriptStream">
+				<map>
+					<entry key="precision" value="6"/>
+					<entry key="scanline" value="254"/>
+				</map>
 				<!--type 3 font definitions-->
 				<node name="type3">
 					<map/>
@@ -377,6 +380,27 @@
 					</map>
 				</node>
 			</node>
+			<node name="ElementPracticality">
+				<map>
+					<!--value="<rd>:<gn>:<bl>" or value="<gr>"-->
+					<!--keys must equal to allowed values for practicality atttribues in XSD.-->
+					<entry key="none" value="1"/>
+					<entry key="seldom" value=".75"/>
+					<entry key="sometimes" value=".5"/>
+					<entry key="frequent" value=".25"/>
+					<entry key="always" value="0"/>
+				</map>
+			</node>
+			<node name="ElementImportance">
+				<map>
+					<!--value="<linewidth>:<linedash>" or value="<linewidth>"-->
+					<!--keys must equal to allowed values for importance atttribues in XSD.-->
+					<entry key="canonical" value=".1:0"/>
+					<entry key="cardinal" value=".5:0"/>
+					<entry key="dividing" value=".36:1:1.8"/>
+					<entry key="graphical" value=".28:0"/>
+				</map>
+			</node>
 			<node name="ChartStereographic">
 				<map>
 					<!--postscript units per astrolabe unit-->
@@ -386,9 +410,6 @@
 					<!--astrolabe units-->
 					<entry key="halomin" value=".08"/>
 					<entry key="halomax" value=".4"/>
-					<!--defaults-->
-					<entry key="practicality" value="0"/>
-					<entry key="importance" value=".1:0"/>
 				</map>
 			</node>
 			<node name="ChartPage">
@@ -410,7 +431,7 @@
 			</node>
 			<node name="AtlasStereographic">
 				<map>
-					<entry key="urlModelMap" value="@{node}@.map"/>
+					<entry key="urlModelMap" value="{node}.map"/>
 					<!--percent-->
 					<entry key="overlap" value="10"/>
 					<!--degrees-->
@@ -431,133 +452,35 @@
 					</map>
 				</node>
 			</node>
-			<node name="HorizonLocal">
-				<map/>
-				<node name="practicality">
-					<map>
-						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
-						<entry key="none" value="1"/>
-						<entry key="never" value=".85"/>
-						<entry key="seldom" value=".75"/>
-						<entry key="sometimes" value=".5"/>
-						<entry key="frequent" value=".25"/>
-						<entry key="always" value="0"/>
-					</map>
-				</node>
-			</node>
-			<node name="HorizonEquatorial">
-				<map/>
-				<node name="practicality">
-					<map>
-						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
-						<entry key="none" value="1"/>
-						<entry key="never" value=".85"/>
-						<entry key="seldom" value=".75"/>
-						<entry key="sometimes" value=".5"/>
-						<entry key="frequent" value=".25"/>
-						<entry key="always" value="0"/>
-					</map>
-				</node>
-			</node>
-			<node name="HorizonEcliptical">
-				<map/>
-				<node name="practicality">
-					<map>
-						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
-						<entry key="none" value="1"/>
-						<entry key="never" value=".85"/>
-						<entry key="seldom" value=".75"/>
-						<entry key="sometimes" value=".5"/>
-						<entry key="frequent" value=".25"/>
-						<entry key="always" value="0"/>
-					</map>
-				</node>
-			</node>
-			<node name="HorizonGalactic">
-				<map/>
-				<node name="practicality">
-					<map>
-						<!--keys must equal to allowed values for practicality atttribue in XSD.-->
-						<entry key="none" value="1"/>
-						<entry key="never" value=".85"/>
-						<entry key="seldom" value=".75"/>
-						<entry key="sometimes" value=".5"/>
-						<entry key="frequent" value=".25"/>
-						<entry key="always" value="0"/>
-					</map>
-				</node>
-			</node>
 			<node name="CircleParallel">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleMeridian">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleSouthernTropic">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleNorthernTropic">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleSouthernPolar">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleNorthernPolar">
 				<map>
 					<entry key="interval" value="1"/>
 				</map>
-				<node name="importance">
-					<map>
-						<!--keys must equal to allowed values for importance atttribue in XSD.-->
-						<entry key="canonical" value=".1:0"/>
-						<entry key="cardinal" value=".5:0"/>
-					</map>
-				</node>
 			</node>
 			<node name="DialDegree">
 				<map/>
@@ -703,7 +626,6 @@
 						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
-						<entry key="invisible" value="0"/>
 						<entry key="zenit" value="4.2"/>
 						<!--magx*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
 						<entry key="mag-1" value="4.64"/>
@@ -741,69 +663,48 @@
 					<entry key="bottomright" value="1:0"/>
 				</map>
 			</node>
-			<node name="BodyAreal">
-				<map/>
-				<!--node names on this level must equal to values of type atttribue in XSD.-->
-				<node name="area">
-					<map>
-						<entry key="importance" value=".36:1:1.8"/>
-					</map>
-				</node>
-				<node name="sign">
-					<map>
-						<entry key="importance" value=".28:0"/>
-					</map>
-				</node>
-			</node>
 			<node name="BodyPlanet">
 				<map/>
 				<node name="mercury">
 					<map>
 						<entry key="interval" value=".2"/>
 						<entry key="stretch" value=".034"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="venus">
 					<map>
 						<entry key="interval" value=".6"/>
 						<entry key="stretch" value=".034"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="mars">
 					<map>
 						<entry key="interval" value="2"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="jupiter">
 					<map>
 						<entry key="interval" value="11"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="saturn">
 					<map>
 						<entry key="interval" value="28"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="uranus">
 					<map>
 						<entry key="interval" value="72"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="neptune">
 					<map>
 						<entry key="interval" value="180"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 			</node>
@@ -811,7 +712,6 @@
 				<map>
 					<entry key="interval" value=".02"/>
 					<entry key="stretch" value=".012"/>
-					<entry key="importance" value=".04:0"/>
 				</map>
 			</node>
 			<node name="BodySun">
@@ -820,14 +720,12 @@
 					<map>
 						<entry key="interval" value="1"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 				<node name="true">
 					<map>
 						<entry key="interval" value="1"/>
 						<entry key="stretch" value="0"/>
-						<entry key="importance" value=".72:0"/>
 					</map>
 				</node>
 			</node>

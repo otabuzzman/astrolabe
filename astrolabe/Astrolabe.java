@@ -58,7 +58,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
 		d = new CAADate( epoch, true ) ;
 
-		Registry.register( ApplicationConstant.GC_EPOCHE, new Double( d.Julian() ) ) ;
+		ApplicationHelper.registerNumber( ApplicationConstant.GC_EPOCHE, d.Julian() ) ;
 
 		key = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
 		ApplicationHelper.registerYMD( key, d ) ;
@@ -72,11 +72,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		// Atlas processing.
 		for ( int at=0 ; at<getAtlasCount() ; at++ ) {
 			Atlas atlas ;
-
-			ps.operator.gsave() ;
 
 			try {
 				atlas = AstrolabeFactory.companionOf( getAtlas( at ) ) ;
@@ -84,22 +81,29 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				throw new RuntimeException( e.toString() ) ;
 			}
 
+			// Atlas interface
+			atlas.addAllAtlasPage() ;
 			for ( astrolabe.model.Chart atlasPage : atlas.toModel() ) {
 				addChart( atlasPage ) ;
 			}
 
-			ps.operator.gsave() ;
-
+			// AuxiliaryEmitter interface
 			atlas.headAUX() ;
 			atlas.emitAUX() ;
 			atlas.tailAUX() ;
+
+			// PostscriptEmitter interface
+			ps.operator.gsave() ;
+
+			atlas.headPS( ps ) ;
+			atlas.emitPS( ps ) ;
+			atlas.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
 		}
 
-		// Chart processing.
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			PostscriptEmitter chart ;
-
-			ps.operator.gsave() ;
 
 			try {
 				chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
@@ -107,113 +111,14 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				throw new RuntimeException( e.toString() ) ;
 			}
 
+			ps.operator.gsave() ;
+
 			chart.headPS( ps ) ;
 			chart.emitPS( ps ) ;
-
-			// Horizon processing.
-			for ( int ho=0 ; ho<( (astrolabe.model.ChartAzimuthalType) chart ).getHorizonCount() ; ho++ ) {
-				PostscriptEmitter horizon ;
-
-				ps.operator.gsave() ;
-
-				try {
-					astrolabe.model.Horizon modelHorizon = ( (astrolabe.model.ChartAzimuthalType) chart ).getHorizon( ho ) ;
-					horizon = AstrolabeFactory.companionOf( modelHorizon, epoch, (Projector) chart ) ;
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				horizon.headPS( ps ) ;
-				horizon.emitPS( ps ) ;
-
-				// AnnotationStraight processing.
-				for ( int an=0 ; an<( (astrolabe.model.HorizonType) horizon ).getAnnotationStraightCount() ; an++ ) {
-					PostscriptEmitter annotation ;
-
-					ps.operator.gsave() ;
-
-					try {
-						annotation = new AnnotationStraight( ( (astrolabe.model.HorizonType) horizon ).getAnnotationStraight( an ) ) ;
-					} catch ( ParameterNotValidException e ) {
-						throw new RuntimeException( e.toString() ) ;
-					}
-
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
-
-					ps.operator.grestore() ;
-				}
-
-				// Circle processing.
-				for ( int cl=0 ; cl<( (astrolabe.model.HorizonType) horizon ).getCircleCount() ; cl++ ) {
-					PostscriptEmitter circle ;
-
-					ps.operator.gsave() ;
-
-					try {
-						astrolabe.model.Circle modelCircle = ( (astrolabe.model.HorizonType) horizon ).getCircle( cl ) ;
-						circle = AstrolabeFactory.companionOf( modelCircle, epoch, (Projector) horizon ) ;
-					} catch ( ParameterNotValidException e ) {
-						throw new RuntimeException( e.toString() ) ;
-					}
-
-					circle.headPS( ps ) ;
-					circle.emitPS( ps ) ;
-					circle.tailPS( ps ) ;
-
-					ps.operator.grestore() ;
-				} // Circle processing.
-
-				// Body processing
-				try {
-					for ( int bd=0 ; bd<( (astrolabe.model.HorizonType) horizon ).getBodyCount() ; bd++ ) {
-						PostscriptEmitter body ;
-
-						ps.operator.gsave() ;
-
-						astrolabe.model.Body modelBody = ( (astrolabe.model.HorizonType) horizon ).getBody( bd ) ;
-						body = AstrolabeFactory.companionOf( modelBody, (Projector) horizon, epoch ) ;
-
-						body.headPS( ps ) ;
-						body.emitPS( ps ) ;
-						body.tailPS( ps ) ;
-
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				// Catalog processing
-				try {
-					for ( int ct=0 ; ct<( (astrolabe.model.HorizonType) horizon ).getCatalogCount() ; ct++ ) {
-						PostscriptEmitter catalog ;
-
-						ps.operator.gsave() ;
-
-						astrolabe.model.Catalog modelCatalog = ( (astrolabe.model.HorizonType) horizon ).getCatalog( ct ) ;
-						catalog = AstrolabeFactory.companionOf( modelCatalog, (Projector) horizon, epoch ) ;
-
-						catalog.headPS( ps ) ;
-						catalog.emitPS( ps ) ;
-						catalog.tailPS( ps ) ;
-
-						ps.operator.grestore() ;
-					}
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				horizon.tailPS( ps ) ;
-
-				ps.operator.grestore() ;
-			} // Horizon processing.
-
 			chart.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
-		} // Chart processing.
+		}
 	}
 
 	public void tailPS( PostscriptStream ps ) {
@@ -224,22 +129,51 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		File f ;
 		FileInputStream s ;
 		InputStreamReader r ;
-		Astrolabe a ;
+		Astrolabe astrolabe ;
+		String viewerDecl ;
+		Process viewerProc ;
+		TeeOutputStream out ;
 		PostscriptStream ps ;
 
 		try {
 			f = new File( argv[0] ) ;
 			s = new FileInputStream( f ) ;
 			r = new InputStreamReader( s, "UTF-8" ) ;
-			a = new AstrolabeReader().read( r ) ;
+			astrolabe = new AstrolabeReader().read( r ) ;
 
-			ps = new PostscriptStream( System.out, a.getName() ) ;
+			out =  new TeeOutputStream( System.out ) ;
 
-			a.headPS( ps ) ;
-			a.emitPS( ps ) ;
-			a.tailPS( ps ) ;
+			viewerDecl = ApplicationHelper.getPreferencesKV(
+					ApplicationHelper.getClassNode( Astrolabe.class, astrolabe.getName(), null ),
+					ApplicationConstant.PK_ASTROLABE_VIEWER, null ) ;
+			if ( viewerDecl == null ) {
+				viewerProc = null ;
+			} else {
+				try {
+					viewerProc = Runtime.getRuntime().exec( viewerDecl.split( " " ) ) ;
 
+					viewerProc.getInputStream().close() ;
+					viewerProc.getErrorStream().close() ;
+
+					out.add( viewerProc.getOutputStream() ) ;
+				} catch ( IOException e ) {
+					viewerDecl = null ;
+					viewerProc = null ;
+				}
+			}
+
+			ps = new PostscriptStream( out ) ;
+
+			astrolabe.headPS( ps ) ;
+			astrolabe.emitPS( ps ) ;
+			astrolabe.tailPS( ps ) ;
+
+			ps.flush() ;
+			ps.flush() ;
 			ps.close() ;
+
+			if ( viewerDecl != null )
+				viewerProc.waitFor() ;
 
 			Registry.remove() ;
 		} catch ( Exception e ) {

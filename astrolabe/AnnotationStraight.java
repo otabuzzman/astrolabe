@@ -17,8 +17,6 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private final static double DEFAULT_MARGIN = 1.2 ;
 	private final static double DEFAULT_RISE = 1.2 ;
 
-	private ParserAttribute parser ;
-
 	private double subscriptshrink ;
 	private double subscriptshift ;
 	private double superscriptshrink ;
@@ -36,8 +34,6 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		} catch ( ValidationException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
-
-		parser = new ParserAttribute() ;
 
 		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
@@ -58,11 +54,9 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		int nt, ne ;
 		double size ;
 		Text text ;
-		boolean reverse ;
-		String anchor ;
 
 		try {
-			size = new Text( getText( 0 ) ).purpose() ;
+			size = new Text( getText( 0 ) ).size() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -89,7 +83,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 				} catch ( ParameterNotValidException e ) { // should not happen
 					throw new RuntimeException( e.toString() ) ;
 				}
-				emitPS( ps, text, text.purpose(), 0,
+				emitPS( ps, text, text.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;
@@ -110,54 +104,52 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.operator.rotate( 90 ) ;
 		}
 
-		reverse = parser.booleanValue( getReverse() ) ;
-		if ( reverse ) {
+		if ( new Boolean( getReverse() ).booleanValue() ) {
 			ps.operator.rotate( 180 ) ;
 		}
 
-		anchor = parser.stringValue( getAnchor() ) ;
-		if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( rise ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( rise ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( rise ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( -size/2 ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -( size+rise ) ) ;
-		} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.operator.stringwidth() ;
 			ps.operator.pop() ;
@@ -181,7 +173,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		java.util.Vector<Object> fet ;
 		String t ;
 
-		t = text.value() ;
+		t = text.getValue() ;
 		if ( t.length()==0 ) {
 			String msg ;
 

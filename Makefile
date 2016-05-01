@@ -59,6 +59,7 @@ tidy: clean
 
 	
 
+.SECONDARY: astrolabe.ps
 astrolabe.pdf: astrolabe.xml
 
 catalogADC1239H.pdf: catalogADC1239H.xml
@@ -74,4 +75,3 @@ intersection.pdf: intersection.xml
 .SECONDARY: atlas-stereographic.ps
 atlas-stereographic.pdf: atlas-stereographic.xml
 
-atlaspage-template.pdf: atlaspage-template.xml

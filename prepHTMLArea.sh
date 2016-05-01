@@ -4,9 +4,9 @@
 # Aufruf bei einem Atlas:
 # xsltproc <xsl> <xml> | ./prepHTMLArea.sh <img-src> <area-href> <area-class>
 #
-# xsltproc AtlasStereographic.xsl AtlasStereographic-northern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094
+# xsltproc AtlasStereographic.xsl AtlasStereographic-northern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlaspage-stereographic-%03d.pdf" noborder
 #
-# xsltproc AtlasStereographic.xsl AtlasStereographic-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder940000
+# xsltproc AtlasStereographic.xsl AtlasStereographic-southern.xml | ./prepHTMLArea.sh atlas-stereographic.png "atlaspage-stereographic-%03d.pdf" noborder
 #
 
 # Aufruf bei zwei Atlassen (nebeneinander):
@@ -14,7 +14,7 @@
 #	./prepHTMLArea.sh <img-src> <area-href> <area-class-northern> <area-class-southern>
 #
 # xsltproc AtlasStereographic.xsl AtlasStereographic-northern.xml AtlasStereographic-southern.xml |\
-#	./prepHTMLArea.sh atlas-stereographic.png "atlas-page-%d" iborder000094 iborder940000
+#	./prepHTMLArea.sh atlas-stereographic.png "atlaspage-stereographic-%03d.pdf" norborder noborder
 #
 
 img_src=$1 ; shift
@@ -64,6 +64,9 @@ BEGIN {
 	ycpr=-1 ;
 
 	a=-1 ;
+
+	p=0 ;
+	o=0 ;
 }
 
 # $1  : chartpagerealx (pdf)
@@ -72,8 +75,8 @@ BEGIN {
 NF==2 {
 	a++ ;
 
-	p=0 ;
-
+	o=a>0?p-a+1:0 ;
+	
 	xcpr=$1 ;
 	ycpr=$2 ;
 
@@ -103,11 +106,11 @@ NF==2 {
 # $21 : beq[0]
 # $22 : beq[1]
 # $23 : scale
+# $24 : num
 
-NF==23 {
-	# atlas page count
+NF==24 {
 	p++ ;
-
+	
 	split(discreteDMS($22),deb) ;
 	split(discreteDMS($12),det) ;
 	# northern
@@ -151,7 +154,7 @@ NF==23 {
 	vp3ax=v0x+vp3x ;
 	vp3ay=v0y+vp3y ;
 
-	area_href=sprintf(ENVIRON["area_href"],p) ;
+	area_href=sprintf(ENVIRON["area_href"],$24+o) ;
 	printf("<area class=\"%s\" title=\"%s\" shape=\"poly\" coords=\"%i,%i,%i,%i,%i,%i,%i,%i,%i,%i\" alt=\"\" href=\"%s\"/>\n",
 		class, title, vp0ax,vp0ay,vp1ax,vp1ay,vp2ax,vp2ay,vp3ax,vp3ay,vp0ax,vp0ay,area_href) ;
 }

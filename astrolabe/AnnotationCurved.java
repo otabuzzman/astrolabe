@@ -16,8 +16,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private final static double DEFAULT_MARGIN = 1.2 ;
 	private final static double DEFAULT_RISE = 1.2 ;
 
-	private ParserAttribute parser ;
-
 	private double subscriptshrink ;
 	private double subscriptshift ;
 	private double superscriptshrink ;
@@ -37,8 +35,6 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		} catch ( ValidationException e ) {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
-
-		parser = new ParserAttribute() ;
 
 		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
 
@@ -60,11 +56,9 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		int nt, ne ;
 		double size ;
 		Text text ;
-		boolean reverse ;
-		String anchor ;
 
 		try {
-			size = new Text( getText( 0 ) ).purpose() ;
+			size = new Text( getText( 0 ) ).size() ;
 		} catch ( ParameterNotValidException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -81,7 +75,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				} catch ( ParameterNotValidException e ) { // should not happen
 					throw new RuntimeException( e.toString() ) ;
 				}
-				AnnotationStraight.emitPS( ps, text, text.purpose(), 0,
+				AnnotationStraight.emitPS( ps, text, text.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;
@@ -99,13 +93,11 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		ps.operator.translate() ;
 
 		try {
-			reverse = parser.booleanValue( getReverse() ) ;
-			if ( reverse ) {
+			if ( new Boolean( getReverse() ).booleanValue() ) {
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHREVERSE ) ;
 			}
 
-			anchor = parser.stringValue( getAnchor() ) ;
-			if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+			if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
 				ps.push( rise ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -114,7 +106,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.push( margin ) ;
 				ps.operator.add() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 				ps.push( rise ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -127,7 +119,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.operator.exch() ;
 				ps.operator.sub() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 				ps.push( rise ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -140,7 +132,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.operator.exch() ;
 				ps.operator.sub() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 				ps.push( size/2 ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -149,7 +141,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.push( margin ) ;
 				ps.operator.add() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 				ps.push( size/2 ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -162,7 +154,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.operator.exch() ;
 				ps.operator.sub() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 				ps.push( size/2 ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -175,7 +167,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.operator.exch() ;
 				ps.operator.sub() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 				ps.push( -( size+rise ) ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -184,7 +176,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.push( margin ) ;
 				ps.operator.add() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 				ps.push( -( size+rise ) ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;
@@ -197,7 +189,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 				ps.operator.mul( distance ) ;
 				ps.operator.exch() ;
 				ps.operator.sub() ;
-			} else if ( anchor.equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+			} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 				ps.push( -( size+rise ) ) ;
 				ps.push( true ) ;
 				ps.custom( ApplicationConstant.PS_PROLOG_PATHSHIFT ) ;

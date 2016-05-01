@@ -6,9 +6,10 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class CircleSouthernTropic extends CircleParallel {
 
-	public CircleSouthernTropic( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
-		double radal, degal ;
+	public CircleSouthernTropic( Object peer, Projector projector ) throws ParameterNotValidException {
+		double epoch, radal, degal ;
 
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 		radal = -ApplicationHelper.meanObliquityOfEcliptic( epoch ) ;
 		degal = CAACoordinateTransformation.RadiansToDegrees( radal ) ;
 

@@ -26,10 +26,17 @@
 	<xs:element name="Epoch">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="DateType"/>
+				<xs:extension base="DateType">
+					<xs:sequence>
+						<xs:element ref="A" minOccurs="0"/>
+						<xs:element ref="O" minOccurs="0"/>
+					</xs:sequence>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="A" type="DateType"/>
+	<xs:element name="O" type="DateType"/>
 	<xs:complexType name="ChartAzimuthalType">
 		<xs:sequence>
 			<xs:element ref="ChartPage"/>
@@ -52,6 +59,20 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="northern" type="xs:boolean" use="required"/>
+		<xs:attribute name="practicality" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="none|seldom|sometimes|frequent|always"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="importance" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Chart">
 		<xs:complexType>
@@ -245,7 +266,7 @@
 		<xs:attribute name="practicality" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="none|never|seldom|sometimes|frequent|always"/>
+					<xs:pattern value="none|seldom|sometimes|frequent|always"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -299,7 +320,7 @@
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical|cardinal"/>
+					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -467,14 +488,14 @@
 		<xs:attribute name="anchor" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(@\{[^\}]+\}@)"/>
+					<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(\{.+\})"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="reverse" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="true|false|(@\{[^\}]+\}@)"/>
+					<xs:pattern value="true|false|(\{.+\})"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -497,14 +518,14 @@
 								<xs:attribute name="anchor" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(@\{[^\}]+\}@)"/>
+											<xs:pattern value="topleft|topmiddle|topright|middleleft|middle|middleright|bottomleft|bottommiddle|bottomright|(\{.+\})"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
 								<xs:attribute name="number" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:pattern value="([1-9][0-9]*)|(@\{[^\}]+\}@)"/>
+											<xs:pattern value="([1-9][0-9]*)|(\{.+\})"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
@@ -547,7 +568,7 @@
 					<xs:attribute name="purpose" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="none|bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|invisible|zenit|(mag([x]|(-?[0-9]+)))|(@\{[^\}]+\}@)"/>
+								<xs:pattern value="none|bodylettering[07]|titlelettering|textlettering|circlelettering|diallettering|dialcardinal|dialfraction|guidance|obscure|zenit|(mag([x]|(-?[0-9]+)))|(\{.+\})"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -615,6 +636,13 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="importance" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyAreal">
 		<xs:complexType>
@@ -631,6 +659,13 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="stretch" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="importance" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="canonical|cardinal|dividing|graphical"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyPlanet">
 		<xs:complexType>

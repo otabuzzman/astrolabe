@@ -11,8 +11,6 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 	private double[] origin = new double[2] ; // bottom left x/y
 	private double[] extent = new double[2] ; // frame size x/y
 
-	private ParserAttribute parser ;
-
 	public Frame( Object peer ) throws ParameterNotValidException {
 		Layout layout ; 
 		double[] frame ;
@@ -25,11 +23,9 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 			throw new ParameterNotValidException( e.toString() ) ;
 		}
 
-		parser = new ParserAttribute() ;
-
 		layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
 
-		number = parser.intValue( getNumber() ) ;
+		number = new Double( getNumber() ).intValue() ;
 		if ( number>0 ) {
 			frame = layout.frame( number ) ;
 		} else {
@@ -46,14 +42,12 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 	}
 
 	public void emitPS( PostscriptStream ps ) {
-		String anchor ;
 		String[] xyRaw ;
 		double[] xyVal ;
 
-		anchor = parser.stringValue( getAnchor() ) ;
 		xyRaw = ApplicationHelper.getPreferencesKV(
 				ApplicationHelper.getClassNode( this, null, null ),
-				anchor, DEFAULT_ANCHOR )
+				getAnchor(), DEFAULT_ANCHOR )
 				.split( ":" ) ;
 
 		xyVal = new double[2] ;

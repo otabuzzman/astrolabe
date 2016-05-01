@@ -4,7 +4,6 @@ package astrolabe;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 
@@ -31,29 +30,8 @@ public class PostscriptStream extends FilterOutputStream {
 			ApplicationHelper.getClassNode( this, null, null ),
 			ApplicationConstant.PK_POSTSCRIPT_SCANLINE, DEFAULT_SCANLINE ) ;
 
-	private Process viewerProcess ;
-	private OutputStream viewerOutput ;
-
-	public PostscriptStream( OutputStream out, String instance ) {
+	public PostscriptStream( OutputStream out ) {
 		super( out ) ;
-
-		String viewer ;
-
-		viewer = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, instance, null ),
-				ApplicationConstant.PK_PRINTSTREAM_VIEWER, null ) ;
-		if ( viewer.equals( "" ) ) {
-			viewer = null ;
-		}
-		if ( viewer != null ) {
-			try {
-				viewerProcess = Runtime.getRuntime().exec( viewer.split( " " ) ) ;
-				viewerProcess.getInputStream().close() ;
-				viewerProcess.getErrorStream().close() ;
-
-				viewerOutput = new PrintStream( viewerProcess.getOutputStream() ) ;
-			} catch ( IOException e ) {}
-		}
 
 		// Unicode 4.1.0, see file Blocks-4.1.0.txt
 		ucBlock = new UcBlock[145] ;
@@ -374,43 +352,10 @@ public class PostscriptStream extends FilterOutputStream {
 	}
 
 	private void print( String def ) {
-		byte[] b ;
-
-		b = def.getBytes() ;
 		try {
-			write( b ) ;
-
-			if ( viewerOutput != null ) {
-				viewerOutput.write( b ) ;
-			}
-		} catch ( IOException e ) {}
-
-		flush() ;
-	}
-
-	public void flush() {
-		try {
-			super.flush() ;
-
-			if ( viewerOutput != null ) {
-				viewerOutput.flush() ;
-			}
-		} catch ( IOException e ) {}
-	}
-
-	public void close() {
-		try {
-			super.close() ;
-
-			if ( viewerOutput != null ) {
-				viewerOutput.flush() ;
-				viewerOutput.flush() ;
-				viewerOutput.close() ;
-
-				viewerProcess.waitFor() ;
-			}
+			write( def.getBytes() ) ;
 		} catch ( IOException e ) {
-		} catch ( InterruptedException e ) {
+			throw new RuntimeException() ;
 		}
 	}
 

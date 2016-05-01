@@ -1,12 +1,8 @@
 
 package astrolabe;
 
-import org.exolab.castor.xml.ValidationException;
-
 @SuppressWarnings("serial")
-public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements PostscriptEmitter, Projector {
-
-	private final static String DEFAULT_PRACTICALITY = "0" ;
+public class HorizonGalactic extends HorizonType {
 
 	private Projector projector ;
 
@@ -14,15 +10,10 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	private double ST ;
 
 	public HorizonGalactic( Object peer, Projector projector ) throws ParameterNotValidException {
+		super( peer, projector ) ;
+
 		double[] eq ;
 		String key ;
-
-		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
-		try {
-			validate() ;
-		} catch ( ValidationException e ) {
-			throw new ParameterNotValidException( e.toString() ) ;
-		}
 
 		this.projector = projector ;
 
@@ -36,24 +27,12 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		ApplicationHelper.registerHMS( key, ST ) ;
 	}
 
-	public double[] project( double[] ga ) {
-		return project( ga[0], ga[1] ) ;
-	}
-
 	public double[] project( double l, double b ) {
 		return projector.project( convert( l, b ) ) ;
 	}
 
-	public double[] unproject( double[] xy ) {
-		return unproject( xy[0], xy[1] ) ;
-	}
-
 	public double[] unproject( double x, double y ) {
 		return unconvert( projector.unproject( x, y ) ) ;
-	}
-
-	public double[] convert( double[] ga ) {
-		return convert( ga[0], ga[1] ) ;
 	}
 
 	public double[] convert( double l, double b ) {
@@ -64,31 +43,11 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		return r ;
 	}
 
-	public double[] unconvert( double[] eq ) {
-		return unconvert( eq[0], eq[1] ) ;
-	}
-
 	public double[] unconvert( double RA, double d ) {
 		double[] r ;
 
 		r = ApplicationHelper.equatorial2Galactic( RA, d ) ;
 
 		return r ;
-	}
-
-	public void headPS( PostscriptStream ps ) {
-		String practicality ;
-
-		practicality = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_HORIZON_PRACTICALITY ),
-				getPracticality(), DEFAULT_PRACTICALITY ) ;
-
-		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
-	}
-
-	public void emitPS( PostscriptStream ps ) {
-	}
-
-	public void tailPS( PostscriptStream ps ) {
 	}
 }

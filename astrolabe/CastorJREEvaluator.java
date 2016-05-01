@@ -14,15 +14,20 @@ public class CastorJREEvaluator implements RegExpEvaluator {
 	}
 
 	public boolean matches( String string ) {
-		return pattern==null?true:pattern.matcher( string ).find() ;
+		boolean b ;
+
+		if ( pattern == null )
+			b = true ;
+		else
+			b = pattern.matcher( string ).find() ;
+		return b ;
 	}
 
 	public void setExpression(String expression ) {
-		if ( expression == null ) {
+		if ( expression == null )
 			pattern = null ;
-		} else {
+		else
 			pattern = Pattern.compile( expression ) ;
-		}
 	}
 
 }

@@ -62,6 +62,7 @@ public class CatalogADC6049Record implements CatalogRecord {
 		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
 		model.getBodyAreal().setName( con ) ;
 		model.getBodyAreal().setType( ApplicationConstant.AV_BODY_AREA ) ;
+		model.getBodyAreal().setImportance( ApplicationConstant.AV_BODY_DIVIDING ) ;
 		for ( int p=0 ; p<RAhr.size() ; p++ ) {
 			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
 			pm = new astrolabe.model.Position() ;

@@ -12,8 +12,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private final static double DEFAULT_HALO = 4 ;
 	private final static double DEFAULT_HALOMIN = .08 ;
 	private final static double DEFAULT_HALOMAX = .4 ;
-	private final static String DEFAULT_PRACTICALITY = "0" ;
-	private final static String DEFAULT_IMPORTANCE = ".1:0" ;
 
 	private double unit ;
 	private double scale ;
@@ -132,7 +130,8 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		String practicality, importance ;
+		ElementPracticality practicality ;
+		ElementImportance importance ;
 
 		ps.dsc.beginSetup() ;
 
@@ -166,14 +165,15 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		ps.operator.scale( unit ) ;
 
-		practicality = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CHART_PRACTICALITY, DEFAULT_PRACTICALITY ) ;
-		importance = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CHART_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
-		ApplicationHelper.emitPSPracticality( ps, practicality ) ;
-		ApplicationHelper.emitPSImportance( ps, importance ) ;
+		practicality = new ElementPracticality( getPracticality() ) ;
+		practicality.headPS( ps ) ;
+		practicality.emitPS( ps ) ;
+		practicality.tailPS( ps ) ;
+
+		importance = new ElementImportance( getImportance() ) ;
+		importance.headPS( ps ) ;
+		importance.emitPS( ps ) ;
+		importance.tailPS( ps ) ;
 
 		ps.dsc.endPageSetup() ;
 
@@ -200,6 +200,24 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			} catch ( ParameterNotValidException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
+		}
+
+		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
+			PostscriptEmitter horizon ;
+
+			try {
+				horizon = AstrolabeFactory.companionOf( getHorizon( ho ), this ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			ps.operator.gsave() ;
+
+			horizon.headPS( ps ) ;
+			horizon.emitPS( ps ) ;
+			horizon.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
 		}
 	}
 

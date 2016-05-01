@@ -33,12 +33,15 @@ public class CatalogADC1239T extends CatalogType implements PostscriptEmitter {
 		}
 	} ;
 
-	public CatalogADC1239T( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
+	public CatalogADC1239T( Object peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		String[] rv ;
+		double epoch ;
 
 		this.projector = projector ;
+
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 		this.epoch = epoch ;
 
 		restrict = new HashSet<String>() ;

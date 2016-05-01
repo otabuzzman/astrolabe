@@ -18,7 +18,7 @@ public final class ApplicationConstant {
 	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global model variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
-	public final static String LP_SUBSTITUTE = "@\\{[^\\}]+\\}@" ;
+	public final static String LP_SUBSTITUTE = "\\{[^\\{\\}]+\\}" ;
 
 	public final static String LK_ASTROLABE_EPOCH = "substitue.astrolabe.epoch" ;
 
@@ -355,8 +355,10 @@ public final class ApplicationConstant {
 	public final static String LK_DMS_SECONDS	= "message.dms.seconds" ;
 
 	// attribute values (AV_), patterns (AP_)
-	public final static String AV_ATLAS_NORTHERN = "northern" ;
-	public final static String AV_ATLAS_SOUTHERN = "southern" ;
+	public final static String AV_GENERAL_CARDINAL	= "cardinal" ;
+	public final static String AV_GENERAL_CANONICAL	= "canonical" ;
+	public final static String AV_GENERAL_DIVIDING	= "dividing" ;
+	public final static String AV_GENERAL_GRAPHICAL	= "graphical" ;
 
 	public final static String AV_CIRCLE_CHASING = "chasing" ;
 	public final static String AV_CIRCLE_LEADING = "leading" ;
@@ -371,27 +373,24 @@ public final class ApplicationConstant {
 	public final static String AV_ANNOTATION_BOTTOMMIDDLE	= "bottommiddle" ;
 	public final static String AV_ANNOTATION_BOTTOMRIGHT	= "bottomright" ;
 
-	public final static String AV_BODY_AREA = "area" ;
-	public final static String AV_BODY_SIGN = "sign" ;
+	public final static String AV_BODY_AREA			= "area" ;
+	public final static String AV_BODY_SIGN			= "sign" ;
+	public final static String AV_BODY_DIVIDING		= AV_GENERAL_DIVIDING ;
+	public final static String AV_BODY_GRAPHICAL	= AV_GENERAL_GRAPHICAL ;
 
 	// preferences keys (PK_), nodes (PN_)
-	public final static String PN_GENERAL_PRACTICALITY	= "practicality" ;
-	public final static String PN_GENERAL_IMPORTANCE	= "importance" ;
-
-	public final static String PK_GENERAL_PRACTICALITY	= PN_GENERAL_PRACTICALITY ;
-	public final static String PK_GENERAL_IMPORTANCE	= PN_GENERAL_IMPORTANCE ;
 	public final static String PK_GENERAL_RISE			= "rise" ;
 	public final static String PK_GENERAL_SPACE			= "space" ;
 	public final static String PK_GENERAL_INTERVAL		= "interval" ;
 	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
 	public final static String PK_GENERAL_PRECISION		= "precision" ;
 
+	public final static String PK_ASTROLABE_VIEWER		= "viewer" ;
+
 	public final static String PK_CHART_UNIT			= "unit" ;
 	public final static String PK_CHART_HALO			= "halo" ;
 	public final static String PK_CHART_HALOMIN			= "halomin" ;
 	public final static String PK_CHART_HALOMAX			= "halomax" ;
-	public final static String PK_CHART_PRACTICALITY	= PK_GENERAL_PRACTICALITY ;
-	public final static String PK_CHART_IMPORTANCE		= PK_GENERAL_IMPORTANCE ;
 
 	public final static String PN_CHARTPAGE_LAYOUT		= "layout" ;
 
@@ -401,10 +400,7 @@ public final class ApplicationConstant {
 	public final static String PK_ATLAS_INTERVALUNITSH	= "intervalUnitsH" ;
 	public final static String PK_ATLAS_INTERVALUNITSD	= "intervalUnitsD" ;
 
-	public final static String PN_HORIZON_PRACTICALITY = PN_GENERAL_PRACTICALITY ;
-
 	public final static String PK_CIRCLE_INTERVAL	= PK_GENERAL_INTERVAL ;
-	public final static String PN_CIRCLE_IMPORTANCE	= PN_GENERAL_IMPORTANCE ;
 
 	public final static String PN_DIAL_ANNOTATION	= "annotation" ;
 	public final static String PK_DIAL_RISE			= PK_GENERAL_RISE ;
@@ -428,7 +424,6 @@ public final class ApplicationConstant {
 
 	public final static String PK_BODY_INTERVAL		= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH		= "stretch" ;
-	public final static String PK_BODY_IMPORTANCE	= PK_GENERAL_IMPORTANCE ;
 
 	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;
 	public final static String PK_POSTSCRIPT_SCANLINE	= "scanline" ;
@@ -436,8 +431,6 @@ public final class ApplicationConstant {
 	public final static String PN_POSTSCRIPT_PROLOG		= "prolog" ;
 	public final static String PN_POSTSCRIPT_UNICODE	= "unicode" ;
 	public final static String PK_POSTSCRIPT_DEFAULT	= "default" ;
-
-	public final static String PK_PRINTSTREAM_VIEWER	= "viewer" ;
 
 	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
 

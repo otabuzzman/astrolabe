@@ -46,7 +46,9 @@
 		<xsl:value-of select="Bottom/phi/Rational/@value"/><xsl:text> </xsl:text>
 		<xsl:value-of select="Bottom/theta/Rational/@value"/><xsl:text> </xsl:text>
 
-		<xsl:value-of select="@scale"/>
+		<xsl:value-of select="@scale"/><xsl:text> </xsl:text>
+
+		<xsl:value-of select="@num"/>
 		
 		<xsl:text>&#xa;</xsl:text>
 	</xsl:template>

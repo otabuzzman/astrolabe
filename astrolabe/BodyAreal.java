@@ -2,7 +2,6 @@
 package astrolabe;
 
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -14,8 +13,6 @@ import caa.CAACoordinateTransformation;
 public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEmitter {
 
 	private Projector projector ;
-
-	private final static String DEFAULT_IMPORTANCE = ".36:1:1.8" ;
 
 	private java.util.Vector<double[]> outline ;
 
@@ -48,14 +45,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		Preferences node ;
-		String importance ;
+		ElementImportance importance ;
 
-		node = ApplicationHelper.getClassNode( this, getName(), getType() ) ;
-
-		importance = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
-
-		ApplicationHelper.emitPSImportance( ps, importance ) ;
+		importance = new ElementImportance( getImportance() ) ;
+		importance.headPS( ps ) ;
+		importance.emitPS( ps ) ;
+		importance.tailPS( ps ) ;
 	}
 
 	public void emitPS( PostscriptStream ps ) {
@@ -110,6 +105,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				}
 
 				peer.setType( getType() ) ;
+				peer.setImportance( getImportance() ) ;
 
 				peer.setAnnotation( getAnnotation() ) ;
 

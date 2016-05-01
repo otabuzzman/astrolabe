@@ -7,7 +7,7 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic scale="100" northern="true">
+		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
 			<ChartPage size="a0" real="100" layout="default"/>
 			<Origin>
 				<phi>
@@ -699,7 +699,7 @@ astrolabe.xsd">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic scale="100" northern="true">
+		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
 			<ChartPage size="a0" real="100" layout="default"/>
 			<Origin>
 				<phi>

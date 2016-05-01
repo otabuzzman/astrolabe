@@ -32,7 +32,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		this.projector = projector ;
 
-		size = new Text( getText() ).purpose() ;
+		size = new Text( getText() ).size() ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;

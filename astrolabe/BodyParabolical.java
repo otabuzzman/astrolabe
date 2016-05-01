@@ -8,7 +8,7 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class BodyParabolical extends astrolabe.model.BodyParabolical implements PostscriptEmitter, Baseline {
 
-	public BodyParabolical( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
+	public BodyParabolical( Object peer, Projector projector ) throws ParameterNotValidException {
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
 		try {
 			validate() ;

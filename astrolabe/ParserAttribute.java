@@ -15,7 +15,7 @@ public class ParserAttribute extends ParserSubstitute {
 
 		while ( m.find( 0 ) ) {
 			s = t.substring( m.start(), m.end() ) ;
-			l = s.substring( 2, s.length()-2 ) ;
+			l = s.substring( 1, s.length()-1 ) ;
 			v = super.parse( l ) ;
 			t = m.replaceFirst( v ) ;
 			m = p.matcher( t ) ;

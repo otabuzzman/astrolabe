@@ -649,9 +649,13 @@ public final class ApplicationHelper {
 	} 
 
 	public static void setupCompanionFromPeer( Object companion, Object peer ) {
+		ParserAttribute parser ;
 		Method method[] , gm, sm ;
 		String gn, sn ;
 		Class<?>[] pt ;
+		Object v ;
+
+		parser = new ParserAttribute() ;
 
 		method = peer.getClass().getMethods() ;
 		for ( int m=0 ; m<method.length ; m++ ) {
@@ -663,7 +667,11 @@ public final class ApplicationHelper {
 					pt = new Class[] { gm.getReturnType() } ;
 					sn = gn.replaceFirst( "g", "s" ) ;
 					sm = companion.getClass().getMethod( sn, pt ) ;
-					sm.invoke( companion, gm.invoke( peer, (Object[]) null ) ) ;
+					v = gm.invoke( peer, (Object[]) null ) ;
+					if ( v instanceof String )
+						sm.invoke( companion, parser.stringValue( (String) v ) ) ;
+					else
+						sm.invoke( companion, v ) ;
 				} catch ( NoSuchMethodException e ) {
 					continue ;
 				} catch ( InvocationTargetException e ) {
@@ -729,9 +737,9 @@ public final class ApplicationHelper {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.Annotation[] an ) throws ParameterNotValidException {
-		for ( int a=0 ; a<an.length ; a++ ) {
-			PostscriptEmitter annotation ;
+		PostscriptEmitter annotation ;
 
+		for ( int a=0 ; a<an.length ; a++ ) {
 			ps.operator.gsave() ;
 
 			annotation = AstrolabeFactory.companionOf( an[a] ) ;
@@ -744,9 +752,9 @@ public final class ApplicationHelper {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationCurved[] an ) throws ParameterNotValidException {
-		for ( int a=0 ; a<an.length ; a++ ) {
-			PostscriptEmitter annotation ;
+		PostscriptEmitter annotation ;
 
+		for ( int a=0 ; a<an.length ; a++ ) {
 			ps.operator.gsave() ;
 
 			annotation = new AnnotationCurved( an[a] ) ;
@@ -759,9 +767,9 @@ public final class ApplicationHelper {
 	}
 
 	public static void emitPS( PostscriptStream ps, astrolabe.model.AnnotationStraight[] an ) throws ParameterNotValidException {
-		for ( int a=0 ; a<an.length ; a++ ) {
-			PostscriptEmitter annotation ;
+		PostscriptEmitter annotation ;
 
+		for ( int a=0 ; a<an.length ; a++ ) {
 			ps.operator.gsave() ;
 
 			annotation = new AnnotationStraight( an[a] ) ;
@@ -770,40 +778,6 @@ public final class ApplicationHelper {
 			annotation.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
-		}
-	}
-
-	public static void emitPSPracticality( PostscriptStream ps, String practicality ) {
-		double r, g, b ;
-		String[] p ;
-
-		p = practicality.split( ":" ) ;
-
-		if ( p.length>1 ) {
-			r = new Double( p[0] ).doubleValue() ;
-			g = new Double( p[1] ).doubleValue() ;
-			b = new Double( p[2] ).doubleValue() ;
-			ps.operator.setrgbcolor( r, g, b ) ;
-		} else { // setgray
-			ps.operator.setgray( new Double( p[0] ).doubleValue() ) ;
-		}
-	}
-
-	public static void emitPSImportance( PostscriptStream ps, String importance ) {
-		String[] i ;
-
-		i = importance.split( ":" ) ;
-
-		ps.operator.setlinewidth( new Double( i[0] ).doubleValue() ) ;
-		if ( i.length>2 ) {
-			ps.array( true ) ;
-			ps.push( new Double( i[1] ).doubleValue() ) ;
-			ps.push( new Double( i[1] ).doubleValue()*new Double( i[2] ).doubleValue() ) ;
-			ps.array( false ) ;
-			ps.push( 0 ) ;
-			ps.operator.setdash() ;
-		} else {
-			ps.operator.setdash( new Double( i[1] ).doubleValue() ) ;
 		}
 	}
 

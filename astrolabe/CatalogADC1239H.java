@@ -34,13 +34,16 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 		}
 	} ;
 
-	public CatalogADC1239H( Object peer, Projector projector, double epoch ) throws ParameterNotValidException {
+	public CatalogADC1239H( Object peer, Projector projector ) throws ParameterNotValidException {
 		super( peer, projector ) ;
 
 		String[] rv ;
+		double epoch ;
 
 		this.peer = (astrolabe.model.CatalogADC1239H) peer ;
 		this.projector = projector ;
+
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
 		this.epoch = epoch ;
 
 		restrict = new HashSet<String>() ;
@@ -88,6 +91,7 @@ public class CatalogADC1239H extends CatalogType implements PostscriptEmitter {
 			for ( int b=0 ; b<sv.length ; b++ ) {
 				bodySign = new astrolabe.model.BodyAreal() ;
 				bodySign.setType( ApplicationConstant.AV_BODY_SIGN ) ;
+				bodySign.setImportance( ApplicationConstant.AV_BODY_GRAPHICAL ) ;
 
 				bv = sv[b].split( ":" ) ;
 				for ( int p=0 ; p<bv.length ; p++ ) {

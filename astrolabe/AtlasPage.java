@@ -6,6 +6,7 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEmitter {
 
+	// castor requirement for (un)marshalling
 	public AtlasPage() {
 	}
 

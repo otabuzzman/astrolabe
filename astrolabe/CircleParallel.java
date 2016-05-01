@@ -20,7 +20,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	private final static Log log = LogFactory.getLog( CircleParallel.class ) ;
 
 	private final static double DEFAULT_INTERVAL = 1 ;
-	private final static String DEFAULT_IMPORTANCE = ".1:0" ;
 
 	private Projector projector ;
 
@@ -215,13 +214,12 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		String importance ;
+		ElementImportance importance ;
 
-		importance = ApplicationHelper.getPreferencesKV(
-				ApplicationHelper.getClassNode( this, getName(), ApplicationConstant.PN_CIRCLE_IMPORTANCE ),
-				getImportance(), DEFAULT_IMPORTANCE ) ;
-
-		ApplicationHelper.emitPSImportance( ps, importance ) ;
+		importance = new ElementImportance( getImportance() ) ;
+		importance.headPS( ps ) ;
+		importance.emitPS( ps ) ;
+		importance.tailPS( ps ) ;
 	}
 
 	public void emitPS( PostscriptStream ps ) {
@@ -409,7 +407,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 
-			// Dial processing.
 			if ( getDial() != null ) {
 				try {
 					PostscriptEmitter dial ;

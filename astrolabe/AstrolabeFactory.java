@@ -65,18 +65,18 @@ public final class AstrolabeFactory {
 		return chart ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, double epoch, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.HorizonLocal hoLo ;
 		astrolabe.model.HorizonEquatorial hoEq ;
 		astrolabe.model.HorizonEcliptical hoEc ;
 		PostscriptEmitter horizon ;
 
 		if ( ( hoLo = ho.getHorizonLocal() ) != null  ) {
-			horizon = new HorizonLocal( hoLo, epoch, p ) ;
+			horizon = new HorizonLocal( hoLo, p ) ;
 		} else if ( ( hoEq = ho.getHorizonEquatorial() ) != null  ) {
 			horizon = new HorizonEquatorial( hoEq, p ) ;
 		} else if ( ( hoEc = ho.getHorizonEcliptical() ) != null  ) {
-			horizon = new HorizonEcliptical( hoEc, epoch, p ) ;
+			horizon = new HorizonEcliptical( hoEc, p ) ;
 		} else { // ho.getHorizonGalactic() != null
 			horizon = new HorizonGalactic( ho.getHorizonGalactic(), p ) ;
 		}
@@ -84,7 +84,7 @@ public final class AstrolabeFactory {
 		return horizon ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, double epoch, Projector p ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.CircleParallel clP ;
 		astrolabe.model.CircleMeridian clM ;
 		astrolabe.model.CircleSouthernPolar clSP ;
@@ -97,13 +97,13 @@ public final class AstrolabeFactory {
 		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
 			circle = new CircleMeridian( clM, p ) ;
 		} else if ( ( clSP = cl.getCircleSouthernPolar() ) != null ) {
-			circle = new CircleSouthernPolar( clSP, epoch, p ) ;
+			circle = new CircleSouthernPolar( clSP, p ) ;
 		} else if ( ( clNP = cl.getCircleNorthernPolar() ) != null ) {
-			circle = new CircleNorthernPolar( clNP, epoch, p ) ;
+			circle = new CircleNorthernPolar( clNP, p ) ;
 		} else if ( ( clST = cl.getCircleSouthernTropic() ) != null ) {
-			circle = new CircleSouthernTropic( clST, epoch, p ) ;
+			circle = new CircleSouthernTropic( clST, p ) ;
 		} else { // cl.getCircleNorthernTropic() != null
-			circle = new CircleNorthernTropic( cl.getCircleNorthernTropic(), epoch, p ) ;
+			circle = new CircleNorthernTropic( cl.getCircleNorthernTropic(), p ) ;
 		}
 
 		return circle ;
@@ -135,7 +135,7 @@ public final class AstrolabeFactory {
 		return annotation ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p, double epoch ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.BodyStellar bdS ;
 		astrolabe.model.BodyAreal bdA ;
 		astrolabe.model.BodyPlanet bdP ;
@@ -149,21 +149,21 @@ public final class AstrolabeFactory {
 		} else if ( ( bdA = bd.getBodyAreal() ) != null ) {
 			body = new BodyAreal( bdA, p ) ;
 		} else if ( ( bdP = bd.getBodyPlanet() ) != null ) {
-			body = new BodyPlanet( bdP, epoch, p ) ;
+			body = new BodyPlanet( bdP, p ) ;
 		} else if ( ( bdM = bd.getBodyMoon() ) != null ) {
-			body = new BodyMoon( bdM, epoch, p ) ;
+			body = new BodyMoon( bdM, p ) ;
 		} else if ( ( bdH = bd.getBodySun() ) != null ) {
-			body = new BodySun( bdH, epoch, p ) ;
+			body = new BodySun( bdH, p ) ;
 		} else if ( ( bdE = bd.getBodyElliptical() ) != null ) {
-			body = new BodyElliptical( bdE, epoch, p ) ;
+			body = new BodyElliptical( bdE, p ) ;
 		} else { // bd.getBodyParabolical() != null
-			body = new BodyParabolical( bd.getBodyParabolical(), epoch, p ) ;
+			body = new BodyParabolical( bd.getBodyParabolical(), p ) ;
 		}
 
 		return body ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p, double epoch ) throws ParameterNotValidException {
+	public static PostscriptEmitter companionOf( astrolabe.model.Catalog ct, Projector p ) throws ParameterNotValidException {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
@@ -171,15 +171,15 @@ public final class AstrolabeFactory {
 		PostscriptEmitter catalog ;
 
 		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
-			catalog = new CatalogADC1239H( ct1239h, p, epoch ) ;
+			catalog = new CatalogADC1239H( ct1239h, p ) ;
 		} else if ( ( ct1239t = ct.getCatalogADC1239T() ) != null ) {
-			catalog = new CatalogADC1239T( ct1239t, p, epoch ) ;
+			catalog = new CatalogADC1239T( ct1239t, p ) ;
 		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
-			catalog = new CatalogADC5050( ct5050, p, epoch ) ;
+			catalog = new CatalogADC5050( ct5050, p ) ;
 		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
-			catalog = new CatalogADC6049( ct6049, p, epoch ) ;
+			catalog = new CatalogADC6049( ct6049, p ) ;
 		} else { // // ct.getCatalogADC7118() != null
-			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p, epoch ) ;
+			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p ) ;
 		}
 
 		return catalog ;

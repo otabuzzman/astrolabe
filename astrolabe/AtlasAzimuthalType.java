@@ -20,7 +20,7 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType implements Atlas, AuxiliaryEmitter {
+abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType implements Atlas {
 
 	private final static double DEFAULT_OVERLAP = 10. ;
 	private final static double DEFAULT_LIMITDE	= 0 ;
@@ -29,8 +29,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 
 	private ChartAzimuthalType chart ;
 	private ChartPage chartPage ;
-
-	private String name ;
 
 	// castor requirement for (un)marshalling
 	public AtlasAzimuthalType() {
@@ -45,232 +43,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 	}
 
-	public void headAUX() {
-	}
-
-	public void emitAUX() {
-		URI xmlu ;
-		File xmlf ;
-
-		if ( getMarshal() != null ) {
-			try {
-				xmlu = new URI( getMarshal() ) ;
-				if ( xmlu.isAbsolute() ) {
-					xmlf = new File( xmlu ) ;	
-				} else {
-					xmlf = new File( xmlu.getPath() ) ;
-				}
-				while ( ! xmlf.createNewFile() ) {
-					xmlf.delete() ;
-				}
-
-				marshal( new FileOutputStream( xmlf ), "UTF-8" ) ;
-			} catch ( URISyntaxException e ) {
-				throw new RuntimeException( e.toString() ) ; // URI constructor
-			} catch ( IOException e ) {
-				throw new RuntimeException( e.toString() ) ; // File.createNewFile()
-			}
-		}
-	}
-
-	public void tailAUX() {
-	}
-
-	public astrolabe.model.Chart[] toModel() {
-		astrolabe.model.Chart[] model ;
-		double[] checkerTransform ;
-		double edgeBeg, edgeEnd ;
-		double p0de, tde, p1ra, p2ra ;
-		int checkerRA, checkerDe ;
-		AtlasPage atlasPage ;
-		astrolabe.model.Chart ch ;
-		astrolabe.model.ChartAzimuthalType cA ;
-		astrolabe.model.Horizon h ;
-		astrolabe.model.HorizonEquatorial hE ;
-		astrolabe.model.Circle c ;
-		int intervalNumber ;
-		double circleNumber ;
-		String checker[] ;
-		double ra, de ;
-
-		try {
-			chart = getChartAzimuthalType() ;
-			chartPage = new ChartPage( chart.getChartPage() ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		name = ApplicationConstant.GC_NS_ATL+( chart.getNorthern()?
-				ApplicationConstant.AV_ATLAS_NORTHERN:
-					ApplicationConstant.AV_ATLAS_SOUTHERN ) ;
-
-		removeAllAtlasPage() ;
-		addAllAtlasPage() ;
-
-		checker = getChecker().split( "x" ) ;
-		checkerRA = new Integer( checker[0] ).intValue() ;
-		checkerDe = new Integer( checker[1] ).intValue() ;
-
-		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
-
-		for ( int m=0 ; m<getAtlasPageCount() ; m++ ) {
-			atlasPage = (AtlasPage) getAtlasPage( m ) ;
-
-			hE = new astrolabe.model.HorizonEquatorial() ;
-			hE.setName( name ) ;
-
-			h = new astrolabe.model.Horizon() ;
-			h.setHorizonEquatorial( hE ) ;
-
-			ch = new astrolabe.model.Chart() ;
-			cA = setChartAzimuthalType( ch ) ;
-			cA.setScale( atlasPage.getScale() ) ;
-			cA.setOrigin( atlasPage.getOrigin() ) ;
-			cA.addHorizon( 0, h ) ;
-			cA.setAtlasPage( atlasPage ) ;
-
-			if ( checkerDe>1 ) { // CircleParallel
-				try {
-					p0de = AstrolabeFactory.valueOf( atlasPage.getP0().getTheta() ) ;
-					tde = AstrolabeFactory.valueOf( atlasPage.getTop().getTheta() ) ;
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-				edgeBeg = chart.getNorthern()?p0de:-p0de ;
-				edgeEnd = chart.getNorthern()?tde:-tde ;
-
-				intervalNumber = checkerDe-2 ;
-				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitD() ) ;
-
-				de = checkerTransform[0] ;
-				hE.addCircle( checkerDeToModel( chart.getNorthern()?de:-de ) ) ;
-				circleNumber = intervalNumber+1 ;
-				for ( int i=1 ; i<circleNumber ; i++ ) {
-					de = checkerTransform[0]+i*checkerTransform[1] ;
-					c = checkerDeToModel( chart.getNorthern()?de:-de ) ;
-					hE.addCircle( c ) ;
-				}
-			}
-
-			if ( checkerRA>1 ) { // CircleMeridian
-				try {
-					p1ra = AstrolabeFactory.valueOf( atlasPage.getP1().getPhi() ) ;
-					p2ra = AstrolabeFactory.valueOf( atlasPage.getP2().getPhi() ) ;
-				} catch ( ParameterNotValidException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-				edgeBeg = atlasPage.getRow()>0?p1ra:p2ra ;
-				edgeEnd = atlasPage.getRow()>0?p2ra:p1ra ;
-				if ( edgeBeg>edgeEnd ) {
-					edgeEnd += Math.rad360 ;
-				}
-
-				intervalNumber = checkerRA-2 ;
-				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitH() ) ;
-
-				ra = checkerTransform[0] ;
-				ra = ApplicationHelper.mapTo0To360Range( ra ) ;
-				c = checkerRAToModel( ra ) ;
-				hE.addCircle( c ) ;
-				if ( atlasPage.getRow()>0 ) {
-					circleNumber = intervalNumber+1 ;
-				} else { // atlasPage.row == 0
-					flipCircleRange( c.getCircleMeridian() ) ;
-
-					circleNumber = java.lang.Math.ceil( Math.rad360/checkerTransform[1] ) ;
-				}
-				for ( int i=1 ; i<circleNumber ; i++ ) {
-					ra = checkerTransform[0]+i*checkerTransform[1] ;
-					ra = ApplicationHelper.mapTo0To360Range( ra ) ;
-					c = checkerRAToModel( ra ) ;
-					hE.addCircle( c ) ;
-					if ( atlasPage.getRow() == 0 ) {
-						flipCircleRange( c.getCircleMeridian() ) ;
-					}
-				}
-			}
-
-			if ( checkerDe == 1 && checkerRA == 1 ) {
-				hE.addCircle( new astrolabe.model.Circle() ) ;
-				hE.getCircle( 0 ).setCircleParallel( new astrolabe.model.CircleParallel() ) ;
-				hE.getCircle( 0 ).getCircleParallel().setAngle( new astrolabe.model.Angle() ) ;
-				hE.getCircle( 0 ).getCircleParallel().setBegin( new astrolabe.model.Begin() ) ;
-				hE.getCircle( 0 ).getCircleParallel().getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-				modelOf( hE.getCircle( 0 ).getCircleParallel().getBegin().getImmediate(), false, false, 0 ) ;
-				hE.getCircle( 0 ).getCircleParallel().setEnd( new astrolabe.model.End() ) ;
-				hE.getCircle( 0 ).getCircleParallel().getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-				modelOf( hE.getCircle( 0 ).getCircleParallel().getEnd().getImmediate(), false, false, 1./3600./100. ) ;
-			}
-
-			try {
-				AstrolabeFactory.modelOf( hE, false ) ;
-			} catch ( ParameterNotValidException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-
-			try {
-				ch.validate() ;
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-			model[m] = ch ;
-		}
-
-		return model ;
-	}
-
-	abstract ChartAzimuthalType getChartAzimuthalType() ;
-	abstract astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) ;
-
-	private void marshal( OutputStream xmls, String charset ) {
-		Preferences node ;
-		Marshaller marshaller ;
-		Mapping mapping ;
-		String mapn ;
-		Writer xmlw ;
-
-		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
-
-		// map file creation:
-		// 1. make AtlasStereographic.map (e.g.)
-		// 2. remove unused class definitions from AtlasStereographic.map
-		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
-		// 4. remove required attribute from field definitions for Phi and Theta
-		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
-		mapn = ApplicationHelper.getPreferencesKV( node,
-				ApplicationConstant.PK_ATLAS_URLMODELMAP, getClass().getSimpleName()+".map" ) ;
-
-		try {
-			mapping = new Mapping() ;
-			mapping.loadMapping( mapn ) ;
-
-			xmlw = new OutputStreamWriter( xmls, charset ) ;
-
-			marshaller = new Marshaller( xmlw ) ;
-			marshaller.setMapping( mapping );
-			marshaller.setEncoding( charset ) ;
-
-			marshaller.setSuppressNamespaces( true ) ;
-
-			// suppress xsi:type attribute (implies xmlns:xsi attribute) in marshaller output
-			marshaller.setSuppressXSIType( true ) ;
-
-			marshaller.marshal( this );
-
-			xmls.flush() ;
-			xmls.close() ;
-		} catch ( MappingException e ) {
-			throw new RuntimeException( e.toString() ) ; // Mapping constructor
-		} catch ( ValidationException e ) {
-			throw new RuntimeException( e.toString() ) ; // Marshaller.marshal
-		} catch ( MarshalException e ) {
-			throw new RuntimeException( e.toString() ) ; // Marshaller.marshal
-		} catch ( IOException e ) {
-			throw new RuntimeException( e.toString() ) ; // Mapping.loadMapping(), Marshaller constructor
-		}
-	}
-
-	private void addAllAtlasPage() {
+	public void addAllAtlasPage() {
 		int nra, nde, grid[], num ; // number of pages per single declination, number of page rows
 		double a, b, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
 		double overlap, spanDe, originDe, extentDe ;
@@ -280,6 +53,13 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		Vector vc, vb, vt ;
 		double[] xy, eq ;
 		Preferences node ;
+
+		try {
+			chart = getChartAzimuthalType() ;
+			chartPage = new ChartPage( chart.getChartPage() ) ;
+		} catch ( ParameterNotValidException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
 
 		setChartpagerealx( chartPage.realx() ) ;
 		setChartpagerealy( chartPage.realy() ) ;
@@ -432,12 +212,6 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 				// atlas page scale
 				atlasPage.setScale( chartPage.realx()/dim[0]*100 ) ;
 
-				try {
-					atlasPage.validate() ;
-				} catch ( ValidationException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
 				addAtlasPage( atlasPage ) ;
 			}
 
@@ -445,6 +219,245 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		}
 
 		pageConnect( grid ) ;
+	}
+
+	public astrolabe.model.Chart[] toModel() {
+		astrolabe.model.Chart[] model ;
+		double[] checkerTransform ;
+		double edgeBeg, edgeEnd ;
+		double p0de, tde, p1ra, p2ra ;
+		int checkerRA, checkerDe ;
+		AtlasPage atlasPage ;
+		astrolabe.model.Chart ch ;
+		astrolabe.model.ChartAzimuthalType cA ;
+		astrolabe.model.Horizon h ;
+		astrolabe.model.HorizonEquatorial hE ;
+		astrolabe.model.Circle c ;
+		int intervalNumber ;
+		double circleNumber ;
+		String name, checker[] ;
+		double ra, de ;
+
+		name = ApplicationConstant.GC_NS_ATL+getName() ;
+
+		checker = getChecker().split( "x" ) ;
+		checkerRA = new Integer( checker[0] ).intValue() ;
+		checkerDe = new Integer( checker[1] ).intValue() ;
+
+		model = new astrolabe.model.Chart[ getAtlasPageCount() ] ;
+
+		for ( int m=0 ; m<getAtlasPageCount() ; m++ ) {
+			atlasPage = (AtlasPage) getAtlasPage( m ) ;
+
+			hE = new astrolabe.model.HorizonEquatorial() ;
+			hE.setName( name ) ;
+
+			h = new astrolabe.model.Horizon() ;
+			h.setHorizonEquatorial( hE ) ;
+
+			ch = new astrolabe.model.Chart() ;
+			cA = setChartAzimuthalType( ch ) ;
+			cA.setScale( atlasPage.getScale() ) ;
+			cA.setOrigin( atlasPage.getOrigin() ) ;
+			cA.addHorizon( 0, h ) ;
+			cA.setAtlasPage( atlasPage ) ;
+
+			if ( checkerDe>1 ) { // CircleParallel
+				try {
+					p0de = AstrolabeFactory.valueOf( atlasPage.getP0().getTheta() ) ;
+					tde = AstrolabeFactory.valueOf( atlasPage.getTop().getTheta() ) ;
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+				edgeBeg = chart.getNorthern()?p0de:-p0de ;
+				edgeEnd = chart.getNorthern()?tde:-tde ;
+
+				intervalNumber = checkerDe-2 ;
+				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitD() ) ;
+
+				de = checkerTransform[0] ;
+				hE.addCircle( checkerDeToModel( name, chart.getNorthern()?de:-de ) ) ;
+				circleNumber = intervalNumber+1 ;
+				for ( int i=1 ; i<circleNumber ; i++ ) {
+					de = checkerTransform[0]+i*checkerTransform[1] ;
+					c = checkerDeToModel( name, chart.getNorthern()?de:-de ) ;
+					hE.addCircle( c ) ;
+				}
+			}
+
+			if ( checkerRA>1 ) { // CircleMeridian
+				try {
+					p1ra = AstrolabeFactory.valueOf( atlasPage.getP1().getPhi() ) ;
+					p2ra = AstrolabeFactory.valueOf( atlasPage.getP2().getPhi() ) ;
+				} catch ( ParameterNotValidException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+				edgeBeg = atlasPage.getRow()>0?p1ra:p2ra ;
+				edgeEnd = atlasPage.getRow()>0?p2ra:p1ra ;
+				if ( edgeBeg>edgeEnd ) {
+					edgeEnd += Math.rad360 ;
+				}
+
+				intervalNumber = checkerRA-2 ;
+				checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitH() ) ;
+
+				ra = checkerTransform[0] ;
+				ra = ApplicationHelper.mapTo0To360Range( ra ) ;
+				c = checkerRAToModel( name, ra ) ;
+				hE.addCircle( c ) ;
+				if ( atlasPage.getRow()>0 ) {
+					circleNumber = intervalNumber+1 ;
+				} else { // atlasPage.row == 0
+					flipCircleRange( c.getCircleMeridian() ) ;
+
+					circleNumber = java.lang.Math.ceil( Math.rad360/checkerTransform[1] ) ;
+				}
+				for ( int i=1 ; i<circleNumber ; i++ ) {
+					ra = checkerTransform[0]+i*checkerTransform[1] ;
+					ra = ApplicationHelper.mapTo0To360Range( ra ) ;
+					c = checkerRAToModel( name, ra ) ;
+					hE.addCircle( c ) ;
+					if ( atlasPage.getRow() == 0 ) {
+						flipCircleRange( c.getCircleMeridian() ) ;
+					}
+				}
+			}
+
+			if ( checkerDe == 1 && checkerRA == 1 ) {
+				hE.addCircle( new astrolabe.model.Circle() ) ;
+				hE.getCircle( 0 ).setCircleParallel( new astrolabe.model.CircleParallel() ) ;
+				hE.getCircle( 0 ).getCircleParallel().setAngle( new astrolabe.model.Angle() ) ;
+				hE.getCircle( 0 ).getCircleParallel().setBegin( new astrolabe.model.Begin() ) ;
+				hE.getCircle( 0 ).getCircleParallel().getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+				modelOf( hE.getCircle( 0 ).getCircleParallel().getBegin().getImmediate(), false, false, 0 ) ;
+				hE.getCircle( 0 ).getCircleParallel().setEnd( new astrolabe.model.End() ) ;
+				hE.getCircle( 0 ).getCircleParallel().getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+				modelOf( hE.getCircle( 0 ).getCircleParallel().getEnd().getImmediate(), false, false, 1./3600./100. ) ;
+			}
+
+			try {
+				AstrolabeFactory.modelOf( hE, false ) ;
+			} catch ( ParameterNotValidException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			try {
+				ch.validate() ;
+			} catch ( ValidationException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+			model[m] = ch ;
+		}
+
+		return model ;
+	}
+
+	public void headAUX() {
+	}
+
+	public void emitAUX() {
+		URI xmlu ;
+		File xmlf ;
+
+		if ( getMarshal() != null ) {
+			try {
+				xmlu = new URI( getMarshal() ) ;
+				if ( xmlu.isAbsolute() ) {
+					xmlf = new File( xmlu ) ;	
+				} else {
+					xmlf = new File( xmlu.getPath() ) ;
+				}
+				while ( ! xmlf.createNewFile() ) {
+					xmlf.delete() ;
+				}
+
+				marshal( new FileOutputStream( xmlf ), "UTF-8" ) ;
+			} catch ( URISyntaxException e ) {
+				throw new RuntimeException( e.toString() ) ; // URI constructor
+			} catch ( IOException e ) {
+				throw new RuntimeException( e.toString() ) ; // File.createNewFile()
+			}
+		}
+	}
+
+	public void tailAUX() {
+	}
+
+	public void headPS( PostscriptStream ps ) {
+	}
+
+	public void emitPS( PostscriptStream ps ) {
+		AtlasPage atlasPage ;
+
+		chart.headPS( ps ) ;
+
+		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
+			atlasPage = (AtlasPage) getAtlasPage( ap ) ;
+
+			ps.operator.gsave() ;
+
+			atlasPage.headPS( ps ) ;
+			atlasPage.emitPS( ps ) ;
+			atlasPage.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		chart.tailPS( ps ) ;
+	}
+
+	public void tailPS( PostscriptStream ps ) {
+	}
+
+	abstract ChartAzimuthalType getChartAzimuthalType() ;
+	abstract astrolabe.model.ChartAzimuthalType setChartAzimuthalType( astrolabe.model.Chart chart ) ;
+
+	private void marshal( OutputStream xmls, String charset ) {
+		Preferences node ;
+		Marshaller marshaller ;
+		Mapping mapping ;
+		String mapn ;
+		Writer xmlw ;
+
+		node = ApplicationHelper.getClassNode( this, getName(), null ) ;
+
+		// map file creation:
+		// 1. make AtlasStereographic.map (e.g.)
+		// 2. remove unused class definitions from AtlasStereographic.map
+		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
+		// 4. remove required attribute from field definitions for Phi and Theta
+		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
+		mapn = ApplicationHelper.getPreferencesKV( node,
+				ApplicationConstant.PK_ATLAS_URLMODELMAP, getClass().getSimpleName()+".map" ) ;
+
+		try {
+			mapping = new Mapping() ;
+			mapping.loadMapping( mapn ) ;
+
+			xmlw = new OutputStreamWriter( xmls, charset ) ;
+
+			marshaller = new Marshaller( xmlw ) ;
+			marshaller.setMapping( mapping );
+			marshaller.setEncoding( charset ) ;
+
+			marshaller.setSuppressNamespaces( true ) ;
+
+			// suppress xsi:type attribute (implies xmlns:xsi attribute) in marshaller output
+			marshaller.setSuppressXSIType( true ) ;
+
+			marshaller.marshal( this );
+
+			xmls.flush() ;
+			xmls.close() ;
+		} catch ( MappingException e ) {
+			throw new RuntimeException( e.toString() ) ; // Mapping constructor
+		} catch ( ValidationException e ) {
+			throw new RuntimeException( e.toString() ) ; // Marshaller.marshal
+		} catch ( MarshalException e ) {
+			throw new RuntimeException( e.toString() ) ; // Marshaller.marshal
+		} catch ( IOException e ) {
+			throw new RuntimeException( e.toString() ) ; // Mapping.loadMapping(), Marshaller constructor
+		}
 	}
 
 	private java.util.Vector<Vector> page( double ra, double de, double a, double b ) {
@@ -588,7 +601,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		return index ;
 	}
 
-	private astrolabe.model.Circle checkerDeToModel( double de ) {
+	private astrolabe.model.Circle checkerDeToModel( String name, double de ) {
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleParallel cP ;
 		astrolabe.model.Annotation a ;
@@ -630,7 +643,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 
 		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_DEGREES ) ) ;
@@ -642,7 +655,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_MINUTES ) ) ;
@@ -654,7 +667,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal+ApplicationHelper.getLocalizedString( ApplicationConstant.LK_DMS_SECONDS ) ) ;
@@ -666,7 +679,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tDMS.add( tGen ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
-		tVal = ".@{"+designator+indicator+"}@" ;
+		tVal = ".{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
@@ -685,7 +698,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 			if ( t == rDMS[0] ) {
 				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
 				tVal = tGen.getValue() ;
-				tGen.setValue( "@{"+designator+indicator+"}@"+tVal ) ;
+				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
 			}
 			aS.addText( tGen ) ;
 		}
@@ -703,7 +716,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		return c ;
 	}
 
-	private astrolabe.model.Circle checkerRAToModel( double ra ) {
+	private astrolabe.model.Circle checkerRAToModel( String name, double ra ) {
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleMeridian cM ;
 		astrolabe.model.Annotation a ;
@@ -747,7 +760,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 
 		designator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
@@ -763,7 +776,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
@@ -779,7 +792,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
@@ -795,7 +808,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 		tGen.addSuperscript( tSup ) ;
 
 		indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
-		tVal = "@{"+designator+indicator+"}@" ;
+		tVal = "{"+designator+indicator+"}" ;
 		tGen = new astrolabe.model.Text() ;
 		tGen.setName( name ) ;
 		tGen.setValue( tVal ) ;
@@ -814,7 +827,7 @@ abstract class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType imp
 			if ( t == rDMS[0] ) {
 				indicator = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
 				tVal = tGen.getValue() ;
-				tGen.setValue( "@{"+designator+indicator+"}@"+tVal ) ;
+				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
 			}
 			aS.addText( tDMS.get( t ) ) ;
 		}

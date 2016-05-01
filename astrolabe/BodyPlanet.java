@@ -17,7 +17,6 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 	private final static double DEFAULT_INTERVAL = 1 ;
 	private final static double DEFAULT_STRETCH = 0 ;
-	private final static String DEFAULT_IMPORTANCE = ".72:0" ;
 
 	private double jdAy ;
 	private double jdOy ;
@@ -26,14 +25,14 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 	private double interval ;
 	private double stretch ;
-	private String importance ;
 
 	private Method eclipticLongitude ;
 	private Method eclipticLatitude ;
 
-	public BodyPlanet( Object peer, double epoch, Projector projector ) throws ParameterNotValidException {
+	public BodyPlanet( Object peer, Projector projector ) throws ParameterNotValidException {
 		Preferences node ; 
 		CAADate date ;
+		double epochG, epochL, epochA, epochO ;
 		long y ;
 
 		ApplicationHelper.setupCompanionFromPeer( this, peer ) ;
@@ -44,18 +43,43 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		}
 
 		date = new CAADate() ;
-		date.Set( epoch, true ) ;
+
+		epochG = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		date.Set( epochG, true ) ;
+		y = date.Year() ;
+		date.Set( y, 1, 1, 0, 0, 0, true ) ;
 		jdAy = date.Julian() ;
-		if ( getEpoch() != null ) {
-			date.Set( AstrolabeFactory.valueOf( getEpoch() ), true ) ;
-		} else {
-			y = date.Year() ;
-			date.Set( y, 12, 31, 0, 0, 0, true ) ;
-		}
+		date.Set( y, 12, 31, 0, 0, 0, true ) ;
 		jdOy = date.Julian() ;
+
+		if ( getEpoch() != null ) {
+			epochL = AstrolabeFactory.valueOf( getEpoch() ) ;
+			date.Set( epochL, true ) ;
+			y = date.Year() ;
+			date.Set( y, 1, 1, 0, 0, 0, true ) ;
+			jdAy = date.Julian() ;
+			date.Set( y, 12, 31, 0, 0, 0, true ) ;
+			jdOy = date.Julian() ;
+
+			date.Set( epochL, true ) ;
+
+			if ( getEpoch().getA() != null ) {
+				epochA = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
+				jdAy = epochA ;
+				jdOy = date.Julian() ;
+			}
+
+			if ( getEpoch().getO() != null ) {
+				epochO = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
+				jdOy = epochO ;
+				if ( getEpoch().getA() == null )
+					jdAy = date.Julian() ;
+			}
+		}
+
 		date.delete() ;
 
-		if ( jdAy>jdOy ) {
+		if ( ! ( jdAy<jdOy ) ) {
 			String msg ;
 
 			msg = ApplicationHelper.getLocalizedString( ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
@@ -74,7 +98,6 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		} else {
 			stretch = 0 ;
 		}
-		importance = ApplicationHelper.getPreferencesKV( node, ApplicationConstant.PK_BODY_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
 
 		try {
 			Class<?> c ;
@@ -91,7 +114,12 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 	}
 
 	public void headPS( PostscriptStream ps ) {
-		ApplicationHelper.emitPSImportance( ps, importance ) ;
+		ElementImportance importance ;
+
+		importance = new ElementImportance( getImportance() ) ;
+		importance.headPS( ps ) ;
+		importance.emitPS( ps ) ;
+		importance.tailPS( ps ) ;
 	}
 
 	public void emitPS( PostscriptStream ps ) {
@@ -110,24 +138,27 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		double[] xy ;
 
 		if ( cut ) {
-			jdlist = new java.util.Vector<Double>() ;
 			fov = ApplicationHelper.getFovGlobal() ;
 			if ( fov == null ) {
 				fov = ApplicationHelper.getFovGlobal() ;
 			}
 
+			jdlist = new java.util.Vector<Double>() ;
 			cutter = new ListCutter( list( jdlist ), fov ) ;
 
 			idlist = new java.util.Vector<int[]>() ;
 			cutter.segmentsInterior( idlist ) ;
 			for ( int[] jdid : idlist ) {
-				peer = new astrolabe.model.BodyPlanet() ;
-				peer.setEpoch( new astrolabe.model.Epoch() ) ;
-				peer.getEpoch().setJD( new astrolabe.model.JD() ) ;
-
 				jdAe = jdlist.get( jdid[0] ) ;
 				jdOe = jdlist.get( jdid[1] ) ;
 
+				peer = new astrolabe.model.BodyPlanet() ;
+				peer.setEpoch( new astrolabe.model.Epoch() ) ;
+				peer.getEpoch().setA( new astrolabe.model.A() ) ;
+				peer.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
+				peer.getEpoch().setJD( new astrolabe.model.JD() ) ;
+
+				peer.getEpoch().getA().getJD().setValue( jdAe ) ;
 				peer.getEpoch().getJD().setValue( jdOe ) ;
 
 				if ( getName() != null ) {
@@ -141,7 +172,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				peer.setAnnotation( getAnnotation() ) ;
 
 				try {
-					body = new BodyPlanet( peer, jdAe, projector ) ;
+					body = new BodyPlanet( peer, projector ) ;
 
 					ps.operator.gsave();
 
@@ -186,7 +217,6 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 
-			// Dial processing.
 			if ( getDialDay() != null ) {
 				PostscriptEmitter dial ;
 

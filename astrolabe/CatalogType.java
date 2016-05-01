@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-abstract public class CatalogType extends astrolabe.model.CatalogType {
+abstract public class CatalogType extends astrolabe.model.CatalogType implements Catalog {
 
 	private Projector projector ;
 
