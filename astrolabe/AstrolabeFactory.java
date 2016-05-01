@@ -8,6 +8,8 @@ import org.exolab.castor.xml.ValidationException;
 
 import astrolabe.model.AngleType;
 import astrolabe.model.AnnotationType;
+import astrolabe.model.BodyArealType;
+import astrolabe.model.BodyStellarType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
 import astrolabe.model.CircleType;
@@ -168,7 +170,9 @@ public final class AstrolabeFactory {
 		astrolabe.model.CatalogADC1239H ct1239h ;
 		astrolabe.model.CatalogADC1239T ct1239t ;
 		astrolabe.model.CatalogADC5050 ct5050 ;
+		astrolabe.model.CatalogADC5109 ct5109 ;
 		astrolabe.model.CatalogADC6049 ct6049 ;
+		astrolabe.model.CatalogADC7118 ct7118 ;
 		Catalog catalog ;
 
 		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
@@ -177,10 +181,14 @@ public final class AstrolabeFactory {
 			catalog = new CatalogADC1239T( ct1239t, p ) ;
 		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
 			catalog = new CatalogADC5050( ct5050, p ) ;
+		} else if ( ( ct5109 = ct.getCatalogADC5109() ) != null ) {
+			catalog = new CatalogADC5109( ct5109, p ) ;
 		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
 			catalog = new CatalogADC6049( ct6049, p ) ;
-		} else { // // ct.getCatalogADC7118() != null
-			catalog = new CatalogADC7118( ct.getCatalogADC7118(), p ) ;
+		} else if ( ( ct7118 = ct.getCatalogADC7118() ) != null ) {
+			catalog = new CatalogADC7118( ct7118, p ) ;
+		} else { // // ct.getCatalogADC7237() != null
+			catalog = new CatalogADC7237( ct.getCatalogADC7237(), p ) ;
 		}
 
 		return catalog ;
@@ -270,6 +278,52 @@ public final class AstrolabeFactory {
 		if ( validate ) {
 			try {
 				text.validate() ;
+			} catch ( ValidationException e ) {
+				return false ;
+			}
+		}
+
+		return true ;
+	}
+
+	public static void modelOf( BodyStellarType body ) throws ValidationException {
+		if ( ! modelOf( body, true ) ) {
+			throw new ValidationException( body.getClass().getSimpleName() ) ;
+		}
+	}
+
+	public static boolean modelOf( BodyStellarType body, boolean validate ) {
+		Preferences node ;
+
+		node = Configuration.getClassNode( body, body.getName(), null ) ;
+		body.setupPeer( node ) ;
+
+		if ( validate ) {
+			try {
+				body.validate() ;
+			} catch ( ValidationException e ) {
+				return false ;
+			}
+		}
+
+		return true ;
+	}
+
+	public static void modelOf( BodyArealType body ) throws ValidationException {
+		if ( ! modelOf( body, true ) ) {
+			throw new ValidationException( body.getClass().getSimpleName() ) ;
+		}
+	}
+
+	public static boolean modelOf( BodyArealType body, boolean validate ) {
+		Preferences node ;
+
+		node = Configuration.getClassNode( body, body.getName(), null ) ;
+		body.setupPeer( node ) ;
+
+		if ( validate ) {
+			try {
+				body.validate() ;
 			} catch ( ValidationException e ) {
 				return false ;
 			}

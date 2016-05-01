@@ -8,11 +8,6 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class BodyStellar extends astrolabe.model.BodyStellar implements PostscriptEmitter {
 
-	@SuppressWarnings("unused")
-	private Projector projector ;
-
-	private double size ;
-
 	private double turn ;
 	private double spin ;
 
@@ -25,10 +20,6 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		String key ;
 
 		peer.setupCompanion( this ) ;
-
-		this.projector = projector ;
-
-		size = new Text( getText() ).size() ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
@@ -68,7 +59,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.array( true ) ;
 		try {
-			AnnotationStraight.emitPS( ps, new Text( getText() ), size, 0, 0, 0, 0, 0 ) ;
+			AnnotationStraight.emitPS( ps, getScript(), new Script( getScript() ).size(), 0, 0, 0, 0, 0 ) ;
 		} catch ( ParameterNotValidException e ) {
 			String msg ;
 

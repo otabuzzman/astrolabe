@@ -1,7 +1,9 @@
 
 package astrolabe;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import fri.patterns.interpreter.parsergenerator.Lexer;
 import fri.patterns.interpreter.parsergenerator.Parser;
@@ -32,6 +34,8 @@ public class ParserSubstitute extends ReflectSemantic {
 		{ "CONDITION", "CONDITION", "'>='", "EXPRESSION" },
 		{ "CONDITION", "CONDITION", "'=='", "EXPRESSION" },
 		{ "CONDITION", "CONDITION", "'!='", "EXPRESSION" },
+		{ "CONDITION", "CONDITION", "'~'", "EXPRESSION" },
+		{ "CONDITION", "CONDITION", "'!~'", "EXPRESSION" },
 		{ "EXPRESSION", "TERM" },
 		{ "EXPRESSION", "EXPRESSION", "'+'", "TERM" },
 		{ "EXPRESSION", "EXPRESSION", "'-'", "TERM" },
@@ -86,8 +90,12 @@ public class ParserSubstitute extends ReflectSemantic {
 		if ( operator.equals( "==" ) )
 			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )==
 				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
-		return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )!=
-			( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+		if ( operator.equals( "!=" ) )
+			return new Boolean( ( longCONDITION?( (Long) CONDITION ).longValue():( (Double) CONDITION ).doubleValue() )!=
+				( longEXPRESSION?( (Long) EXPRESSION ).longValue():( (Double) EXPRESSION ).doubleValue() ) ) ;
+		if ( operator.equals( "~" ) )
+			return new Boolean( CONDITION.toString().matches( EXPRESSION.toString() ) ) ;
+		return new Boolean( ! CONDITION.toString().matches( EXPRESSION.toString() ) ) ;
 	}
 
 	public Object EXPRESSION( Object TERM ) {
@@ -136,8 +144,14 @@ public class ParserSubstitute extends ReflectSemantic {
 	public Object FACTOR( Object value ) {
 		try {
 			// value is a "`number`"
-			return Double.valueOf( value.toString() ) ;
-		} catch ( NumberFormatException e ) {
+			try {
+				// value is a long "`number`"
+				return Long.valueOf( value.toString() ) ;
+			} catch ( NumberFormatException eL ) {
+				// value is a double "`number`"
+				return Double.valueOf( value.toString() ) ;
+			}
+		} catch ( NumberFormatException eD ) {
 			if ( value.toString().matches( "\".*\"" ) )
 				// value is a "`stringdef`"
 				return value.toString().substring( 1, value.toString().length()-1 ) ;
@@ -208,8 +222,8 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public static void main( String[] argv ) {
-		if ( argv.length%2 == 0 )
-			System.exit( 1 ) ;
+		BufferedReader r ;
+		String s ;
 
 		for ( int a=1 ; a<argv.length-1 ; a=a+2 )
 			try {
@@ -222,6 +236,12 @@ public class ParserSubstitute extends ReflectSemantic {
 				}
 			}
 
-			System.err.println( new ParserSubstitute().parse( argv[0] ) ) ;
+			try {
+				r = new BufferedReader( new InputStreamReader( System.in ) ) ;
+				while ( ( s = r.readLine() ) != null )
+					System.err.println( new ParserSubstitute().parse( s ) ) ;
+			} catch ( IOException e ) {
+				System.exit( 1 ) ;
+			}
 	}
 }

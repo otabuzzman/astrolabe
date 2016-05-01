@@ -32,6 +32,8 @@ public class AtlasGnomonic extends AtlasAzimuthalType implements Atlas {
 			model[ap] = new astrolabe.model.Chart() ;
 
 			chart = new astrolabe.model.ChartGnomonic() ;
+			chart.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+
 			chartAzimuthalType.setupCompanion( chart ) ;
 
 			model[ap].setChartGnomonic( chart ) ;

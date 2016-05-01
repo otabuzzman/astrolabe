@@ -58,7 +58,7 @@ public class HorizonLocal extends HorizonType implements PostscriptEmitter, Proj
 
 			lo0 = BodySun.meanEclipticLongitude( jd ) ;
 			la0 = BodySun.meanEclipticLatitude( jd ) ;
-			epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ; 
+			epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ; 
 			e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 			c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;

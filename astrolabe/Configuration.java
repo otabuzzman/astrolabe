@@ -92,7 +92,7 @@ public class Configuration {
 			}
 			if ( keys.contains( key ) ) {
 				Registry.register( "node", node.name() ) ;
-				r = new ParserAttribute().stringValue( node.get( key, def ) ) ;
+				r = ( (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ).stringValue( node.get( key, def ) ) ;
 			} else {
 				r = Configuration.getValue( node.parent(), key, def ) ;
 			}
@@ -101,20 +101,29 @@ public class Configuration {
 		return r ;
 	}
 
-	public static Preferences getClassNode( Class<?> clazz, String instance, String qualifier ) {
-		String name ;
-
-		name = "/"+clazz.getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
-
-		return getClassNode( name, instance, qualifier) ;
+	public static Preferences getClassNode( Object clazz, String instance, String qualifier ) {
+		return getClassNode( clazz.getClass(), instance, qualifier) ;
 	}
 
-	public static Preferences getClassNode( Object clazz, String instance, String qualifier ) {
+	public static Preferences getClassNode( Class<?> clazz, String instance, String qualifier ) {
+		Preferences r, node ;
 		String name ;
 
-		name = "/"+clazz.getClass().getName().replaceAll( "\\.", "/" ).split( "\\$", 2 )[0] ;
+		if ( clazz == null ) {
+			r = null ;
+		} else {
+			name = "/"+clazz.getName()
+			.replaceAll( "\\.", "/" )
+			.split( "\\$", 2 )[0] ;
 
-		return getClassNode( name, instance, qualifier) ;
+			node = getClassNode( name, instance, qualifier) ;
+			if ( node == null )
+				node = getClassNode( clazz.getSuperclass(), instance, qualifier) ;
+
+			r = node ;
+		}
+
+		return r ;
 	}
 
 	public static Preferences getClassNode( String clazz, String instance, String qualifier ) {
@@ -133,7 +142,7 @@ public class Configuration {
 				r = Preferences.systemRoot().node( n ) ;
 			} else {
 				if ( instance == null ) {
-					r = null ;
+					r = Preferences.systemRoot() ;
 				} else {
 					pd = instance.lastIndexOf( "/" ) ;
 					pi = pd<0?null:instance.substring( 0, pd ) ;

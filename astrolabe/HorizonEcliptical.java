@@ -24,7 +24,7 @@ public class HorizonEcliptical extends HorizonType implements PostscriptEmitter,
 
 		this.projector = projector ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;

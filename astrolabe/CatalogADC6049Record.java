@@ -15,8 +15,6 @@ import caa.CAAPrecession;
 
 public class CatalogADC6049Record implements CatalogRecord {
 
-	private final static String DEFAULT_IMPORTANCE = ApplicationConstant.AV_BODY_DIVIDING ;
-
 	private final static int CR_LENGTH18 = 25 ;
 	private final static int CR_LENGTH20 = 29 ;
 
@@ -74,21 +72,15 @@ public class CatalogADC6049Record implements CatalogRecord {
 		}
 	}
 
-	public astrolabe.model.Body toModel() throws ValidationException {
-		astrolabe.model.Body model ;
+	public void toModel( astrolabe.model.Body body ) throws ValidationException {
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
 		double epoch ;
-		String importance ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
-		importance = Configuration.getValue(
-				Configuration.getClassNode( this, con, null ),
-				ApplicationConstant.PK_CATALOGADC6049RECORD_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
-		model = new astrolabe.model.Body() ;
-		model.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-		model.getBodyAreal().setName( con ) ;
-		model.getBodyAreal().setImportance( importance ) ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+
+		body.getBodyAreal().setName( con ) ;
+
 		for ( int p=0 ; p<RAhr.size() ; p++ ) {
 			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
 			pm = new astrolabe.model.Position() ;
@@ -104,13 +96,11 @@ public class CatalogADC6049Record implements CatalogRecord {
 			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
 			pm.getTheta().getRational().setValue( ceq.Y() ) ;  
 
-			model.getBodyAreal().addPosition( pm ) ;
+			body.getBodyAreal().addPosition( pm ) ;
 			ceq.delete() ;
 		}
 
-		model.validate() ;
-
-		return model ;
+		body.validate() ;
 	}
 
 	public List<double[]> list( Projector projector ) {

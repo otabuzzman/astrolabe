@@ -26,252 +26,26 @@
 						<entry key="setImportance,java.lang.String" value="canonical"/>
 					</map>
 				</node>
-				<node name="AnnotationStraight">
+				<node name="BodyStellar">
 					<map>
 						<!--keys must equal to method names in model class.-->
-						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
-						<entry key="setReverse,java.lang.String" value="false"/>
-						<entry key="setRadiant,java.lang.Boolean" value="false"/>
+						<entry key="setTurn,java.lang.Double" value="0"/>
+						<entry key="setSpin,java.lang.Double" value="0"/>
 					</map>
-					<!--Q I, top-->
-					<node name="It:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
-						</map>
-					</node>
-					<node name="It:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
-						</map>
-					</node>
-					<!--Q II, top-->
-					<node name="IIt:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
-						</map>
-					</node>
-					<node name="IIt:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="bottommiddle"/>
-						</map>
-					</node>
-					<!--Q II, left-->
-					<node name="IIl:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleright"/>
-						</map>
-					</node>
-					<node name="IIl:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleright"/>
-						</map>
-					</node>
-					<!--Q III, left-->
-					<node name="IIIl:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleright"/>
-						</map>
-					</node>
-					<node name="IIIl:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleright"/>
-						</map>
-					</node>
-					<!--Q III, bottom-->
-					<node name="IIIb:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
-						</map>
-					</node>
-					<node name="IIIb:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
-						</map>
-					</node>
-					<!--Q IV, bottom-->
-					<node name="IVb:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
-						</map>
-					</node>
-					<node name="IVb:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="topmiddle"/>
-						</map>
-					</node>
-					<!--Q IV, right-->
-					<node name="IVr:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleleft"/>
-						</map>
-					</node>
-					<node name="IVr:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleleft"/>
-						</map>
-					</node>
-					<!--Q I, right-->
-					<node name="Ir:atl:northern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleleft"/>
-						</map>
-					</node>
-					<node name="Ir:atl:southern">
-						<map>
-							<entry key="setAnchor,java.lang.String" value="middleleft"/>
-						</map>
-					</node>
 				</node>
-				<node name="AnnotationCurved">
+				<node name="BodyAreal">
 					<map>
 						<!--keys must equal to method names in model class.-->
-						<entry key="setAnchor,java.lang.String" value="bottomleft"/>
-						<entry key="setReverse,java.lang.String" value="false"/>
-						<entry key="setDistance,java.lang.Double" value="0"/>
+						<entry key="setImportance,java.lang.String" value="dividing"/>
 					</map>
-				</node>
-				<node name="Text">
-					<map>
-						<entry key="setPurpose,java.lang.String" value="textlettering"/>
-					</map>
-					<!--ns atl: from  class Atlas-->
-					<node name="atl:northern">
+					<node name="sgn:">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
+							<entry key="setImportance,java.lang.String" value="graphical"/>
 						</map>
 					</node>
-					<node name="atl:southern">
+					<node name="cut:sgn:">
 						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--ns'es for "Q I-IV, inside fov" from class CircleParallel, CircleMeridian-->
-					<node name="I:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="I:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="II:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="II:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="III:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="III:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="IV:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<node name="IV:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="none"/>
-						</map>
-					</node>
-					<!--Q I, top-->
-					<node name="It:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="It:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q II, top-->
-					<node name="IIt:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IIt:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q II, left-->
-					<node name="IIl:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IIl:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q III, left-->
-					<node name="IIIl:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IIIl:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q III, bottom-->
-					<node name="IIIb:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IIIb:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q IV, bottom-->
-					<node name="IVb:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IVb:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q IV, right-->
-					<node name="IVr:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="IVr:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<!--Q I, right-->
-					<node name="Ir:atl:northern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
-						</map>
-					</node>
-					<node name="Ir:atl:southern">
-						<map>
-							<entry key="setPurpose,java.lang.String" value="guidance"/>
+							<entry key="setImportance,java.lang.String" value="graphical"/>
 						</map>
 					</node>
 				</node>
@@ -497,26 +271,6 @@
 					<entry key="interval" value="1"/>
 				</map>
 			</node>
-			<node name="CircleSouthernTropic">
-				<map>
-					<entry key="interval" value="1"/>
-				</map>
-			</node>
-			<node name="CircleNorthernTropic">
-				<map>
-					<entry key="interval" value="1"/>
-				</map>
-			</node>
-			<node name="CircleSouthernPolar">
-				<map>
-					<entry key="interval" value="1"/>
-				</map>
-			</node>
-			<node name="CircleNorthernPolar">
-				<map>
-					<entry key="interval" value="1"/>
-				</map>
-			</node>
 			<node name="DialDegree">
 				<map/>
 				<node name="annotation">
@@ -645,7 +399,7 @@
 					<entry key="rise" value="1.2"/>
 				</map>
 			</node>
-			<node name="Text">
+			<node name="Script">
 				<map/>
 				<node name="purpose">
 					<map>
@@ -661,25 +415,6 @@
 						<entry key="dialfraction" value="2.6"/>
 						<entry key="guidance" value="1.6"/>
 						<entry key="obscure" value=".2"/>
-						<entry key="zenit" value="4.2"/>
-						<!--.12*(1+z)**n, compound interest with z=.24, n=17 (number of mags)-->
-						<entry key="mag-1" value="4.64"/>
-						<entry key="mag0" value="3.74"/>
-						<entry key="mag1" value="3.02"/>
-						<entry key="mag2" value="2.43"/>
-						<entry key="mag3" value="1.96"/>
-						<entry key="mag4" value="1.58"/>
-						<entry key="mag5" value="1.27"/>
-						<entry key="mag6" value="1.03"/>
-						<entry key="mag7" value=".83"/>
-						<entry key="mag8" value=".67"/>
-						<entry key="mag9" value=".54"/>
-						<entry key="mag10" value=".43"/>
-						<entry key="mag11" value=".35"/>
-						<entry key="mag12" value=".28"/>
-						<entry key="mag13" value=".22"/>
-						<entry key="mag14" value=".18"/>
-						<entry key="mag15" value=".14"/>
 					</map>
 				</node>
 			</node>
@@ -770,18 +505,6 @@
 			<node name="Rational">
 				<map>
 					<entry key="precision" value="6"/>
-				</map>
-			</node>
-			<node name="CatalogADC6049Record">
-				<map>
-					<!--value must be one of node ElementImportance-->
-					<entry key="importance" value="dividing"/>
-				</map>
-			</node>
-			<node name="Sign">
-				<map>
-					<!--value must be one of node ElementImportance-->
-					<entry key="importance" value="graphical"/>
 				</map>
 			</node>
 		</node>

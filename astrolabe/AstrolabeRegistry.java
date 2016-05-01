@@ -3,6 +3,8 @@ package astrolabe;
 
 import java.text.MessageFormat;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import caa.CAACoordinateTransformation;
 import caa.CAADate;
 
@@ -85,5 +87,20 @@ public class AstrolabeRegistry extends Registry {
 		registerName( key+ind, dDMS.sign()?"-":"" ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
 		registerName( key+ind, dDMS.sign()?"-":"+" ) ;
+	}
+
+	public static void registerJTSCoordinate( String key, JTSCoordinate jtscoordinate ) {
+		String ind ;
+		MessageCatalog m ;
+		Geometry fov ;
+
+		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+
+		fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+
+		ind = m.message( ApplicationConstant.LK_INDICTAOR_JTSCOORDINATE_QUADRANT ) ;
+		registerNumber( key+ind, jtscoordinate.quadrant() ) ;
+		ind = m.message( ApplicationConstant.LK_INDICTAOR_JTSCOORDINATE_BOUNDARY ) ;
+		registerNumber( key+ind, jtscoordinate.boundary( fov.getEnvelopeInternal() ) ) ;
 	}
 }

@@ -45,11 +45,11 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		Layout layout ;
 		Frame frame ;
-		int nt, ne ;
+		int ns, ne ;
 		double size ;
-		Text text ;
+		Script script ;
 
-		size = new Text( getText( 0 ) ).size() ;
+		size = new Script( getScript( 0 ) ).size() ;
 
 		if ( ! ( size>0 ) )
 			return ;
@@ -66,18 +66,18 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 
 		ps.array( true ) ;
-		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
+		for ( ns=0, ne=0 ; ns<getScriptCount() ; ns++ ) {
 			try {
-				text = new Text( getText( nt ) ) ;
+				script = new Script( getScript( ns ) ) ;
 
-				emitPS( ps, text, text.size(), 0,
+				emitPS( ps, script, script.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;
 			}
 		}
 		ps.array( false ) ;
-		if ( ne==nt ) {
+		if ( ne==ns ) {
 			ps.operator.pop() ; // array
 			ps.operator.grestore() ;
 
@@ -154,18 +154,18 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public static void emitPS( AstrolabePostscriptStream ps, Text text, double size, double shift,
+	public static void emitPS( AstrolabePostscriptStream ps, astrolabe.model.Script script, double size, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
 		List<List<Object>> FET ;
 		List<Object> fet ;
-		String t ;
+		String s ;
 
-		t = text.getValue() ;
-		if ( t.length()==0 ) {
-			throw new ParameterNotValidException( Integer.toString( t.length() ) ) ;
+		s = script.getValue() ;
+		if ( s.length()==0 ) {
+			throw new ParameterNotValidException( Integer.toString( s.length() ) ) ;
 		}
 
-		FET = ps.ucFET( t ) ;
+		FET = ps.ucFET( s ) ;
 
 		for ( int e=0 ; e<FET.size() ; e++ ) {
 			fet = FET.get( e ) ;
@@ -180,14 +180,14 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.array( false ) ;
 		}
 
-		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
-			emitPS( ps, new Text( text.getSubscript( d ) ),
+		for ( int d=0 ; d<script.getSubscriptCount() ; d++ ) {
+			emitPS( ps, new Script( script.getSubscript( d ) ),
 					size*subscriptshrink, shift+size*subscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 
-		for ( int u=0 ; u<text.getSuperscriptCount() ; u++ ) {
-			emitPS( ps, new Text( text.getSuperscript( u ) ),
+		for ( int u=0 ; u<script.getSuperscriptCount() ; u++ ) {
+			emitPS( ps, new Script( script.getSuperscript( u ) ),
 					size*superscriptshrink, shift+size*superscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}

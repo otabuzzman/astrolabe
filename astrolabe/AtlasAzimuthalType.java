@@ -70,7 +70,7 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		originDe = AstrolabeFactory.valueOf( getOrigin() )[2] ;
 		extentDe = AstrolabeFactory.valueOf( getExtent() )[2] ;
 
-		spanDe = AstrolabeFactory.valueOf( getAtlasAzimuthalTypeChoice().getSpanDe() ) ;
+		spanDe = AstrolabeFactory.valueOf( getAtlasAzimuthalTypeChoice().getSpanParallel() ) ;
 
 		rab = chartPageX/chartPageY ;
 
@@ -213,21 +213,27 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		astrolabe.model.Circle c ;
 		int intervalNumber ;
 		double circleNumber ;
-		String name, checker[] ;
 		double ra, de ;
 
+		if ( getAnnotationMeridian() == null )
+			checkerRA = 1 ;
+		else
+			checkerRA = getAnnotationMeridian().getChecker() ;
+		if ( getAnnotationParallel() == null )
+			checkerDe = 1 ;
+		else
+			checkerDe = getAnnotationParallel().getChecker() ;
+
+		if ( checkerDe == 1 && checkerRA == 1 )
+			return ;
+
 		northern = getChartAzimuthalType().getNorthern() ;
-
-		name = ApplicationConstant.GC_NS_ATL+getName() ;
-
-		checker = getChecker().split( "x" ) ;
-		checkerRA = new Integer( checker[0] ).intValue() ;
-		checkerDe = new Integer( checker[1] ).intValue() ;
 
 		atlasPage = (AtlasPage) getAtlasPage( atlaspage ) ;
 
 		hE = new astrolabe.model.HorizonEquatorial() ;
-		hE.setName( name ) ;
+		hE.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		AstrolabeFactory.modelOf( hE, false ) ;
 
 		h = new astrolabe.model.Horizon() ;
 		h.setHorizonEquatorial( hE ) ;
@@ -248,11 +254,11 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 			checkerTransform = checkerTransform( edgeBeg, edgeEnd, intervalNumber, intervalUnitD() ) ;
 
 			de = checkerTransform[0] ;
-			hE.addCircle( checkerDeToModel( name, northern?de:-de ) ) ;
+			hE.addCircle( checkerDeToModel( northern?de:-de ) ) ;
 			circleNumber = intervalNumber+1 ;
 			for ( int i=1 ; i<circleNumber ; i++ ) {
 				de = checkerTransform[0]+i*checkerTransform[1] ;
-				c = checkerDeToModel( name, northern?de:-de ) ;
+				c = checkerDeToModel( northern?de:-de ) ;
 				hE.addCircle( c ) ;
 			}
 		}
@@ -272,7 +278,7 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 
 			ra = checkerTransform[0] ;
 			ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
-			c = checkerRAToModel( name, ra, northern ) ;
+			c = checkerRAToModel( ra, northern ) ;
 			hE.addCircle( c ) ;
 			if ( atlasPage.getRow()>0 ) {
 				circleNumber = intervalNumber+1 ;
@@ -284,27 +290,13 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 			for ( int i=1 ; i<circleNumber ; i++ ) {
 				ra = checkerTransform[0]+i*checkerTransform[1] ;
 				ra = CAACoordinateTransformation.MapTo0To360Range( ra ) ;
-				c = checkerRAToModel( name, ra, northern ) ;
+				c = checkerRAToModel( ra, northern ) ;
 				hE.addCircle( c ) ;
 				if ( atlasPage.getRow() == 0 ) {
 					flipCircleRange( c.getCircleMeridian() ) ;
 				}
 			}
 		}
-
-		if ( checkerDe == 1 && checkerRA == 1 ) {
-			hE.addCircle( new astrolabe.model.Circle() ) ;
-			hE.getCircle( 0 ).setCircleParallel( new astrolabe.model.CircleParallel() ) ;
-			hE.getCircle( 0 ).getCircleParallel().setAngle( new astrolabe.model.Angle() ) ;
-			hE.getCircle( 0 ).getCircleParallel().setBegin( new astrolabe.model.Begin() ) ;
-			hE.getCircle( 0 ).getCircleParallel().getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-			modelOf( hE.getCircle( 0 ).getCircleParallel().getBegin().getImmediate(), false, false, 0 ) ;
-			hE.getCircle( 0 ).getCircleParallel().setEnd( new astrolabe.model.End() ) ;
-			hE.getCircle( 0 ).getCircleParallel().getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-			modelOf( hE.getCircle( 0 ).getCircleParallel().getEnd().getImmediate(), false, false, 1./3600./100. ) ;
-		}
-
-		AstrolabeFactory.modelOf( hE, false ) ;
 	}
 
 	public void headAUX() {
@@ -546,24 +538,14 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		return index ;
 	}
 
-	private astrolabe.model.Circle checkerDeToModel( String name, double de ) {
-		MessageCatalog m ;
+	private astrolabe.model.Circle checkerDeToModel( double de ) {
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleParallel cP ;
 		astrolabe.model.Annotation a ;
-		astrolabe.model.AnnotationStraight aS ;
-		astrolabe.model.Text tGen ;
-		String designator, indicator, tVal ;
-		List<astrolabe.model.Text> tDMS ;
-		int[] rDMS ;
-		DMS dms ;
-
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
 
 		cP = new astrolabe.model.CircleParallel() ;
-		cP.setName( name ) ;
+		cP.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		AstrolabeFactory.modelOf( cP, false ) ;
 
 		c = new astrolabe.model.Circle() ;
 		c.setCircleParallel( cP ) ;
@@ -580,89 +562,28 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		cP.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
 		cP.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
 
-		aS = new astrolabe.model.AnnotationStraight() ;
-		aS.setName( name ) ;
-
-		a = new astrolabe.model.Annotation() ;
-		a.setAnnotationStraight( aS ) ;
-
-		cP.addAnnotation( a ) ;
-
-		designator = m.message( ApplicationConstant.LK_CIRCLE_ALTITUDE ) ;
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_DEGREES ) ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_MINUTES ) ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal+m.message( ApplicationConstant.LK_DMS_SECONDS ) ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
-		tVal = ".{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		dms = new DMS( de ) ;
-		rDMS = dms.relevant() ;
-		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
-			tGen = tDMS.get( t ) ;
-			if ( t == rDMS[0] ) {
-				indicator = m.message( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
-				tVal = tGen.getValue() ;
-				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
-			}
-			aS.addText( tGen ) ;
-		}
-
-		AstrolabeFactory.modelOf( aS, false ) ;
 		cP.getAngle().getRational().setValue( de ) ;
 		cP.getBegin().getImmediate().getRational().setValue( 0 ) ;
 		cP.getEnd().getImmediate().getRational().setValue( 360 ) ;
-		AstrolabeFactory.modelOf( cP, false ) ;
+
+		a = new astrolabe.model.Annotation() ;
+		a.setAnnotationStraight( getAnnotationParallel().getAnnotationStraight() ) ;
+
+		cP.addAnnotation( a ) ;
 
 		return c ;
 	}
 
-	private astrolabe.model.Circle checkerRAToModel( String name, double ra, boolean northern ) {
-		MessageCatalog m ;
+	private astrolabe.model.Circle checkerRAToModel( double ra, boolean northern ) {
 		astrolabe.model.Circle c ;
 		astrolabe.model.CircleMeridian cM ;
 		astrolabe.model.Annotation a ;
-		astrolabe.model.AnnotationStraight aS ;
-		astrolabe.model.Text tGen ;
-		astrolabe.model.Superscript tSup ;
-		String designator, indicator, tVal ;
-		List<astrolabe.model.Text> tDMS ;
-		int[] rDMS ;
-		DMS dms ;
 		double cMEnd ;
 		Preferences node ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		tDMS = new java.util.Vector<astrolabe.model.Text>() ;
-
 		cM = new astrolabe.model.CircleMeridian() ;
-		cM.setName( name ) ;
+		cM.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+		AstrolabeFactory.modelOf( cM, false ) ;
 
 		c = new astrolabe.model.Circle() ;
 		c.setCircleMeridian( cM ) ;
@@ -679,79 +600,17 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		cM.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
 		cM.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
 
-		aS = new astrolabe.model.AnnotationStraight() ;
-		aS.setName( name ) ;
-
-		a = new astrolabe.model.Annotation() ;
-		a.setAnnotationStraight( aS ) ;
-
-		cM.addAnnotation( a ) ;
-
-		designator = m.message( ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( m.message( ApplicationConstant.LK_HMS_HOURS ) ) ;
-		tGen.addSuperscript( tSup ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( m.message( ApplicationConstant.LK_HMS_MINUTES ) ) ;
-		tGen.addSuperscript( tSup ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		tSup = new astrolabe.model.Superscript() ;
-		tSup.setValue( m.message( ApplicationConstant.LK_HMS_SECONDS ) ) ;
-		tGen.addSuperscript( tSup ) ;
-
-		indicator = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
-		tVal = "{"+designator+indicator+"}" ;
-		tGen = new astrolabe.model.Text() ;
-		tGen.setName( name ) ;
-		tGen.setValue( tVal ) ;
-		AstrolabeFactory.modelOf( tGen, false ) ;
-		tDMS.add( tGen ) ;
-
-		dms = new DMS( ra ) ;
-		rDMS = dms.relevant() ;
-		for ( int t=rDMS[0] ; t<rDMS[1] ; t++ ) {
-			tGen = tDMS.get( t ) ;
-			if ( t == rDMS[0] ) {
-				indicator = m.message( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
-				tVal = tGen.getValue() ;
-				tGen.setValue( "{"+designator+indicator+"}"+tVal ) ;
-			}
-			aS.addText( tDMS.get( t ) ) ;
-		}
-
-		AstrolabeFactory.modelOf( aS, false ) ;
-
 		node = Configuration.getClassNode( this, getName(), null ) ;
 		cMEnd = Configuration.getValue( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
+
 		cM.getAngle().getRational().setValue( ra ) ;
 		cM.getBegin().getImmediate().getRational().setValue( northern?-90:90 ) ;
 		cM.getEnd().getImmediate().getRational().setValue( cMEnd ) ;
-		AstrolabeFactory.modelOf( cM, false ) ;
+
+		a = new astrolabe.model.Annotation() ;
+		a.setAnnotationStraight( getAnnotationMeridian().getAnnotationStraight() ) ;
+
+		cM.addAnnotation( a ) ;
 
 		return c ;
 	}

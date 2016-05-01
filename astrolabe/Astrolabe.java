@@ -18,13 +18,12 @@ import caa.CAADate ;
 @SuppressWarnings("serial")
 public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEmitter {
 
-	private double epoch ;
-
 	public Astrolabe( Peer peer ) {
 		String pn ;
 		FileInputStream pr ;
 		Locale dl ;
 		String ln, lc[] ;
+		double epoch ;
 		CAADate d ;
 		String key ;
 
@@ -54,12 +53,14 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
 		d = new CAADate( epoch, true ) ;
 
-		Registry.registerNumber( ApplicationConstant.GC_EPOCHE, d.Julian() ) ;
+		Registry.registerNumber( ApplicationConstant.GC_EPOCH, d.Julian() ) ;
 
 		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
 		AstrolabeRegistry.registerYMD( key, d ) ;
 
 		d.delete() ;
+
+		Registry.register( ApplicationConstant.GC_PARSER, new ParserAttribute() ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {

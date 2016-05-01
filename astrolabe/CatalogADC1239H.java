@@ -28,6 +28,8 @@ public class CatalogADC1239H extends CatalogType implements Catalog {
 
 	private HashSet<String> restrict ;
 
+	private astrolabe.model.Script script ;
+
 	private Hashtable<String, CatalogRecord> catalogT ;
 	private List<String> catalogL ;
 
@@ -47,6 +49,8 @@ public class CatalogADC1239H extends CatalogType implements Catalog {
 				restrict.add( rv[v] ) ;
 			}
 		}
+
+		script = ( (astrolabe.model.CatalogADC1239H) peer ).getScript() ;
 
 		catalogT = new Hashtable<String, CatalogRecord>() ;
 		catalogL = new java.util.Vector<String>() ;
@@ -125,26 +129,35 @@ public class CatalogADC1239H extends CatalogType implements Catalog {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		astrolabe.model.BodyStellar bodyModel ;
+		astrolabe.model.Body body ;
 		BodyStellar bodyStellar ;
 		astrolabe.model.Select[] select ;
 
 		for ( CatalogRecord record : catalogT.values() ) {
 			record.register() ;
 
+			body = new astrolabe.model.Body() ;
+			body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
+			body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
+			AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
+
 			try {
-				bodyModel = record.toModel().getBodyStellar() ;
+				record.toModel( body ) ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyModel.setAnnotation( getAnnotation() ) ;
+			body.getBodyStellar().setScript( script ) ;
+			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
 
 			select = getSelect( record.ident() ) ;
-			if ( select != null )
-				bodyModel.setAnnotation( select[select.length-1].getAnnotation() ) ;
+			if ( select != null ) {
+				body.getBodyStellar().setAnnotation( select[select.length-1].getAnnotation() ) ;
+				if ( select[select.length-1].getScript() != null )
+					body.getBodyStellar().setScript( select[select.length-1].getScript() ) ;
+			}
 
-			bodyStellar = new BodyStellar( bodyModel, projector ) ;
+			bodyStellar = new BodyStellar( body.getBodyStellar(), projector ) ;
 
 			ps.operator.gsave() ;
 

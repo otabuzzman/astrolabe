@@ -7,24 +7,20 @@ import caa.CAANutation;
 public class CircleNorthernTropic extends CircleParallel {
 
 	public CircleNorthernTropic( Peer peer, Projector projector ) {
-		double epoch, ra ;
+		super( peer, projector ) ;
+	}
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+	public astrolabe.model.Angle getAngle() {
+		astrolabe.model.Angle r ;
+		double e, o ;
 
-		ra = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+		e = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
 
-		if ( ( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational() == null ) {
-			int d = (int) ra ;
-			int m = (int) ( ( ra-d )*60 ) ;
-			double s = ( ( ra-d )*60-m )*60 ;
+		r = new astrolabe.model.Angle() ;
+		r.setRational( new astrolabe.model.Rational() ) ;
+		r.getRational().setValue( o ) ;
 
-			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setDeg( d ) ;
-			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setMin( m ) ;
-			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getDMS().setSec( s ) ;
-		} else {
-			( (astrolabe.model.CircleNorthernTropic) peer ).getAngle().getRational().setValue( ra ) ;
-		}
-
-		setup( peer, projector ) ;
+		return r ;
 	}
 }

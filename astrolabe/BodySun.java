@@ -49,7 +49,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 		date = new CAADate() ;
 
-		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		date.Set( epochG, true ) ;
 		y = date.Year() ;
@@ -156,6 +156,15 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				jdOe = jdlist.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodySun() ;
+				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+
+				peer.setStretch( getStretch() ) ;
+				peer.setType( getType() ) ;
+				peer.setImportance( getImportance() ) ;
+				peer.setCircle( getCircle() ) ;
+
+				peer.setAnnotation( getAnnotation() ) ;
+
 				peer.setEpoch( new astrolabe.model.Epoch() ) ;
 				peer.getEpoch().setA( new astrolabe.model.A() ) ;
 				peer.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
@@ -164,17 +173,8 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				peer.getEpoch().getA().getJD().setValue( jdAe ) ;
 				peer.getEpoch().getJD().setValue( jdOe ) ;
 
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-				}
-
-				peer.setStretch( getStretch() ) ;
-				peer.setType( getType() ) ;
-				peer.setImportance( getImportance() ) ;
-				peer.setCircle( getCircle() ) ;
 
 				peer.setDialDay( getDialDay() ) ;
-				peer.setAnnotation( getAnnotation() ) ;
 
 				try {
 					peer.validate() ;

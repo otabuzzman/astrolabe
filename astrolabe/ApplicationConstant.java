@@ -9,18 +9,21 @@ public final class ApplicationConstant {
 	// general constants (GC_), patterns (GP_)
 	public final static String GC_APPLICATION	= "astrolabe" ;			// application name
 	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;		// native library
-	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
 	public final static String GC_NS_ATL		= "atl:" ;				// name space, application generated
+	public final static String GC_NS_CAT		= "cat:" ;				// name space, application generated
+	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
+	public final static String GC_NS_SGN		= "sgn:" ;				// name space, application generated
 	public final static String GC_NS_REG		= "reg:" ;				// name space, application generated
-	public final static String GC_EPOCHE		= GC_NS_REG+"epoch" ;	// class global model variable, internal usage
-	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global model variable, internal usage
-	public final static String GC_FOVUNI		= GC_NS_REG+"fovuni" ;	// class global model variable, internal usage
-	public final static String GC_FOVEFF		= GC_NS_REG+"foveff" ;	// class global model variable, internal usage
+	public final static String GC_EPOCH			= GC_NS_REG+"epoch" ;	// class global variable, internal usage
+	public final static String GC_FOVUNI		= GC_NS_REG+"fovuni" ;	// class global variable, internal usage
+	public final static String GC_FOVEFF		= GC_NS_REG+"foveff" ;	// class global variable, internal usage
+	public final static String GC_LAYOUT		= GC_NS_REG+"layout" ;	// class global variable, internal usage
+	public final static String GC_PARSER		= GC_NS_REG+"parser" ;	// class global variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LP_SUBSTITUTE = "\\{[^\\{\\}]+\\}" ;
 
-	public final static String LK_ASTROLABE_EPOCH = "substitue.astrolabe.epoch" ;
+	public final static String LK_ASTROLABE_EPOCH			= "substitue.astrolabe.epoch" ;
 
 	public final static String LK_HORIZON_LATITUDE			= "substitute.horizon.latitude" ;
 	public final static String LK_HORIZON_LONGITUDE			= "substitute.horizon.longitude" ;
@@ -28,8 +31,9 @@ public final class ApplicationConstant {
 	public final static String LK_HORIZON_TIMESIDEREAL		= "substitute.horizon.timesidereal" ;
 	public final static String LK_HORIZON_ECLIPTICEPSILON	= "substitute.horizon.eclipticepsilon" ;
 
-	public final static String LK_CIRCLE_AZIMUTH	= "substitute.circle.azimuth" ;
-	public final static String LK_CIRCLE_ALTITUDE	= "substitute.circle.altitude" ;
+	public final static String LK_CIRCLE_AZIMUTH		= "substitute.circle.azimuth" ;
+	public final static String LK_CIRCLE_ALTITUDE		= "substitute.circle.altitude" ;
+	public final static String LK_CIRCLE_CURRENTPOINT	= "substitute.circle.currentpoint" ;
 
 	public final static String LK_BODY_AZIMUTH			= "substitute.body.azimuth" ;
 	public final static String LK_BODY_ALTITUDE			= "substitute.body.altitude" ;
@@ -258,6 +262,115 @@ public final class ApplicationConstant {
 	public final static String LK_ADC5050_MULTCNT		= "substitute.adc5050.MultCnt" ;
 	public final static String LK_ADC5050_NOTEFLAG		= "substitute.adc5050.NoteFlag" ;
 
+	public final static String LK_ADC5109_SKY2000	= "substitute.adc5109.SKY2000" ;
+	public final static String LK_ADC5109_ID		= "substitute.adc5109.ID" ;
+	public final static String LK_ADC5109_HD		= "substitute.adc5109.HD" ;
+	public final static String LK_ADC5109_M_HD		= "substitute.adc5109.m_HD" ;
+	public final static String LK_ADC5109_U_HD		= "substitute.adc5109.u_HD" ;
+	public final static String LK_ADC5109_SAO		= "substitute.adc5109.SAO" ;
+	public final static String LK_ADC5109_M_SAO		= "substitute.adc5109.m_SAO" ;
+	public final static String LK_ADC5109_DM		= "substitute.adc5109.DM" ;
+	public final static String LK_ADC5109_M_DM		= "substitute.adc5109.m_DM" ;
+	public final static String LK_ADC5109_U_DM		= "substitute.adc5109.u_DM" ;
+	public final static String LK_ADC5109_HR		= "substitute.adc5109.HR" ;
+	public final static String LK_ADC5109_WDS		= "substitute.adc5109.WDS" ;
+	public final static String LK_ADC5109_M_WDS		= "substitute.adc5109.m_WDS" ;
+	public final static String LK_ADC5109_U_WDS		= "substitute.adc5109.u_WDS" ;
+	public final static String LK_ADC5109_PPM		= "substitute.adc5109.PPM" ;
+	public final static String LK_ADC5109_U_PPM		= "substitute.adc5109.u_PPM" ;
+	public final static String LK_ADC5109_ID_MERG	= "substitute.adc5109.ID_merg" ;
+	public final static String LK_ADC5109_NAME		= "substitute.adc5109.Name" ;
+	public final static String LK_ADC5109_VNAME		= "substitute.adc5109.Vname" ;
+	public final static String LK_ADC5109_RAH		= "substitute.adc5109.RAh" ;
+	public final static String LK_ADC5109_RAM		= "substitute.adc5109.RAm" ;
+	public final static String LK_ADC5109_RAS		= "substitute.adc5109.RAs" ;
+	public final static String LK_ADC5109_DE		= "substitute.adc5109.DE" ;
+	public final static String LK_ADC5109_DED		= "substitute.adc5109.DEd" ;
+	public final static String LK_ADC5109_DEM		= "substitute.adc5109.DEm" ;
+	public final static String LK_ADC5109_DES		= "substitute.adc5109.DEs" ;
+	public final static String LK_ADC5109_E_POS		= "substitute.adc5109.e_pos" ;
+	public final static String LK_ADC5109_F_POS		= "substitute.adc5109.f_pos" ;
+	public final static String LK_ADC5109_R_POS		= "substitute.adc5109.r_pos" ;
+	public final static String LK_ADC5109_PMRA		= "substitute.adc5109.pmRA" ;
+	public final static String LK_ADC5109_PMDE		= "substitute.adc5109.pmDE" ;
+	public final static String LK_ADC5109_R_PM		= "substitute.adc5109.r_pm" ;
+	public final static String LK_ADC5109_RV		= "substitute.adc5109.RV" ;
+	public final static String LK_ADC5109_R_RV		= "substitute.adc5109.r_RV" ;
+	public final static String LK_ADC5109_PLX		= "substitute.adc5109.Plx" ;
+	public final static String LK_ADC5109_E_PLX		= "substitute.adc5109.e_Plx" ;
+	public final static String LK_ADC5109_R_PLX		= "substitute.adc5109.r_Plx" ;
+	public final static String LK_ADC5109_GCI_X		= "substitute.adc5109.GCI_X" ;
+	public final static String LK_ADC5109_GCI_Y		= "substitute.adc5109.GCI_Y" ;
+	public final static String LK_ADC5109_GCI_Z		= "substitute.adc5109.GCI_Z" ;
+	public final static String LK_ADC5109_GLON		= "substitute.adc5109.GLON" ;
+	public final static String LK_ADC5109_GLAT		= "substitute.adc5109.GLAT" ;
+	public final static String LK_ADC5109_VMAG		= "substitute.adc5109.Vmag" ;
+	public final static String LK_ADC5109_VDER		= "substitute.adc5109.Vder" ;
+	public final static String LK_ADC5109_E_VMAG	= "substitute.adc5109.e_Vmag" ;
+	public final static String LK_ADC5109_F_VMAG	= "substitute.adc5109.f_Vmag" ;
+	public final static String LK_ADC5109_R_VMAG	= "substitute.adc5109.r_Vmag" ;
+	public final static String LK_ADC5109_N_VMAG	= "substitute.adc5109.n_Vmag" ;
+	public final static String LK_ADC5109_BMAG		= "substitute.adc5109.Bmag" ;
+	public final static String LK_ADC5109_BV		= "substitute.adc5109.BV" ;
+	public final static String LK_ADC5109_E_BMAG	= "substitute.adc5109.e_Bmag" ;
+	public final static String LK_ADC5109_F_BMAG	= "substitute.adc5109.f_Bmag" ;
+	public final static String LK_ADC5109_R_BMAG	= "substitute.adc5109.r_Bmag" ;
+	public final static String LK_ADC5109_UMAG		= "substitute.adc5109.Umag" ;
+	public final static String LK_ADC5109_UB		= "substitute.adc5109.UB" ;
+	public final static String LK_ADC5109_E_UMAG	= "substitute.adc5109.e_Umag" ;
+	public final static String LK_ADC5109_N_UMAG	= "substitute.adc5109.n_Umag" ;
+	public final static String LK_ADC5109_R_UMAG	= "substitute.adc5109.r_Umag" ;
+	public final static String LK_ADC5109_PTV		= "substitute.adc5109.Ptv" ;
+	public final static String LK_ADC5109_R_PTV		= "substitute.adc5109.r_Ptv" ;
+	public final static String LK_ADC5109_PTG		= "substitute.adc5109.Ptg" ;
+	public final static String LK_ADC5109_R_PTG		= "substitute.adc5109.r_Ptg" ;
+	public final static String LK_ADC5109_SPMK		= "substitute.adc5109.SpMK" ;
+	public final static String LK_ADC5109_R_SPMK	= "substitute.adc5109.r_SpMK" ;
+	public final static String LK_ADC5109_SP		= "substitute.adc5109.Sp" ;
+	public final static String LK_ADC5109_R_SP		= "substitute.adc5109.r_Sp" ;
+	public final static String LK_ADC5109_SEP		= "substitute.adc5109.sep" ;
+	public final static String LK_ADC5109_DMAG		= "substitute.adc5109.Dmag" ;
+	public final static String LK_ADC5109_ORBPER	= "substitute.adc5109.orbPer" ;
+	public final static String LK_ADC5109_PA		= "substitute.adc5109.PA" ;
+	public final static String LK_ADC5109_DATE		= "substitute.adc5109.date" ;
+	public final static String LK_ADC5109_R_DUP		= "substitute.adc5109.r_Dup" ;
+	public final static String LK_ADC5109_N_DMAG	= "substitute.adc5109.n_Dmag" ;
+	public final static String LK_ADC5109_DIST1		= "substitute.adc5109.dist1" ;
+	public final static String LK_ADC5109_DIST2		= "substitute.adc5109.dist2" ;
+	public final static String LK_ADC5109_ID_A		= "substitute.adc5109.ID_A" ;
+	public final static String LK_ADC5109_ID_B		= "substitute.adc5109.ID_B" ;
+	public final static String LK_ADC5109_ID_C		= "substitute.adc5109.ID_C" ;
+	public final static String LK_ADC5109_MAGMAX	= "substitute.adc5109.magMax" ;
+	public final static String LK_ADC5109_MAGMIN	= "substitute.adc5109.magMin" ;
+	public final static String LK_ADC5109_VARAMP	= "substitute.adc5109.varAmp" ;
+	public final static String LK_ADC5109_N_VARAMP	= "substitute.adc5109.n_varAmp" ;
+	public final static String LK_ADC5109_VARPER	= "substitute.adc5109.varPer" ;
+	public final static String LK_ADC5109_VAREP		= "substitute.adc5109.varEp" ;
+	public final static String LK_ADC5109_VARTYP	= "substitute.adc5109.varTyp" ;
+	public final static String LK_ADC5109_R_VAR		= "substitute.adc5109.r_var" ;
+	public final static String LK_ADC5109_MAG1		= "substitute.adc5109.mag1" ;
+	public final static String LK_ADC5109_VMAG1		= "substitute.adc5109.vmag1" ;
+	public final static String LK_ADC5109_E_MAG1	= "substitute.adc5109.e_mag1" ;
+	public final static String LK_ADC5109_N_MAG1	= "substitute.adc5109.n_mag1" ;
+	public final static String LK_ADC5109_P_MAG1	= "substitute.adc5109.p_mag1" ;
+	public final static String LK_ADC5109_R_MAG1	= "substitute.adc5109.r_mag1" ;
+	public final static String LK_ADC5109_MAG2		= "substitute.adc5109.mag2" ;
+	public final static String LK_ADC5109_VMAG2		= "substitute.adc5109.vmag2" ;
+	public final static String LK_ADC5109_E_MAG2	= "substitute.adc5109.e_mag2" ;
+	public final static String LK_ADC5109_N_MAG2	= "substitute.adc5109.n_mag2" ;
+	public final static String LK_ADC5109_P_MAG2	= "substitute.adc5109.p_mag2" ;
+	public final static String LK_ADC5109_R_MAG2	= "substitute.adc5109.r_mag2" ;
+	public final static String LK_ADC5109_CI1		= "substitute.adc5109.ci1" ;
+	public final static String LK_ADC5109_F_MAG1	= "substitute.adc5109.f_mag1" ;
+	public final static String LK_ADC5109_F_MAG2	= "substitute.adc5109.f_mag2" ;
+	public final static String LK_ADC5109_MAG3		= "substitute.adc5109.mag3" ;
+	public final static String LK_ADC5109_VMAG3		= "substitute.adc5109.vmag3" ;
+	public final static String LK_ADC5109_E_MAG3	= "substitute.adc5109.e_mag3" ;
+	public final static String LK_ADC5109_N_MAG3	= "substitute.adc5109.n_mag3" ;
+	public final static String LK_ADC5109_P_MAG3	= "substitute.adc5109.p_mag3" ;
+	public final static String LK_ADC5109_R_MAG3	= "substitute.adc5109.r_mag3" ;
+	public final static String LK_ADC5109_F_MAG3	= "substitute.adc5109.f_mag3" ;
+
 	public final static String LK_ADC6049_CONSTELLATION	= "substitute.adc6049.constellation" ;
 	public final static String LK_ADC6049_ABBREVIATION	= "substitute.adc6049.latin.abbreviation" ;
 	public final static String LK_ADC6049_NOMINATIVE	= "substitute.adc6049.latin.nominative" ;
@@ -278,6 +391,25 @@ public final class ApplicationConstant {
 	public final static String LK_ADC7118_N_MAG		= "substitute.adc7118.n_mag" ;
 	public final static String LK_ADC7118_DESC		= "substitute.adc7118.Desc" ;
 
+	public final static String LK_ADC7237_PGC		= "substitute.adc7237.PGC" ;
+	public final static String LK_ADC7237_RAH		= "substitute.adc7237.RAh" ;
+	public final static String LK_ADC7237_RAM		= "substitute.adc7237.RAm" ;
+	public final static String LK_ADC7237_RAS		= "substitute.adc7237.RAs" ;
+	public final static String LK_ADC7237_DE		= "substitute.adc7237.DE" ;
+	public final static String LK_ADC7237_DED		= "substitute.adc7237.DEd" ;
+	public final static String LK_ADC7237_DEM		= "substitute.adc7237.DEm" ;
+	public final static String LK_ADC7237_DES		= "substitute.adc7237.DEs" ;
+	public final static String LK_ADC7237_OTYPE		= "substitute.adc7237.OType" ;
+	public final static String LK_ADC7237_MTYPE		= "substitute.adc7237.MType" ;
+	public final static String LK_ADC7237_LOGD25	= "substitute.adc7237.logD25" ;
+	public final static String LK_ADC7237_E_LOGD25	= "substitute.adc7237.e_logD25" ;
+	public final static String LK_ADC7237_LOGR25	= "substitute.adc7237.logR25" ;
+	public final static String LK_ADC7237_E_LOGR25	= "substitute.adc7237.e_logR25" ;
+	public final static String LK_ADC7237_PA		= "substitute.adc7237.PA" ;
+	public final static String LK_ADC7237_E_PA		= "substitute.adc7237.e_PA" ;
+	public final static String LK_ADC7237_O_ANAMES	= "substitute.adc7237.o_ANames" ;
+	public final static String LK_ADC7237_ANAMES	= "substitute.adc7237.ANames" ;
+
 	public final static String LK_INDICATOR_YMD_NUMBEROFYEAR	= "substitute.indicator.ymd.numberofyear" ;
 	public final static String LK_INDICATOR_YMD_NUMBEROFMONTH	= "substitute.indicator.ymd.numberofmonth" ;
 	public final static String LK_INDICTAOR_YMD_NUMBEROFDAY		= "substitute.indicator.ymd.numberofday" ;
@@ -294,6 +426,9 @@ public final class ApplicationConstant {
 
 	public final static String LK_INDICTAOR_SIG_MATH	= "substitute.indicator.sig.math" ;
 	public final static String LK_INDICTAOR_SIG_BOTH	= "substitute.indicator.sig.both" ;
+
+	public final static String LK_INDICTAOR_JTSCOORDINATE_QUADRANT	= "substitue.indicator.jtscoordinate.quadrant" ;
+	public final static String LK_INDICTAOR_JTSCOORDINATE_BOUNDARY	= "substitue.indicator.jtscoordinate.boundary" ;
 
 	// locale message keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
 	public final static String LK_MESSAGE_PARAMETERNOTAVLID = "message.parameternotvalid" ;
@@ -382,7 +517,6 @@ public final class ApplicationConstant {
 	public final static String PK_GENERAL_INTERVAL		= "interval" ;
 	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
 	public final static String PK_GENERAL_PRECISION		= "precision" ;
-	public final static String PK_GENERAL_IMPORTANCE	= "importnace" ;
 
 	public final static String PK_ASTROLABE_VIEWER		= "viewer" ;
 
@@ -408,8 +542,6 @@ public final class ApplicationConstant {
 	public final static String PK_DIAL_THICKNESS	= "thickness" ;
 	public final static String PK_DIAL_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
 
-	public final static String PK_SIGN_IMPORTANCE	= PK_GENERAL_IMPORTANCE ;
-
 	public final static String PK_GRADUATION_SPACE		= PK_GENERAL_SPACE ;
 	public final static String PK_GRADUATION_LINELENGTH	= "linelength" ;
 	public final static String PK_GRADUATION_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
@@ -421,16 +553,14 @@ public final class ApplicationConstant {
 	public final static String PK_ANNOTATION_MARGIN				= "margin" ;
 	public final static String PK_ANNOTATION_RISE				= PK_GENERAL_RISE ;
 
-	public final static String PN_TEXT_PURPOSE		= "purpose" ;
+	public final static String PN_TEXT_PURPOSE	= "purpose" ;
 
-	public final static String PK_BODY_INTERVAL		= PK_GENERAL_INTERVAL ;
-	public final static String PK_BODY_STRETCH		= "stretch" ;
+	public final static String PK_BODY_INTERVAL	= PK_GENERAL_INTERVAL ;
+	public final static String PK_BODY_STRETCH	= "stretch" ;
 
 	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
 
 	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
-
-	public final static String PK_CATALOGADC6049RECORD_IMPORTANCE = PK_GENERAL_IMPORTANCE ;
 
 	// postscript custom definitions
 	public final static String PS_CUSTOM_LIM0			= "LIM0" ;

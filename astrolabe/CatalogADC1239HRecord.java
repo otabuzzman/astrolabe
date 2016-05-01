@@ -11,8 +11,6 @@ import caa.CAAPrecession;
 
 public class CatalogADC1239HRecord implements CatalogRecord {
 
-	private final static String DEFAULT_STAR = "\uf811" ;
-
 	private final static int CR_TOKEN = 78 ;
 
 	public String   Catalog   ; //  [H] Catalogue (H=Hipparcos)
@@ -189,25 +187,14 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		pmDE() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel() throws ValidationException {
-		astrolabe.model.Body model ;
-		astrolabe.model.Text tm ;
+	public void toModel( astrolabe.model.Body body ) throws ValidationException {
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
 		double epoch ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
-		tm = new astrolabe.model.Text() ;
-		tm.setPurpose( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
-		tm.setValue( DEFAULT_STAR ) ;
-
-		model = new astrolabe.model.Body() ;
-		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-		model.getBodyStellar().setName( HIP ) ;
-		model.getBodyStellar().setTurn( 0 ) ;
-		model.getBodyStellar().setSpin( 0 ) ;
-		model.getBodyStellar().setText( tm ) ;
+		body.getBodyStellar().setName( HIP ) ;
 
 		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
 				epoch-2451545., RAhms(), DEdms(), pmRA()/1000., pmDE()/1000. ) ;
@@ -225,13 +212,11 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
 		pm.getTheta().getRational().setValue( ceq.Y() ) ;  
 
-		model.getBodyStellar().setPosition( pm ) ;
+		body.getBodyStellar().setPosition( pm ) ;
 		cpm.delete() ;
 		ceq.delete() ;
 
-		model.validate() ;
-
-		return model ;
+		body.validate() ;
 	}
 
 	public List<double[]> list( Projector projector ) {
@@ -410,7 +395,7 @@ public class CatalogADC1239HRecord implements CatalogRecord {
 		List<String> r = new java.util.Vector<String>( 2 ) ;
 
 		r.add( HIP ) ;
-		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+		r.add( "Vmag"+( (int) Vmag() ) ) ;
 
 		return r ;
 	}

@@ -11,8 +11,6 @@ import caa.CAAPrecession;
 
 public class CatalogADC5050Record implements CatalogRecord {
 
-	private final static String DEFAULT_STAR = "\uf811" ;
-
 	private final static int CR_LENGTH = 198 ;
 
 	public String HR         ; //  [1/9110]+ Harvard Revised Number = Bright Star Number
@@ -141,25 +139,14 @@ public class CatalogADC5050Record implements CatalogRecord {
 		pmDE() ; // continue new methods
 	}
 
-	public astrolabe.model.Body toModel() throws ValidationException {
-		astrolabe.model.Body model ;
-		astrolabe.model.Text tm ;
+	public void toModel( astrolabe.model.Body body ) throws ValidationException {
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
 		double epoch ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
-		tm = new astrolabe.model.Text() ;
-		tm.setPurpose( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
-		tm.setValue( DEFAULT_STAR ) ;
-
-		model = new astrolabe.model.Body() ;
-		model.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-		model.getBodyStellar().setName( HR ) ;
-		model.getBodyStellar().setTurn( 0 ) ;
-		model.getBodyStellar().setSpin( 0 ) ;
-		model.getBodyStellar().setText( tm ) ;
+		body.getBodyStellar().setName( HR ) ;
 
 		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
 				epoch-2451545., RAh()+RAm()/60.+RAs()/3600., DEd()+DEm()/60.+DEs()/3600., pmRA(), pmDE() ) ;
@@ -177,13 +164,11 @@ public class CatalogADC5050Record implements CatalogRecord {
 		pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
 		pm.getTheta().getRational().setValue( ceq.Y() ) ;  
 
-		model.getBodyStellar().setPosition( pm ) ;
+		body.getBodyStellar().setPosition( pm ) ;
 		cpm.delete() ;
 		ceq.delete() ;
 
-		model.validate() ;
-
-		return model ;
+		body.validate() ;
 	}
 
 	public List<double[]> list( Projector projector ) {
@@ -316,7 +301,7 @@ public class CatalogADC5050Record implements CatalogRecord {
 		List<String> r = new java.util.Vector<String>( 2 ) ;
 
 		r.add( HR ) ;
-		r.add( "mag"+( (int) ( Vmag()+100.5 )-100 ) ) ;
+		r.add( "Vmag"+( (int) Vmag() ) ) ;
 
 		return r ;
 	}

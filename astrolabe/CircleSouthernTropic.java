@@ -7,24 +7,20 @@ import caa.CAANutation;
 public class CircleSouthernTropic extends CircleParallel {
 
 	public CircleSouthernTropic( Peer peer, Projector projector ) {
-		double epoch, ra ;
+		super( peer, projector ) ;
+	}
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+	public astrolabe.model.Angle getAngle() {
+		astrolabe.model.Angle r ;
+		double e, o ;
 
-		ra = -CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+		e = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
 
-		if ( ( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getRational() == null ) {
-			int d = (int) ra ;
-			int m = (int) ( ( ra-d )*60 ) ;
-			double s = ( ( ra-d )*60-m )*60 ;
+		r = new astrolabe.model.Angle() ;
+		r.setRational( new astrolabe.model.Rational() ) ;
+		r.getRational().setValue( -o ) ;
 
-			( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getDMS().setDeg( d ) ;
-			( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getDMS().setMin( m ) ;
-			( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getDMS().setSec( s ) ;
-		} else {
-			( (astrolabe.model.CircleSouthernTropic) peer ).getAngle().getRational().setValue( ra ) ;
-		}
-
-		setup( peer, projector ) ;
+		return r ;
 	}
 }

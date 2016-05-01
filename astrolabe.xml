@@ -23,9 +23,6 @@ astrolabe.xsd" name="astrolabe">
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
-							<Angle>
-								<Rational value="-24.5"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0"/>
@@ -36,6 +33,9 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 				</HorizonEquatorial>
@@ -45,62 +45,59 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonGalactic practicality="seldom">
 					<Circle>
 						<CircleParallel importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="chasing"/>
+							</Begin>
+							<End>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</End>
 							<Angle>
 								<Rational value="-80"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="-60"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="-40"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="chasing"/>
-							</Begin>
-							<End>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</End>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-20"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
+							<Angle>
+								<Rational value="-20"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--horizon-->
 					<Circle>
 						<CircleParallel importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -111,36 +108,53 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="10" division="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
+											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="bottomleft" reverse="false" distance="18.5">
-											<Text purpose="diallettering" value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
+											<Script purpose="diallettering" value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="20"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</End>
+							<Angle>
+								<Rational value="20"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="40"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -151,30 +165,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="80"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -185,14 +182,29 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="80"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--meridians-->
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="0.0"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -201,13 +213,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="30"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -216,28 +228,30 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Immediate>
+									<DMS deg="-85" min="0" sec="0.0"/>
+								</Immediate>
 							</Begin>
 							<End>
 								<Immediate>
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="90"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<DMS deg="-85" min="0" sec="0.0"/>
@@ -248,13 +262,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="120"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<DMS deg="-85" min="0" sec="0.0"/>
@@ -265,30 +279,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="150"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<DMS deg="-85" min="0" sec="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="180"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -301,23 +298,38 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="middleleft" reverse="false" distance="12">
-											<Text purpose="guidance" value="Galaktische Breite (&#x0394;b 20&#x00b0;)"/>
+											<Script purpose="guidance" value="Galaktische Breite (&#x0394;b 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="180"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="210"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -326,13 +338,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="240"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -341,13 +353,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="270"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -356,28 +368,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="300"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="330"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -386,26 +383,29 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="330"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Body>
 						<BodyStellar turn="0.0" spin="-3.0">
 							<Annotation>
 								<AnnotationStraight anchor="bottomleft" radiant="false" reverse="false">
-									<Text purpose="bodylettering7" value="{azimutgrd}&#x00b0;{azimutgrdmin}', {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}' (l,b)"/>
+									<Script purpose="bodylettering7" value="{azimutgrd}&#x00b0;{azimutgrdmin}', {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}' (l,b)"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Annotation>
 								<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-									<Text purpose="bodylettering7" value="{rektaszensiongrd}&#x00b0;{rektaszensiongrdmin}', {deklinationbeide}{deklinationgrd}&#x00b0;{deklinationgrdmin}' (RA,d)"/>
+									<Script purpose="bodylettering7" value="{rektaszensiongrd}&#x00b0;{rektaszensiongrdmin}', {deklinationbeide}{deklinationgrd}&#x00b0;{deklinationgrdmin}' (RA,d)"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="bottommiddle" reverse="false" distance="50">
-									<Text purpose="bodylettering7" value="Galaktischer NP"/>
+									<Script purpose="bodylettering7" value="Galaktischer NP"/>
 								</AnnotationCurved>
 							</Annotation>
-							<Text purpose="zenit" value="&#xf810;"/>
+							<Script value="&#xf810;" purpose="3.2"/>
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -423,9 +423,6 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonEquatorial practicality="always">
 					<Circle>
 						<CircleParallel importance="canonical" name="suntrue">
-							<Angle>
-								<Rational value="-20"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS min="0" sec="0.0" deg="0"/>
@@ -436,13 +433,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="-20"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical" name="sunmean">
-							<Angle>
-								<Rational value="-19.9"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS min="0" sec="0.0" deg="0"/>
@@ -453,6 +450,9 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="-19.9"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 				</HorizonEquatorial>
@@ -462,36 +462,33 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonEcliptical practicality="sometimes">
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-40"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
+							<Angle>
+								<Rational value="-40"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-20"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</End>
+							<Angle>
+								<Rational value="-20"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--horizon-->
 					<Circle>
 						<CircleParallel importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -504,19 +501,19 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="true" distance="71.5">
-									<Text purpose="circlelettering" value="Ekliptik">
+									<Script purpose="circlelettering" value="Ekliptik">
 										<Subscript value="J{epochej}"/>
-									</Text>
-									<Text purpose="circlelettering" value=" {ekliptikneigungmathe}{ekliptikneigunggrd}&#x00b0;{ekliptikneigunggrdmin}'{ekliptikneigunggrdsek}''.{ekliptikneigunggrdfrk} (&#x03b5;)"/>
+									</Script>
+									<Script purpose="circlelettering" value=" {ekliptikneigungmathe}{ekliptikneigunggrd}&#x00b0;{ekliptikneigunggrdmin}'{ekliptikneigunggrdsek}''.{ekliptikneigunggrdfrk} (&#x03b5;)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<Rational value="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="20"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -531,23 +528,40 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="10" division="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
+											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="bottomleft" reverse="false" distance=".4">
-											<Text purpose="diallettering" value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
+											<Script purpose="diallettering" value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="20"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="40"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -558,30 +572,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="80"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -592,14 +589,29 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="80"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--meridians-->
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="0.0"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -608,13 +620,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="15"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -623,28 +635,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="30"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="45"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -657,23 +654,38 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="middle" reverse="false" distance="20">
-											<Text purpose="guidance" value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
+											<Script purpose="guidance" value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="45"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -682,13 +694,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="75"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -697,13 +709,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="90"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -712,13 +724,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="105"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -727,13 +739,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="120"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -742,13 +754,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="135"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -757,13 +769,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="150"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -772,13 +784,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="165"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -787,13 +799,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="180"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -802,13 +814,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="195"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -817,13 +829,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="210"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -832,13 +844,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="225"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -847,13 +859,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="240"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -862,13 +874,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="255"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -877,13 +889,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="270"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -892,13 +904,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="285"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -907,13 +919,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="300"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -922,13 +934,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="315"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -937,28 +949,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="330"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="345"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -967,6 +964,9 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="345"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<!--planets-->
@@ -974,13 +974,13 @@ astrolabe.xsd" name="astrolabe">
 						<BodyPlanet type="mars" importance="canonical">
 							<Annotation>
 								<AnnotationCurved reverse="true" anchor="bottommiddle" distance="97.8">
-									<Text purpose="diallettering" value="Mars"/>
+									<Script purpose="diallettering" value="Mars"/>
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="true" baseline="none">
 								<GraduationSpan span="10" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
-										<Text purpose="guidance" value="{wertt}. {monatkurz}"/>
+										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
 								</GraduationSpan>
 							</DialDay>
@@ -990,13 +990,13 @@ astrolabe.xsd" name="astrolabe">
 						<BodyPlanet type="jupiter" importance="canonical">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
-									<Text purpose="diallettering" value="Jupiter"/>
+									<Script purpose="diallettering" value="Jupiter"/>
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
 								<GraduationSpan span="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
-										<Text purpose="guidance" value="{wertt}. {monatkurz}"/>
+										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
 								</GraduationSpan>
 							</DialDay>
@@ -1006,13 +1006,13 @@ astrolabe.xsd" name="astrolabe">
 						<BodyPlanet type="saturn" importance="canonical">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
-									<Text purpose="diallettering" value="Saturn"/>
+									<Script purpose="diallettering" value="Saturn"/>
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
 								<GraduationSpan span="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
-										<Text purpose="guidance" value="{wertt}. {monatkurz}"/>
+										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
 								</GraduationSpan>
 							</DialDay>
@@ -1022,13 +1022,13 @@ astrolabe.xsd" name="astrolabe">
 						<BodyPlanet type="uranus" importance="canonical">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="50">
-									<Text purpose="guidance" value="Uranus"/>
+									<Script purpose="guidance" value="Uranus"/>
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
 								<GraduationSpan span="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
-										<Text purpose="guidance" value="{wertt}. {monatkurz}"/>
+										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
 								</GraduationSpan>
 							</DialDay>
@@ -1038,13 +1038,13 @@ astrolabe.xsd" name="astrolabe">
 						<BodyPlanet type="neptune" importance="canonical">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="25">
-									<Text purpose="guidance" value="Neptun"/>
+									<Script purpose="guidance" value="Neptun"/>
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="true" baseline="none">
 								<GraduationSpan span="180" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
-										<Text purpose="guidance" value="{wertt}. {monatkurz}"/>
+										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
 								</GraduationSpan>
 							</DialDay>
@@ -1056,55 +1056,55 @@ astrolabe.xsd" name="astrolabe">
 							<DialDay reflect="false" baseline="rail">
 								<GraduationSpan span="1" division="4">
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{wochentagkurz}"/>
+										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
-										</Text>
-										<Text purpose="guidance" value="{zeitgleichungstdsek}">
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
 											<Superscript value="s"/>
-										</Text>
+										</Script>
 									</AnnotationStraight>
 								</GraduationSpan>
 								<GraduationHalf span="7">
 									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
-										<Text purpose="guidance" value="{julianischertag}"/>
+										<Script purpose="guidance" value="{julianischertag}"/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{wertt}."/>
+										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
-										</Text>
-										<Text purpose="guidance" value="{zeitgleichungstdsek}">
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
 											<Superscript value="s"/>
-										</Text>
+										</Script>
 									</AnnotationStraight>
 								</GraduationHalf>
 								<GraduationFull span="30">
 									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
-										<Text purpose="dialcardinal" value="{monat}"/>
+										<Script purpose="dialcardinal" value="{monat}"/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{wertt}."/>
+										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Text purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
-										</Text>
-										<Text purpose="guidance" value="{zeitgleichungstdsek}">
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
 											<Superscript value="s"/>
-										</Text>
+										</Script>
 									</AnnotationStraight>
 								</GraduationFull>
 								<Annotation>
 									<AnnotationCurved anchor="bottommiddle" reverse="false" distance="99.06">
-										<Text purpose="diallettering" value="Wahre Sonne (&#x0394;T 6">
+										<Script purpose="diallettering" value="Wahre Sonne (&#x0394;T 6">
 											<Superscript value="h"/>
-										</Text>
-										<Text purpose="diallettering" value="), Zeitgleichung"/>
+										</Script>
+										<Script purpose="diallettering" value="), Zeitgleichung"/>
 									</AnnotationCurved>
 								</Annotation>
 							</DialDay>
@@ -1116,20 +1116,20 @@ astrolabe.xsd" name="astrolabe">
 							<DialDay reflect="true" baseline="rail">
 								<GraduationSpan span="1" division="4">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-										<Text purpose="guidance" value="{wertt}."/>
+										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 								</GraduationSpan>
 								<GraduationHalf span="7">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-										<Text purpose="guidance" value="{wochentagkurz}"/>
+										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
 								</GraduationHalf>
 								<Annotation>
 									<AnnotationCurved anchor="topmiddle" reverse="false" distance="99.06">
-										<Text purpose="diallettering" value="Mittlere Sonne {epochej} (&#x0394;T 6">
+										<Script purpose="diallettering" value="Mittlere Sonne {epochej} (&#x0394;T 6">
 											<Superscript value="h"/>
-										</Text>
-										<Text purpose="diallettering" value=")"/>
+										</Script>
+										<Script purpose="diallettering" value=")"/>
 									</AnnotationCurved>
 								</Annotation>
 							</DialDay>
@@ -1143,9 +1143,6 @@ astrolabe.xsd" name="astrolabe">
 					<!--astronomical twilight-->
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="-18" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1154,17 +1151,17 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="23.5">
-									<Text purpose="circlelettering" value="Astronomische D&#x00e4;mmerung -18&#x00b0; Altitude (h)"/>
+									<Script purpose="circlelettering" value="Astronomische D&#x00e4;mmerung -18&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<DMS deg="-18" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--nautical twilight-->
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="-12" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1173,17 +1170,17 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="22.5">
-									<Text purpose="circlelettering" value="Nautische D&#x00e4;mmerung -12&#x00b0; Altitude (h)"/>
+									<Script purpose="circlelettering" value="Nautische D&#x00e4;mmerung -12&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<DMS deg="-12" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--civil twilight-->
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="-6" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1192,17 +1189,17 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="22">
-									<Text purpose="circlelettering" value="B&#x00fc;rgerliche D&#x00e4;mmerung -6&#x00b0; Altitude (h)"/>
+									<Script purpose="circlelettering" value="B&#x00fc;rgerliche D&#x00e4;mmerung -6&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<DMS deg="-6" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--sunset/sunrise-->
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-0.883"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1211,22 +1208,22 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="22">
-									<Text purpose="circlelettering" value="Sonnenaufgang -0.883&#x00b0; Altitude (h)"/>
+									<Script purpose="circlelettering" value="Sonnenaufgang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topleft" reverse="false" distance="78">
-									<Text purpose="circlelettering" value="Sonnenuntergang -0.883&#x00b0; Altitude (h)"/>
+									<Script purpose="circlelettering" value="Sonnenuntergang -0.883&#x00b0; Altitude (h)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<Rational value="-0.883"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--horizon-->
 					<Circle>
 						<CircleParallel name="lop0" fov="horizon" importance="cardinal">
-							<Angle>
-								<DMS deg="0" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1235,39 +1232,39 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="bottomleft" reverse="false" distance="10">
-									<Text purpose="circlelettering" value="Horizont {breitebeide}{breitegrd}&#x00b0;{breitegrdmin}'{breitegrdsek}.{breitegrdfrk}'' geografische Breite (&#x03c6;)"/>
-									<Text purpose="circlelettering" value=", Sternzeit {sternzeitstd}">
+									<Script purpose="circlelettering" value="Horizont {breitebeide}{breitegrd}&#x00b0;{breitegrdmin}'{breitegrdsek}.{breitegrdfrk}'' geografische Breite (&#x03c6;)"/>
+									<Script purpose="circlelettering" value=", Sternzeit {sternzeitstd}">
 										<Superscript value="h"/>
-									</Text>
-									<Text purpose="circlelettering" value="{sternzeitstdmin}">
+									</Script>
+									<Script purpose="circlelettering" value="{sternzeitstdmin}">
 										<Superscript value="m"/>
-									</Text>
-									<Text purpose="circlelettering" value="{sternzeitstdsek}">
+									</Script>
+									<Script purpose="circlelettering" value="{sternzeitstdsek}">
 										<Superscript value="s"/>
-									</Text>
-									<Text purpose="circlelettering" value=".{sternzeitstdfrk} (ST)"/>
+									</Script>
+									<Script purpose="circlelettering" value=".{sternzeitstdfrk} (ST)"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<DMS deg="0" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="10" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
+							<Angle>
+								<DMS deg="10" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="20" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1278,13 +1275,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="360" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<DMS deg="20" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="30" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1299,23 +1296,40 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="rail" reflect="false">
 									<GraduationSpan division="4" span="10">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
+											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="middleleft" reverse="false" distance=".45">
-											<Text purpose="diallettering" value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
+											<Script purpose="diallettering" value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<DMS deg="30" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
+							<Begin>
+								<Immediate>
+									<DMS deg="0" min="0" sec="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="360" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<DMS deg="40" min="0" sec="0.0"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1326,13 +1340,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="360" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<DMS deg="50" min="0" sec="0.0"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1343,13 +1357,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="360" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<DMS deg="60" min="0" sec="0.0"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1360,30 +1374,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="360" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<DMS deg="70" min="0" sec="0.0"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<DMS deg="0" min="0" sec="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="360" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<DMS deg="80" min="0" sec="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1394,14 +1391,29 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="360" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<DMS deg="80" min="0" sec="0.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--meridians-->
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="0.0"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1410,13 +1422,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="15"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1425,13 +1437,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="30"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1440,13 +1452,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="45"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1455,13 +1467,27 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved anchor="middle" reverse="false" distance="22">
+											<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1470,27 +1496,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middle" reverse="false" distance="22">
-											<Text purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="75"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1499,13 +1511,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="90"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1514,13 +1526,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="105"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1529,28 +1541,28 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="120"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
+								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
 							<End>
 								<Immediate>
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="135"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1559,13 +1571,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="150"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1574,13 +1586,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="165"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1589,13 +1601,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="180"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1604,13 +1616,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="195"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1619,13 +1631,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="210"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1634,28 +1646,28 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="225"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
-								<Reference circle="eqp-24.5" node="chasing"/>
+								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
 							<End>
 								<Immediate>
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="240"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1664,13 +1676,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="255"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1679,13 +1691,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="270"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1694,28 +1706,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="285"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="300"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1728,23 +1725,38 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="middle" reverse="false" distance="22">
-											<Text purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
+											<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="300"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Reference circle="eqp-24.5" node="leading"/>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="315"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1753,28 +1765,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="330"/>
 							</Angle>
-							<Begin>
-								<Reference circle="eqp-24.5" node="leading"/>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="345"/>
-							</Angle>
 							<Begin>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</Begin>
@@ -1783,16 +1780,19 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="345"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Body>
 						<BodyStellar turn="0.0" spin="0.0">
 							<Annotation>
 								<AnnotationCurved anchor="bottommiddle" reverse="false" distance="50">
-									<Text purpose="bodylettering7" value="Zenit"/>
+									<Script purpose="bodylettering7" value="Zenit"/>
 								</AnnotationCurved>
 							</Annotation>
-							<Text purpose="zenit" value="&#xf810;"/>
+							<Script value="&#xf810;" purpose="3.2"/>
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -1821,15 +1821,15 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonEquatorial practicality="none">
 					<Circle>
 						<CircleParallel name="eqp-24.4" fov="horizon" importance="canonical">
-							<Angle>
-								<Rational value="-24.4"/>
-							</Angle>
 							<Begin>
 								<Reference circle="lop0" node="chasing"/>
 							</Begin>
 							<End>
 								<Reference circle="lop0" node="leading"/>
 							</End>
+							<Angle>
+								<Rational value="-24.4"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 				</HorizonEquatorial>
@@ -1839,9 +1839,6 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonLocal practicality="always">
 					<Circle>
 						<CircleParallel importance="cardinal">
-							<Angle>
-								<DMS deg="38" min="29" sec="2.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<DMS deg="0" min="0" sec="0.0"/>
@@ -1854,9 +1851,12 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="52">
-									<Text purpose="circlelettering" value="Zirkumpolarkreis"/>
+									<Script purpose="circlelettering" value="Zirkumpolarkreis"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<DMS deg="38" min="29" sec="2.0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Latitude>
@@ -1869,9 +1869,6 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonLocal practicality="always">
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-17.5"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -1886,28 +1883,31 @@ astrolabe.xsd" name="astrolabe">
 								<DialHour baseline="rail" reflect="true">
 									<GraduationSpan span=".5" division="4">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="30">
+											<Script purpose="dialfraction" value="30">
 												<Superscript value="m"/>
-											</Text>
+											</Script>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<GraduationHalf span="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialcardinal" value="{azimutzeitstd}">
+											<Script purpose="dialcardinal" value="{azimutzeitstd}">
 												<Superscript value="h"/>
-											</Text>
+											</Script>
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
 										<AnnotationCurved anchor="middle" reverse="true" distance="1.04">
-											<Text purpose="diallettering" value="Lokalzeit (&#x0394;t 7.5">
+											<Script purpose="diallettering" value="Lokalzeit (&#x0394;t 7.5">
 												<Superscript value="m"/>
-											</Text>
-											<Text purpose="diallettering" value=")"/>
+											</Script>
+											<Script purpose="diallettering" value=")"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialHour>
 							</Dial>
+							<Angle>
+								<Rational value="-17.5"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Latitude>
@@ -1928,9 +1928,6 @@ astrolabe.xsd" name="astrolabe">
 				<HorizonEquatorial practicality="always">
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-25"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -1945,50 +1942,50 @@ astrolabe.xsd" name="astrolabe">
 								<DialHour baseline="rail" reflect="false">
 									<GraduationSpan span=".5" division="3">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="30">
+											<Script purpose="dialfraction" value="30">
 												<Superscript value="m"/>
-											</Text>
+											</Script>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<GraduationHalf span="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialcardinal" value="{wertstd}">
+											<Script purpose="dialcardinal" value="{wertstd}">
 												<Superscript value="h"/>
-											</Text>
+											</Script>
 										</AnnotationStraight>
 									</GraduationHalf>
 									<Annotation>
 										<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
-											<Text purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
+											<Script purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
 												<Superscript value="m"/>
-											</Text>
-											<Text purpose="diallettering" value=")"/>
+											</Script>
+											<Script purpose="diallettering" value=")"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialHour>
 							</Dial>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="50">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<Rational value="-25"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-10"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -1999,14 +1996,14 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="-10"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--equator-->
 					<Circle>
 						<CircleParallel importance="cardinal">
-							<Angle>
-								<Rational value="0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2019,16 +2016,33 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26">
-									<Text purpose="circlelettering" value="&#x00c4;quator"/>
+									<Script purpose="circlelettering" value="&#x00c4;quator"/>
 								</AnnotationCurved>
 							</Annotation>
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
+							<Begin>
+								<Immediate>
+									<Rational value="0.0"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<Rational value="360"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="10"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2039,13 +2053,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="20"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2056,13 +2070,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="30"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2073,13 +2087,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="40"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2090,13 +2104,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="50"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2107,13 +2121,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2124,30 +2138,13 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
 							<Angle>
 								<Rational value="70"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
 						</CircleParallel>
 					</Circle>
 					<Circle>
 						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="80"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2158,14 +2155,14 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="80"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 					<!--southern tropic-->
 					<Circle>
 						<CircleSouthernTropic importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2178,7 +2175,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26.5">
-									<Text purpose="circlelettering" value="S&#x00fc;dlicher Sonnenwendekreis"/>
+									<Script purpose="circlelettering" value="S&#x00fc;dlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleSouthernTropic>
@@ -2186,9 +2183,6 @@ astrolabe.xsd" name="astrolabe">
 					<!--northern tropic-->
 					<Circle>
 						<CircleNorthernTropic importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2201,7 +2195,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="false" distance="27">
-									<Text purpose="circlelettering" value="N&#x00f6;rdlicher Sonnenwendekreis"/>
+									<Script purpose="circlelettering" value="N&#x00f6;rdlicher Sonnenwendekreis"/>
 								</AnnotationCurved>
 							</Annotation>
 						</CircleNorthernTropic>
@@ -2209,9 +2203,6 @@ astrolabe.xsd" name="astrolabe">
 					<!--northern polar-->
 					<Circle>
 						<CircleNorthernPolar importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0.0"/>
@@ -2227,9 +2218,23 @@ astrolabe.xsd" name="astrolabe">
 					<!--meridians-->
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="0.0"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2240,13 +2245,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="15"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2257,13 +2262,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="30"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2274,13 +2279,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="45"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2291,13 +2296,27 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2308,27 +2327,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="75"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2339,13 +2344,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="90"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2356,13 +2361,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="105"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2373,13 +2378,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="120"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2390,13 +2395,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="135"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2407,13 +2412,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="150"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2424,13 +2429,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="165"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2441,13 +2446,27 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
+							<Dial>
+								<DialDegree baseline="none" reflect="false">
+									<GraduationSpan span="20" division="1">
+										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+										</AnnotationStraight>
+									</GraduationSpan>
+									<Annotation>
+										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+										</AnnotationCurved>
+									</Annotation>
+								</DialDegree>
+							</Dial>
 							<Angle>
 								<Rational value="180"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2458,27 +2477,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="195"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2489,13 +2494,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="210"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2506,13 +2511,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="225"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2523,13 +2528,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="240"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2540,13 +2545,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="255"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2557,13 +2562,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="270"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2574,30 +2579,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="285"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="300"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2612,23 +2600,40 @@ astrolabe.xsd" name="astrolabe">
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan span="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
 										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
 										</AnnotationCurved>
 									</Annotation>
 								</DialDegree>
 							</Dial>
+							<Angle>
+								<Rational value="300"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
+							<Begin>
+								<Immediate>
+									<Rational value="-25"/>
+								</Immediate>
+							</Begin>
+							<End>
+								<Immediate>
+									<DMS deg="85" min="0" sec="0.0"/>
+								</Immediate>
+							</End>
 							<Angle>
 								<Rational value="315"/>
 							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2639,30 +2644,13 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
 							<Angle>
 								<Rational value="330"/>
 							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
 						</CircleMeridian>
 					</Circle>
 					<Circle>
 						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="345"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="-25"/>
@@ -2673,41 +2661,41 @@ astrolabe.xsd" name="astrolabe">
 									<DMS deg="85" min="0" sec="0.0"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="345"/>
+							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<!--ADC6049-->
 					<Catalog>
-						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_18.dat.gz-->
-						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/6/6049/bound_20.dat.gz-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_18.dat-->
-						<!--ftp://archive.astro.umd.edu/pub/adc/archives/catalogs/6/6049/public/6049_bound_20.dat-->
-						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/juergen schuck/eigene%20dateien/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
+						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VI/49bound_18.dat.gz-->
+						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VI/49bound_20.dat.gz-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
-						<CatalogADC6049 fov="chart" url="lib/cat/6049/bound_20.dat.gz">
+						<CatalogADC6049 name="6049" fov="chart" url="lib/cat/6049/bound_20.dat.gz">
 							<Annotation>
 								<AnnotationStraight reverse="false" anchor="bottomleft" radiant="false">
-									<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
+									<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Select value="CMI,CNC,ERI,FOR,MON">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
-										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
+										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="AQL,AUR,CAM,CRT,CRV,LEO,ORI,PSC,PUP,SER1,SEX,SGR,UMI,VIR">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
-										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
+										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
 							<Select value="LAC,LEP,SCT,SER2">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
-										<Text purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
+										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
@@ -2715,23 +2703,22 @@ astrolabe.xsd" name="astrolabe">
 					</Catalog>
 					<!--ADC5050-->
 					<Catalog>
-						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/5/5050/catalog.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
+						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 fov="chart" url="lib/cat/5050/catalog.dat.gz" restrict="mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz" restrict="Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
 							<Select value="mag0,mag1,mag2">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Text purpose="bodylettering0" value="{Name}"/>
+										<Script purpose="bodylettering0" value="{Name}"/>
 									</AnnotationStraight>
 								</Annotation>
 								<Annotation>
 									<AnnotationStraight anchor="topleft" reverse="false" radiant="false">
-										<Text purpose="bodylettering0" value="{HR}"/>
+										<Script purpose="bodylettering0" value="{HR}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
+							<Script purpose="{Vmag&#x0026;-1?4.64:Vmag&#x0026;0?3.74:Vmag&#x0026;1?3.02:Vmag&#x0026;2?2.43:Vmag&#x0026;3?1.96:Vmag&#x0026;4?1.58:Vmag&#x0026;5?1.27:Vmag&#x0026;6?1.03:Vmag&#x0026;7?0.83:Vmag&#x0026;8?0.67:Vmag&#x0026;9?0.54:Vmag&#x0026;10?0.43:Vmag&#x0026;11?0.35:Vmag&#x0026;12?0.28:Vmag&#x0026;13?0.22:Vmag&#x0026;14?0.18:0.14:}" value="&#xf811;"/>
 						</CatalogADC5050>
 					</Catalog>
 				</HorizonEquatorial>

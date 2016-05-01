@@ -115,26 +115,31 @@ public class CatalogADC6049 extends CatalogType implements Catalog {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		astrolabe.model.BodyAreal bodyModel ;
+		astrolabe.model.Body body ;
 		BodyAreal bodyAreal ;
 		astrolabe.model.Select[] select ;
 
 		for ( CatalogRecord record : catalogT.values() ) {
 			record.register() ;
 
+			body = new astrolabe.model.Body() ;
+			body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
+			body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
+			AstrolabeFactory.modelOf( body.getBodyAreal(), false ) ;
+
 			try {
-				bodyModel = record.toModel().getBodyAreal() ;
+				record.toModel( body ) ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyModel.setAnnotation( getAnnotation() ) ;
+			body.getBodyAreal().setAnnotation( getAnnotation() ) ;
 
 			select = getSelect( record.ident() ) ;
 			if ( select != null )
-				bodyModel.setAnnotation( select[select.length-1].getAnnotation() ) ;
+				body.getBodyAreal().setAnnotation( select[select.length-1].getAnnotation() ) ;
 
-			bodyAreal = new BodyAreal( bodyModel, projector ) ;
+			bodyAreal = new BodyAreal( body.getBodyAreal(), projector ) ;
 
 			ps.operator.gsave() ;
 

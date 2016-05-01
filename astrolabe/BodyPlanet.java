@@ -39,7 +39,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 		date = new CAADate() ;
 
-		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCHE ) ).doubleValue() ;
+		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		date.Set( epochG, true ) ;
 		y = date.Year() ;
@@ -140,6 +140,14 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				jdOe = jdlist.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodyPlanet() ;
+				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+
+				peer.setStretch( getStretch() ) ;
+				peer.setImportance( getImportance() ) ;
+				peer.setType( getType() ) ;
+
+				peer.setAnnotation( getAnnotation() ) ;
+
 				peer.setEpoch( new astrolabe.model.Epoch() ) ;
 				peer.getEpoch().setA( new astrolabe.model.A() ) ;
 				peer.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
@@ -148,16 +156,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				peer.getEpoch().getA().getJD().setValue( jdAe ) ;
 				peer.getEpoch().getJD().setValue( jdOe ) ;
 
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-				}
-
-				peer.setStretch( getStretch() ) ;
-				peer.setImportance( getImportance() ) ;
-				peer.setType( getType() ) ;
-
 				peer.setDialDay( getDialDay() ) ;
-				peer.setAnnotation( getAnnotation() ) ;
 
 				try {
 					peer.validate() ;

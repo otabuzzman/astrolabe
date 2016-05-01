@@ -10,8 +10,6 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 
-	private final static String DEFAULT_IMPORTANCE = ApplicationConstant.AV_BODY_GRAPHICAL ;
-
 	private final static Log log = LogFactory.getLog( Sign.class ) ;
 
 	private Projector projector ;
@@ -29,31 +27,34 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		astrolabe.model.BodyAreal peer ;
+		astrolabe.model.Body body ;
 		BodyAreal companion ;
 		CatalogRecord record ;
-		String importance ;
 
 		try {
-			for ( String body : getValue().split( "," ) ) {
+			for ( String segment : getValue().split( "," ) ) {
 				peer = new astrolabe.model.BodyAreal() ;
+				peer.setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
+				AstrolabeFactory.modelOf( peer, false ) ;
 
-				for ( String ident : body.split( ":" ) ) {
-					importance = Configuration.getValue(
-							Configuration.getClassNode( this, ident, null ),
-							ApplicationConstant.PK_SIGN_IMPORTANCE, DEFAULT_IMPORTANCE ) ;
-					peer.setName( ident ) ;
-					peer.setImportance( importance ) ;
-
+				for ( String ident : segment.split( ":" ) ) {
 					if ( ( record = catalog.getCatalogRecord( ident ) ) == null ) {
 						String msg ;
 
 						msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-						msg = MessageFormat.format( msg, new Object[] { "\""+ident+"\"", "\""+body+"\"" } ) ;
+						msg = MessageFormat.format( msg, new Object[] { "\""+ident+"\"", "\""+segment+"\"" } ) ;
 
 						throw new ParameterNotValidException( msg ) ;
 					}
 					try {
-						peer.addPosition( record.toModel().getBodyStellar().getPosition() ) ;
+						body = new astrolabe.model.Body() ;
+						body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
+						body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
+						AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
+
+						record.toModel( body ) ;
+
+						peer.addPosition( body.getBodyStellar().getPosition() ) ;
 					} catch ( ValidationException e ) {
 						throw new RuntimeException( e.toString() ) ;
 					}
@@ -66,9 +67,7 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 				}
 
 				companion = new BodyAreal( peer, projector ) ;
-
-				if ( getAnnotationCount()>0 )
-					companion.setAnnotation( getAnnotation() ) ;
+				companion.setAnnotation( 0, getAnnotation() ) ;
 
 				ps.operator.gsave() ;
 

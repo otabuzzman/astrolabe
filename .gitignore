@@ -15,10 +15,12 @@ lib/cat/1239/cdrom/tables/*
 !lib/cat/1239/cdrom/tables/selectADC5050Template.xml
 lib/cat/5050/*
 !lib/cat/5050/prep.sh
-lib/cat/5109/
+lib/cat/5109/*
+!lib/cat/5109/prep.sh
 lib/cat/6049/
 lib/cat/7118/
-lib/cat/7237/
+lib/cat/7237/*
+!lib/cat/7237/prep.sh
 lib/vsop87/
 lib/Blocks-4.1.0.txt
 .classpath

@@ -114,6 +114,9 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			for ( int is=0 ; is<segmentList.size() ; is++ ) {
 				segment = segmentList.get( is ) ;
 				peer = new astrolabe.model.BodyAreal() ;
+				peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+
+				peer.setImportance( getImportance() ) ;
 
 				for ( double[] coordinate : segment ) {
 					lo = projector.unproject( coordinate ) ;
@@ -133,12 +136,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 					peer.addPosition( position ) ;
 				}
-
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-				}
-
-				peer.setImportance( getImportance() ) ;
 
 				if ( is == ia ) {
 					peer.setAnnotation( getAnnotation() ) ;

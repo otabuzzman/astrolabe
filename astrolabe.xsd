@@ -137,9 +137,11 @@
 			<xs:element ref="Origin"/>
 			<xs:element ref="Extent"/>
 			<xs:choice>
-				<xs:element name="SpanDe" type="AngleType"/>
-				<xs:element name="SpanRA" type="AngleType"/>
+				<xs:element ref="SpanParallel"/>
+				<xs:element ref="SpanMeridian"/>
 			</xs:choice>
+			<xs:element ref="AnnotationParallel" minOccurs="0"/>
+			<xs:element ref="AnnotationMeridian" minOccurs="0"/>
 			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" use="optional">
@@ -161,14 +163,6 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="checker" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="(([1-9]|([1-9][0-9]+))x([2-9]|([1-9][0-9]+)))"/>
-					<xs:pattern value="(([2-9]|([1-9][0-9]+))x([1-9]|([1-9][0-9]+)))"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 		<xs:attribute name="marshal" type="xs:anyURI" use="optional"/>
 	</xs:complexType>
 	<xs:element name="Atlas">
@@ -181,6 +175,22 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="SpanMeridian" type="AngleType"/>
+	<xs:element name="SpanParallel" type="AngleType"/>
+	<xs:complexType name="InsertionAnnotationType">
+		<xs:sequence>
+			<xs:element ref="AnnotationStraight"/>
+		</xs:sequence>
+		<xs:attribute name="checker" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:positiveInteger">
+					<xs:minInclusive value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="AnnotationParallel" type="InsertionAnnotationType"/>
+	<xs:element name="AnnotationMeridian" type="InsertionAnnotationType"/>
 	<xs:element name="AtlasStereographic">
 		<xs:complexType>
 			<xs:complexContent>
@@ -320,7 +330,6 @@
 	<xs:element name="HorizonGalactic" type="HorizonType"/>
 	<xs:complexType name="CircleType">
 		<xs:sequence>
-			<xs:element ref="Angle"/>
 			<xs:element ref="Begin"/>
 			<xs:element ref="End"/>
 			<xs:element ref="Dial" minOccurs="0"/>
@@ -388,8 +397,28 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Immediate" type="AngleType"/>
-	<xs:element name="CircleParallel" type="CircleType"/>
-	<xs:element name="CircleMeridian" type="CircleType"/>
+	<xs:element name="CircleParallel">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CircleType">
+					<xs:sequence>
+						<xs:element ref="Angle"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CircleMeridian">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CircleType">
+					<xs:sequence>
+						<xs:element ref="Angle"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="CircleSouthernPolar">
 		<xs:complexType>
 			<xs:complexContent>
@@ -503,7 +532,7 @@
 	</xs:element>
 	<xs:complexType name="AnnotationType">
 		<xs:sequence>
-			<xs:element ref="Text" maxOccurs="unbounded"/>
+			<xs:element ref="Script" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="anchor" use="required">
@@ -518,7 +547,7 @@
 					<xs:pattern value="bottomleft"/>
 					<xs:pattern value="bottommiddle"/>
 					<xs:pattern value="bottomright"/>
-					<xs:pattern value="(\{.+\})"/>
+					<xs:pattern value="\{.+\}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -527,7 +556,7 @@
 				<xs:restriction base="xs:string">
 					<xs:pattern value="true"/>
 					<xs:pattern value="false"/>
-					<xs:pattern value="(\{.+\})"/>
+					<xs:pattern value="\{.+\}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -559,7 +588,7 @@
 											<xs:pattern value="bottomleft"/>
 											<xs:pattern value="bottommiddle"/>
 											<xs:pattern value="bottomright"/>
-											<xs:pattern value="(\{.+\})"/>
+											<xs:pattern value="\{.+\}"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
@@ -567,7 +596,7 @@
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
 											<xs:pattern value="([1-9][0-9]*)"/>
-											<xs:pattern value="(\{.+\})"/>
+											<xs:pattern value="\{.+\}"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
@@ -607,7 +636,7 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="Text">
+	<xs:element name="Script">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="TextType">
@@ -624,11 +653,8 @@
 								<xs:pattern value="dialfraction"/>
 								<xs:pattern value="guidance"/>
 								<xs:pattern value="obscure"/>
-								<xs:pattern value="zenit"/>
-								<xs:pattern value="mag-1"/>
-								<xs:pattern value="mag[0-9]"/>
-								<xs:pattern value="mag1[0-5]*"/>
-								<xs:pattern value="(\{.+\})"/>
+								<xs:pattern value="[-+]?([0-9]*\.[0-9]+|[0-9]+)"/>
+								<xs:pattern value="\{.+\}"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -654,7 +680,7 @@
 	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="Text"/>
+			<xs:element ref="Script"/>
 			<xs:element ref="Position"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -814,8 +840,22 @@
 		</xs:attribute>
 		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 	</xs:complexType>
+	<xs:complexType name="CommonType">
+		<xs:sequence>
+			<xs:element ref="Script"/>
+		</xs:sequence>
+		<xs:attribute name="value" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+(,[^,]+)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="Common" type="CommonType"/>
 	<xs:complexType name="SelectType">
 		<xs:sequence>
+			<xs:element ref="Script" minOccurs="0"/>
 			<xs:element ref="Annotation" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="value" use="required">
@@ -833,8 +873,10 @@
 				<xs:element ref="CatalogADC1239H"/>
 				<xs:element ref="CatalogADC1239T"/>
 				<xs:element ref="CatalogADC5050"/>
+				<xs:element ref="CatalogADC5109"/>
 				<xs:element ref="CatalogADC6049"/>
 				<xs:element ref="CatalogADC7118"/>
+				<xs:element ref="CatalogADC7237"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -842,11 +884,14 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
-								<xs:pattern value="[1-9][0-9]{0,6}(,[1-9][0-9]{0,6})*"/>
+								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
+								<xs:pattern value="[1-9][0-9]{0,5}(,[1-9][0-9]{0,5})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -858,10 +903,13 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
 								<xs:pattern value="[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4](,[1-9][0-9]{0,3}-[1-9][0-9]{0,4}-[1-4])*"/>
 							</xs:restriction>
 						</xs:simpleType>
@@ -874,11 +922,33 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
+								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
 								<xs:pattern value="[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC5109">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+					<xs:attribute name="restrict" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="Vmag-?[0-9]+(,Vmag-?[0-9]+)*"/>
+								<xs:pattern value="[1-9][0-9]{0,7}(,[1-9][0-9]{0,7})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -905,11 +975,32 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
 					<xs:attribute name="restrict" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
 								<xs:pattern value="mag-?[0-9]+(,mag-?[0-9]+)*"/>
 								<xs:pattern value="I?[1-9][0-9]{0,3}(,I?[1-9][0-9]{0,3})*"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC7237">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+					<xs:attribute name="restrict" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[1-9][0-9]{0,6}(,[1-9][0-9]{0,6})*"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -926,8 +1017,9 @@
 	<xs:element name="Artefact" type="ArtefactType"/>
 	<xs:complexType name="SignType">
 		<xs:sequence>
-			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Annotation" minOccurs="0"/>
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="value" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">

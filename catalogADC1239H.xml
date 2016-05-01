@@ -23,9 +23,6 @@ astrolabe.xsd">
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
-							<Angle>
-								<Rational value="-24.5"/>
-							</Angle>
 							<Begin>
 								<Immediate>
 									<Rational value="0"/>
@@ -36,6 +33,9 @@ astrolabe.xsd">
 									<Rational value="360"/>
 								</Immediate>
 							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
 						</CircleParallel>
 					</Circle>
 				</HorizonEquatorial>
@@ -43,945 +43,197 @@ astrolabe.xsd">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-25"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialHour baseline="rail" reflect="false">
-									<GraduationSpan span=".5" division="3">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialfraction" value="30">
-												<Superscript value="m"/>
-											</Text>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf span="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Text purpose="dialcardinal" value="{wertstd}">
-												<Superscript value="h"/>
-											</Text>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<Annotation>
-										<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
-											<Text purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
-												<Superscript value="m"/>
-											</Text>
-											<Text purpose="diallettering" value=")"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialHour>
-							</Dial>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="50">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
-									<Text purpose="guidance" value="&#x03b4; {h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="-10"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<!--equator-->
-					<Circle>
-						<CircleParallel importance="cardinal">
-							<Angle>
-								<Rational value="0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Annotation>
-								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26">
-									<Text purpose="circlelettering" value="&#x00c4;quator"/>
-								</AnnotationCurved>
-							</Annotation>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="10"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="20"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="30"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="40"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="50"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="60"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="70"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Angle>
-								<Rational value="80"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleParallel>
-					</Circle>
-					<!--southern tropic-->
-					<Circle>
-						<CircleSouthernTropic importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Annotation>
-								<AnnotationCurved anchor="topmiddle" reverse="false" distance="26.5">
-									<Text purpose="circlelettering" value="S&#x00fc;dlicher Sonnenwendekreis"/>
-								</AnnotationCurved>
-							</Annotation>
-						</CircleSouthernTropic>
-					</Circle>
-					<!--northern tropic-->
-					<Circle>
-						<CircleNorthernTropic importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-							<Annotation>
-								<AnnotationCurved anchor="topmiddle" reverse="false" distance="27">
-									<Text purpose="circlelettering" value="N&#x00f6;rdlicher Sonnenwendekreis"/>
-								</AnnotationCurved>
-							</Annotation>
-						</CircleNorthernTropic>
-					</Circle>
-					<!--northern polar-->
-					<Circle>
-						<CircleNorthernPolar importance="cardinal">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="0.0"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<Rational value="360"/>
-								</Immediate>
-							</End>
-						</CircleNorthernPolar>
-					</Circle>
-					<!--meridians-->
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="0.0"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="15"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="30"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="45"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="60"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="75"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="90"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="105"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="120"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="135"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="150"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="165"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="180"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="195"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="210"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="225"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="240"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="255"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="270"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="285"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="300"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Text purpose="guidance" value="{wertgrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Text purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="315"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="330"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
-					<Circle>
-						<CircleMeridian importance="canonical">
-							<Angle>
-								<Rational value="345"/>
-							</Angle>
-							<Begin>
-								<Immediate>
-									<Rational value="-25"/>
-								</Immediate>
-							</Begin>
-							<End>
-								<Immediate>
-									<DMS deg="85" min="0" sec="0.0"/>
-								</Immediate>
-							</End>
-						</CircleMeridian>
-					</Circle>
 					<!--ADC1239-->
 					<Catalog>
-						<!--ftp://adc.astro.umd.edu/pub/adc/archives/catalogs/1/1239/hip_main.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/jschuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<!--file:///c:/dokumente%20und%20einstellungen/juergen%20schuck/eigene%20dateien/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
+						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H fov="chart" url="lib/cat/1239/hip_main.dat.gz" restrict="mag-1,mag0,mag1,mag2,mag3,mag4,mag5,mag6">
+						<CatalogADC1239H name="1239H" fov="chart" url="lib/cat/1239/hip_main.dat.gz" restrict="Vmag-1,Vmag0,Vmag1,Vmag2,Vmag3,Vmag4,Vmag5,Vmag6">
 							<Select value="mag-1,mag0,mag1,mag2,mag3,mag4,mag5,mag6">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Text purpose="bodylettering0" value="{HIP}"/>
+										<Script purpose="bodylettering0" value="{HIP}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</Select>
-							<!--Aql-->
-							<Sign value="98036:97649:97278,97649:95501:97804,99473:97804,95501:93747:93244,95501:93805"/>
-							<!--And-->
-							<Sign value="677:3092:5447,9640:5447:4436:3881"/>
-							<!--Scl-->
-							<Sign value="116231:4577:115102:116231"/>
-							<!--Ara-->
-							<Sign value="88714:85792:83081:82363:85727:85267:85258:88714"/>
-							<!--Lib-->
-							<Sign value="77853:76333:74785:72622:73714:76333"/>
-							<!--Cet-->
-							<Sign value="10324:11484,8102:3419:1562,3419:5364:6537:8645:11345:12390:12770:11783:8102,10826:12390,10826:12387:12706:14143:13954:12828:11484:12093:12706"/>
-							<!--Ari-->
-							<Sign value="13209:9884:8903:8832"/>
-							<!--Sct-->
-							<Sign value="92175:92202:92814:90595:91117:92175"/>
-							<!--Pyx-->
-							<Sign value="42515:42828:43409"/>
-							<!--Boo-->
-							<Sign value="71795:69673:72105:74666:73555:71075:71053:69673:67927:67459"/>
-							<!--Cae-->
-							<Sign value="21060:21770:21861"/>
-							<!--Cha-->
-							<Sign value="40702:51839:60000"/>
-							<!--Cnc-->
-							<Sign value="43103:42806:40843,42806:42911:40526,42911:44066"/>
-							<!--Cap-->
-							<Sign value="100064:100345:104139:105515:106985:107556,105515:105881:104139,100345:102485,104139:102978"/>
-							<!--Car-->
-							<Sign value="45238:50099:52419:52468:54463:53253:51232:50371:45556,42568:41037:30438,45080:45556,45080:42568,30438:31685,41037:39429"/>
-							<!--Cas-->
-							<Sign value="8886:6686:4427:3179:746"/>
-							<!--Cen-->
-							<Sign value="71683:68702:66657:68002:68282:67472:67464:65936:65109,67464:68933,67472:71352:73334,68002:61932:60823:59196:56480:56561"/>
-							<!--Cep-->
-							<Sign value="109492:112724:106032:105199:109492,112724:116727:106032"/>
-							<!--Com-->
-							<Sign value="64241:64394:60742"/>
-							<!--Cvn-->
-							<Sign value="61317:63125"/>
-							<!--Aur-->
-							<Sign value="28380:28360:24608:23453:23015,25428:23015,25428:28380"/>
-							<!--Col-->
-							<Sign value="30277:29807:28199:27628:28328,27628:26634:25859"/>
-							<!--Cir-->
-							<Sign value="71908:75323,71908:74824"/>
-							<!--Crt-->
-							<Sign value="53740:54682:55705:55282:53740,55282:55687:56633:58188:57283:55705"/>
-							<!--CrA-->
-							<Sign value="91875:92989:93174:93825:94114:94160:94005:93542:92953,91875:90887"/>
-							<!--CrB-->
-							<Sign value="76127:75695:76267:76952:77512:78159:78493"/>
-							<!--Crv-->
-							<Sign value="61174:60965:59803:59316:59199,59316:61359:60965"/>
-							<!--Cru-->
-							<Sign value="61084:60718,62434:59747"/>
-							<!--Cyg-->
-							<Sign value="94779:95853:97165:100453:102098,100453:102488:104732:107310,100453:98110:95947"/>
-							<!--Del-->
-							<Sign value="101421:101769:101958:102532:102281:101769"/>
-							<!--Dor-->
-							<Sign value="27100:27890:26069:27100,26069:21281:19893"/>
-							<!--Dra-->
-							<Sign value="87585:87833:85670:85829:87585:94376:97433:89937:83895:80331:78527:75458:68756:61281:56211"/>
-							<!--Nor-->
-							<Sign value="79509:80000:80582:78639:80000,78639:79509"/>
-							<!--Eri-->
-							<Sign value="7588:9007:10602:11407:12413:12486:13847:15510:17797:17874:20042:20535:21393:17651:16611:15474:14146:12843:13701:15197:16537:17378:21444:22109:22701:23875:23972:21594"/>
-							<!--Sge-->
-							<Sign value="96837:97365:96757,97365:98337:98920"/>
-							<!--For-->
-							<Sign value="13147:14879"/>
-							<!--Gem-->
-							<Sign value="31681:34088:35550:35350:32362,35550:36962:37740,36962:37826,36962:36046:34693:36850,34693:33018,34693:32246:30883,32246:30343:29655:28734"/>
-							<!--Cam-->
-							<Sign value="16228:18505:22783,16228:17959:22783,17959:25110"/>
-							<!--CMa-->
-							<Sign value="33160:34045:33347:32349:33977:34444:35037:35904,33579:33856:34444,33856:33165:31592:31416,31592:30324,31592:32349,33579:32759,30122:33579,33347:33160"/>
-							<!--UMa-->
-							<Sign value="67301:65378:62956:59774:54061:53910:58001:59774,58001:57399:54539:50372,54539:50801,53910:48402:46853:44471,46853:44127,48402:48319:41704:46733:54061"/>
-							<!--Gru-->
-							<Sign value="114131:110997:109268:112122:114421:114131,112122:113638,112122:112623,109268:109111:108085"/>
-							<!--Her-->
-							<Sign value="86414:87808:85112:84606:84380:81833:81126:79992:77760,81833:81693:80816:80170,81693:83207:85693:84379,86974:87933:88794,87933:86974,83207:84380"/>
-							<!--Hor-->
-							<Sign value="19747:12484:14240"/>
-							<!--Hya-->
-							<Sign value="42799:42402:42313:43109:43234:42799,43234:43813:45336:46776:46509:46390:48356:49841:51069:52943:56343:57936:64166:64962"/>
-							<!--Hyi-->
-							<Sign value="2021:17678:12394:11001:9236"/>
-							<!--Ind-->
-							<Sign value="105319:101772:103227:105319"/>
-							<!--Lac-->
-							<Sign value="109937:111104:111022:110609:110538:111169:111022"/>
-							<!--Mon-->
-							<Sign value="29651:30867:34769:30419:29151,34769:39863:37447"/>
-							<!--Lep-->
-							<Sign value="28910:28103:27288:25985:24305,25985:27654:27072:25606:23685,25985:25606,24305:24845,24305:24327,23685:24305,24327:24244,24845:24873"/>
-							<!--Leo-->
-							<Sign value="57632:54879:49669:49583:50583:54872:57632,50583:50335:48455:47908,54872:54879"/>
-							<!--Lup-->
-							<Sign value="77634:78970:78384:77634,78384:76297:75141:75177,75141:73273,76297:76552:74395:71860,74395:71536,71860:70576,71860:73273"/>
-							<!--Lyn-->
-							<Sign value="45860:45688:44700:44248:41075:36145:33449:30060"/>
-							<!--Lyr-->
-							<Sign value="91262:91971:92420:93194:92791:91971"/>
-							<!--Ant-->
-							<Sign value="51172:48926"/>
-							<!--Mic-->
-							<Sign value="105140:103738:102831"/>
-							<!--Mus-->
-							<Sign value="62322:57363:61199:61585:62322"/>
-							<!--Oct-->
-							<Sign value="107089:112405:70638:107089"/>
-							<!--Aps-->
-							<Sign value="72370:81065:81852"/>
-							<!--Oph-->
-							<Sign value="86032:86742,84012:86742,86032:83000:79882:81377:84012:85755"/>
-							<!--Ori-->
-							<Sign value="26727:26311:25930,28691:29426:29038:27913,29426:28614:27989:26727:27366:24436:25930:25336:26207:27989,25336:22449:22549:22730:23123,22449:22509:22845,29038:28614"/>
-							<!--Pav-->
-							<Sign value="100751:105858:102395:99240:100751,99240:98495:91792:93015:99240,93015:92609:90098:88866:92609,88866:86929"/>
-							<!--Peg-->
-							<Sign value="1067:113963,113881:112158:109352,113881:112748:112440:109176:107354,113963:112447:112029:109427:107315,677:113881,677:1067"/>
-							<!--Pic-->
-							<Sign value="32607:27530:27321"/>
-							<!--Per-->
-							<Sign value="17448:18246:18614:18532:17358:15863:14328:13268,15863:14576:14354:13254"/>
-							<!--Equ-->
-							<Sign value="104521:104858:105570:104987:104521"/>
-							<!--CMi-->
-							<Sign value="37279:36188"/>
-							<!--LMi-->
-							<Sign value="53229:51233:49593:46952,49593:53229"/>
-							<!--Vul-->
-							<Sign value="95771:98543"/>
-							<!--UMi-->
-							<Sign value="11767:85822:82080:77055:79822:75097:72607:77055"/>
-							<!--Phe-->
-							<Sign value="5348:5165:2072:5348,5165:7083:8837:5165:6867:2072:2081:765:2072"/>
-							<!--Psc-->
-							<Sign value="4889:5742,4889:6193:5742:7097:8198:9487:8833:7884:7007:4906:3760:1645:118268:116771:116928:115738:114971:115830:116771"/>
-							<!--PsA-->
-							<Sign value="113368:111954:108661:107608:109422:111188:113246"/>
-							<!--Vol-->
-							<Sign value="37504:34481:39794:37504,39794:35228,39794:41312:44382:39794"/>
-							<!--Pup-->
-							<Sign value="39757:38146:35264:31685:32768:36377:39429:39757"/>
-							<!--Ret-->
-							<Sign value="19780:19921:18597:17440:19780"/>
-							<!--Sgr-->
-							<Sign value="89931:90496,89642:90185:88635:87072,88635:89931:90185:93506:92041:89931,92041:90496:89341,93506:93864:92855:92041,92855:93085:93683:94820:95168,93864:96406:98688:98412:98032:95347,98032:95294"/>
-							<!--Sco-->
-							<Sign value="85927:86670:87073:86228:84143:82671:82514:82396:81266:80763:78401,80763:78265,80763:78820"/>
-							<!--Ser-->
-							<Sign value="77516:77622:77070:76276:77233:78072:77450:77233,92946:89962:86565:86263:84880"/>
-							<!--Sex-->
-							<Sign value="51437:49641"/>
-							<!--Men-->
-							<Sign value="25918:21949"/>
-							<!--Tau-->
-							<Sign value="25428:21881:20889,21421:26451,20205:20455,20205:18724:15900,21421:20889,21421:20894:20205,20889:20648:20455:17847"/>
-							<!--Tel-->
-							<Sign value="90568:90422"/>
-							<!--Tuc-->
-							<Sign value="110130:114996:1599,114996:2484"/>
-							<!--Tri-->
-							<Sign value="10559:10064:8796:10559"/>
-							<!--Tra-->
-							<Sign value="82273:74946:77952:82273"/>
-							<!--Aqr-->
-							<Sign value="106278:109074:110395:110960:111497:112961:114855:115438,109074:110003:109139,110003:111123:112716:113136:114341,102618:106278"/>
-							<!--Vir-->
-							<Sign value="57380:60030:61941:65474:69427:69701:71957,65474:66249:68520:72220,66249:63090:63608,63090:61941"/>
-							<!--Vel-->
-							<Sign value="39953:42536:42913:45941:48774:52727:51986:50191:46651:44816:39953"/>
+							<Artefact>
+								<!--Aql-->
+								<Sign value="98036:97649:97278,97649:95501:97804,99473:97804,95501:93747:93244,95501:93805"/>
+								<!--And-->
+								<Sign value="677:3092:5447,9640:5447:4436:3881"/>
+								<!--Scl-->
+								<Sign value="116231:4577:115102:116231"/>
+								<!--Ara-->
+								<Sign value="88714:85792:83081:82363:85727:85267:85258:88714"/>
+								<!--Lib-->
+								<Sign value="77853:76333:74785:72622:73714:76333"/>
+								<!--Cet-->
+								<Sign value="10324:11484,8102:3419:1562,3419:5364:6537:8645:11345:12390:12770:11783:8102,10826:12390,10826:12387:12706:14143:13954:12828:11484:12093:12706"/>
+								<!--Ari-->
+								<Sign value="13209:9884:8903:8832"/>
+								<!--Sct-->
+								<Sign value="92175:92202:92814:90595:91117:92175"/>
+								<!--Pyx-->
+								<Sign value="42515:42828:43409"/>
+								<!--Boo-->
+								<Sign value="71795:69673:72105:74666:73555:71075:71053:69673:67927:67459"/>
+								<!--Cae-->
+								<Sign value="21060:21770:21861"/>
+								<!--Cha-->
+								<Sign value="40702:51839:60000"/>
+								<!--Cnc-->
+								<Sign value="43103:42806:40843,42806:42911:40526,42911:44066"/>
+								<!--Cap-->
+								<Sign value="100064:100345:104139:105515:106985:107556,105515:105881:104139,100345:102485,104139:102978"/>
+								<!--Car-->
+								<Sign value="45238:50099:52419:52468:54463:53253:51232:50371:45556,42568:41037:30438,45080:45556,45080:42568,30438:31685,41037:39429"/>
+								<!--Cas-->
+								<Sign value="8886:6686:4427:3179:746"/>
+								<!--Cen-->
+								<Sign value="71683:68702:66657:68002:68282:67472:67464:65936:65109,67464:68933,67472:71352:73334,68002:61932:60823:59196:56480:56561"/>
+								<!--Cep-->
+								<Sign value="109492:112724:106032:105199:109492,112724:116727:106032"/>
+								<!--Com-->
+								<Sign value="64241:64394:60742"/>
+								<!--Cvn-->
+								<Sign value="61317:63125"/>
+								<!--Aur-->
+								<Sign value="28380:28360:24608:23453:23015,25428:23015,25428:28380"/>
+								<!--Col-->
+								<Sign value="30277:29807:28199:27628:28328,27628:26634:25859"/>
+								<!--Cir-->
+								<Sign value="71908:75323,71908:74824"/>
+								<!--Crt-->
+								<Sign value="53740:54682:55705:55282:53740,55282:55687:56633:58188:57283:55705"/>
+								<!--CrA-->
+								<Sign value="91875:92989:93174:93825:94114:94160:94005:93542:92953,91875:90887"/>
+								<!--CrB-->
+								<Sign value="76127:75695:76267:76952:77512:78159:78493"/>
+								<!--Crv-->
+								<Sign value="61174:60965:59803:59316:59199,59316:61359:60965"/>
+								<!--Cru-->
+								<Sign value="61084:60718,62434:59747"/>
+								<!--Cyg-->
+								<Sign value="94779:95853:97165:100453:102098,100453:102488:104732:107310,100453:98110:95947"/>
+								<!--Del-->
+								<Sign value="101421:101769:101958:102532:102281:101769"/>
+								<!--Dor-->
+								<Sign value="27100:27890:26069:27100,26069:21281:19893"/>
+								<!--Dra-->
+								<Sign value="87585:87833:85670:85829:87585:94376:97433:89937:83895:80331:78527:75458:68756:61281:56211"/>
+								<!--Nor-->
+								<Sign value="79509:80000:80582:78639:80000,78639:79509"/>
+								<!--Eri-->
+								<Sign value="7588:9007:10602:11407:12413:12486:13847:15510:17797:17874:20042:20535:21393:17651:16611:15474:14146:12843:13701:15197:16537:17378:21444:22109:22701:23875:23972:21594"/>
+								<!--Sge-->
+								<Sign value="96837:97365:96757,97365:98337:98920"/>
+								<!--For-->
+								<Sign value="13147:14879"/>
+								<!--Gem-->
+								<Sign value="31681:34088:35550:35350:32362,35550:36962:37740,36962:37826,36962:36046:34693:36850,34693:33018,34693:32246:30883,32246:30343:29655:28734"/>
+								<!--Cam-->
+								<Sign value="16228:18505:22783,16228:17959:22783,17959:25110"/>
+								<!--CMa-->
+								<Sign value="33160:34045:33347:32349:33977:34444:35037:35904,33579:33856:34444,33856:33165:31592:31416,31592:30324,31592:32349,33579:32759,30122:33579,33347:33160"/>
+								<!--UMa-->
+								<Sign value="67301:65378:62956:59774:54061:53910:58001:59774,58001:57399:54539:50372,54539:50801,53910:48402:46853:44471,46853:44127,48402:48319:41704:46733:54061"/>
+								<!--Gru-->
+								<Sign value="114131:110997:109268:112122:114421:114131,112122:113638,112122:112623,109268:109111:108085"/>
+								<!--Her-->
+								<Sign value="86414:87808:85112:84606:84380:81833:81126:79992:77760,81833:81693:80816:80170,81693:83207:85693:84379,86974:87933:88794,87933:86974,83207:84380"/>
+								<!--Hor-->
+								<Sign value="19747:12484:14240"/>
+								<!--Hya-->
+								<Sign value="42799:42402:42313:43109:43234:42799,43234:43813:45336:46776:46509:46390:48356:49841:51069:52943:56343:57936:64166:64962"/>
+								<!--Hyi-->
+								<Sign value="2021:17678:12394:11001:9236"/>
+								<!--Ind-->
+								<Sign value="105319:101772:103227:105319"/>
+								<!--Lac-->
+								<Sign value="109937:111104:111022:110609:110538:111169:111022"/>
+								<!--Mon-->
+								<Sign value="29651:30867:34769:30419:29151,34769:39863:37447"/>
+								<!--Lep-->
+								<Sign value="28910:28103:27288:25985:24305,25985:27654:27072:25606:23685,25985:25606,24305:24845,24305:24327,23685:24305,24327:24244,24845:24873"/>
+								<!--Leo-->
+								<Sign value="57632:54879:49669:49583:50583:54872:57632,50583:50335:48455:47908,54872:54879"/>
+								<!--Lup-->
+								<Sign value="77634:78970:78384:77634,78384:76297:75141:75177,75141:73273,76297:76552:74395:71860,74395:71536,71860:70576,71860:73273"/>
+								<!--Lyn-->
+								<Sign value="45860:45688:44700:44248:41075:36145:33449:30060"/>
+								<!--Lyr-->
+								<Sign value="91262:91971:92420:93194:92791:91971"/>
+								<!--Ant-->
+								<Sign value="51172:48926"/>
+								<!--Mic-->
+								<Sign value="105140:103738:102831"/>
+								<!--Mus-->
+								<Sign value="62322:57363:61199:61585:62322"/>
+								<!--Oct-->
+								<Sign value="107089:112405:70638:107089"/>
+								<!--Aps-->
+								<Sign value="72370:81065:81852"/>
+								<!--Oph-->
+								<Sign value="86032:86742,84012:86742,86032:83000:79882:81377:84012:85755"/>
+								<!--Ori-->
+								<Sign value="26727:26311:25930,28691:29426:29038:27913,29426:28614:27989:26727:27366:24436:25930:25336:26207:27989,25336:22449:22549:22730:23123,22449:22509:22845,29038:28614"/>
+								<!--Pav-->
+								<Sign value="100751:105858:102395:99240:100751,99240:98495:91792:93015:99240,93015:92609:90098:88866:92609,88866:86929"/>
+								<!--Peg-->
+								<Sign value="1067:113963,113881:112158:109352,113881:112748:112440:109176:107354,113963:112447:112029:109427:107315,677:113881,677:1067"/>
+								<!--Pic-->
+								<Sign value="32607:27530:27321"/>
+								<!--Per-->
+								<Sign value="17448:18246:18614:18532:17358:15863:14328:13268,15863:14576:14354:13254"/>
+								<!--Equ-->
+								<Sign value="104521:104858:105570:104987:104521"/>
+								<!--CMi-->
+								<Sign value="37279:36188"/>
+								<!--LMi-->
+								<Sign value="53229:51233:49593:46952,49593:53229"/>
+								<!--Vul-->
+								<Sign value="95771:98543"/>
+								<!--UMi-->
+								<Sign value="11767:85822:82080:77055:79822:75097:72607:77055"/>
+								<!--Phe-->
+								<Sign value="5348:5165:2072:5348,5165:7083:8837:5165:6867:2072:2081:765:2072"/>
+								<!--Psc-->
+								<Sign value="4889:5742,4889:6193:5742:7097:8198:9487:8833:7884:7007:4906:3760:1645:118268:116771:116928:115738:114971:115830:116771"/>
+								<!--PsA-->
+								<Sign value="113368:111954:108661:107608:109422:111188:113246"/>
+								<!--Vol-->
+								<Sign value="37504:34481:39794:37504,39794:35228,39794:41312:44382:39794"/>
+								<!--Pup-->
+								<Sign value="39757:38146:35264:31685:32768:36377:39429:39757"/>
+								<!--Ret-->
+								<Sign value="19780:19921:18597:17440:19780"/>
+								<!--Sgr-->
+								<Sign value="89931:90496,89642:90185:88635:87072,88635:89931:90185:93506:92041:89931,92041:90496:89341,93506:93864:92855:92041,92855:93085:93683:94820:95168,93864:96406:98688:98412:98032:95347,98032:95294"/>
+								<!--Sco-->
+								<Sign value="85927:86670:87073:86228:84143:82671:82514:82396:81266:80763:78401,80763:78265,80763:78820"/>
+								<!--Ser-->
+								<Sign value="77516:77622:77070:76276:77233:78072:77450:77233,92946:89962:86565:86263:84880"/>
+								<!--Sex-->
+								<Sign value="51437:49641"/>
+								<!--Men-->
+								<Sign value="25918:21949"/>
+								<!--Tau-->
+								<Sign value="25428:21881:20889,21421:26451,20205:20455,20205:18724:15900,21421:20889,21421:20894:20205,20889:20648:20455:17847"/>
+								<!--Tel-->
+								<Sign value="90568:90422"/>
+								<!--Tuc-->
+								<Sign value="110130:114996:1599,114996:2484"/>
+								<!--Tri-->
+								<Sign value="10559:10064:8796:10559"/>
+								<!--Tra-->
+								<Sign value="82273:74946:77952:82273"/>
+								<!--Aqr-->
+								<Sign value="106278:109074:110395:110960:111497:112961:114855:115438,109074:110003:109139,110003:111123:112716:113136:114341,102618:106278"/>
+								<!--Vir-->
+								<Sign value="57380:60030:61941:65474:69427:69701:71957,65474:66249:68520:72220,66249:63090:63608,63090:61941"/>
+								<!--Vel-->
+								<Sign value="39953:42536:42913:45941:48774:52727:51986:50191:46651:44816:39953"/>
+							</Artefact>
+							<Script purpose="{Vmag&#x0026;-1?4.64:Vmag&#x0026;0?3.74:Vmag&#x0026;1?3.02:Vmag&#x0026;2?2.43:Vmag&#x0026;3?1.96:Vmag&#x0026;4?1.58:Vmag&#x0026;5?1.27:Vmag&#x0026;6?1.03:Vmag&#x0026;7?0.83:Vmag&#x0026;8?0.67:Vmag&#x0026;9?0.54:Vmag&#x0026;10?0.43:Vmag&#x0026;11?0.35:Vmag&#x0026;12?0.28:Vmag&#x0026;13?0.22:Vmag&#x0026;14?0.18:0.14:}" value="&#xf811;"/>
 						</CatalogADC1239H>
 					</Catalog>
 				</HorizonEquatorial>

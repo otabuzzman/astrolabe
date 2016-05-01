@@ -46,11 +46,11 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		int nt, ne ;
+		int ns, ne ;
 		double size ;
-		Text text ;
+		Script script ;
 
-		size = new Text( getText( 0 ) ).size() ;
+		size = new Script( getScript( 0 ) ).size() ;
 
 		if ( ! ( size>0 ) )
 			return ;
@@ -58,18 +58,18 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
-		for ( nt=0, ne=0 ; nt<getTextCount() ; nt++ ) {
+		for ( ns=0, ne=0 ; ns<getScriptCount() ; ns++ ) {
 			try {
-				text = new Text( getText( nt ) ) ;
+				script = new Script( getScript( ns ) ) ;
 
-				AnnotationStraight.emitPS( ps, text, text.size(), 0,
+				AnnotationStraight.emitPS( ps, script, script.size(), 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 			} catch ( ParameterNotValidException e ) {
 				ne++ ;
 			}
 		}
 		ps.array( false ) ;
-		if ( ne==nt ) {
+		if ( ne==ns ) {
 			ps.operator.pop() ; // array
 			ps.operator.grestore() ;
 

@@ -32,6 +32,8 @@ public class AtlasEquidistant extends AtlasAzimuthalType implements Atlas {
 			model[ap] = new astrolabe.model.Chart() ;
 
 			chart = new astrolabe.model.ChartEquidistant() ;
+			chart.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+
 			chartAzimuthalType.setupCompanion( chart ) ;
 
 			model[ap].setChartEquidistant( chart ) ;

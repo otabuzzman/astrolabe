@@ -32,6 +32,8 @@ public class AtlasOrthographic extends AtlasAzimuthalType implements Atlas {
 			model[ap] = new astrolabe.model.Chart() ;
 
 			chart = new astrolabe.model.ChartOrthographic() ;
+			chart.setName( ApplicationConstant.GC_NS_ATL+getName() ) ;
+
 			chartAzimuthalType.setupCompanion( chart ) ;
 
 			model[ap].setChartOrthographic( chart ) ;

@@ -32,4 +32,7 @@
 	<complexTypeBinding name="/AtlasPageType/@fcp">
 		<member java-type="int"/>
 	</complexTypeBinding>
+	<complexTypeBinding name="/InsertionAnnotationType/@checker">
+		<member java-type="int"/>
+	</complexTypeBinding>
 </binding>

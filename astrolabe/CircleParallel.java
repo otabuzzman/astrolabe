@@ -234,122 +234,46 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		astrolabe.model.CircleParallel peer ;
 		CircleParallel circle ;
 		double[] lob, loe ;
-		astrolabe.model.Annotation aC = null ;
-		astrolabe.model.AnnotationCurved aCM, aCC ; // model/cut annotation
-		astrolabe.model.AnnotationStraight aSM, aSC ; // model/cut annotation
-		astrolabe.model.Text tC ;
 		List<double[]> l ;
 		double[] xy ;
-		String ns ;
 
 		if ( cut ) {
 			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			cutter = new ListCutter( list(), fov ) ;
 			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
-				peer = new astrolabe.model.CircleParallel() ;
-				// astrolabe.model.AngleType
-				peer.setAngle( new astrolabe.model.Angle() ) ;
-				peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
-
-				peer.setBegin( new astrolabe.model.Begin() ) ;
-				// astrolabe.model.AngleType
-				peer.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
-				peer.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-				peer.setEnd( new astrolabe.model.End() ) ;
-				// astrolabe.model.AngleType
-				peer.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
-				peer.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
-				if ( getName() != null ) {
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-				}
-
 				lob = projector.unproject( s.get( 0 ) ) ;
 				xy = s.get( s.size()-1 ) ;
 				loe = projector.unproject( xy ) ; 
 
-				ns = new JTSCoordinate( xy ).quadrant(
-						new JTSCoordinate( fov.getEnvelope().getCoordinates()[0] ),
-						new JTSCoordinate( fov.getEnvelope().getCoordinates()[2] ) )+":" ;
-
-				peer.getAngle().getRational().setValue( al ) ;
-				peer.getBegin().getImmediate().getRational().setValue( lob[0] ) ;
-				peer.getEnd().getImmediate().getRational().setValue( loe[0] ) ;
-				AstrolabeFactory.modelOf( peer, false ) ;
-
-				peer.setImportance( getImportance() ) ;
-
-				peer.setDial( getDial() ) ;
-
 				try {
-					for ( astrolabe.model.Annotation annotation : getAnnotation() ) {
-						aCM = annotation.getAnnotationCurved() ;
-						if ( aCM != null && aCM.getName() != null ) {
-							aCC = new astrolabe.model.AnnotationCurved() ;
-							aCC.setName( ns+aCM.getName() ) ;
+					peer = new astrolabe.model.CircleParallel() ;
+					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+					AstrolabeFactory.modelOf( peer, false ) ;
 
-							for ( astrolabe.model.Text tM : aCM.getText() ) {
-								tC = new astrolabe.model.Text() ;
-								tC.setName( ns+tM.getName() ) ;
-								tC.setValue( tM.getValue() ) ;
-								AstrolabeFactory.modelOf( tC, false ) ;
+					peer.setImportance( getImportance() ) ;
 
-								tC.setName( tM.getName() ) ;
+					// astrolabe.model.AngleType
+					peer.setAngle( new astrolabe.model.Angle() ) ;
+					peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
+					peer.getAngle().getRational().setValue( al ) ;
 
-								tC.setSubscript( tM.getSubscript() ) ;
-								tC.setSuperscript( tM.getSuperscript() ) ;
-
-								aCC.addText( tC ) ;
-							}
-
-							AstrolabeFactory.modelOf( aCC, false ) ;
-
-							aCC.setName( aCM.getName() ) ;
-							// setPurpose already done by AstrolabeFactory.modelOf()
-							// aCC.setPurpose( aCM.getPurpose() ) ;
-							// setAnchor already done by AstrolabeFactory.modelOf()
-							// aCC.setAnchor( aCM.getAnchor() ) ;
-							aCC.setReverse( aCM.getReverse() ) ;
-							aCC.setDistance( aCM.getDistance() ) ;
-
-							aC = new astrolabe.model.Annotation() ;
-							aC.setAnnotationCurved( aCC ) ;
-						}
-						aSM = annotation.getAnnotationStraight() ;
-						if ( aSM != null && aSM.getName() != null ) {
-							aSC = new astrolabe.model.AnnotationStraight() ;
-							aSC.setName( ns+aSM.getName() ) ;
-
-							for ( astrolabe.model.Text tM : aSM.getText() ) {
-								tC = new astrolabe.model.Text() ;
-								tC.setName( ns+tM.getName() ) ;
-								tC.setValue( tM.getValue() ) ;
-								AstrolabeFactory.modelOf( tC, false ) ;
-
-								tC.setName( tM.getName() ) ;
-
-								tC.setSubscript( tM.getSubscript() ) ;
-								tC.setSuperscript( tM.getSuperscript() ) ;
-
-								aSC.addText( tC ) ;
-							}
-
-							AstrolabeFactory.modelOf( aSC, false ) ;
-
-							aSC.setName( aSM.getName() ) ;
-							// setPurpose already done by AstrolabeFactory.modelOf()
-							// aSC.setPurpose( aSM.getPurpose() ) ;
-							// setAnchor already done by AstrolabeFactory.modelOf()
-							// aSC.setAnchor( aSM.getAnchor() ) ;
-							aSC.setReverse( aSM.getReverse() ) ;
-							aSC.setRadiant( aSM.getRadiant() ) ;
-
-							aC = new astrolabe.model.Annotation() ;
-							aC.setAnnotationStraight( aSC ) ;
-						}
-						peer.addAnnotation( aC ) ;
-
-						peer.validate() ;
+					peer.setBegin( new astrolabe.model.Begin() ) ;
+					// astrolabe.model.AngleType
+					peer.getBegin().setImmediate( new astrolabe.model.Immediate() ) ;
+					peer.getBegin().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+					peer.getBegin().getImmediate().getRational().setValue( lob[0] ) ;
+					peer.setEnd( new astrolabe.model.End() ) ;
+					// astrolabe.model.AngleType
+					peer.getEnd().setImmediate( new astrolabe.model.Immediate() ) ;
+					peer.getEnd().getImmediate().setRational( new astrolabe.model.Rational() ) ;
+					peer.getEnd().getImmediate().getRational().setValue( loe[0] ) ;
+					if ( getName() != null ) {
 					}
+
+					peer.setDial( getDial() ) ;
+					peer.setAnnotation( getAnnotation() ) ;
+
+					peer.validate() ;
 				} catch ( ValidationException e ) {
 					throw new RuntimeException( e.toString() ) ;
 				}
@@ -374,6 +298,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			}
 
 			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+
+			AstrolabeRegistry.registerJTSCoordinate(
+					ApplicationConstant.LK_CIRCLE_CURRENTPOINT, new JTSCoordinate( l.get( l.size()-1 ) ) ) ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;

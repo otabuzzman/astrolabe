@@ -20,11 +20,11 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC7118 extends CatalogType implements Catalog {
+public class CatalogADC5109 extends CatalogType implements Catalog {
 
-	private final static int C_CHUNK = 96+1/*0x0a*/ ;
+	private final static int C_CHUNK = 520+1/*0x0a*/ ;
 
-	private final static Log log = LogFactory.getLog( CatalogADC7118.class ) ;
+	private final static Log log = LogFactory.getLog( CatalogADC5109.class ) ;
 
 	private HashSet<String> restrict ;
 
@@ -35,7 +35,7 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 
 	private Projector projector ;
 
-	public CatalogADC7118( Peer peer, Projector projector ) {
+	public CatalogADC5109( Peer peer, Projector projector ) {
 		super( peer, projector ) ;
 
 		String[] rv ;
@@ -43,8 +43,8 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 		this.projector = projector ;
 
 		restrict = new HashSet<String>() ;
-		if ( ( (astrolabe.model.CatalogADC7118) peer ).getRestrict() != null ) {
-			rv = ( (astrolabe.model.CatalogADC7118) peer ).getRestrict().split( "," ) ;
+		if ( ( (astrolabe.model.CatalogADC5109) peer ).getRestrict() != null ) {
+			rv = ( (astrolabe.model.CatalogADC5109) peer ).getRestrict().split( "," ) ;
 			for ( int v=0 ; v<rv.length ; v++ ) {
 				restrict.add( rv[v] ) ;
 			}
@@ -64,13 +64,13 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 		String ident ;
 		Comparator<String> c = new Comparator<String>() {
 			public int compare( String a, String b ) {
-				CatalogADC7118Record x, y ;
+				CatalogADC5109Record x, y ;
 
-				x = (CatalogADC7118Record) catalogT.get( a ) ;
-				y = (CatalogADC7118Record) catalogT.get( b ) ;
+				x = (CatalogADC5109Record) catalogT.get( a ) ;
+				y = (CatalogADC5109Record) catalogT.get( b ) ;
 
-				return x.mag()<y.mag()?-1:
-					x.mag()>y.mag()?1:
+				return x.Vmag()<y.Vmag()?-1:
+					x.Vmag()>y.Vmag()?1:
 						0 ;
 			}
 		} ;
@@ -173,19 +173,28 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 	}
 
 	public CatalogRecord record( java.io.Reader catalog ) {
-		CatalogADC7118Record r = null ;
+		CatalogADC5109Record r = null ;
 		char[] cl ;
+		int o ;
 		String rl ;
 
 		cl = new char[C_CHUNK] ;
+		o = 0 ;
 
 		try {
-			while ( catalog.read( cl, 0, C_CHUNK )>-1 ) {
-				rl = new String( cl ) ;
-				rl = rl.substring( 0, rl.length()-1 ) ;
-
-				if ( ( r = record( rl ) ) != null )
-					break ;
+			while ( catalog.read( cl, o++, 1 ) == 1 ) {
+				if ( cl[o-1] == '\n' ) {
+					if ( o<C_CHUNK ) {
+						for ( o-- ; o<C_CHUNK ; o++ ) {
+							cl[o] = ' ' ;
+						}
+						cl[o-1] = '\n' ;
+					}
+					rl = new String( cl ) ;
+					o = 0 ;
+					if ( ( r = record( rl ) ) != null )
+						break ;
+				}
 			}
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
@@ -194,12 +203,12 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 		return r ;
 	}
 
-	private CatalogADC7118Record record( String record ) {
-		CatalogADC7118Record r = null ;
+	private CatalogADC5109Record record( String record ) {
+		CatalogADC5109Record r = null ;
 		boolean ok = true ;
 
 		try {
-			r = new CatalogADC7118Record( record ) ;
+			r = new CatalogADC5109Record( record ) ;
 
 			if ( restrict.size()>0 )
 				for ( String key : r.ident() )
