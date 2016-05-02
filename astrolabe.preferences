@@ -69,6 +69,11 @@
 						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=atlas-stereographic.pdf -q -"/>
 					</map>
 				</node>
+				<node name="atlas-catalogADC7237">
+					<map>
+						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=atlas-catalogADC7237.pdf -q -"/>
+					</map>
+				</node>
 			</node>
 			<node name="PostscriptStream">
 				<map>

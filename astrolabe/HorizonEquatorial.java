@@ -59,8 +59,9 @@ public class HorizonEquatorial extends HorizonType implements PostscriptEmitter,
 			Catalog catalog ;
 
 			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
-
+System.err.println( new java.util.Date().toString() ) ;
 			catalog.addAllCatalogRecord() ;
+System.err.println( new java.util.Date().toString() ) ;
 
 			ps.operator.gsave() ;
 

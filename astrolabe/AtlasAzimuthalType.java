@@ -38,8 +38,9 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 	public void addAllAtlasPage() throws ValidationException {
 		int nra, nde, grid[], num ; // number of pages per single declination, number of page rows
 		double a, b, rab, rad, tan ; // atlas page x, y, |v0| (radius), tan derived from a plus overlap
-		double overlap, spanDe, originDe, extentDe ;
-		double de, dde, sde, ra, dim[] ;
+		double overlap, spanRA, spanDe ;
+		double originRA, extentRA, originDe, extentDe ;
+		double ra, dra, de, dde, sde, dim[] ;
 		astrolabe.model.ChartAzimuthalType chartAzimuthalType ;
 		boolean northern ;
 		ChartPage chartPage ;
@@ -50,37 +51,41 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		Vector vc, vb, vt ;
 		double[] xy, eq ;
 
-		chartAzimuthalType = getChartAzimuthalType() ;
-		northern = chartAzimuthalType.getNorthern() ;
-		chartPage = new ChartPage( chartAzimuthalType.getChartPage() ) ;
-		chartPageX = chartPage.realx() ;
-		chartPageY = chartPage.realy() ;
-
 		projector = projector() ;
-
-		setChartpagerealx( chartPageX ) ;
-		setChartpagerealy( chartPageY ) ;
 
 		overlap = Configuration.getValue(
 				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_ATLAS_OVERLAP, DEFAULT_OVERLAP ) ;
 
+		chartAzimuthalType = getChartAzimuthalType() ;
+		northern = chartAzimuthalType.getNorthern() ;
+		chartPage = new ChartPage( chartAzimuthalType.getChartPage() ) ;
+		chartPageX = chartPage.realx() ;
+		chartPageY = chartPage.realy() ;
+		setChartpagerealx( chartPageX ) ;
+		setChartpagerealy( chartPageY ) ;
+		rab = chartPageX/chartPageY ;
+
+		originRA = AstrolabeFactory.valueOf( getOrigin() )[1] ;
+		extentRA = AstrolabeFactory.valueOf( getExtent() )[1] ;
 		originDe = AstrolabeFactory.valueOf( getOrigin() )[2] ;
 		extentDe = AstrolabeFactory.valueOf( getExtent() )[2] ;
+		dra = originRA-extentRA ;
+		dde = originDe-extentDe ;
 
 		spanDe = AstrolabeFactory.valueOf( getAtlasAzimuthalTypeChoice().getSpanParallel() ) ;
 
-		rab = chartPageX/chartPageY ;
-
-		dde = originDe-extentDe ;
 		nde = (int) ( dde/spanDe+1 ) ;
 		sde = ( dde-spanDe )/( nde-1 ) ;
 		de = originDe-spanDe ;
+		de = de+sde ;
 
 		grid = new int[nde] ;
 		num = 1 ;
 
 		for ( int cde=0 ; cde<nde ; cde++ ) {
+			de = de-sde ;
+
 			rad = projector.project( 0, de )[0] ;
 			b = rad-projector.project( 0, de+spanDe )[0] ;
 			a = b*rab ;
@@ -192,8 +197,6 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 
 				addAtlasPage( atlasPage ) ;
 			}
-
-			de = de-sde ;
 		}
 
 		pageConnect( grid ) ;

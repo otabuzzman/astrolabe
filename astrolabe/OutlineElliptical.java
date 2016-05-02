@@ -3,8 +3,6 @@ package astrolabe;
 
 import java.util.List;
 
-import caa.CAACoordinateTransformation;
-
 @SuppressWarnings("serial")
 public class OutlineElliptical extends astrolabe.model.OutlineElliptical implements PostscriptEmitter {
 
