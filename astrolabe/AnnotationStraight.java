@@ -46,14 +46,9 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		Layout layout ;
 		Frame frame ;
-		int ns, ne ;
-		double size ;
 		Script script ;
-
-		size = new Script( getScript( 0 ) ).size() ;
-
-		if ( ! ( size>0 ) )
-			return ;
+		int ns, n0 ;
+		double p, height ;
 
 		ps.operator.gsave() ;
 
@@ -67,19 +62,27 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 
 		ps.array( true ) ;
-		for ( ns=0, ne=0 ; ns<getScriptCount() ; ns++ ) {
-			try {
-				script = new Script( getScript( ns ) ) ;
+		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
+			script = new Script( getScript( ns ) ) ;
 
-				emitPS( ps, script, script.size(), 0,
+			p = Configuration.getValue(
+					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;
+			if ( p<0 )
+				p = Double.valueOf( script.getPurpose() ) ;
+
+			if ( p==0 )
+				n0++ ;
+			else {
+				AnnotationStraight.emitPS( ps, script, p, 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
-			} catch ( ParameterNotValidException e ) {
-				ne++ ;
+				if ( height==0 )
+					height = p ;
 			}
 		}
 		ps.array( false ) ;
-		if ( ne==ns ) {
-			ps.operator.pop() ; // array
+
+		if ( n0==ns ) {
+			ps.operator.pop() ;
 			ps.operator.grestore() ;
 
 			return ;
@@ -114,36 +117,36 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
-			ps.push( -size/2 ) ;
+			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
-			ps.push( -size/2 ) ;
+			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
 			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
-			ps.push( -size/2 ) ;
+			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( margin ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
 			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.operator.dup() ;
 			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 		}
 
 		ps.operator.moveto() ;
@@ -156,35 +159,30 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	public void tailPS( AstrolabePostscriptStream ps ) {
 	}
 
-	public static void emitPS( AstrolabePostscriptStream ps, astrolabe.model.Script script, double size, double shift,
-			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
-		String s ;
+	public static void emitPS( AstrolabePostscriptStream ps, astrolabe.model.TextType text, double height, double shift,
+			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) {
+		if ( text.getValue().length()>0 )
+			for ( UnicodeControlBlock unicodeControlBlock : ps.getUnicodeControlBlockArray( text.getValue() ) ) {
+				ps.array( true ) ;
+				ps.push( unicodeControlBlock.fontname ) ;
+				ps.push( unicodeControlBlock.encoding ) ;
+				ps.push( height ) ;
+				ps.push( shift ) ;
+				ps.push( true ) ;
+				ps.push( true ) ;
+				ps.push( "("+unicodeControlBlock.string+")" ) ;
+				ps.array( false ) ;
+			}
 
-		s = script.getValue() ;
-		if ( s.length()==0 ) {
-			throw new ParameterNotValidException( Integer.toString( s.length() ) ) ;
-		}
-		for ( UnicodeControlBlock unicodeControlBlock : ps.getUnicodeControlBlockArray( s ) ) {
-			ps.array( true ) ;
-			ps.push( unicodeControlBlock.fontname ) ;
-			ps.push( unicodeControlBlock.encoding ) ;
-			ps.push( size ) ;
-			ps.push( shift ) ;
-			ps.push( true ) ;
-			ps.push( true ) ;
-			ps.push( "("+unicodeControlBlock.string+")" ) ;
-			ps.array( false ) ;
-		}
-
-		for ( int d=0 ; d<script.getSubscriptCount() ; d++ ) {
-			emitPS( ps, new Script( script.getSubscript( d ) ),
-					size*subscriptshrink, shift+size*subscriptshift,
+		for ( int d=0 ; d<text.getSubscriptCount() ; d++ ) {
+			emitPS( ps, text.getSubscript( d ),
+					height*subscriptshrink, shift+height*subscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 
-		for ( int u=0 ; u<script.getSuperscriptCount() ; u++ ) {
-			emitPS( ps, new Script( script.getSuperscript( u ) ),
-					size*superscriptshrink, shift+size*superscriptshift,
+		for ( int u=0 ; u<text.getSuperscriptCount() ; u++ ) {
+			emitPS( ps, text.getSuperscript( u ),
+					height*superscriptshrink, shift+height*superscriptshift,
 					subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
 		}
 	}

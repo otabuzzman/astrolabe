@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.text.MessageFormat;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -52,6 +50,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		Geometry fov ;
 		Script script ;
+		double height ;
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 		if ( fov == null ) {
@@ -61,6 +60,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		if ( ! fov.covers( new GeometryFactory().createPoint(
 				new JTSCoordinate( new double[] { x, y } ) ) ) )
 			return ;
+
+		ps.operator.mark() ;
 
 		ps.push( x ) ;
 		ps.push( y ) ;
@@ -72,19 +73,20 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.newpath() ;
 		ps.operator.moveto() ;
 
-		ps.array( true ) ;
-		try {
-			script = new Script( getScript() ) ;
+		script = new Script( getScript() ) ;
+		height = Configuration.getValue(
+				Configuration.getClassNode( script, script.getName(), null ),
+				script.getPurpose(), -1. ) ;
+		if ( height<0 )
+			height = Double.valueOf( script.getPurpose() ) ;
+		if ( height==0 ) {
+			ps.operator.cleartomark() ;
 
-			AnnotationStraight.emitPS( ps, script, script.size(), 0, 0, 0, 0, 0 ) ;
-		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.toString(), "" } ) ;
-
-			throw new RuntimeException( msg ) ;
+			return ;
 		}
+
+		ps.array( true ) ;
+		AnnotationStraight.emitPS( ps, script, height, 0, 0, 0, 0, 0 ) ;
 		ps.array( false ) ;									// p, p, text
 
 		ps.operator.dup() ;
@@ -154,6 +156,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;
 		ps.operator.rotate( -spin ) ;
+
+		ps.operator.cleartomark() ;
 
 		if ( getAnnotation() != null ) {
 			PostscriptEmitter annotation ;

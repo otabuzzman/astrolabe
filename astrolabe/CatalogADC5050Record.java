@@ -5,13 +5,8 @@ import java.lang.reflect.Field;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import org.exolab.castor.xml.ValidationException;
-
-import caa.CAA2DCoordinate;
-import caa.CAACoordinateTransformation;
-import caa.CAAPrecession;
-
-public class CatalogADC5050Record implements CatalogRecord {
+@SuppressWarnings("serial")
+public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record implements CatalogRecord {
 
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
@@ -19,6 +14,10 @@ public class CatalogADC5050Record implements CatalogRecord {
 
 	public String HR         ; //  [1/9110]+ Harvard Revised Number = Bright Star Number
 	public String Name       ; //  Name, generally Bayer and/or Flamsteed name
+	public String flamsteed		;
+	public String bayer			;
+	public String bayerindex 	;
+	public String constellation	;
 	public String DM         ; //  Durchmusterung Identification (zone in bytes 17-19)
 	public String HD         ; //  [1/225300]? Henry Draper Catalog Number
 	public String SAO        ; //  [1/258997]? SAO Catalog Number
@@ -78,7 +77,12 @@ public class CatalogADC5050Record implements CatalogRecord {
 		}
 
 		HR         = data.substring( 0, 4 ).trim() ;
-		Name       = data.substring( 4, 14 ).trim() ;
+		Name       = data.substring( 4, 14 ) ;
+		flamsteed		= Name.substring(0, 3).trim() ;
+		bayer			= Name.substring(3, 6).trim() ;
+		bayerindex		= Name.substring(6, 7).trim() ;
+		constellation	= Name.substring(7, 10).trim() ;
+		Name.trim() ;
 		DM         = data.substring( 14, 25 ).trim() ;
 		HD         = data.substring( 25, 31 ).trim() ;
 		SAO        = data.substring( 31, 37 ).trim() ;
@@ -132,9 +136,9 @@ public class CatalogADC5050Record implements CatalogRecord {
 		NoteFlag   = data.substring( 196, 197 ).trim() ;
 	}
 
-	public boolean isValid() {
+	public boolean isOK() {
 		try {
-			validate() ;
+			recognize() ;
 		} catch ( ParameterNotValidException e ) {
 			return false ;
 		}
@@ -142,7 +146,7 @@ public class CatalogADC5050Record implements CatalogRecord {
 		return true ;
 	}
 
-	public void validate() throws ParameterNotValidException {
+	public void recognize() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
 		String value ;
@@ -177,6 +181,16 @@ public class CatalogADC5050Record implements CatalogRecord {
 		Registry.registerName( key, HR ) ;
 		key = m.message( ApplicationConstant.LK_ADC5050_NAME ) ;
 		Registry.registerName( key, Name ) ;
+		key = m.message( ApplicationConstant.LK_ADC5050_NAME_FLAMSTEED ) ;
+		Registry.registerName( key, flamsteed ) ;
+		key = m.message( ApplicationConstant.LK_ADC5050_NAME_BAYER ) ;
+		bayer = Configuration.getValue(
+				Configuration.getClassNode( this, null, ApplicationConstant.PN_GENERAL_REGISTRY ), bayer, bayer ) ;
+		Registry.registerName( key, bayer ) ;
+		key = m.message( ApplicationConstant.LK_ADC5050_NAME_BAYERINDEX ) ;
+		Registry.registerName( key, bayerindex ) ;
+		key = m.message( ApplicationConstant.LK_ADC5050_NAME_CONSTELLATION ) ;
+		Registry.registerName( key, constellation ) ;
 		key = m.message( ApplicationConstant.LK_ADC5050_DM ) ;
 		Registry.registerName( key, DM ) ;
 		key = m.message( ApplicationConstant.LK_ADC5050_HD ) ;
@@ -279,44 +293,6 @@ public class CatalogADC5050Record implements CatalogRecord {
 		Registry.registerName( key, MultCnt ) ;
 		key = m.message( ApplicationConstant.LK_ADC5050_NOTEFLAG ) ;
 		Registry.registerName( key, NoteFlag ) ;
-	}
-
-	public void toModel( astrolabe.model.Body body ) throws ValidationException {
-		astrolabe.model.Position pm ;
-		CAA2DCoordinate cpm, ceq ;
-		double epoch, pmRA, pmDE ;
-
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
-
-		body.getBodyStellar().setName( HR ) ;
-
-		pmRA = 0 ;
-		if ( this.pmRA.length()>0 )
-			pmRA = new Double( this.pmRA ).doubleValue() ;
-		pmDE = 0 ;
-		if ( this.pmDE.length()>0 )
-			pmDE = new Double( this.pmDE ).doubleValue() ;
-		cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
-				epoch-2451545., RAh()+RAm()/60.+RAs()/3600., DEd()+DEm()/60.+DEs()/3600., pmRA, pmDE ) ;
-		ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
-		pm = new astrolabe.model.Position() ;
-		// astrolabe.model.SphericalType
-		pm.setR( new astrolabe.model.R() ) ;
-		pm.getR().setValue( 1 ) ;
-		// astrolabe.model.AngleType
-		pm.setPhi( new astrolabe.model.Phi() ) ;
-		pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-		pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
-		// astrolabe.model.AngleType
-		pm.setTheta( new astrolabe.model.Theta() ) ;
-		pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-		pm.getTheta().getRational().setValue( ceq.Y() ) ;  
-
-		body.getBodyStellar().setPosition( pm ) ;
-		cpm.delete() ;
-		ceq.delete() ;
-
-		body.validate() ;
 	}
 
 	public double[] RA() {

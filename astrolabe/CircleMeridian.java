@@ -209,9 +209,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementImportance importance ;
+		GSPaintStyle importance ;
 
-		importance = new ElementImportance( getImportance() ) ;
+		importance = new GSPaintStyle( getImportance() ) ;
 		importance.headPS( ps ) ;
 		importance.emitPS( ps ) ;
 		importance.tailPS( ps ) ;

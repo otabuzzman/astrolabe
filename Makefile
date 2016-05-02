@@ -91,3 +91,5 @@ catalogADC7237.pdf: catalogADC7237.xml
 atlas-stereographic-nostar.pdf: atlas-stereographic-nostar.xml
 .SECONDARY: atlas-stereographic.ps
 atlas-stereographic.pdf: atlas-stereographic.xml
+
+m45.pdf: m45.xml

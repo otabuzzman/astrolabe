@@ -42,7 +42,7 @@ astrolabe.xsd" name="atlas-stereographic">
 					</Script>
 				</AnnotationStraight>
 			</CheckerMeridian>
-			<ChartStereographic scale="100" northern="true" practicality="always" importance="graphical">
+			<ChartStereographic scale="100" northern="true">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
 				<Origin>
 					<phi>
@@ -67,24 +67,22 @@ astrolabe.xsd" name="atlas-stereographic">
 						<!--$legendmagnitude-->
 						<AnnotationStraight anchor="middleleft" reverse="false" radiant="false">
 							<Script purpose="circlelettering" value="Helligkeit (Vmag):"/>
-							<Script purpose="circlelettering" value=" -1 "/>
-							<Script purpose="4.64" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 0 "/>
-							<Script purpose="3.74" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 1 "/>
-							<Script purpose="3.02" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 2 "/>
-							<Script purpose="2.43" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 3 "/>
-							<Script purpose="1.96" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 4 "/>
-							<Script purpose="1.58" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 5 "/>
-							<Script purpose="1.27" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 6 "/>
-							<Script purpose="1.03" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 7 "/>
-							<Script purpose=".83" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" -1(&#x2264;)"/>
+							<Script purpose="4.98" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 0"/>
+							<Script purpose="4.02" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 1"/>
+							<Script purpose="3.24" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 2"/>
+							<Script purpose="2.61" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 3"/>
+							<Script purpose="2.11" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 4"/>
+							<Script purpose="1.70" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 5"/>
+							<Script purpose="1.37" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 6(&#x2265;)"/>
+							<Script purpose="1.10" value="&#xf811;"/>
 							<Frame number="14" anchor="middleleft"/>
 						</AnnotationStraight>
 						<!--$legendtopcon-->
@@ -187,7 +185,7 @@ astrolabe.xsd" name="atlas-stereographic">
 					</Script>
 				</AnnotationStraight>
 			</CheckerMeridian>
-			<ChartStereographic scale="100" northern="false" practicality="always" importance="graphical">
+			<ChartStereographic scale="100" northern="false">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
 				<Origin>
 					<phi>
@@ -212,24 +210,22 @@ astrolabe.xsd" name="atlas-stereographic">
 						<!--$legendmagnitude-->
 						<AnnotationStraight anchor="middleleft" reverse="false" radiant="false">
 							<Script purpose="circlelettering" value="Helligkeit (Vmag):"/>
-							<Script purpose="circlelettering" value=" -1 "/>
-							<Script purpose="4.64" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 0 "/>
-							<Script purpose="3.74" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 1 "/>
-							<Script purpose="3.02" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 2 "/>
-							<Script purpose="2.43" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 3 "/>
-							<Script purpose="1.96" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 4 "/>
-							<Script purpose="1.58" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 5 "/>
-							<Script purpose="1.27" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 6 "/>
-							<Script purpose="1.03" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 7 "/>
-							<Script purpose=".83" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" -1(&#x2264;)"/>
+							<Script purpose="4.98" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 0"/>
+							<Script purpose="4.02" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 1"/>
+							<Script purpose="3.24" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 2"/>
+							<Script purpose="2.61" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 3"/>
+							<Script purpose="2.11" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 4"/>
+							<Script purpose="1.70" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 5"/>
+							<Script purpose="1.37" value="&#xf811;"/>
+							<Script purpose="circlelettering" value=" 6(&#x2265;)"/>
+							<Script purpose="1.10" value="&#xf811;"/>
 							<Frame number="14" anchor="middleleft"/>
 						</AnnotationStraight>
 						<!--$legendtopcon-->
@@ -297,7 +293,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</AtlasStereographic>
 	</Atlas>
 	<Chart>
-		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
+		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a3" real="100" layout="default"/>
 			<Origin>
 				<phi>
@@ -980,7 +976,7 @@ astrolabe.xsd" name="atlas-stereographic">
 		</ChartStereographic>
 	</Chart>
 	<Chart>
-		<ChartStereographic scale="100" northern="false" practicality="always" importance="canonical">
+		<ChartStereographic scale="100" northern="false">
 			<ChartPage size="a3" real="100" layout="default"/>
 			<Origin>
 				<phi>

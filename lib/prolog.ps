@@ -6,9 +6,15 @@
 
 (lib/Astrolabe.ps) run
 
-% pagesize <x> <y>
-/pagesize {
+<<
+	/BeginPage {
+	pop
 	currentpagedevice
 	/PageSize get
 	{} forall
-} def
+	.5 mul exch
+	.5 mul exch
+	translate
+	.28 setlinewidth
+	} bind
+>> setpagedevice

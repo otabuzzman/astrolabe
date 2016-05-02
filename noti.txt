@@ -1,0 +1,60 @@
+4,98
+4,02
+3,24
+2,61
+2,11
+1,70
+1,37
+1,10
+0,89
+0,72
+0,58
+0,47
+0,38
+0,30
+
+4,98 4,02 3,24 2,61 2,11 1,70 1,37 1,10 0,89 0,72 0,58 0,47 0,38 0,30
+4.98 4.02 3.24 2.61 2.11 1.70 1.37 1.10 0.89 0.72 0.58 0.47 0.38 0.30
+
+mag<-1?:4.98:mag<0?4.02:mag<1?3.24:mag<2?2.61:mag<3?2.11:mag<4?1.70:mag<5?1.37:mag<6?1.10:mag<7?0.89:mag<8?0.72:mag<9?0.58:mag<10?0.47:mag<11?0.38:0.30
+mag&#x003c;-1?:4.98:mag&#x003c;0?4.02:mag&#x003c;1?3.24:mag&#x003c;2?2.61:mag&#x003c;3?2.11:mag&#x003c;4?1.70:mag&#x003c;5?1.37:mag&#x003c;6?1.10:mag&#x003c;7?0.89:mag&#x003c;8?0.72:mag&#x003c;9?0.58:mag&#x003c;10?0.47:mag&#x003c;11?0.38:0.30
+
+Vmag<-1?:4.98:Vmag<0?4.02:Vmag<1?3.24:Vmag<2?2.61:Vmag<3?2.11:Vmag<4?1.70:Vmag<5?1.37:Vmag<6?1.10:Vmag<7?0.89:Vmag<8?0.72:Vmag<9?0.58:Vmag<10?0.47:Vmag<11?0.38:0.30
+Vmag&#x003c;-1?:4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:Vmag&#x003c;6?1.10:Vmag&#x003c;7?0.89:Vmag&#x003c;8?0.72:Vmag&#x003c;9?0.58:Vmag&#x003c;10?0.47:Vmag&#x003c;11?0.38:0.30
+
+<Script purpose="circlelettering" value=" &#x2264; -1 "/>
+<Script purpose="4.98" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 0 "/>
+<Script purpose="4.02" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 1 "/>
+<Script purpose="3.24" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 2 "/>
+<Script purpose="2.61" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 3 "/>
+<Script purpose="2.11" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 4 "/>
+<Script purpose="1.70" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 5 "/>
+<Script purpose="1.37" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 6 "/>
+<Script purpose="1.10" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 7 "/>
+<Script purpose="0.89" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 8 "/>
+<Script purpose="0.72" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 9 "/>
+<Script purpose="0.58" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 10 "/>
+<Script purpose="0.47" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" 11 "/>
+<Script purpose="0.38" value="&#xf811;"/>
+<Script purpose="circlelettering" value=" &#x2265; 12 "/>
+<Script purpose="0.30" value="&#xf811;"/>
+
+					<!--CatalogADC7118 attribute nature-->
+					<entry key="cluster" value=".28:0.4:0.5"/>
+					<entry key="galaxy" value=".28:0"/>
+					<entry key="nebula" value=".28:0.2"/>
+					<!--CatalogADC7237 attribute nature-->
+					<entry key="multiple" value=".28:0.4:0.5"/>
+					<entry key="uncertain" value=".28:0"/>

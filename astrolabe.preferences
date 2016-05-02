@@ -9,43 +9,48 @@
 			<node name="model">
 				<map/>
 				<node name="HorizonEquatorial">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setPracticality,java.lang.String" value="always"/>
-					</map>
-				</node>
-				<node name="CircleParallel">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setImportance,java.lang.String" value="canonical"/>
-					</map>
-				</node>
-				<node name="CircleMeridian">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setImportance,java.lang.String" value="canonical"/>
-					</map>
-				</node>
-				<node name="BodyStellar">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setTurn,java.lang.Double" value="0"/>
-						<entry key="setSpin,java.lang.Double" value="0"/>
-					</map>
-				</node>
-				<node name="BodyAreal">
-					<map>
-						<!--keys must equal to method names in model class.-->
-						<entry key="setImportance,java.lang.String" value="dividing"/>
-					</map>
-					<node name="sgn:">
+					<map/>
+					<node name="default">
 						<map>
-							<entry key="setImportance,java.lang.String" value="graphical"/>
+							<!--keys must equal to method names in model class.-->
+							<entry key="setPracticality,java.lang.String" value="always"/>
 						</map>
 					</node>
-					<node name="cut:sgn:">
+				</node>
+				<node name="CircleParallel">
+					<map/>
+					<node name="default">
 						<map>
-							<entry key="setImportance,java.lang.String" value="graphical"/>
+							<!--keys must equal to method names in model class.-->
+							<entry key="setImportance,java.lang.String" value="canonical"/>
+						</map>
+					</node>
+				</node>
+				<node name="CircleMeridian">
+					<map/>
+					<node name="default">
+						<map>
+							<!--keys must equal to method names in model class.-->
+							<entry key="setImportance,java.lang.String" value="canonical"/>
+						</map>
+					</node>
+				</node>
+				<node name="BodyStellar">
+					<map/>
+					<node name="default">
+						<map>
+							<!--keys must equal to method names in model class.-->
+							<entry key="setTurn,java.lang.Double" value="0"/>
+							<entry key="setSpin,java.lang.Double" value="0"/>
+						</map>
+					</node>
+				</node>
+				<node name="BodyAreal">
+					<map/>
+					<node name="default">
+						<map>
+							<!--keys must equal to method names in model class.-->
+							<entry key="setNature,java.lang.String" value="arbitrary"/>
 						</map>
 					</node>
 				</node>
@@ -198,10 +203,10 @@
 					</map>
 				</node>
 			</node>
-			<node name="ElementPracticality">
+			<node name="GSPaintColor">
 				<map>
 					<!--value="<rd>:<gn>:<bl>" or value="<gr>"-->
-					<!--keys must equal to allowed values for practicality atttribues in XSD.-->
+					<!--keys must equal to allowed values for practicality attributes in XSD.-->
 					<entry key="none" value="1"/>
 					<entry key="seldom" value=".75"/>
 					<entry key="sometimes" value=".5"/>
@@ -209,14 +214,19 @@
 					<entry key="always" value="0"/>
 				</map>
 			</node>
-			<node name="ElementImportance">
+			<node name="GSPaintStyle">
 				<map>
-					<!--value="<linewidth>:<linedash>" or value="<linewidth>"-->
-					<!--keys must equal to allowed values for importance atttribues in XSD.-->
+					<!--value="<linewidth>:<linedash>[:<linedash>]" or value="<linewidth>"-->
+					<!--keys must equal to allowed values for importance and nature attributes in XSD.-->
+					<!--CircleType attribute importance-->
 					<entry key="canonical" value=".1:0"/>
 					<entry key="cardinal" value=".5:0"/>
-					<entry key="dividing" value=".36:1:1.8"/>
-					<entry key="graphical" value=".28:0"/>
+					<!--BodyArealType attribute nature-->
+					<entry key="arbitrary" value=".36:1.8:0.25"/>
+					<entry key="authentic" value=".28:0"/>
+					<!--BodyOrbitalType attribute nature-->
+					<entry key="artificial" value=".36:2.4:0.125"/>
+					<entry key="celestial" value=".38:0"/>
 				</map>
 			</node>
 			<node name="ChartStereographic">
@@ -408,25 +418,6 @@
 					<entry key="rise" value="1.2"/>
 				</map>
 			</node>
-			<node name="Script">
-				<map/>
-				<node name="purpose">
-					<map>
-						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
-						<entry key="none" value="-1"/>
-						<entry key="bodylettering0" value="3.0"/>
-						<entry key="bodylettering7" value="1.4"/>
-						<entry key="titlelettering" value="5.8"/>
-						<entry key="textlettering" value="4.4"/>
-						<entry key="circlelettering" value="3.8"/>
-						<entry key="diallettering" value="2.4"/>
-						<entry key="dialcardinal" value="3.8"/>
-						<entry key="dialfraction" value="2.6"/>
-						<entry key="guidance" value="1.6"/>
-						<entry key="obscure" value=".2"/>
-					</map>
-				</node>
-			</node>
 			<node name="Frame">
 				<map>
 					<entry key="topleft" value="0:1"/>
@@ -438,6 +429,22 @@
 					<entry key="bottomleft" value="0:0"/>
 					<entry key="bottommiddle" value=".5:0"/>
 					<entry key="bottomright" value="1:0"/>
+				</map>
+			</node>
+			<node name="Script">
+				<map>
+					<!--keys must equal to allowed values for purpose atttribue in XSD.-->
+					<entry key="none" value="0"/>
+					<entry key="bodylettering0" value="3.0"/>
+					<entry key="bodylettering7" value="1.4"/>
+					<entry key="titlelettering" value="5.8"/>
+					<entry key="textlettering" value="4.4"/>
+					<entry key="circlelettering" value="3.8"/>
+					<entry key="diallettering" value="2.4"/>
+					<entry key="dialcardinal" value="3.8"/>
+					<entry key="dialfraction" value="2.6"/>
+					<entry key="guidance" value="1.6"/>
+					<entry key="obscure" value=".2"/>
 				</map>
 			</node>
 			<node name="BodyPlanet">
@@ -506,6 +513,11 @@
 					</map>
 				</node>
 			</node>
+			<node name="OutlineElliptical">
+				<map>
+					<entry key="interval" value="10"/>
+				</map>
+			</node>
 			<node name="DMS">
 				<map>
 					<entry key="precision" value="2"/>
@@ -541,6 +553,34 @@
 					<entry key="DEs" value=".+"/>
 					<entry key="Vmag" value=".+"/>
 				</map>
+				<node name="registry">
+					<map>
+						<entry key="Alp" value="&#x03b1;"/>
+						<entry key="Bet" value="&#x03b2;"/>
+						<entry key="Chi" value="&#x03c7;"/>
+						<entry key="Del" value="&#x03b4;"/>
+						<entry key="Eps" value="&#x03b5;"/>
+						<entry key="Eta" value="&#x03b7;"/>
+						<entry key="Gam" value="&#x03b3;"/>
+						<entry key="Iot" value="&#x03b9;"/>
+						<entry key="Kap" value="&#x03ba;"/>
+						<entry key="Lam" value="&#x03bb;"/>
+						<entry key="Mu" value="&#x03bc;"/>
+						<entry key="Nu" value="&#x03bd;"/>
+						<entry key="Ome" value="&#x03c9;"/>
+						<entry key="Omi" value="&#x03bf;"/>
+						<entry key="Phi" value="&#x03c6;"/>
+						<entry key="Pi" value="&#x03c0;"/>
+						<entry key="Psi" value="&#x03c8;"/>
+						<entry key="Rho" value="&#x03c1;"/>
+						<entry key="Sig" value="&#x03c3;"/>
+						<entry key="Tau" value="&#x03c4;"/>
+						<entry key="The" value="&#x03b8;"/>
+						<entry key="Ups" value="&#x03c5;"/>
+						<entry key="Xi" value="&#x03be;"/>
+						<entry key="Zet" value="&#x03b6;"/>
+					</map>
+				</node>
 			</node>
 			<node name="CatalogADC5109Record">
 				<map>
@@ -560,6 +600,11 @@
 					<entry key="DEd" value=".+"/>
 				</map>
 			</node>
+			<node name="CatalogADC7118">
+				<map>
+					<entry key="thresholdscale" value="5.2"/>
+				</map>
+			</node>
 			<node name="CatalogADC7118Record">
 				<map>
 					<entry key="RAh" value=".+"/>
@@ -568,6 +613,11 @@
 					<entry key="DEd" value=".+"/>
 					<entry key="DEm" value=".+"/>
 					<entry key="mag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC7237">
+				<map>
+					<entry key="thresholdscale" value="5.2"/>
 				</map>
 			</node>
 			<node name="CatalogADC7237Record">

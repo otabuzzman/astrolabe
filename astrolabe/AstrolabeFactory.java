@@ -203,7 +203,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( HorizonType horizon, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( horizon, horizon.getName(), null ) ;
+		node = Configuration.getClassNode( horizon, horizon.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;
@@ -230,7 +230,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( CircleType circle, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( circle, circle.getName(), null ) ;
+		node = Configuration.getClassNode( circle, circle.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;
@@ -257,7 +257,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( AnnotationType annotation, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( annotation, annotation.getName(), null ) ;
+		node = Configuration.getClassNode( annotation, annotation.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;
@@ -284,7 +284,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( TextType text, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( text, text.getName(), null ) ;
+		node = Configuration.getClassNode( text, text.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;
@@ -311,7 +311,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( BodyStellarType body, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( body, body.getName(), null ) ;
+		node = Configuration.getClassNode( body, body.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;
@@ -338,7 +338,7 @@ public final class AstrolabeFactory {
 	public static boolean modelOf( BodyArealType body, boolean validate ) {
 		Preferences node ;
 
-		node = Configuration.getClassNode( body, body.getName(), null ) ;
+		node = Configuration.getClassNode( body, body.getName(), ApplicationConstant.PN_GENERAL_DEFAULT ) ;
 
 		if ( node == null )
 			return false ;

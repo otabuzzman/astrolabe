@@ -7,7 +7,7 @@ astrolabe.xsd" name="astrolabe">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
+		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a0" real="100" layout="50:50x50:50"/>
 			<Origin>
 				<phi>
@@ -405,7 +405,6 @@ astrolabe.xsd" name="astrolabe">
 									<Script purpose="bodylettering7" value="Galaktischer NP"/>
 								</AnnotationCurved>
 							</Annotation>
-							<Script value="&#xf810;" purpose="3.2"/>
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -414,6 +413,7 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="90"/>
 								</theta>
 							</Position>
+							<Script value="&#xf810;" purpose="3.2"/>
 						</BodyStellar>
 					</Body>
 				</HorizonGalactic>
@@ -971,7 +971,7 @@ astrolabe.xsd" name="astrolabe">
 					</Circle>
 					<!--planets-->
 					<Body>
-						<BodyPlanet type="mars" importance="canonical">
+						<BodyPlanet type="mars" nature="celestial">
 							<Annotation>
 								<AnnotationCurved reverse="true" anchor="bottommiddle" distance="97.8">
 									<Script purpose="diallettering" value="Mars"/>
@@ -987,7 +987,7 @@ astrolabe.xsd" name="astrolabe">
 						</BodyPlanet>
 					</Body>
 					<Body>
-						<BodyPlanet type="jupiter" importance="canonical">
+						<BodyPlanet type="jupiter" nature="celestial">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
 									<Script purpose="diallettering" value="Jupiter"/>
@@ -1003,7 +1003,7 @@ astrolabe.xsd" name="astrolabe">
 						</BodyPlanet>
 					</Body>
 					<Body>
-						<BodyPlanet type="saturn" importance="canonical">
+						<BodyPlanet type="saturn" nature="celestial">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
 									<Script purpose="diallettering" value="Saturn"/>
@@ -1019,7 +1019,7 @@ astrolabe.xsd" name="astrolabe">
 						</BodyPlanet>
 					</Body>
 					<Body>
-						<BodyPlanet type="uranus" importance="canonical">
+						<BodyPlanet type="uranus" nature="celestial">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="50">
 									<Script purpose="guidance" value="Uranus"/>
@@ -1035,7 +1035,7 @@ astrolabe.xsd" name="astrolabe">
 						</BodyPlanet>
 					</Body>
 					<Body>
-						<BodyPlanet type="neptune" importance="canonical">
+						<BodyPlanet type="neptune" nature="celestial">
 							<Annotation>
 								<AnnotationCurved reverse="false" anchor="topmiddle" distance="25">
 									<Script purpose="guidance" value="Neptun"/>
@@ -1052,7 +1052,7 @@ astrolabe.xsd" name="astrolabe">
 					</Body>
 					<!--true sun-->
 					<Body>
-						<BodySun type="true" circle="suntrue" importance="canonical">
+						<BodySun type="true" circle="suntrue" nature="celestial">
 							<DialDay reflect="false" baseline="rail">
 								<GraduationSpan span="1" division="4">
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
@@ -1112,7 +1112,7 @@ astrolabe.xsd" name="astrolabe">
 					</Body>
 					<!--mean sun-->
 					<Body>
-						<BodySun type="mean" circle="sunmean" importance="canonical">
+						<BodySun type="mean" circle="sunmean" nature="celestial">
 							<DialDay reflect="true" baseline="rail">
 								<GraduationSpan span="1" division="4">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
@@ -1792,7 +1792,6 @@ astrolabe.xsd" name="astrolabe">
 									<Script purpose="bodylettering7" value="Zenit"/>
 								</AnnotationCurved>
 							</Annotation>
-							<Script value="&#xf810;" purpose="3.2"/>
 							<Position>
 								<phi>
 									<Rational value="0.0"/>
@@ -1801,6 +1800,7 @@ astrolabe.xsd" name="astrolabe">
 									<Rational value="90"/>
 								</theta>
 							</Position>
+							<Script value="&#xf810;" purpose="3.2"/>
 						</BodyStellar>
 					</Body>
 					<Latitude>
@@ -2673,32 +2673,34 @@ astrolabe.xsd" name="astrolabe">
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
 						<CatalogADC6049 name="6049" fov="chart" url="lib/cat/6049/bound_20.dat.gz">
-							<Annotation>
-								<AnnotationStraight reverse="false" anchor="bottomleft" radiant="false">
-									<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
-								</AnnotationStraight>
-							</Annotation>
-							<Select value="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}">
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}" nature=".36:1.8:0.25">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
-							</Select>
-							<Select value="{abk&#x00fc;rzung~&#x0022;AQL&#x0022;||abk&#x00fc;rzung~&#x0022;AUR&#x0022;||abk&#x00fc;rzung~&#x0022;CAM&#x0022;||abk&#x00fc;rzung~&#x0022;CAS&#x0022;||abk&#x00fc;rzung~&#x0022;CEP&#x0022;||abk&#x00fc;rzung~&#x0022;CRT&#x0022;||abk&#x00fc;rzung~&#x0022;CRV&#x0022;||abk&#x00fc;rzung~&#x0022;CVN&#x0022;||abk&#x00fc;rzung~&#x0022;LEO&#x0022;||abk&#x00fc;rzung~&#x0022;ORI&#x0022;||abk&#x00fc;rzung~&#x0022;PSC&#x0022;||abk&#x00fc;rzung~&#x0022;PUP&#x0022;||abk&#x00fc;rzung~&#x0022;SER1&#x0022;||abk&#x00fc;rzung~&#x0022;SEX&#x0022;||abk&#x00fc;rzung~&#x0022;SGR&#x0022;||abk&#x00fc;rzung~&#x0022;UMI&#x0022;||abk&#x00fc;rzung~&#x0022;VIR&#x0022;}">
+							</CatalogADC6049Record>
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;AQL&#x0022;||abk&#x00fc;rzung~&#x0022;AUR&#x0022;||abk&#x00fc;rzung~&#x0022;CAM&#x0022;||abk&#x00fc;rzung~&#x0022;CAS&#x0022;||abk&#x00fc;rzung~&#x0022;CEP&#x0022;||abk&#x00fc;rzung~&#x0022;CRT&#x0022;||abk&#x00fc;rzung~&#x0022;CRV&#x0022;||abk&#x00fc;rzung~&#x0022;CVN&#x0022;||abk&#x00fc;rzung~&#x0022;LEO&#x0022;||abk&#x00fc;rzung~&#x0022;ORI&#x0022;||abk&#x00fc;rzung~&#x0022;PSC&#x0022;||abk&#x00fc;rzung~&#x0022;PUP&#x0022;||abk&#x00fc;rzung~&#x0022;SER1&#x0022;||abk&#x00fc;rzung~&#x0022;SEX&#x0022;||abk&#x00fc;rzung~&#x0022;SGR&#x0022;||abk&#x00fc;rzung~&#x0022;UMI&#x0022;||abk&#x00fc;rzung~&#x0022;VIR&#x0022;}" nature=".36:1.8:0.25">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
-							</Select>
-							<Select value="{abk&#x00fc;rzung~&#x0022;LAC&#x0022;||abk&#x00fc;rzung~&#x0022;LEP&#x0022;||abk&#x00fc;rzung~&#x0022;SCT&#x0022;||abk&#x00fc;rzung~&#x0022;SER2&#x0022;}">
+							</CatalogADC6049Record>
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;LAC&#x0022;||abk&#x00fc;rzung~&#x0022;LEP&#x0022;||abk&#x00fc;rzung~&#x0022;SCT&#x0022;||abk&#x00fc;rzung~&#x0022;SER2&#x0022;}" nature=".36:1.8:0.25">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
-							</Select>
+							</CatalogADC6049Record>
+							<CatalogADC6049Record select="true" nature=".36:1.8:0.25">
+								<Annotation>
+									<AnnotationStraight reverse="false" anchor="bottomleft" radiant="false">
+										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
+									</AnnotationStraight>
+								</Annotation>
+							</CatalogADC6049Record>
 						</CatalogADC6049>
 					</Catalog>
 					<!--ADC5050-->
@@ -2706,20 +2708,19 @@ astrolabe.xsd" name="astrolabe">
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
 						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
-							<Restrict value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}"/>
-							<Select value="{Vmag>0&#x0026;&#x0026;Vmag&#x003c;2}">
+							<CatalogADC5050Record select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Script purpose="bodylettering0" value="{Name}"/>
+										<Script purpose="{Vmag&#x003c;3?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{Name}"/>
 									</AnnotationStraight>
 								</Annotation>
 								<Annotation>
 									<AnnotationStraight anchor="topleft" reverse="false" radiant="false">
-										<Script purpose="bodylettering0" value="{HR}"/>
+										<Script purpose="{Vmag&#x003c;4?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{HR}"/>
 									</AnnotationStraight>
 								</Annotation>
-							</Select>
-							<Script purpose="{Vmag&#x003c;-1?4.64:Vmag&#x003c;0?3.74:Vmag&#x003c;1?3.02:Vmag&#x003c;2?2.43:Vmag&#x003c;3?1.96:Vmag&#x003c;4?1.58:Vmag&#x003c;5?1.27:Vmag&#x003c;6?1.03:Vmag&#x003c;7?0.83:Vmag&#x003c;8?0.67:Vmag&#x003c;9?0.54:Vmag&#x003c;10?0.43:Vmag&#x003c;11?0.35:Vmag&#x003c;12?0.28:Vmag&#x003c;13?0.22:Vmag&#x003c;14?0.18:0.14}" value="&#xf811;"/>
+								<Script value="&#xf811;" purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:Vmag&#x003c;6?1.10:Vmag&#x003c;7?0.89:Vmag&#x003c;8?0.72:Vmag&#x003c;9?0.58:Vmag&#x003c;10?0.47:Vmag&#x003c;11?0.38:0.30}"/>
+							</CatalogADC5050Record>
 						</CatalogADC5050>
 					</Catalog>
 				</HorizonEquatorial>

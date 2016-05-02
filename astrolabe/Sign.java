@@ -7,6 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAACoordinateTransformation;
+
 @SuppressWarnings("serial")
 public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 
@@ -27,7 +29,7 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		astrolabe.model.BodyAreal peer ;
-		astrolabe.model.Body body ;
+		astrolabe.model.Position pm ;
 		BodyAreal companion ;
 		CatalogRecord record ;
 
@@ -40,6 +42,8 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 					peer.setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
 				AstrolabeFactory.modelOf( peer, false ) ;
 
+				peer.setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
+
 				for ( String ident : segment.split( ":" ) ) {
 					if ( ( record = catalog.getCatalogRecord( ident ) ) == null ) {
 						String msg ;
@@ -49,25 +53,19 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 
 						throw new ParameterNotValidException( msg ) ;
 					}
-					try {
-						body = new astrolabe.model.Body() ;
-						body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-						if ( getName() == null )
-							body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN ) ;
-						else
-							body.getBodyStellar().setName( ApplicationConstant.GC_NS_SGN+getName() ) ;
-						AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
 
-						body.getBodyStellar().setScript( new astrolabe.model.Script() ) ;
-						body.getBodyStellar().getScript().setPurpose( ApplicationConstant.AV_SCRIPT_NONE ) ;
-						body.getBodyStellar().getScript().setValue( "" ) ;
-
-						record.toModel( body ) ;
-
-						peer.addPosition( body.getBodyStellar().getPosition() ) ;
-					} catch ( ValidationException e ) {
-						throw new RuntimeException( e.toString() ) ;
-					}
+					pm = new astrolabe.model.Position() ;
+					// astrolabe.model.SphericalType
+					pm.setR( new astrolabe.model.R() ) ;
+					pm.getR().setValue( 1 ) ;
+					// astrolabe.model.AngleType
+					pm.setPhi( new astrolabe.model.Phi() ) ;
+					pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
+					pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( record.RA()[0] ) ) ;  
+					// astrolabe.model.AngleType
+					pm.setTheta( new astrolabe.model.Theta() ) ;
+					pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
+					pm.getTheta().getRational().setValue( record.de()[0] ) ;  
 				}
 
 				try {

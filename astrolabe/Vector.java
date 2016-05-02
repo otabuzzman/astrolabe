@@ -53,6 +53,12 @@ public class Vector {
 		}
 	}
 
+	public void neg() {
+		x = -x ;
+		y = -y ;
+		z = -z ;
+	}
+
 	public double abs() {
 		return java.lang.Math.sqrt( x*x+y*y+z*z ) ;
 	}

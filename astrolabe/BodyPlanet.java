@@ -101,12 +101,12 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementImportance importance ;
+		GSPaintStyle nature ;
 
-		importance = new ElementImportance( getImportance() ) ;
-		importance.headPS( ps ) ;
-		importance.emitPS( ps ) ;
-		importance.tailPS( ps ) ;
+		nature = new GSPaintStyle( getNature() ) ;
+		nature.headPS( ps ) ;
+		nature.emitPS( ps ) ;
+		nature.tailPS( ps ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
@@ -146,7 +146,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
 
 				peer.setStretch( getStretch() ) ;
-				peer.setImportance( getImportance() ) ;
+				peer.setNature( getNature() ) ;
 				peer.setType( getType() ) ;
 
 				peer.setAnnotation( getAnnotation() ) ;
@@ -201,7 +201,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
 			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
-			
+
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
 			ps.operator.gsave() ;

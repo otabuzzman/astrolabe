@@ -1,9 +1,9 @@
 
 package astrolabe;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
-import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
@@ -14,13 +14,14 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	private Projector projector ;
 
-	private List<double[]> outline ;
+	private List<double[]> outline = new java.util.Vector<double[]>() ;
 
 	public BodyAreal( Peer peer, Projector projector ) {
 		PolygonSphere polygon ;
-		List<double[]> outline ;
+		List<double[]> position ;
 		double lo, la ;
 		double sr, sd ;
+		OutlineElliptical ellipse ;
 		MessageCatalog m ;
 		String key ;
 
@@ -28,19 +29,14 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 		this.projector = projector ;
 
-		this.outline = AstrolabeFactory.valueOf( getPosition() ) ;
-
-		sr = 0 ;
-		sd = 0 ;
-
-		if ( getPositionCount()>2 ) {
-			outline = new java.util.Vector<double[]>() ;
-			for ( double[] v : this.outline ) {
-				lo = CAACoordinateTransformation.MapTo0To360Range( v[1] ) ;
+		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
+			position = new java.util.Vector<double[]>() ;
+			for ( double[] p : AstrolabeFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
+				lo = CAACoordinateTransformation.MapTo0To360Range( p[1] ) ;
 				if ( lo>180 )
 					lo = lo-360 ;
 
-				la = CAACoordinateTransformation.MapTo0To360Range( v[2] ) ;
+				la = CAACoordinateTransformation.MapTo0To360Range( p[2] ) ;
 				if ( la>180 )
 					la = la-360 ;
 				if ( la>90 )
@@ -48,13 +44,22 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				if ( la<-90 )
 					la = -180-la ;
 
-				outline.add( new double[] { 1, lo, la } ) ;
-			}			
-			polygon = new PolygonSphere( outline ) ;
+				position.add( new double[] { 1, lo, la } ) ;
+				outline.add( projector.project( lo, la ) ) ;
+			}
+
+			polygon = new PolygonSphere( position ) ;
 			sr = polygon.area() ;
 			if ( sr>( 2*java.lang.Math.PI ) )
 				sr = 4*java.lang.Math.PI-sr ;
 			sd = sr/java.lang.Math.pow( ( 2*java.lang.Math.PI/360. ), 2 ) ;
+		} else {
+			ellipse = new OutlineElliptical( getBodyArealTypeChoice().getOutlineElliptical(), projector ) ;
+
+			outline.addAll( ellipse.list() ) ;
+
+			sr = 0 ;
+			sd = 0 ;
 		}
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
@@ -66,106 +71,51 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementImportance importance ;
+		GSPaintStyle nature ;
 
-		importance = new ElementImportance( getImportance() ) ;
-		importance.headPS( ps ) ;
-		importance.emitPS( ps ) ;
-		importance.tailPS( ps ) ;
+		nature = new GSPaintStyle( getNature() ) ;
+		nature.headPS( ps ) ;
+		nature.emitPS( ps ) ;
+		nature.tailPS( ps ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		emitPS( ps, true ) ;
-	}
-
-	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
 		ListCutter cutter ;
-		List<List<double[]>> segmentList ;
-		List<double[]> segment ;
+		List<List<double[]>> segment ;
+		Comparator<List<double[]>> comparator = new Comparator<List<double[]>>() {
+			public int compare( List<double[]> a, List<double[]> b ) {
+				double alen, blen ;
+
+				alen = Vector.len( Vector.con( a ) ) ;
+				blen = Vector.len( Vector.con( b ) ) ;
+
+				return alen<blen?1:
+					alen>blen?-1:
+						0 ;
+			}
+		} ;
 		Geometry fov ;
-		astrolabe.model.BodyAreal peer ;
-		BodyAreal body ;
-		astrolabe.model.Position position ;
-		double[] lo, xy = null ;
+		double[] xy ;
 		Vector z, p ;
-		double lm , lc ;
-		int ia ;
 		double a ;
 
-		if ( cut ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-			if ( fov == null ) {
-				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			}
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+		if ( fov == null ) {
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+		}
 
-			cutter = new ListCutter( list(), fov ) ;
-			segmentList = cutter.segmentsIntersecting( true ) ;
+		cutter = new ListCutter( outline, fov ) ;
 
-			lm = 0 ;
-			ia = 0 ;
-			for ( int is=0 ; is<segmentList.size() ; is++ ) {
-				lc = Vector.len( Vector.con( segmentList.get( is ) ) ) ;
-				if ( lc>lm ) {
-					lm = lc ;
-					ia = is ;
-				}
-			}
+		segment = cutter.segmentsIntersecting( true ) ;
+		if ( segment.size()>1 )
+			Collections.sort( segment, comparator ) ;
 
-			for ( int is=0 ; is<segmentList.size() ; is++ ) {
-				segment = segmentList.get( is ) ;
-				peer = new astrolabe.model.BodyAreal() ;
-				if ( getName() == null )
-					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
-				else
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+		for ( int s=0 ; s<segment.size() ; s++ ) {
+			ps.operator.gsave() ;
 
-				peer.setImportance( getImportance() ) ;
-
-				for ( double[] coordinate : segment ) {
-					lo = projector.unproject( coordinate ) ;
-
-					position = new astrolabe.model.Position() ;
-					// astrolabe.model.SphericalType
-					position.setR( new astrolabe.model.R() ) ;
-					position.getR().setValue( 1 ) ;
-					// astrolabe.model.AngleType
-					position.setPhi( new astrolabe.model.Phi() ) ;
-					position.getPhi().setRational( new astrolabe.model.Rational() ) ;
-					position.getPhi().getRational().setValue( lo[0] ) ;  
-					// astrolabe.model.AngleType
-					position.setTheta( new astrolabe.model.Theta() ) ;
-					position.getTheta().setRational( new astrolabe.model.Rational() ) ;
-					position.getTheta().getRational().setValue( lo[1] ) ;  
-
-					peer.addPosition( position ) ;
-				}
-
-				if ( is == ia ) {
-					peer.setAnnotation( getAnnotation() ) ;
-				}
-
-				try {
-					peer.validate() ;
-				} catch ( ValidationException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				body = new BodyAreal( peer, projector ) ;
-
-				ps.operator.gsave();
-
-				body.headPS( ps ) ;
-				body.emitPS( ps, false ) ;
-				body.tailPS( ps ) ;
-
-				ps.operator.grestore();
-			}
-		} else {
 			ps.array( true ) ;
-			for ( int n=0 ; n<outline.size() ; n++ ) {
-				lo = outline.get( n ) ;
-
-				xy = projector.project( lo[1], lo[2] ) ;
+			for ( int c=0 ; c<segment.get( s ).size() ; c++ ) {
+				xy = segment.get( s ).get( c ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
@@ -200,8 +150,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			ps.operator.stroke() ;
 			ps.operator.grestore() ;
 
-			lo = outline.get( outline.size()-1 ) ;
-			xy = projector.project( lo[1], lo[2] ) ;
+			xy = segment.get( s ).get( segment.get( s ).size()-1 ) ;
 			p = new Vector( xy[0], xy[1] ) ;
 			xy = projector.project( 0, 90 ) ;
 			z = new Vector( xy[0], xy[1] ) ; // zenit
@@ -212,7 +161,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 			ps.operator.rotate( a ) ;
 
-			if ( getAnnotation() != null ) {
+			if ( s == 0 && getAnnotation() != null ) {
 				PostscriptEmitter annotation ;
 
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
@@ -226,6 +175,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 					ps.operator.grestore() ;
 				}
 			}
+
+			ps.operator.grestore() ;
 		}
 	}
 
@@ -233,15 +184,6 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	}
 
 	public List<double[]> list() {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-		double[] lo, xy ;
-
-		for ( int n=0 ; n<outline.size() ; n++ ) {
-			lo = outline.get( n ) ;
-			xy = projector.project( lo[1], lo[2] ) ;
-			r.add( xy ) ;
-		}
-
-		return r ;
+		return new java.util.Vector<double[]>( outline ) ;
 	}
 }

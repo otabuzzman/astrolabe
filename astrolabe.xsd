@@ -60,27 +60,6 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="northern" type="xs:boolean" use="required"/>
-		<xs:attribute name="practicality" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="none"/>
-					<xs:pattern value="seldom"/>
-					<xs:pattern value="sometimes"/>
-					<xs:pattern value="frequent"/>
-					<xs:pattern value="always"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="importance" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical"/>
-					<xs:pattern value="cardinal"/>
-					<xs:pattern value="dividing"/>
-					<xs:pattern value="graphical"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Chart">
 		<xs:complexType>
@@ -98,7 +77,7 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="a[0-5]"/>
-					<xs:pattern value="[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?"/>
+					<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)x([0-9]+|[0-9]*\.[0-9]+)"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -114,7 +93,7 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="[a-zA-Z]+"/>
-					<xs:pattern value="(((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*)x((0|([1-9][0-9]*))(\.[0-9]*[1-9])?(:(0|([1-9][0-9]*))(\.[0-9]*[1-9])?)*))"/>
+					<xs:pattern value="(([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+))*)x(([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+))*)"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -346,8 +325,6 @@
 				<xs:restriction base="xs:string">
 					<xs:pattern value="canonical"/>
 					<xs:pattern value="cardinal"/>
-					<xs:pattern value="dividing"/>
-					<xs:pattern value="graphical"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -624,7 +601,9 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="value" use="required">
 			<xs:simpleType>
-				<xs:restriction base="xs:string"/>
+				<xs:restriction base="xs:string">
+					<xs:pattern value=".+"/>
+				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
@@ -645,7 +624,7 @@
 								<xs:pattern value="dialfraction"/>
 								<xs:pattern value="guidance"/>
 								<xs:pattern value="obscure"/>
-								<xs:pattern value="[-+]?([0-9]*\.[0-9]+|[0-9]+)"/>
+								<xs:pattern value="[0-9]+|[0-9]*\.[0-9]+"/>
 								<xs:pattern value="\{.+\}"/>
 							</xs:restriction>
 						</xs:simpleType>
@@ -672,8 +651,8 @@
 	<xs:complexType name="BodyStellarType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="Script"/>
 			<xs:element ref="Position"/>
+			<xs:element ref="Script"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="turn" use="required">
@@ -704,16 +683,18 @@
 	<xs:complexType name="BodyArealType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
+			<xs:choice>
+				<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
+				<xs:element ref="OutlineElliptical"/>
+			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="importance" use="required">
+		<xs:attribute name="nature" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical"/>
-					<xs:pattern value="cardinal"/>
-					<xs:pattern value="dividing"/>
-					<xs:pattern value="graphical"/>
+					<xs:pattern value="arbitrary"/>
+					<xs:pattern value="authentic"/>
+					<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -725,6 +706,26 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="OutlineElliptical">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AngleType">
+					<xs:sequence>
+						<xs:element ref="Position"/>
+					</xs:sequence>
+					<xs:attribute name="proportion" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minExclusive value="0"/>
+								<xs:maxInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="PA" type="xs:double" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="BodyOrbitalType">
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
@@ -733,13 +734,12 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="stretch" type="xs:boolean" use="optional" default="false"/>
-		<xs:attribute name="importance" use="required">
+		<xs:attribute name="nature" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="canonical"/>
-					<xs:pattern value="cardinal"/>
-					<xs:pattern value="dividing"/>
-					<xs:pattern value="graphical"/>
+					<xs:pattern value="artificial"/>
+					<xs:pattern value="celestial"/>
+					<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -819,43 +819,13 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="CatalogType">
-		<xs:sequence>
-			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="Restrict" minOccurs="0">
-				<xs:complexType>
-					<xs:attribute name="value">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Select" minOccurs="0" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element ref="Script" minOccurs="0"/>
-						<xs:element ref="Annotation" maxOccurs="unbounded"/>
-					</xs:sequence>
-					<xs:attribute name="value" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element ref="Artefact" minOccurs="0"/>
-		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 		<xs:attribute name="fov" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string"/>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 	</xs:complexType>
 	<xs:element name="Catalog">
 		<xs:complexType>
@@ -875,7 +845,7 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
-						<xs:element ref="Script"/>
+						<xs:element ref="CatalogADC1239HRecord" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -886,7 +856,7 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
-						<xs:element ref="Script"/>
+						<xs:element ref="CatalogADC1239TRecord" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -897,7 +867,7 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
-						<xs:element ref="Script"/>
+						<xs:element ref="CatalogADC5050Record" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -908,7 +878,7 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
-						<xs:element ref="Script"/>
+						<xs:element ref="CatalogADC5109Record" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -917,7 +887,11 @@
 	<xs:element name="CatalogADC6049">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="CatalogType"/>
+				<xs:extension base="CatalogType">
+					<xs:sequence>
+						<xs:element ref="CatalogADC6049Record" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -926,7 +900,7 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
-						<xs:element ref="Script"/>
+						<xs:element ref="CatalogADC7118Record" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -937,8 +911,120 @@
 			<xs:complexContent>
 				<xs:extension base="CatalogType">
 					<xs:sequence>
+						<xs:element ref="CatalogADC7237Record" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="CatalogRecordType">
+		<xs:sequence>
+			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="select" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="true"/>
+					<xs:pattern value="false"/>
+					<xs:pattern value="\{.+\}"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="CatalogADC1239HRecord">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC1239TRecord">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC5050Record">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC5109Record">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC6049Record">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:attribute name="nature" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
+								<xs:pattern value="\{.+\}"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC7118Record">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+					<xs:attribute name="nature" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[0-9]+|[0-9]*\.[0-9]+(:[0-9]+|[0-9]*\.[0-9]+){1,2}"/>
+								<xs:pattern value="\{.+\}"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CatalogADC7237Record">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="CatalogRecordType">
+					<xs:sequence>
+						<xs:element ref="Script"/>
+					</xs:sequence>
+					<xs:attribute name="nature" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[0-9]+|[0-9]*\.[0-9]+(:[0-9]+|[0-9]*\.[0-9]+){1,2}"/>
+								<xs:pattern value="\{.+\}"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -992,8 +1078,8 @@
 		<xs:attribute name="sec" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
-					<xs:minInclusive value="0.0"/>
-					<xs:maxExclusive value="60.0"/>
+					<xs:minInclusive value="0"/>
+					<xs:maxExclusive value="60"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -1016,8 +1102,8 @@
 		<xs:attribute name="sec" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
-					<xs:minInclusive value="0.0"/>
-					<xs:maxExclusive value="60.0"/>
+					<xs:minInclusive value="0"/>
+					<xs:maxExclusive value="60"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

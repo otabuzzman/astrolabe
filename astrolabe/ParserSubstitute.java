@@ -56,7 +56,7 @@ public class ParserSubstitute extends ReflectSemantic {
 		{ Token.IGNORED, "`whitespaces`" }
 	} ;
 
-	public Object SUBSTITUTE( Object mark, Object DEFINITION, Object kram ) {
+	public Object SUBSTITUTE( Object DEFINITION ) {
 		return DEFINITION ;
 	}
 
@@ -76,8 +76,8 @@ public class ParserSubstitute extends ReflectSemantic {
 
 	public Object CONDITION( Object CONDITION, Object operator, Object COMPARISON ) {
 		if ( operator.equals( "&&" ) )
-			return ( (Boolean) CONDITION ).booleanValue()&&( (Boolean) COMPARISON ).booleanValue() ;
-		return ( (Boolean) CONDITION ).booleanValue()||( (Boolean) COMPARISON ).booleanValue() ;
+			return ( (Boolean) CONDITION ).booleanValue() && ( (Boolean) COMPARISON ).booleanValue() ;
+		return ( (Boolean) CONDITION ).booleanValue() || ( (Boolean) COMPARISON ).booleanValue() ;
 	}
 
 	public Object COMPARISON( Object EXPRESSION ) {
@@ -85,18 +85,65 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object COMPARISON( Object COMPARISON, Object operator, Object EXPRESSION ) {
-		if ( operator.equals( "<" ) )
-			return number( COMPARISON ).doubleValue()<number( EXPRESSION ).doubleValue() ;
-		if ( operator.equals( ">" ) )
-			return number( COMPARISON ).doubleValue()>number( EXPRESSION ).doubleValue() ;
-		if ( operator.equals( "<=" ) )
-			return number( COMPARISON ).doubleValue()<=number( EXPRESSION ).doubleValue() ;
-		if ( operator.equals( ">=" ) )
-			return number( COMPARISON ).doubleValue()>=number( EXPRESSION ).doubleValue() ;
-		if ( operator.equals( "==" ) )
-			return number( COMPARISON ).doubleValue()==number( EXPRESSION ).doubleValue() ;
-		if ( operator.equals( "!=" ) )
-			return number( COMPARISON ).doubleValue()!=number( EXPRESSION ).doubleValue() ;
+		switch ( types( COMPARISON, EXPRESSION) ) {
+		case 0 :
+		case 2 :
+		case 20 :
+		case 22 :
+			if ( operator.equals( "<" ) )
+				return ( (Long) number( COMPARISON ) ).longValue() < ( (Long) number( EXPRESSION ) ).longValue() ;
+			if ( operator.equals( ">" ) )
+				return ( (Long) number( COMPARISON ) ).longValue() > ( (Long) number( EXPRESSION ) ).longValue() ;
+				if ( operator.equals( "<=" ) )
+					return ( (Long) number( COMPARISON ) ).longValue() <= ( (Long) number( EXPRESSION ) ).longValue() ;
+				if ( operator.equals( ">=" ) )
+					return ( (Long) number( COMPARISON ) ).longValue() >= ( (Long) number( EXPRESSION ) ).longValue() ;
+					if ( operator.equals( "==" ) )
+						return ( (Long) number( COMPARISON ) ).longValue() == ( (Long) number( EXPRESSION ) ).longValue() ;
+					if ( operator.equals( "!=" ) )
+						return ( (Long) number( COMPARISON ) ).longValue() != ( (Long) number( EXPRESSION ) ).longValue() ;
+		case 1 :
+		case 21 :
+			if ( operator.equals( "<" ) )
+				return ( (Long) number( COMPARISON ) ).longValue() < ( (Double) number( EXPRESSION ) ).doubleValue() ;
+			if ( operator.equals( ">" ) )
+				return ( (Long) number( COMPARISON ) ).longValue() > ( (Double) number( EXPRESSION ) ).doubleValue() ;
+				if ( operator.equals( "<=" ) )
+					return ( (Long) number( COMPARISON ) ).longValue() <= ( (Double) number( EXPRESSION ) ).doubleValue() ;
+				if ( operator.equals( ">=" ) )
+					return ( (Long) number( COMPARISON ) ).longValue() >= ( (Double) number( EXPRESSION ) ).doubleValue() ;
+					if ( operator.equals( "==" ) )
+						return ( (Long) number( COMPARISON ) ).doubleValue() == ( (Double) number( EXPRESSION ) ).doubleValue() ;
+					if ( operator.equals( "!=" ) )
+						return ( (Long) number( COMPARISON ) ).doubleValue() != ( (Double) number( EXPRESSION ) ).doubleValue() ;
+		case 10 :
+		case 12 :
+			if ( operator.equals( "<" ) )
+				return ( (Double) number( COMPARISON ) ).doubleValue() < ( (Long) number( EXPRESSION ) ).longValue() ;
+			if ( operator.equals( ">" ) )
+				return ( (Double) number( COMPARISON ) ).doubleValue() > ( (Long) number( EXPRESSION ) ).longValue() ;
+				if ( operator.equals( "<=" ) )
+					return ( (Double) number( COMPARISON ) ).doubleValue() <= ( (Long) number( EXPRESSION ) ).longValue() ;
+				if ( operator.equals( ">=" ) )
+					return ( (Double) number( COMPARISON ) ).doubleValue() >= ( (Long) number( EXPRESSION ) ).longValue() ;
+					if ( operator.equals( "==" ) )
+						return ( (Double) number( COMPARISON ) ).doubleValue() == ( (Long) number( EXPRESSION ) ).doubleValue() ;
+					if ( operator.equals( "!=" ) )
+						return ( (Double) number( COMPARISON ) ).doubleValue() != ( (Long) number( EXPRESSION ) ).doubleValue() ;
+		case 11 :
+			if ( operator.equals( "<" ) )
+				return ( (Double) number( COMPARISON ) ).doubleValue() < ( (Double) number( EXPRESSION ) ).doubleValue() ;
+			if ( operator.equals( ">" ) )
+				return ( (Double) number( COMPARISON ) ).doubleValue() > ( (Double) number( EXPRESSION ) ).doubleValue() ;
+				if ( operator.equals( "<=" ) )
+					return ( (Double) number( COMPARISON ) ).doubleValue() <= ( (Double) number( EXPRESSION ) ).doubleValue() ;
+				if ( operator.equals( ">=" ) )
+					return ( (Double) number( COMPARISON ) ).doubleValue() >= ( (Double) number( EXPRESSION ) ).doubleValue() ;
+					if ( operator.equals( "==" ) )
+						return ( (Double) number( COMPARISON ) ).doubleValue() == ( (Double) number( EXPRESSION ) ).doubleValue() ;
+					if ( operator.equals( "!=" ) )
+						return ( (Double) number( COMPARISON ) ).doubleValue() != ( (Double) number( EXPRESSION ) ).doubleValue() ;
+		}
 		if ( operator.equals( "~" ) )
 			return string( COMPARISON ).matches( string( EXPRESSION ) ) ;
 		return ! string( COMPARISON ).matches( string( EXPRESSION ) ) ;
@@ -107,9 +154,34 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object EXPRESSION( Object EXPRESSION, Object operator, Object TERM ) {
-		if ( operator.equals( "+" ) )
-			return number( EXPRESSION )+number( TERM ) ;
-		return number( EXPRESSION )-number( TERM ) ;
+		switch ( types( EXPRESSION, TERM ) ) {
+		case 0 :
+		case 2 :
+		case 20 :
+			if ( operator.equals( "+" ) )
+				return ( (Long) number( EXPRESSION ) ).longValue() + ( (Long) number( TERM ) ).longValue() ;
+			return ( (Long) number( EXPRESSION ) ).longValue() - ( (Long) number( TERM ) ).longValue() ;
+		case 1 :
+		case 21 :
+			if ( operator.equals( "+" ) )
+				return ( (Long) number( EXPRESSION ) ).longValue() + ( (Double) number( TERM ) ).doubleValue() ;
+			return ( (Long) number( EXPRESSION ) ).longValue() - ( (Double) number( TERM ) ).doubleValue() ;
+		case 10 :
+		case 12 :
+			if ( operator.equals( "+" ) )
+				return ( (Double) number( EXPRESSION ) ).doubleValue() + ( (Long) number( TERM ) ).longValue() ;
+			return ( (Double) number( EXPRESSION ) ).doubleValue() - ( (Long) number( TERM ) ).longValue() ;
+		case 11 :
+			if ( operator.equals( "+" ) )
+				return ( (Double) number( EXPRESSION ) ).doubleValue() + ( (Double) number( TERM ) ).doubleValue() ;
+			return ( (Double) number( EXPRESSION ) ).doubleValue() - ( (Double) number( TERM ) ).doubleValue() ;
+		case 22 :
+			if ( operator.equals( "+" ) )
+				return string( EXPRESSION ) + string( TERM ) ;
+			return ( (Long) number( EXPRESSION ) ).longValue() - ( (Long) number( TERM ) ).longValue() ;
+		}
+
+		return null ;
 	}
 
 	public Object TERM( Object FACTOR ) {
@@ -117,11 +189,54 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object TERM( Object TERM, Object operator, Object FACTOR ) {
-		if ( operator.equals( "*" ) )
-			return number( TERM )*number( FACTOR ) ;
-		if ( operator.equals( "/" ) )
-			return number( TERM )/number( FACTOR ) ;
-		return number( TERM )%number( FACTOR ) ;
+		switch ( types( TERM, FACTOR ) ) {
+		case 0 :
+		case 2 :
+		case 20 :
+		case 22 :
+			if ( operator.equals( "*" ) )
+				return ( (Long) number( TERM ) ).longValue() * ( (Long) number( FACTOR ) ).longValue() ;
+			if ( operator.equals( "/" ) )
+				return ( (Long) number( TERM ) ).longValue() / ( (Long) number( FACTOR ) ).longValue() ;
+			return ( (Long) number( TERM ) ).longValue() % ( (Long) number( FACTOR ) ).longValue() ;
+		case 1 :
+		case 21 :
+			if ( operator.equals( "*" ) )
+				return ( (Long) number( TERM ) ).longValue() * ( (Double) number( FACTOR ) ).doubleValue() ;
+			if ( operator.equals( "/" ) )
+				return ( (Long) number( TERM ) ).longValue() / ( (Double) number( FACTOR ) ).doubleValue() ;
+			return ( (Long) number( TERM ) ).longValue() % ( (Double) number( FACTOR ) ).doubleValue() ;
+		case 10 :
+		case 12 :
+			if ( operator.equals( "*" ) )
+				return ( (Double) number( TERM ) ).doubleValue() * ( (Long) number( FACTOR ) ).longValue() ;
+			if ( operator.equals( "/" ) )
+				return ( (Double) number( TERM ) ).doubleValue() / ( (Long) number( FACTOR ) ).longValue() ;
+			return ( (Double) number( TERM ) ).doubleValue() % ( (Long) number( FACTOR ) ).longValue() ;
+		case 11 :
+			if ( operator.equals( "*" ) )
+				return ( (Double) number( TERM ) ).doubleValue() * ( (Double) number( FACTOR ) ).doubleValue() ;
+			if ( operator.equals( "/" ) )
+				return ( (Double) number( TERM ) ).doubleValue() / ( (Double) number( FACTOR ) ).doubleValue() ;
+			return ( (Double) number( TERM ) ).doubleValue() % ( (Double) number( FACTOR ) ).doubleValue() ;
+		}
+
+		return null ;
+	}
+
+	private int types( Object a, Object b ) {
+		// Long, 	Long, 		0
+		// Long,	Double,		1
+		// Long,	String,		2
+		// Double, 	Long, 		10
+		// Double,	Double,		11
+		// Double,	String,		12
+		// String, 	Long, 		20
+		// String,	Double,		21
+		// String,	String,		22
+		return
+		( a instanceof Long ? 0 : a instanceof Double ? 1 : 2 )*10+
+		( b instanceof Long ? 0 : b instanceof Double ? 1 : 2 ) ;
 	}
 
 	private String string( Object value ) {
@@ -129,15 +244,18 @@ public class ParserSubstitute extends ReflectSemantic {
 			new String( value.toString() ) ;
 	}
 
-	private Double number( Object value ) {
-		return value instanceof Double ? (Double) value :
-			value instanceof Long ? new Double( value.toString() ) :
-				new Double( value.toString().length() ) ;
+	private Object number( Object value ) {
+		return value instanceof String ?
+				new Long( value.toString().length() ) : value ;
 	}
 
 	public Object FACTOR( Object value ) {
 		Object factor ;
 
+		try {
+			// value is a "`number`"
+			return Long.valueOf( value.toString() ) ;
+		} catch ( NumberFormatException e ) {}
 		try {
 			// value is a "`number`"
 			return Double.valueOf( value.toString() ) ;
@@ -162,7 +280,15 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object FACTOR( Object minus, Object FACTOR ) {
-		return new Double( -( (Double) FACTOR ).doubleValue() ) ;
+		switch ( types( FACTOR, FACTOR ) ) {
+		case 0 :
+		case 22 :
+			return -(Long) number( FACTOR ) ;
+		case 11 :
+			return -(Double) number( FACTOR ) ;
+		}
+
+		return null ;
 	}
 
 	public Object FACTOR( Object leftParenthesis, Object DEFINITION, Object rightParenthesis ) {

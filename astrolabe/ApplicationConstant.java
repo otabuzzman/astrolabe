@@ -208,6 +208,10 @@ public final class ApplicationConstant {
 
 	public final static String LK_ADC5050_HR			= "substitute.adc5050.HR" ;
 	public final static String LK_ADC5050_NAME			= "substitute.adc5050.Name" ;
+	public final static String LK_ADC5050_NAME_FLAMSTEED		= "substitute.adc5050.Name.flamsteed" ;
+	public final static String LK_ADC5050_NAME_BAYER			= "substitute.adc5050.Name.bayer" ;
+	public final static String LK_ADC5050_NAME_BAYERINDEX		= "substitute.adc5050.Name.bayerindex" ;
+	public final static String LK_ADC5050_NAME_CONSTELLATION	= "substitute.adc5050.Name.constellation" ;	
 	public final static String LK_ADC5050_DM			= "substitute.adc5050.DM" ;
 	public final static String LK_ADC5050_HD			= "substitute.adc5050.HD" ;
 	public final static String LK_ADC5050_SAO			= "substitute.adc5050.SAO" ;
@@ -505,10 +509,13 @@ public final class ApplicationConstant {
 
 	// preferences keys (PK_), nodes (PN_)
 	private final static String PK_GENERAL_RISE			= "rise" ;
-	private final static String PK_GENERAL_SPACE			= "space" ;
+	private final static String PK_GENERAL_SPACE		= "space" ;
 	private final static String PK_GENERAL_INTERVAL		= "interval" ;
-	private final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
-	private final static String PK_GENERAL_PRECISION		= "precision" ;
+	private final static String PK_GENERAL_LINEWIDTH	= "linewidth" ;
+	private final static String PK_GENERAL_PRECISION	= "precision" ;
+
+	protected final static String PN_GENERAL_DEFAULT	= "default" ;
+	protected final static String PN_GENERAL_REGISTRY	= "registry" ;
 
 	// PostscriptStream
 	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;
@@ -555,14 +562,14 @@ public final class ApplicationConstant {
 	public final static String PK_ANNOTATION_MARGIN				= "margin" ;
 	public final static String PK_ANNOTATION_RISE				= PK_GENERAL_RISE ;
 
-	public final static String PN_TEXT_PURPOSE	= "purpose" ;
-
 	public final static String PK_BODY_INTERVAL	= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH	= "stretch" ;
 
-	public final static String PK_DMS_PRECISION = PK_GENERAL_PRECISION ;
+	public final static String PK_DMS_PRECISION				= PK_GENERAL_PRECISION ;
 
-	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
+	public final static String PK_RATIONAL_PRECISION		= PK_GENERAL_PRECISION ;
+
+	public final static String PK_CATALOG_THRESHOLDSCALE	= "thresholdscale" ;
 
 	// postscript custom definitions
 	public final static String PS_PROLOG_PAGESIZE		= "pagesize" ;

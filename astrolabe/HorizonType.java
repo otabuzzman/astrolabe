@@ -9,9 +9,9 @@ abstract public class HorizonType extends astrolabe.model.HorizonType {
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementPracticality practicality ;
+		GSPaintColor practicality ;
 
-		practicality = new ElementPracticality( getPracticality() ) ;
+		practicality = new GSPaintColor( getPracticality() ) ;
 		practicality.headPS( ps ) ;
 		practicality.emitPS( ps ) ;
 		practicality.tailPS( ps ) ;

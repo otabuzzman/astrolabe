@@ -53,13 +53,6 @@ public class ParserAttribute extends ParserSubstitute {
 	}
 
 	public String stringValue( String string ) {
-		String value ;
-
-		value = parse( string ) ;
-
-		if ( value == null )
-			value = new String( string ) ;
-
-		return value ;
+		return parse( string ) ;
 	}
 }

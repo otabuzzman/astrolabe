@@ -10,13 +10,8 @@ import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import org.exolab.castor.xml.ValidationException;
-
-import caa.CAA2DCoordinate;
-import caa.CAACoordinateTransformation;
-import caa.CAAPrecession;
-
-public class CatalogADC6049Record implements CatalogRecord {
+@SuppressWarnings("serial")
+public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record implements CatalogRecord {
 
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
@@ -76,9 +71,9 @@ public class CatalogADC6049Record implements CatalogRecord {
 		}
 	}
 
-	public boolean isValid() {
+	public boolean isOK() {
 		try {
-			validate() ;
+			recognize() ;
 		} catch ( ParameterNotValidException e ) {
 			return false ;
 		}
@@ -86,7 +81,7 @@ public class CatalogADC6049Record implements CatalogRecord {
 		return true ;
 	}
 
-	public void validate() throws ParameterNotValidException {
+	public void recognize() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
 		Object value ;
@@ -100,7 +95,7 @@ public class CatalogADC6049Record implements CatalogRecord {
 					token = getClass().getDeclaredField( key ) ;
 					value = token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
-					for ( String v : (List<String>) value )
+					for ( String v : unsafecast( value ) )
 						if ( ! v.matches( pattern ) )
 							throw new ParameterNotValidException( key ) ;
 				} catch ( NoSuchFieldException e ) {
@@ -112,6 +107,11 @@ public class CatalogADC6049Record implements CatalogRecord {
 		} catch ( BackingStoreException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> unsafecast( Object value ) {
+		return (List<String>) value ;
 	}
 
 	public void register() {
@@ -139,37 +139,6 @@ public class CatalogADC6049Record implements CatalogRecord {
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_GENITIVE, new Object[] { con } ) ;
 		v = m.message( p ) ;
 		Registry.registerName( k, v ) ;
-	}
-
-	public void toModel( astrolabe.model.Body body ) throws ValidationException {
-		astrolabe.model.Position pm ;
-		CAA2DCoordinate ceq ;
-		double epoch ;
-
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
-
-		body.getBodyAreal().setName( con ) ;
-
-		for ( int p=0 ; p<RAh.size() ; p++ ) {
-			ceq = CAAPrecession.PrecessEquatorial( RAh( p ), DEd( p ), 2451545./*J2000*/, epoch ) ;
-			pm = new astrolabe.model.Position() ;
-			// astrolabe.model.SphericalType
-			pm.setR( new astrolabe.model.R() ) ;
-			pm.getR().setValue( 1 ) ;
-			// astrolabe.model.AngleType
-			pm.setPhi( new astrolabe.model.Phi() ) ;
-			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-			pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
-			// astrolabe.model.AngleType
-			pm.setTheta( new astrolabe.model.Theta() ) ;
-			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-			pm.getTheta().getRational().setValue( ceq.Y() ) ;  
-
-			body.getBodyAreal().addPosition( pm ) ;
-			ceq.delete() ;
-		}
-
-		body.validate() ;
 	}
 
 	public double[] RA() {

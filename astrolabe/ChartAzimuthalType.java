@@ -122,13 +122,10 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementPracticality practicality ;
-		ElementImportance importance ;
 		long seed ;
 
 		ps.dsc.beginSetup() ;
 
-		// Set pagesize
 		ps.dict( true ) ;
 		ps.push( "/PageSize" ) ;
 		ps.array( true ) ;
@@ -136,17 +133,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.push( page.sizey()*unit ) ;
 		ps.array( false ) ;
 		ps.dict( false ) ;
-
 		ps.operator.setpagedevice() ;
-
-		// Set origin at center of page.
-		ps.push( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
-
-		ps.operator.mul( .5 ) ;
-		ps.operator.exch() ;
-		ps.operator.mul( .5 ) ;
-		ps.operator.exch() ;
-		ps.operator.translate() ;
 
 		seed = new Date().getTime()/1000 ;
 		ps.operator.srand( seed ) ;
@@ -156,16 +143,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dsc.beginPageSetup() ;
 
 		ps.operator.scale( unit ) ;
-
-		practicality = new ElementPracticality( getPracticality() ) ;
-		practicality.headPS( ps ) ;
-		practicality.emitPS( ps ) ;
-		practicality.tailPS( ps ) ;
-
-		importance = new ElementImportance( getImportance() ) ;
-		importance.headPS( ps ) ;
-		importance.emitPS( ps ) ;
-		importance.tailPS( ps ) ;
 
 		ps.dsc.endPageSetup() ;
 

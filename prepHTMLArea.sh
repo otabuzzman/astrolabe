@@ -1,11 +1,11 @@
-# ./prepHTMLArea.sh <img-src> <area-href> [ <chart-picker-ratio> ]
+# ./prepHTMLArea.sh <img-src> <area-href>
 #
 
 # Gebrauch:
-# xsltproc <xsl> <xml> | [ LANG=<country> ] ./prepHTMLArea.sh <img-src> <area-href> [ <pagesize-chart> <pagesize-picker> ]
+# xsltproc <xsl> <xml> | [ LANG=<country> ] ./prepHTMLArea.sh <img-src> <area-href>
 #
 # xsltproc AtlasStereographic.xsl AtlasStereographic-northern.xml |\
-#	LANG=de ./prepHTMLArea.sh atlas-stereographic-northern.png "atlaspage-stereographic-northern-%03d.pdf"
+#	LANG=de ./prepHTMLArea.sh atlas-stereographic-northern.png "pdf/atlaspage-stereographic-northern-%03d.pdf"
 #
 
 export img_src=$1 ; shift

@@ -117,12 +117,12 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		ElementImportance importance ;
+		GSPaintStyle nature ;
 
-		importance = new ElementImportance( getImportance() ) ;
-		importance.headPS( ps ) ;
-		importance.emitPS( ps ) ;
-		importance.tailPS( ps ) ;
+		nature = new GSPaintStyle( getNature() ) ;
+		nature.headPS( ps ) ;
+		nature.emitPS( ps ) ;
+		nature.tailPS( ps ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
@@ -163,7 +163,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 				peer.setStretch( getStretch() ) ;
 				peer.setType( getType() ) ;
-				peer.setImportance( getImportance() ) ;
+				peer.setNature( getNature() ) ;
 				peer.setCircle( getCircle() ) ;
 
 				peer.setAnnotation( getAnnotation() ) ;
@@ -220,7 +220,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
 				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
-				
+
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;

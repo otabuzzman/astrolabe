@@ -22,6 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import caa.CAA2DCoordinate;
+import caa.CAACoordinateTransformation;
+import caa.CAAPrecession;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -32,12 +36,13 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 
 	private final static Log log = LogFactory.getLog( CatalogADC5050.class ) ;
 
-	private Hashtable<String, CatalogADC5050Record> catalog = new Hashtable<String, CatalogADC5050Record>() ;
+	private Hashtable<String, CatalogADC5050Record> catalog ;
 
 	private Projector projector ;
 
 	public CatalogADC5050( Peer peer, Projector projector ) {
 		Geometry fov, fovu, fove ;
+		String key ;
 
 		peer.setupCompanion( this ) ;
 
@@ -51,18 +56,33 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 			fov = fovu.intersection( fove ) ;
 		}
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
+
+		key = getClass().getSimpleName()+":"+getName() ;
+		catalog = unsafecast( Registry.retrieve( key ) ) ;
+		if ( catalog == null ) {
+			catalog = new Hashtable<String, CatalogADC5050Record>() ;
+			Registry.register( key, catalog ) ;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Hashtable<String, CatalogADC5050Record> unsafecast( Object value ) {
+		return (Hashtable<String, CatalogADC5050Record>) value ;
 	}
 
 	public void addAllCatalogRecord() {
 		Reader reader ;
 		CatalogADC5050Record record ;
 
+		if ( catalog.size()>0 )
+			return ;
+
 		try {
 			reader = reader() ;
 
 			while ( ( record = record( reader ) ) != null ) {
 				try {
-					record.validate() ;
+					record.recognize() ;
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
@@ -73,7 +93,16 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 					continue ;
 				}
 
-				catalog.put( record.HR, record ) ;
+				record.register() ;
+
+				for ( astrolabe.model.CatalogADC5050Record select : getCatalogADC5050Record() ) {
+					select.setupCompanion( record ) ;
+					if ( Boolean.parseBoolean( record.getSelect() ) ) {
+						catalog.put( record.HR, record ) ;
+
+						break ;
+					}
+				}
 			}
 
 			reader.close() ;
@@ -84,6 +113,10 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+	}
+
+	public void delAllCatalogRecord() {
+		catalog.clear() ;
 	}
 
 	public CatalogRecord getCatalogRecord( String ident ) {
@@ -100,42 +133,54 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		Geometry fov ;
 		double[] xy ;
-		ParserAttribute parser ;
 		List<CatalogADC5050Record> catalog ;
 		Comparator<CatalogADC5050Record> comparator = new Comparator<CatalogADC5050Record>() {
 			public int compare( CatalogADC5050Record a, CatalogADC5050Record b ) {
-				double xmag, ymag ;
+				double amag, bmag ;
 
-				xmag = Double.valueOf( a.Vmag ).doubleValue() ;
-				ymag = Double.valueOf( b.Vmag ).doubleValue() ;
+				amag = Double.valueOf( a.Vmag ).doubleValue() ;
+				bmag = Double.valueOf( b.Vmag ).doubleValue() ;
 
-				return xmag<ymag?-1:
-					xmag>ymag?1:
+				return amag<bmag?-1:
+					amag>bmag?1:
 						0 ;
 			}
 		} ;
 		astrolabe.model.Body body ;
 		BodyStellar bodyStellar ;
+		astrolabe.model.Position pm ;
+		CAA2DCoordinate cpm, ceq ;
+		double epoch, ra, de, pmRA, pmDE ;
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
-		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
 				.toArray( new CatalogADC5050Record[0] ) ) ;
 		Collections.sort( catalog, comparator ) ;
 
-		for ( CatalogRecord record : catalog ) {
-			xy = projector.project( record.RA()[0], record.de()[0] ) ;
+		for ( CatalogADC5050Record record : catalog ) {
+			pmRA = 0 ;
+			if ( record.pmRA.length()>0 )
+				pmRA = new Double( record.pmRA ).doubleValue() ;
+			pmDE = 0 ;
+			if ( record.pmDE.length()>0 )
+				pmDE = new Double( record.pmDE ).doubleValue() ;
+			cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
+					epoch-2451545., record.RA()[0], record.de()[0], pmRA, pmDE ) ;
+			ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
+			ra = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
+			de = ceq.Y() ;
+			cpm.delete() ;
+			ceq.delete() ;
+
+			xy = projector.project( ra, de ) ;
 			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( xy ) ) ) )
 				continue ;
 
 			record.register() ;
-
-			if ( getRestrict() != null )
-				if ( ! parser.booleanValue( getRestrict().getValue() ) )
-					continue ;
 
 			body = new astrolabe.model.Body() ;
 			body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
@@ -144,21 +189,28 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 			else
 				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
 			AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
+			body.getBodyStellar().setName( record.HR ) ;
 
-			body.getBodyStellar().setScript( getScript() ) ;
-			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
+			body.getBodyStellar().setScript( record.getScript() ) ;
+			body.getBodyStellar().setAnnotation( record.getAnnotation() ) ;
 
-			for ( astrolabe.model.Select select : getSelect() ) {
-				if ( ! parser.booleanValue( select.getValue() ) )
-					continue ;
-				body.getBodyStellar().setAnnotation( select.getAnnotation() ) ;
-				if ( select.getScript() != null )
-					body.getBodyStellar().setScript( select.getScript() ) ;
-				break ;
-			}
+			pm = new astrolabe.model.Position() ;
+			// astrolabe.model.SphericalType
+			pm.setR( new astrolabe.model.R() ) ;
+			pm.getR().setValue( 1 ) ;
+			// astrolabe.model.AngleType
+			pm.setPhi( new astrolabe.model.Phi() ) ;
+			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
+			pm.getPhi().getRational().setValue( ra ) ;  
+			// astrolabe.model.AngleType
+			pm.setTheta( new astrolabe.model.Theta() ) ;
+			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
+			pm.getTheta().getRational().setValue( de ) ;  
+
+			body.getBodyStellar().setPosition( pm ) ;
 
 			try {
-				record.toModel( body ) ;
+				body.validate() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}

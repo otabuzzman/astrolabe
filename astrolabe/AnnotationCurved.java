@@ -46,31 +46,34 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		int ns, ne ;
-		double size ;
 		Script script ;
-
-		size = new Script( getScript( 0 ) ).size() ;
-
-		if ( ! ( size>0 ) )
-			return ;
+		int ns, n0 ;
+		double p, height ;
 
 		ps.operator.gsave() ;
 
 		ps.array( true ) ;
-		for ( ns=0, ne=0 ; ns<getScriptCount() ; ns++ ) {
-			try {
-				script = new Script( getScript( ns ) ) ;
+		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
+			script = new Script( getScript( ns ) ) ;
 
-				AnnotationStraight.emitPS( ps, script, script.size(), 0,
+			p = Configuration.getValue(
+					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;
+			if ( p<0 )
+				p = Double.valueOf( script.getPurpose() ) ;
+
+			if ( p==0 )
+				n0++ ;
+			else {
+				AnnotationStraight.emitPS( ps, script, p, 0,
 						subscriptshrink, subscriptshift, superscriptshrink, superscriptshift ) ;
-			} catch ( ParameterNotValidException e ) {
-				ne++ ;
+				if ( height==0 )
+					height = p ;
 			}
 		}
 		ps.array( false ) ;
-		if ( ne==ns ) {
-			ps.operator.pop() ; // array
+
+		if ( n0==ns ) {
+			ps.operator.pop() ;
 			ps.operator.grestore() ;
 
 			return ;
@@ -135,7 +138,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( size/2 ) ;
+			ps.push( height/2 ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.dup() ;
@@ -148,7 +151,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.add() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( size/2 ) ;
+			ps.push( height/2 ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.newpath() ;
@@ -165,7 +168,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( size/2 ) ;
+			ps.push( height/2 ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.newpath() ;
@@ -182,7 +185,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.dup() ;
@@ -195,7 +198,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.add() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.newpath() ;
@@ -212,7 +215,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( -( size+rise ) ) ;
+			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
 			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
 			ps.operator.newpath() ;

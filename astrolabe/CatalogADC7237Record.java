@@ -5,11 +5,8 @@ import java.lang.reflect.Field;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import org.exolab.castor.xml.ValidationException;
-
-import caa.CAACoordinateTransformation;
-
-public class CatalogADC7237Record implements CatalogRecord {
+@SuppressWarnings("serial")
+public class CatalogADC7237Record extends astrolabe.model.CatalogADC7237Record implements CatalogRecord {
 
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
@@ -62,9 +59,9 @@ public class CatalogADC7237Record implements CatalogRecord {
 		ANames		= data.substring( 78, 341 ).trim() ;
 	}
 
-	public boolean isValid() {
+	public boolean isOK() {
 		try {
-			validate() ;
+			recognize() ;
 		} catch ( ParameterNotValidException e ) {
 			return false ;
 		}
@@ -72,7 +69,7 @@ public class CatalogADC7237Record implements CatalogRecord {
 		return true ;
 	}
 
-	public void validate() throws ParameterNotValidException {
+	public void recognize() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
 		String value ;
@@ -139,32 +136,6 @@ public class CatalogADC7237Record implements CatalogRecord {
 		Registry.registerName( key, o_ANames ) ;
 		key = m.message( ApplicationConstant.LK_ADC7237_ANAMES ) ;
 		Registry.registerName( key, ANames ) ;
-	}
-
-	public void toModel( astrolabe.model.Body body ) throws ValidationException {
-		astrolabe.model.Position pm ;
-		double ra, de ;
-
-		body.getBodyStellar().setName( PGC ) ;
-
-		ra = RAh()+RAm()/60.+RAs()/3600. ;
-		de = DEd()+DEm()/60.+DEs()/3600. ;
-		pm = new astrolabe.model.Position() ;
-		// astrolabe.model.SphericalType
-		pm.setR( new astrolabe.model.R() ) ;
-		pm.getR().setValue( 1 ) ;
-		// astrolabe.model.AngleType
-		pm.setPhi( new astrolabe.model.Phi() ) ;
-		pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-		pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ra ) ) ;  
-		// astrolabe.model.AngleType
-		pm.setTheta( new astrolabe.model.Theta() ) ;
-		pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-		pm.getTheta().getRational().setValue( de ) ;  
-
-		body.getBodyStellar().setPosition( pm ) ;
-
-		body.validate() ;
 	}
 
 	public double[] RA() {

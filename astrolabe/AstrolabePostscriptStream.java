@@ -74,7 +74,7 @@ public class AstrolabePostscriptStream extends UnicodePostscriptStream {
 
 		dsc.beginProlog() ;
 		for ( String token : prolog.trim().split( "\\p{Space}+" ) )
-			print( token ) ;
+			print( token+"\n" ) ;
 		dsc.endProlog() ;
 	}
 }

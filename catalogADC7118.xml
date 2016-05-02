@@ -7,8 +7,8 @@ astrolabe.xsd">
 		</Calendar>
 	</Epoch>
 	<Chart>
-		<ChartStereographic scale="100" northern="true" practicality="always" importance="canonical">
-			<ChartPage size="a4" real="100" layout="default"/>
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a0" real="100" layout="default"/>
 			<Origin>
 				<phi>
 					<Rational value="0"/>
@@ -47,9 +47,10 @@ astrolabe.xsd">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VII/118/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
-						<CatalogADC7118 name="7118" fov="chart" url="lib/cat/7118/ngc2000.dat.gz">
-							<Restrict value="{mag>1&#x0026;&#x0026;mag&#x003c;10}"/>
-							<Script purpose="{mag&#x003c;-1?4.64:mag&#x003c;0?3.74:mag&#x003c;1?3.02:mag&#x003c;2?2.43:mag&#x003c;3?1.96:mag&#x003c;4?1.58:mag&#x003c;5?1.27:mag&#x003c;6?1.03:mag&#x003c;7?0.83:mag&#x003c;8?0.67:mag&#x003c;9?0.54:mag&#x003c;10?0.43:mag&#x003c;11?0.35:mag&#x003c;12?0.28:mag&#x003c;13?0.22:mag&#x003c;14?0.18:0.14}" value="{Type~&#x0022;Gx&#x0022;?&#x0022;&#xf820;&#x0022;:Type~&#x0022;OC&#x0022;?&#x0022;&#xf81e;&#x0022;:Type~&#x0022;Gb&#x0022;?&#x0022;&#xf81f;&#x0022;:Type~&#x0022;Nb&#x0022;?&#x0022;&#xf819;&#x0022;:Type~&#x0022;Pl&#x0022;?&#x0022;&#xf81d;&#x0022;:Type~&#x0022;C+N&#x0022;||Type~&#x0022;Kt&#x0022;?&#x0022;&#xf81a;&#x0022;:Type~&#x0022;Ast&#x0022;||Type~&#x0022;\*\*\*&#x0022;?&#x0022;&#xf813;&#x0022;:Type~&#x0022;D\*&#x0022;?&#x0022;&#xf812;&#x0022;:&#x0022;&#xf812;&#x0022;}"/>
+						<CatalogADC7118 name="7118" url="lib/cat/7118/ngc2000.dat.gz" fov="chart">
+							<CatalogADC7118Record select="true" nature="{Type==&#x0022;Gx&#x0022;?&#x0022;.28:0&#x0022;:Type==&#x0022;OC&#x0022;||Type==&#x0022;Gb&#x0022;||Type==&#x0022;C+N&#x0022;?&#x0022;.28:0.4:0.5&#x0022;:Type==&#x0022;Nb&#x0022;||Type==&#x0022;Pl&#x0022;||Type==&#x0022;Kt&#x0022;?&#x0022;.28:0.2&#x0022;:&#x0022;.28:0&#x0022;}">
+								<Script value="{Type~&#x0022;Gx&#x0022;?&#x0022;&#xf820;&#x0022;:Type~&#x0022;OC&#x0022;?&#x0022;&#xf81e;&#x0022;:Type~&#x0022;Gb&#x0022;?&#x0022;&#xf81f;&#x0022;:Type~&#x0022;Nb&#x0022;?&#x0022;&#xf819;&#x0022;:Type~&#x0022;Pl&#x0022;?&#x0022;&#xf81d;&#x0022;:Type~&#x0022;C+N&#x0022;||Type~&#x0022;Kt&#x0022;?&#x0022;&#xf81a;&#x0022;:Type~&#x0022;Ast&#x0022;||Type~&#x0022;\*\*\*&#x0022;?&#x0022;&#xf813;&#x0022;:Type~&#x0022;D\*&#x0022;?&#x0022;&#xf812;&#x0022;:&#x0022;&#xf812;&#x0022;}" purpose="{mag&#x003c;-1?4.98:mag&#x003c;0?4.02:mag&#x003c;1?3.24:mag&#x003c;2?2.61:mag&#x003c;3?2.11:mag&#x003c;4?1.70:mag&#x003c;5?1.37:mag&#x003c;6?1.10:mag&#x003c;7?0.89:mag&#x003c;8?0.72:mag&#x003c;9?0.58:mag&#x003c;10?0.47:mag&#x003c;11?0.38:0.30}"/>
+							</CatalogADC7118Record>
 						</CatalogADC7118>
 					</Catalog>
 				</HorizonEquatorial>
