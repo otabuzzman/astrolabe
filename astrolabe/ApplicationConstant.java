@@ -21,8 +21,6 @@ public final class ApplicationConstant {
 	public final static String GC_PARSER		= GC_NS_REG+"parser" ;	// class global variable, internal usage
 
 	// locale substitute keys (LK_), nodes (LN_), leafs (LL_), patterns (LP_)
-	public final static String LP_SUBSTITUTE = "\\{[^\\{\\}]+\\}" ;
-
 	public final static String LK_ASTROLABE_EPOCH			= "substitue.astrolabe.epoch" ;
 
 	public final static String LK_HORIZON_LATITUDE			= "substitute.horizon.latitude" ;
@@ -518,6 +516,16 @@ public final class ApplicationConstant {
 	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
 	public final static String PK_GENERAL_PRECISION		= "precision" ;
 
+	// PostscriptStream
+	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;
+	// UnicodePostscriptStream
+	public final static String PK_POSTSCRIPT_CHARTSIZE	= "chartsize" ;
+	public final static String PK_POSTSCRIPT_FONTNAME	= "fontname" ;
+	public final static String PK_POSTSCRIPT_CHARPROC	= "charproc" ;
+	public final static String PK_POSTSCRIPT_ENCODING	= "encoding" ;
+	// AstrolabePostscriptStream
+	public final static String PK_POSTSCRIPT_PROLOG		= "prolog" ;
+
 	public final static String PK_ASTROLABE_VIEWER		= "viewer" ;
 
 	public final static String PK_CHART_UNIT			= "unit" ;
@@ -563,31 +571,20 @@ public final class ApplicationConstant {
 	public final static String PK_RATIONAL_PRECISION = PK_GENERAL_PRECISION ;
 
 	// postscript custom definitions
-	public final static String PS_CUSTOM_LIM0			= "LIM0" ;
-	public final static String PS_CUSTOM_ACOS			= "acos" ;
-	public final static String PS_CUSTOM_ASIN			= "asin" ;
-	public final static String PS_CUSTOM_HALO			= "halo" ;
-	public final static String PS_CUSTOM_LINE			= "line" ;
-	public final static String PS_CUSTOM_LISTREDUCE		= "listreduce" ;
-	public final static String PS_CUSTOM_MATROT90CC		= "matrot90cc" ;
-	public final static String PS_CUSTOM_MATROT90C		= "matrot90c" ;
-	public final static String PS_CUSTOM_MATROT180CC	= "matrot180cc" ;
-	public final static String PS_CUSTOM_MATROT180C		= "matrot180c" ;
-	public final static String PS_CUSTOM_MATROTARB		= "matrotarb" ;
-	public final static String PS_CUSTOM_PAGESIZE		= "pagesize" ;
-	public final static String PS_CUSTOM_PATHLENGTH		= "pathlength" ;
-	public final static String PS_CUSTOM_PATHREVERSE	= "pathreverse" ;
-	public final static String PS_CUSTOM_PATHSHIFT		= "pathshift" ;
-	public final static String PS_CUSTOM_PATHSHOW		= "pathshow" ;
-	public final static String PS_CUSTOM_POLYLINE		= "polyline" ;
-	public final static String PS_CUSTOM_SETENCODING	= "setencoding" ;
-	public final static String PS_CUSTOM_TRUNCATEF		= "truncatef" ;
-	public final static String PS_CUSTOM_VABS			= "vabs" ;
-	public final static String PS_CUSTOM_VADD			= "vadd" ;
-	public final static String PS_CUSTOM_VANGLE			= "vangle" ;
-	public final static String PS_CUSTOM_VAPPLY			= "vapply" ;
-	public final static String PS_CUSTOM_VDOT			= "vdot" ;
-	public final static String PS_CUSTOM_VMUL			= "vmul" ;
-	public final static String PS_CUSTOM_VSCALE			= "vscale" ;
-	public final static String PS_CUSTOM_VSUB			= "vsub" ;
+	public final static String PS_PROLOG_PAGESIZE		= "pagesize" ;
+	public final static String PS_PROLOG_TPATH			= "tpath" ;
+	public final static String PS_PROLOG_TSHOW			= "tshow" ;
+	public final static String PS_PROLOG_TWIDTH			= "twidth" ;
+	public final static String PS_PROLOG_SETENCODING	= "setencoding" ;
+	public final static String PS_PROLOG_GDRAW			= "gdraw" ;
+	public final static String PS_PROLOG_GLEN			= "glen" ;
+	public final static String PS_PROLOG_GMOVE			= "gmove" ;
+	public final static String PS_PROLOG_GPATH			= "gpath" ;
+	public final static String PS_PROLOG_GREV			= "grev" ;
+	public final static String PS_PROLOG_MAX			= "max" ;
+	public final static String PS_PROLOG_MIN			= "min" ;
+	public final static String PS_PROLOG_VABS			= "vabs" ;
+	public final static String PS_PROLOG_VADD			= "vadd" ;
+	public final static String PS_PROLOG_VMUL			= "vmul" ;
+	public final static String PS_PROLOG_VSUB			= "vsub" ;
 }

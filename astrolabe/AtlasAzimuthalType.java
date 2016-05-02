@@ -10,7 +10,6 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.mapping.MappingException;
@@ -50,7 +49,6 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		AtlasPage atlasPage ;
 		Vector vc, vb, vt ;
 		double[] xy, eq ;
-		Preferences node ;
 
 		chartAzimuthalType = getChartAzimuthalType() ;
 		northern = chartAzimuthalType.getNorthern() ;
@@ -63,8 +61,8 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		setChartpagerealx( chartPageX ) ;
 		setChartpagerealy( chartPageY ) ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
-		overlap = Configuration.getValue( node,
+		overlap = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_ATLAS_OVERLAP, DEFAULT_OVERLAP ) ;
 
 		originDe = AstrolabeFactory.valueOf( getOrigin() )[2] ;
@@ -359,13 +357,10 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 	abstract public Projector projector() ;
 
 	private void marshal( OutputStream xmls, String charset ) {
-		Preferences node ;
 		Marshaller marshaller ;
 		Mapping mapping ;
 		String mapn ;
 		Writer xmlw ;
-
-		node = Configuration.getClassNode( this, getName(), null ) ;
 
 		// map file creation:
 		// 1. make AtlasStereographic.map (e.g.)
@@ -373,7 +368,8 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
 		// 4. remove required attribute from field definitions for Phi and Theta
 		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
-		mapn = Configuration.getValue( node,
+		mapn = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_ATLAS_URLMODELMAP, getClass().getSimpleName()+".map" ) ;
 
 		try {
@@ -585,7 +581,6 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		astrolabe.model.CircleMeridian cM ;
 		astrolabe.model.Annotation a ;
 		double cMEnd ;
-		Preferences node ;
 
 		cM = new astrolabe.model.CircleMeridian() ;
 		if ( getName() == null )
@@ -609,8 +604,9 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 		cM.getEnd().setAngle( new astrolabe.model.Angle() ) ;
 		cM.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
-		cMEnd = Configuration.getValue( node, ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
+		cMEnd = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_ATLAS_LIMITDE, DEFAULT_LIMITDE ) ;
 
 		cM.getAngle().getRational().setValue( ra ) ;
 		cM.getBegin().getAngle().getRational().setValue( northern?-90:90 ) ;
@@ -656,12 +652,11 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 	}
 
 	private double[] intervalUnitH() {
-		Preferences node ;
 		String[] iuP ;
 		double[] iuV ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
-		iuP = Configuration.getValue( node,
+		iuP = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_ATLAS_INTERVALUNITSH, DEFAULT_INTERVALUNITSH ).split( ":" ) ;
 		iuV = new double[ iuP.length ] ;
 		for ( int iu=0 ; iu<iuP.length ; iu++ ) {
@@ -672,12 +667,11 @@ abstract public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalT
 	}
 
 	private double[] intervalUnitD() {
-		Preferences node ;
 		String[] iuP ;
 		double[] iuV ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
-		iuP = Configuration.getValue( node,
+		iuP = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_ATLAS_INTERVALUNITSD, DEFAULT_INTERVALUNITSD ).split( ":" ) ;
 		iuV = new double[ iuP.length ] ;
 		for ( int iu=0 ; iu<iuP.length ; iu++ ) {

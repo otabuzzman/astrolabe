@@ -24,6 +24,11 @@ CLASSPATH = ./lib/castor-1.3.1.jar \
 	./lib/runcc.jar \
 	./lib/commons-logging-1.1.1.jar
 
+JAVA_UNICODEBLOCK = $(APPL)/UnicodeBlock.java
+PREP_UNICODEBLOCK = ./prepUnicodeBlock.sh
+
+BLOCKS = ./lib/Blocks-4.1.0.txt
+
 .xml.ps:
 	@time $(JDK)/bin/java $(JDO) \
 			-Djava.library.path=./$(CAA) \
@@ -43,7 +48,7 @@ CLASSPATH = ./lib/castor-1.3.1.jar \
 		$(CLASSPATH)) \
 		org.exolab.castor.tools.MappingTool -i $(subst /,.,$(subst .class,,$<)) -o $@
 
-all: $(APPL)/model
+all: $(APPL)/model $(JAVA_UNICODEBLOCK)
 
 $(APPL)/model: $(MODEL)
 	@echo -n "Building model... "
@@ -57,14 +62,19 @@ $(APPL)/model: $(MODEL)
 	@touch $@
 	@echo "done!"
 
+$(JAVA_UNICODEBLOCK): $(PREP_UNICODEBLOCK) $(BLOCKS)
+	$(PREP_UNICODEBLOCK) $(BLOCKS) >$@
+
 clean:
 	rm -rf $(APPL)/model
-	rm -rf *.class
+	rm -f $(APPL)/*.class
+	rm -f *.class
 
 tidy: clean
-	rm -rf *.ps *.pdf
+	rm -f $(JAVA_UNICODEBLOCKS)
+	rm -f *.ps *.pdf
 
-	
+
 
 .SECONDARY: astrolabe.ps
 astrolabe.pdf: astrolabe.xml

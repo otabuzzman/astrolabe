@@ -81,7 +81,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.get( 0 ) ; // font
 		ps.operator.exch() ;
 		ps.operator.get( 1 ) ; // encoding
-		ps.custom( ApplicationConstant.PS_CUSTOM_SETENCODING ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_SETENCODING ) ;
 
 		ps.operator.dup( 2 ) ;
 		ps.operator.get( 0 ) ; // font
@@ -96,21 +96,21 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.pathbbox() ;							// p, text, p, ll, ur
 
 		ps.operator.copy( 4 ) ;
-		ps.custom( ApplicationConstant.PS_CUSTOM_VSUB ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_VSUB ) ;
 		ps.push( .5 ) ;
-		ps.custom( ApplicationConstant.PS_CUSTOM_VMUL ) ;	// p, text, p, ll, ur, d/2
+		ps.push( ApplicationConstant.PS_PROLOG_VMUL ) ;	// p, text, p, ll, ur, d/2
 
 		// preserve length of d/2*goldensection
 		ps.operator.copy( 2 ) ;
-		ps.custom( ApplicationConstant.PS_CUSTOM_VABS ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_VABS ) ;
 		ps.operator.mul( Math.goldensection ) ;
 		ps.operator.roll( 10, 1 ) ;							// p, l, text, p, ll, ur, d/2
 
-		ps.custom( ApplicationConstant.PS_CUSTOM_VADD ) ;	// p, l, text, p, ll, gc
+		ps.push( ApplicationConstant.PS_PROLOG_VADD ) ;	// p, l, text, p, ll, gc
 
 		ps.operator.roll( 4, 2 ) ;
 		ps.operator.pop( 2 ) ;								// p, l, text, p, gc
-		ps.custom( ApplicationConstant.PS_CUSTOM_VSUB ) ;	// p, l, text, o
+		ps.push( ApplicationConstant.PS_PROLOG_VSUB ) ;	// p, l, text, o
 
 		ps.operator.roll( 6, 4 ) ;							// l, text, o, p
 		ps.operator.translate() ;
@@ -120,7 +120,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.operator.moveto() ;
 
-		ps.operator.show() ;
+		ps.push( ApplicationConstant.PS_PROLOG_TSHOW ) ;
 		ps.operator.grestore() ;	// l
 
 		ps.operator.rotate( spin ) ;
@@ -133,7 +133,10 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.push( 0 ) ;
 		ps.push( 359 ) ;
 		ps.operator.arc() ;
-		ps.custom( ApplicationConstant.PS_CUSTOM_PATHREVERSE ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_GREV ) ;
+		ps.operator.newpath() ;
+		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 		ps.operator.currentpoint() ;
 		ps.operator.translate() ;

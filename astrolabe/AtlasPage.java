@@ -16,8 +16,7 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		ps.operator.mark() ;
-
+		ps.array( true ) ;
 		ps.push( getP0x() ) ;
 		ps.push( getP0y() ) ;
 		ps.push( getP1x() ) ;
@@ -26,8 +25,10 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		ps.push( getP2y() ) ;
 		ps.push( getP3x() ) ;
 		ps.push( getP3y() ) ;
-
-		ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+		ps.array( false ) ;
+		
+		ps.operator.newpath() ;
+		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 		ps.operator.closepath() ;
 		ps.operator.stroke() ;

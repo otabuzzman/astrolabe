@@ -198,22 +198,29 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		} else {
 			if ( circle==null ) {
 				l = list( jdAy, jdOy, 0 ) ;
-				ps.operator.mark() ;
-				for ( int n=l.size() ; n>0 ; n-- ) {
-					xy = (double[]) l.get( n-1 ) ;
+				ps.array( true ) ;
+				for ( int n=0 ; n<l.size() ; n++ ) {
+					xy = (double[]) l.get( n ) ;
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
+				ps.array( false ) ;
 
-				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+				ps.operator.newpath() ;
+				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+
+				ps.operator.dup() ;
+				ps.operator.div( 100 ) ;
 				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+				ps.operator.mul() ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+				
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;

@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.prefs.Preferences;
-
 @SuppressWarnings("serial")
 public class Rational extends astrolabe.model.Rational {
 
@@ -26,7 +24,6 @@ public class Rational extends astrolabe.model.Rational {
 	}
 
 	public void setup( double value, int precision ) {
-		Preferences node ;
 		double d, p ;
 		int e ;
 
@@ -35,8 +32,9 @@ public class Rational extends astrolabe.model.Rational {
 		if ( precision>-1 ) {
 			e = precision ;
 		} else {
-			node = Configuration.getClassNode( this, null, null ) ;
-			e = Configuration.getValue( node, ApplicationConstant.PK_RATIONAL_PRECISION, DEFAULT_PRECISISON ) ;
+			e = Configuration.getValue(
+					Configuration.getClassNode( this, null, null ),
+					ApplicationConstant.PK_RATIONAL_PRECISION, DEFAULT_PRECISISON ) ;
 		}
 		p = java.lang.Math.pow( 10, e ) ;
 

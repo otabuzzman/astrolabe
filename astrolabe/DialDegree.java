@@ -125,13 +125,16 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		emitPSGraduation( ps ) ;
 
 		v = baseline.list( getReflect()?-( ( space+thickness )+rise ):( space+thickness )+rise ) ;
-		ps.operator.mark() ;
-		for ( int n=v.size() ; n>0 ; n-- ) {
-			xy = (double[]) v.get( n-1 ) ;
+		ps.array( true ) ;
+		for ( int n=0 ; n<v.size() ; n++ ) {
+			xy = (double[]) v.get( n ) ;
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
-		ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+		ps.array( false ) ;
+
+		ps.operator.newpath() ;
+		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 		if ( getAnnotation() != null ) {
 			PostscriptEmitter annotation ;
@@ -195,21 +198,29 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		} catch ( ParameterNotValidException ee ) {
 			double[] xy ;
 
-			ps.operator.mark() ;
-			for ( int n=v.size() ; n>0 ; n-- ) {
-				xy = (double[]) v.get( n-1 ) ;
+			ps.array( true ) ;
+			for ( int n=0 ; n<v.size() ; n++ ) {
+				xy = (double[]) v.get( n ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
-			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+			ps.array( false ) ;
+
+			ps.operator.newpath() ;
+			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
-			ps.operator.dup();
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+
+			ps.operator.dup() ;
+			ps.operator.div( 100 ) ;
 			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-			ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+			ps.operator.mul() ;
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
+			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
 			ps.operator.gsave() ;
@@ -241,21 +252,29 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				s = nss%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
 				vDFw = baseline.list( b, e, s ) ;
-				ps.operator.mark() ;
-				for ( int n=vDFw.size() ; n>0 ; n-- ) {
-					double[] xy = (double[]) vDFw.get( n-1 ) ;
+				ps.array( true ) ;
+				for ( int n=0 ; n<vDFw.size() ; n++ ) {
+					double[] xy = (double[]) vDFw.get( n ) ;
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
-				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+				ps.array( false ) ;
+
+				ps.operator.newpath() ;
+				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+
+				ps.operator.dup() ;
+				ps.operator.div( 100 ) ;
 				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+				ps.operator.mul() ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;
@@ -267,21 +286,29 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				s = space+( nss%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
 				vDRv = baseline.list( b, e, s ) ;
-				ps.operator.mark() ;
-				for ( int n=vDRv.size() ; n>0 ; n-- ) {
-					double[] xy = (double[]) vDRv.get( n-1 ) ;
+				ps.array( true ) ;
+				for ( int n=0 ; n<vDRv.size() ; n++ ) {
+					double[] xy = (double[]) vDRv.get( n ) ;
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
-				ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+				ps.array( false ) ;
+
+				ps.operator.newpath() ;
+				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+
+				ps.operator.dup() ;
+				ps.operator.div( 100 ) ;
 				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+				ps.operator.mul() ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;
@@ -297,13 +324,16 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				if ( nss%2 == 0 ) { // subunit filled
 					double[] xy ;
 
-					ps.operator.mark() ;
-					for ( int n=vDFw.size() ; n>0 ; n-- ) {
-						xy = (double[]) vDFw.get( n-1 ) ;
+					ps.array( true ) ;
+					for ( int n=0 ; n<vDFw.size() ; n++ ) {
+						xy = (double[]) vDFw.get( n ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+					ps.array( false ) ;
+
+					ps.operator.newpath() ;
+					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 					ps.operator.closepath() ;
 					ps.operator.fill() ;
 				} else { // subunit unfilled
@@ -313,23 +343,29 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					fw = new java.util.Vector<double[]>( vDFw.subList( 0, vDFw.size()/2 ) ) ;
 					rv = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ;
 
-					ps.operator.mark() ;
-					for ( int n=fw.size() ; n>0 ; n-- ) {
-						xy = (double[]) fw.get( n-1 ) ;
+					ps.array( true ) ;
+					for ( int n=0 ; n<fw.size() ; n++ ) {
+						xy = (double[]) fw.get( n ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+					ps.array( false ) ;
+
+					ps.operator.newpath() ;
+					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
-					ps.operator.mark() ;
-					for ( int n=rv.size() ; n>0 ; n-- ) {
-						xy = (double[]) rv.get( n-1 ) ;
+					ps.array( true ) ;
+					for ( int n=0 ; n<rv.size() ; n++ ) {
+						xy = (double[]) rv.get( n ) ;
 						ps.push( xy[0] ) ;
 						ps.push( xy[1] ) ;
 					}
-					ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+					ps.array( false ) ;
+
+					ps.operator.newpath() ;
+					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
@@ -342,21 +378,28 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 				vector = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2-1, vDFw.size()/2+1 ) ) ;
 
+				ps.operator.newpath() ;
 				xy = (double[]) vector.get( 1 ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 				xy = (double[]) vector.get( 0 ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
-				ps.custom( ApplicationConstant.PS_CUSTOM_LINE ) ;
+				ps.operator.moveto() ;
+				ps.operator.lineto() ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
-				ps.operator.dup();
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+
+				ps.operator.dup() ;
+				ps.operator.div( 100 ) ;
 				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
-				ps.custom( ApplicationConstant.PS_CUSTOM_HALO ) ;
+				ps.operator.mul() ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
+				ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
 				ps.operator.gsave() ;

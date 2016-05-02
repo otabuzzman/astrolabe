@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
@@ -62,17 +61,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		try {
-			ps.emitDSCHeader() ;
-			ps.emitDSCProlog() ;
-		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.toString(), "" } ) ;
-
-			throw new RuntimeException( msg ) ;
-		}
+		ps.emitDSCHeader() ;
+		ps.emitDSCProlog() ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
@@ -150,7 +140,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				viewerProc = null ;
 			} else {
 				try {
-					viewerProc = Runtime.getRuntime().exec( viewerDecl.split( " " ) ) ;
+					viewerProc = Runtime.getRuntime().exec( viewerDecl.trim().split( "\\p{Space}+" ) ) ;
 
 					viewerProc.getInputStream().close() ;
 					viewerProc.getErrorStream().close() ;

@@ -11,7 +11,7 @@ public class ParserAttribute extends ParserSubstitute {
 
 		t = new String( string ) ;
 
-		p = java.util.regex.Pattern.compile( ApplicationConstant.LP_SUBSTITUTE ) ;
+		p = java.util.regex.Pattern.compile( "\\{[^\\{\\}]+\\}" ) ;
 
 		c = 0 ;
 		m = p.matcher( t ) ;

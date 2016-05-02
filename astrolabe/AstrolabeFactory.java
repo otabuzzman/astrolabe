@@ -204,6 +204,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( horizon, horizon.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		horizon.setupPeer( node ) ;
 
 		if ( validate ) {
@@ -227,6 +231,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( circle, circle.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		circle.setupPeer( node ) ;
 
 		if ( validate ) {
@@ -250,6 +258,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( annotation, annotation.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		annotation.setupPeer( node ) ;
 
 		if ( validate ) {
@@ -273,6 +285,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( text, text.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		text.setupPeer( node ) ;
 
 		if ( validate ) {
@@ -296,6 +312,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( body, body.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		body.setupPeer( node ) ;
 
 		if ( validate ) {
@@ -319,6 +339,10 @@ public final class AstrolabeFactory {
 		Preferences node ;
 
 		node = Configuration.getClassNode( body, body.getName(), null ) ;
+
+		if ( node == null )
+			return false ;
+
 		body.setupPeer( node ) ;
 
 		if ( validate ) {

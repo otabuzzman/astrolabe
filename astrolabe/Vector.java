@@ -127,17 +127,26 @@ public class Vector {
 		return new double[] { x, y, z } ;
 	}
 
-	public static double length( List<double[]> list ) {
+	public static List<double[]> con( List<double[]> list ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
 		Vector a, b ;
-		double l = 0 ;
 
-		b = new Vector( list.get( 0 ) ) ;
-		for ( int i=1 ; i<list.size() ; i++ ) {
-			a = new Vector( list.get( i ) ) ;
-			l = l+a.sub( b ).abs() ;
-			b = new Vector( a ) ;
+		for ( int p=1 ; p<list.size() ; p++ ) {
+			a = new Vector( list.get( p ) ) ;
+			b = new Vector( list.get( p-1 ) ) ;
+
+			r.add( a.sub( b ).toArray() ) ;
 		}
 
-		return l ;
+		return r ;
+	}
+
+	public static double len( List<double[]> list ) {
+		double r = 0 ;
+
+		for ( double[] v : list )
+			r = r+new Vector( v ).abs() ;
+
+		return r ;
 	}
 }

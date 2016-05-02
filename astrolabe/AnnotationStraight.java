@@ -1,8 +1,9 @@
 
 package astrolabe;
 
-import java.util.List;
 import java.util.prefs.Preferences;
+
+import astrolabe.UnicodePostscriptStream.UnicodeControlBlock;
 
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
@@ -100,13 +101,13 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
@@ -116,13 +117,13 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.push( -size/2 ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -size/2 ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
@@ -132,13 +133,13 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.push( -( size+rise ) ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -( size+rise ) ) ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
 			ps.operator.dup() ;
-			ps.operator.stringwidth() ;
+			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
@@ -146,9 +147,10 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 
 		ps.operator.moveto() ;
-		ps.operator.show() ;
+		ps.push( ApplicationConstant.PS_PROLOG_TSHOW ) ;
 
 		ps.operator.grestore() ;
+
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
@@ -156,27 +158,21 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 	public static void emitPS( AstrolabePostscriptStream ps, astrolabe.model.Script script, double size, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) throws ParameterNotValidException {
-		List<List<Object>> FET ;
-		List<Object> fet ;
 		String s ;
 
 		s = script.getValue() ;
 		if ( s.length()==0 ) {
 			throw new ParameterNotValidException( Integer.toString( s.length() ) ) ;
 		}
-
-		FET = ps.ucFET( s ) ;
-
-		for ( int e=0 ; e<FET.size() ; e++ ) {
-			fet = FET.get( e ) ;
+		for ( UnicodeControlBlock unicodeControlBlock : ps.getUnicodeControlBlockArray( s ) ) {
 			ps.array( true ) ;
-			ps.push( (String) fet.get( 0 ) ) ;
-			ps.push( (String[]) fet.get( 1 ) ) ;
+			ps.push( unicodeControlBlock.fontname ) ;
+			ps.push( unicodeControlBlock.encoding ) ;
 			ps.push( size ) ;
 			ps.push( shift ) ;
 			ps.push( true ) ;
 			ps.push( true ) ;
-			ps.push( (String) fet.get( 2 ) ) ;
+			ps.push( "("+unicodeControlBlock.string+")" ) ;
 			ps.array( false ) ;
 		}
 

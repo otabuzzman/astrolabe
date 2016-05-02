@@ -91,8 +91,7 @@ public class Configuration {
 				throw new RuntimeException( e.toString() ) ;
 			}
 			if ( keys.contains( key ) ) {
-				Registry.register( "node", node.name() ) ;
-				r = ( (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ).stringValue( node.get( key, def ) ) ;
+				r = node.get( key, def ) ;
 			} else {
 				r = Configuration.getValue( node.parent(), key, def ) ;
 			}

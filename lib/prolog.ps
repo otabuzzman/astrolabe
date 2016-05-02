@@ -1,0 +1,14 @@
+%!PS Prolog File
+
+(lib/text.ps) run
+(lib/math.ps) run
+(lib/graph.ps) run
+
+(lib/Astrolabe.ps) run
+
+% pagesize <x> <y>
+/pagesize {
+	currentpagedevice
+	/PageSize get
+	{} forall
+} def

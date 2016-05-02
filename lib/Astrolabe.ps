@@ -1,0 +1,758 @@
+%!PS Type 3 font Astrolabe
+
+16 dict begin
+	/FontName /Astrolabe def
+
+	/FontType 3 def
+
+	/FontBBox [0 0 1000 1000] def
+	/FontMatrix [.001 0 0 .001 0 0] def
+
+	/parameters 16 dict def
+	parameters begin
+		/glyphdim 1000 def
+		/psprtdim 980 def
+		% 6 percent of psprtdim
+		/halo 58 def
+		% [ <red> <green> <blue> ] or <grey>, values betweeen 0 and 1
+		/bgcolor 1.0 def
+		% 8 percent of psprtdim
+		/strokewid 78 def
+		% 20 percent of strokewid
+		/strokerad 15 def
+		% psprtdim/2-2*halo
+		/outcrcrad 374 def
+		% strokewid
+		/outcrcwid 78 def
+		% outcrcrad/goldensection
+		/inncrcrad 231 def
+		% strokewid
+		/inncrcwid 78 def
+		% inncrcrad/goldensection
+		/corcrcrad 142 def
+		% strokewid
+		/corcrcwid 78 def
+	end
+
+	/procedures 32 dict def
+	procedures begin
+		(lib/graph.ps) run
+		/realrand {
+			2 31 exp 1 sub
+			rand exch div
+		} def
+		/setorigin {
+			parameters begin
+			glyphdim 2 div dup
+			translate
+			end
+		} def
+		% [ <red> <green> <blue> ] setbgcolor
+		% <grey> setbgcolor
+		% read, green, blue, grey: float, 0.0 - 1.0
+		/setbgcolor {
+			parameters begin
+			bgcolor
+			dup type
+			/arraytype eq
+			{dup 0 get exch
+			dup 1 get exch
+			2 get
+			setrgbcolor}
+			{setgray}
+			ifelse
+			end
+		} def
+		% <radius> <halo> drawdisc
+		% radius: float
+		% halo: boolean
+		/drawdisc {
+			newpath
+			exch
+			0 exch 0 exch
+			dup 0 moveto
+			0 359 arc
+			closepath
+			gsave
+			{setbgcolor fill}
+			{fill} ifelse
+			grestore
+		} def
+		% <radius> <width> <halo> drawring
+		% radius, width: float
+		% halo: boolean
+		/drawring {
+			newpath
+			3 1 roll
+			exch dup
+			0 exch 0 exch
+			dup 0 moveto
+			0 359 arc
+			closepath
+			exch sub
+			0 exch 0 exch
+			dup 0 moveto
+			0 359 arc
+			closepath
+			gsave
+			{setbgcolor eofill}
+			{eofill} ifelse
+			grestore
+		} def
+		% <width> <height> <stroke radius> <halo> drawbar
+		% width, height, stroke radius: float
+		% halo: boolean
+		/drawbar {
+			4 dict begin
+			newpath
+			4 1 roll
+			/s exch def
+			/h exch def
+			/w exch def
+			w h s sub moveto
+			w s sub h s sub s
+			0 90 arc
+			s h s sub s
+			90 180 arc
+			s s s
+			180 270 arc
+			w s sub s s
+			270 360 arc
+			closepath
+			gsave
+			{setbgcolor fill}
+			{fill} ifelse
+			grestore
+			end
+		} def
+		% <radius> <angle> <height> <stroke radius> <halo> drawbow
+		% radius, angle, height, stroke radius: float
+		% halo boolean
+		/drawbow {
+			4 dict begin
+			newpath
+			5 1 roll
+			/s exch def
+			/h exch def
+			/a exch def
+			/r exch def
+			r h sub s moveto
+			r h sub s add s s
+			180 270 arc
+			r s sub s s
+			270 360 arc
+			0 0 r
+			s r atan
+			dup a exch sub arc
+			gsave
+			a rotate
+			r s sub s -1 mul s
+			0 90 arc
+			r h sub s add s -1 mul s
+			90 180 arc
+			0 0 r h sub
+			s r h sub atan
+			dup a exch sub
+			-1 mul exch -1 mul exch arcn
+			closepath
+			gsave
+			{setbgcolor fill}
+			{fill} ifelse
+			grestore
+			grestore
+			end
+		} def
+	end
+
+	/CharParam 256 dict def
+	CharParam begin
+		/dstar [
+			% trabant radius
+			142
+		] def
+		/mstar [
+			% width, height
+			864 156
+		] def
+		/vstarfb [
+			% dash number, dash ratio
+			12 .5
+		] def
+		/vstarsb [
+			% dash number, dash ratio
+			6 .5
+		] def
+		/vstarfd [
+			% dash number, dash ratio
+			12 .5
+		] def
+		/vstarsd [
+			% dash number, dash ratio
+			6 .5
+		] def
+		/nebulaed [
+			% gap ratio
+			.35
+		] def
+		/ocluster [
+			% dash number, dash ratio
+			4 .8
+		] def
+		/galaxy3 [
+			% incline
+			60
+		] def
+		/galaxy5 [
+			% incline
+			45
+		] def
+	end
+
+	/CharProcs 256 dict def
+	CharProcs begin
+		/.notdef {
+		} def
+		/sight {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			outcrcwid
+			false drawring
+			1 1 2 {
+			pop
+			90 rotate
+			gsave
+			psprtdim
+			strokewid
+			2 copy
+			-2 div exch
+			-2 div exch
+			translate
+			strokewid 2 div
+			false drawbar
+			grestore
+			} for
+			end
+			end
+		} def
+		/cstar {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			outcrcrad
+			false drawdisc
+			end
+			end
+		} def
+		/dstar {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			outcrcrad
+			false drawdisc
+			{} forall
+			360 realrand mul
+			rotate
+			corcrcrad 0
+			translate
+			true drawdisc
+			end
+			end
+		} def
+		/mstar {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			outcrcrad
+			false drawdisc
+			{} forall
+			180 realrand mul
+			rotate
+			2 copy
+			-2 div halo sub exch
+			-2 div halo sub exch
+			translate
+			2 copy
+			halo add
+			halo add
+			exch
+			halo add
+			halo add
+			exch
+			dup 2 div
+			true drawbar
+			halo halo
+			translate
+			dup 2 div
+			false drawbar
+			end
+			end
+		} def
+		/vstar {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad halo add
+			true drawdisc
+			outcrcrad
+			outcrcwid
+			false drawring
+			corcrcrad
+			false drawdisc
+			end
+			end
+		} def
+		/vstarfb {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			inncrcrad
+			false drawdisc
+			{} forall
+			exch 360 exch div
+			2 copy mul exch
+			dup 0 exch 360 {
+			pop 2 copy
+			rotate
+			outcrcrad exch
+			outcrcwid
+			strokerad
+			false drawbow
+			} for
+			pop pop
+			pop
+			end
+			end
+		} def
+		/vstarsb {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			inncrcrad
+			false drawdisc
+			{} forall
+			exch 360 exch div
+			2 copy mul exch
+			dup 0 exch 360 {
+			pop 2 copy
+			rotate
+			outcrcrad exch
+			outcrcwid
+			strokerad
+			false drawbow
+			} for
+			pop pop
+			pop
+			end
+			end
+		} def
+		/vstarfd {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			corcrcrad
+			false drawdisc
+			{} forall
+			exch 360 exch div
+			2 copy mul exch
+			dup 0 exch 360 {
+			pop 2 copy
+			rotate
+			outcrcrad exch
+			outcrcwid
+			strokerad
+			false drawbow
+			} for
+			pop pop
+			pop
+			end
+			end
+		} def
+		/vstarsd {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			corcrcrad
+			false drawdisc
+			{} forall
+			exch 360 exch div
+			2 copy mul exch
+			dup 0 exch 360 {
+			pop 2 copy
+			rotate
+			outcrcrad exch
+			outcrcwid
+			strokerad
+			false drawbow
+			} for
+			pop pop
+			pop
+			end
+			end
+		} def
+		/nebulaeb {
+			procedures begin
+			parameters begin
+			setorigin
+			1 1 4 {
+			pop
+			90 rotate
+			gsave
+			psprtdim -2 div
+			psprtdim -2 div
+			translate
+			psprtdim
+			strokewid
+			halo add
+			halo add
+			1 true drawbar
+			grestore
+			} for
+			1 1 4 {
+			pop
+			90 rotate
+			gsave
+			psprtdim
+			halo sub
+			halo sub
+			dup
+			dup
+			-2 div exch
+			-2 div exch
+			translate
+			strokewid
+			1 false drawbar
+			grestore
+			} for
+			end
+			end
+		} def
+		/nebulaed {
+			procedures begin
+			parameters begin
+			setorigin
+			{} forall
+			1 exch sub 2 div
+			psprtdim
+			halo sub
+			halo sub
+			mul
+			1 1 4 {
+			pop
+			90 rotate
+			gsave
+			dup
+			strokewid
+			gsave
+			2 copy
+			halo add
+			halo add
+			exch
+			halo add
+			halo add
+			exch
+			2 copy
+			psprtdim -2 div
+			psprtdim -2 div
+			translate
+			1 true drawbar
+			90 rotate
+			strokewid
+			halo add
+			halo add
+			-1 mul
+			0 exch
+			translate
+			1 true drawbar
+			grestore
+			2 copy
+			psprtdim -2 div
+			psprtdim -2 div
+			halo add exch
+			halo add exch
+			translate
+			1 false drawbar
+			90 rotate
+			strokewid
+			-1 mul
+			0 exch
+			translate
+			1 false drawbar
+			grestore
+			} for
+			pop
+			end
+			end
+		} def
+		/pnebulae {
+			procedures begin
+			parameters begin
+			setorigin
+			inncrcrad
+			halo add
+			true drawdisc
+			180 realrand mul
+			rotate
+			1 1 2 {
+			pop
+			90 rotate
+			gsave
+			psprtdim
+			strokewid
+			halo add
+			halo add
+			2 copy
+			-2 div exch
+			-2 div exch
+			translate
+			strokerad
+			halo add
+			true drawbar
+			halo halo
+			translate
+			psprtdim
+			halo sub
+			halo sub
+			strokewid
+			strokerad
+			false drawbar
+			grestore
+			} for
+			inncrcrad
+			inncrcwid
+			false drawring
+			inncrcrad
+			inncrcwid sub
+			true drawdisc
+			end
+			end
+		} def
+		/ocluster {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			{} forall
+			exch 360 exch div
+			2 copy mul exch
+			dup 0 exch 360 {
+			pop 2 copy
+			rotate
+			outcrcrad exch
+			outcrcwid
+			strokerad
+			false drawbow
+			} for
+			pop pop
+			pop
+			end
+			end
+		} def
+		/gcluster {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			true drawdisc
+			outcrcrad
+			outcrcwid
+			false drawring
+			180 realrand mul
+			rotate
+			1 1 2 {
+			pop
+			90 rotate
+			gsave
+			outcrcrad 2 mul
+			strokewid
+			2 copy
+			-2 div exch
+			-2 div exch
+			translate
+			strokewid 2 div
+			false drawbar
+			grestore
+			} for
+			end
+			end
+		} def
+		/galaxy3 {
+			procedures begin
+			parameters begin
+			setorigin
+			{} forall
+			90 exch sub sin
+			newpath
+			outcrcrad
+			halo add
+			0 moveto
+			10 10 350 {
+			dup
+			cos
+			outcrcrad
+			halo add
+			mul exch
+			sin
+			outcrcrad
+			halo add
+			mul
+			2 index
+			mul
+			cvi exch
+			cvi exch
+			lineto
+			} for
+			closepath
+			gsave
+			setbgcolor fill
+			grestore
+			gpath
+			newpath
+			halo
+			neg gmove
+			gdraw
+			gpath
+			outcrcwid
+			neg gmove
+			gdraw
+			eofill
+			pop
+			end
+			end
+		} def
+		/galaxy5 {
+			procedures begin
+			parameters begin
+			setorigin
+			{} forall
+			90 exch sub sin
+			newpath
+			outcrcrad
+			halo add
+			0 moveto
+			10 10 350 {
+			dup
+			cos
+			outcrcrad
+			halo add
+			mul exch
+			sin
+			outcrcrad
+			halo add
+			mul
+			2 index
+			mul
+			cvi exch
+			cvi exch
+			lineto
+			} for
+			closepath
+			gsave
+			setbgcolor fill
+			grestore
+			gpath
+			newpath
+			halo
+			neg gmove
+			gdraw
+			gpath
+			outcrcwid
+			neg gmove
+			gdraw
+			eofill
+			pop
+			end
+			end
+		} def
+		/galaxyc {
+			procedures begin
+			parameters begin
+			setorigin
+			outcrcrad
+			halo add
+			outcrcwid
+			halo add
+			halo add
+			true drawring
+			outcrcrad
+			outcrcwid
+			false drawring
+			end
+			end
+		} def
+	end
+
+	/BuildGlyph {
+		[] 0 setdash
+		1 setlinewidth
+		0 setlinejoin
+		0 setlinecap
+		exch begin
+			parameters begin
+			glyphdim 0 setcharwidth
+			end
+			dup CharParam exch
+			2 copy known
+			{get exch}
+			{pop pop} ifelse
+			CharProcs exch get
+			exec
+		end
+	} bind def
+
+	/BuildChar {
+		1 index /Encoding get
+		exch get
+		1 index /BuildGlyph get
+		exec
+	} bind def
+
+	/Encoding 256 array def
+		0 1 255 {Encoding exch /.notdef put} for
+		Encoding 16 /sight put
+		Encoding 17 /cstar put
+		Encoding 18 /dstar put
+		Encoding 19 /mstar put
+		Encoding 20 /vstar put
+		Encoding 21 /vstarfb put
+		Encoding 22 /vstarfd put
+		Encoding 23 /vstarsb  put
+		Encoding 24 /vstarsd put
+		Encoding 27 /nebulaeb put
+		Encoding 28 /nebulaed put
+		Encoding 29 /pnebulae put
+		Encoding 30 /ocluster put
+		Encoding 31 /gcluster put
+		Encoding 32 /galaxy3 put
+		Encoding 33 /galaxy5 put
+		Encoding 34 /galaxyc put	
+
+	currentdict
+end
+
+dup /FontName get exch definefont pop

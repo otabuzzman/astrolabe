@@ -140,7 +140,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.operator.setpagedevice() ;
 
 		// Set origin at center of page.
-		ps.custom( ApplicationConstant.PS_CUSTOM_PAGESIZE ) ;
+		ps.push( ApplicationConstant.PS_PROLOG_PAGESIZE ) ;
 
 		ps.operator.mul( .5 ) ;
 		ps.operator.exch() ;
@@ -174,8 +174,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		if ( page.sizex()>page.realx() ) {
-			ps.operator.mark() ;
-
+			ps.array( true ) ;
 			ps.push( -page.realx()/2 ) ;
 			ps.push( -page.realy()/2 ) ;
 			ps.push( -page.realx()/2 ) ;
@@ -184,8 +183,10 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			ps.push( page.realy()/2 ) ;
 			ps.push( page.realx()/2 ) ;
 			ps.push( -page.realy()/2 ) ;
+			ps.array( false ) ;
 
-			ps.custom( ApplicationConstant.PS_CUSTOM_POLYLINE ) ;
+			ps.operator.newpath() ;
+			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
 			ps.operator.closepath() ;
 			ps.operator.stroke() ;

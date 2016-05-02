@@ -316,7 +316,7 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		String rams[] ;
 		double ra ;
 
-		rams = RAhms.split( " " ) ;
+		rams = RAhms.trim().split( "\\p{Space}+" ) ;
 		ra = new Double( rams[0] ).doubleValue()
 		+new Double( rams[1] ).doubleValue()/60.
 		+new Double( rams[2] ).doubleValue()/3600. ;
@@ -328,7 +328,7 @@ public class CatalogADC1239TRecord implements CatalogRecord {
 		String dems[] ;
 		double de ;
 
-		dems = DEdms.split( " " ) ;
+		dems = DEdms.trim().split( "\\p{Space}+" ) ;
 		de = new Double( dems[0] ).doubleValue()
 		+new Double( dems[1] ).doubleValue()/60.
 		+new Double( dems[2] ).doubleValue()/3600. ;

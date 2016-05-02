@@ -1,0 +1,225 @@
+%!PS Text Handling Package
+
+(lib/math.ps) run
+
+% <t> <distance> tpath -
+/tpath {
+32 dict begin
+	/td exch def
+	/t exch def
+	/pd 0 def
+	/nc 0 def
+	gsave
+	flattenpath
+	{/fy exch def
+	/fx exch def
+	/nx fx def
+	/ny fy def
+	/os 0 def
+	fx fy transform
+	/cy exch def
+	/cy exch def}
+	{/px nx def
+	/py ny def
+	/ny exch def
+	/nx exch def
+	nx px sub
+	/dx exch def
+	ny py sub 
+	/dy exch def
+	dx dup mul
+	dy dup mul
+	add
+	sqrt
+	/rpl exch def
+	rpl 0
+	ne
+		{dx rpl div
+		os mul
+		/osx exch def
+		dy rpl div
+		os mul
+		/osy exch def
+		px osx add
+		py osy add
+		transform
+		/cy exch def
+		/cx exch def
+		pd rpl add
+		/pd exch def
+		{
+		td pd
+		le
+			{nc 0 t
+			{
+			6 get
+			length
+			add
+			} forall
+			lt
+				{nc inc 0 0 t 
+				{
+				6 get
+				length
+				dup
+				3 1 roll
+				add
+				dup
+				4 index
+				ge
+					{exch sub
+					2 index
+					exch sub
+					dec
+					exit}
+					{exch pop
+					exch inc
+					exch}
+					ifelse
+				} forall
+				3 2 roll pop
+				/ci exch def
+				/ti exch def
+				t ti get
+				6 get
+				ci 1
+				getinterval
+				/c exch def
+				nc inc
+				/nc exch def
+				gsave
+					t ti get
+					dup
+					0 get
+					exch
+					1 get
+					setencoding
+					t ti get
+					0 get
+					findfont
+					t ti get
+					2 get
+					scalefont
+					setfont
+					c stringwidth pop
+					/cw exch def
+					cx cy
+					itransform
+					translate
+					dy dx atan
+					rotate
+					0 t ti get 3 get
+					moveto
+					c show
+					currentpoint
+					t ti get
+					3 get sub
+					transform
+					/cy exch def
+					/cx exch def
+				grestore
+				td cw add
+				/td exch def}
+				{exit}
+				ifelse}
+			{td pd sub
+			/os exch def
+			exit}
+			ifelse
+		} loop}
+		if}
+	{}
+	{fx fy lineto
+	fx fy moveto}
+	pathforall
+	grestore
+end
+} def
+% <t> tshow -
+/tshow {
+	{
+	dup
+	dup
+	dup
+	dup
+	0 get
+	exch
+	1 get
+	setencoding
+	0 get
+	findfont
+	exch
+	2 get
+	scalefont
+	setfont
+	[ currentpoint ]
+	exch dup
+	3 get
+	0 exch
+	rmoveto
+	dup
+	dup
+	6 get
+	exch
+	5 get
+	{show}
+	{stringwidth pop 0
+	rmoveto}
+	ifelse
+	dup
+	4 get
+	{3 get neg
+	0 exch
+	rmoveto
+	pop}
+	{pop
+	aload
+	pop
+	moveto}
+	ifelse
+	} forall
+} def
+% <t> twidth <x> <y>
+/twidth {
+	0 exch
+	{
+	dup
+	4 get
+	{dup
+	dup
+	0 get
+	findfont
+	exch
+	2 get
+	scalefont
+	setfont
+	6 get
+	stringwidth pop
+	add}
+	{pop}
+	ifelse
+	} forall
+	0
+} def
+% <fontname> <encoding> setencoding
+/setencoding {
+2 dict begin
+	exch
+	dup findfont
+	dup length
+	dict begin
+		{
+		1 index
+		/FID
+		ne
+		{def}
+		{pop pop}
+		ifelse
+		} forall
+		exch
+		/Encoding exch def
+		currentdict
+	end
+	definefont pop
+end
+} def

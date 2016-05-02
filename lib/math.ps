@@ -1,0 +1,235 @@
+%!PS Arithmetic and Math Operators Supplement
+
+% <float> inc <float>+1
+/inc {
+	1 add
+} def
+% <float> dec <float>-1
+/dec {
+	1 sub
+} def
+% <float> inv 1/<float>
+/inv {
+	1 exch div
+} def
+% <float> <float> min <float>
+/min {
+	2 copy
+	gt
+	{exch}
+	if
+	pop
+} def
+% <float> <float> max <float>
+/max {
+	2 copy
+	lt
+	{exch}
+	if
+	pop
+} def
+% <float> asin <float>
+/asin {
+	dup dup mul 1 exch sub sqrt atan
+} def
+% <float> acos <float>
+/acos {
+	dup dup mul 1 exch sub sqrt exch atan
+} def
+% 90 matrotarb <matrix>
+/matrot90cc {
+	[ 0 -1 1 0 ]
+} def
+% -90 matrotarb <matrix>
+/matrot90c {
+	[ 0 1 -1 0 ]
+} def
+% 180 matrotarb <matrix>
+/matrot180cc {
+	[ -1 0 0 -1 ]
+} def
+% -180 matrotarb <matrix>
+/matrot180c {
+	[ -1 0 0 -1 ]
+} def
+% <float> matrotarb <matrix>
+/matrotarb {
+	[ exch dup cos exch sin neg 2 copy neg exch ]
+} def
+% <v> vabs <float>
+/vabs {
+	dup mul
+	exch
+	dup mul
+	add
+	sqrt
+	abs
+} def
+% <va> <vb> vadd <v>
+/vadd {
+	3 2 roll
+	add
+	3 1 roll
+	add
+	exch
+} def
+% <va> <vb> vangle <float>
+/vangle {
+	2 vcopy vdot
+	5 1 roll vabs
+	3 1 roll vabs
+	mul
+	div
+	currentdict
+	/places known
+	{places}
+	{4}
+	ifelse
+	10 exch exp
+	2 copy mul
+	truncate
+	exch div
+	exch pop
+	acos
+} def
+% <v> <matrix> vapply <v>
+/vapply {
+2 dict begin
+	/m exch def
+	vdup
+	m 1 get
+	mul exch
+	m 0 get
+	mul add
+	3 1 roll
+	m 3 get
+	mul exch
+	m 2 get
+	mul add
+end
+} def
+% <va> <vb> vdot <v>
+/vdot {
+	3 2 roll
+	mul
+	3 1 roll
+	mul
+	add
+} def
+% <va> <vb> vmul <v>
+/vmul {
+	dup
+	3 1 roll
+	mul
+	3 1 roll
+	mul
+	exch
+} def
+% <v> <float> vscale <v>
+/vscale {
+	3 1 roll
+	vdup
+	5 copy
+	vabs div exch pop
+	mul
+	6 1 roll
+	vabs exch pop div
+	mul
+	exch
+} def
+% <va> <vb> vsub <v>
+/vsub {
+	vneg vadd
+} def
+% <v> vdot -<v>
+/vneg {
+	neg exch
+	neg exch
+} def
+% <v> vdup <v> <v>
+/vdup {
+	2 copy
+} def
+% <v> vpop -
+/vpop {
+	pop
+	pop
+} def
+% <va> <vb> vexch <vb> <va>
+/vexch {
+	4 2 roll
+} def
+% <v0> ... <vN> <int> vcopy <v0> ... <vN> < v0> ... <vN>
+/vcopy {
+	2 mul
+	copy
+} def
+% <v0> ... <vN> <int> <int> vroll <v0> ... <vN>
+/vroll {
+	2 mul exch
+	2 mul exch
+	roll
+} def
+% [ <v0 ... vN ] <int> vget <v>
+/vget {
+	2 mul
+	2 copy
+	exch length add
+	exch pop
+	2 copy
+	exch length mod
+	exch pop
+	2 copy
+	get
+	3 1 roll
+	inc
+	get
+} def
+% [ <v0 ... vN ] <int> <v> vput -
+/vput {
+4 dict begin
+	/y exch def
+	/x exch def
+	2 mul
+	2 copy
+	exch length add
+	exch pop
+	2 copy
+	exch length mod
+	exch pop
+	2 copy
+	x put
+	inc
+	y put
+end
+} def
+% [ <v0> ... <vN> ] vcon [ <v1-v0> ... <vN-v(N-1)> ]
+/vcon {
+	dup length
+	dup
+	dec
+	dec
+	array exch
+	2 div
+	dec
+	1 exch
+	1 exch
+	{
+	3 copy
+	dec
+	3 copy
+	3 copy
+	exch pop
+	inc
+	vget
+	5 2 roll
+	exch pop
+	vget
+	vsub
+	vput
+	pop
+	pop
+	} for
+	exch
+	pop
+} def

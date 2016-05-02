@@ -1,0 +1,169 @@
+%!PS Graph Handling Package
+
+(lib/math.ps) run
+
+% gpath [ <p0> ... <pN> ] 
+/gpath {
+	flattenpath
+	[
+	{} {} {} {}
+	pathforall
+	]
+} def
+% [ <p0> ... <pN> ]  gdraw -
+/gdraw {
+	dup
+	dup
+	0 get
+	exch
+	1 get
+	moveto
+	dup
+	length
+	2 sub
+	2 exch
+	2 exch
+	{
+	2 copy
+	2 copy
+	get
+	3 1 roll
+	inc get
+	lineto
+	pop
+	} for
+	pop
+} def
+% [ <p0> ... <pN> ] <float> gmove [ <p0> ... <pN> ]
+/gmove {
+16 dict begin
+	/d exch def
+	/g exch def
+	g length
+	array
+	dup 0
+	g 1 vget
+	g 0 vget
+	vsub
+	d vscale
+	matrot90c vapply
+	g 0 vget
+	vadd
+	vput
+	g length
+	2 div
+	dec
+	dec
+	1 exch
+	1 exch
+	{
+	2 copy
+	dup
+	/AN exch def
+	g AN
+	inc
+	vget
+	g AN
+	vget
+	vsub
+	g AN
+	vget
+	g AN
+	dec
+	vget
+	vsub
+	2 vcopy
+	/B0y exch def
+	/B0x exch def
+	/B1y exch def
+	/B1x exch def
+	vangle
+	/p exch def
+	180 p sub
+	2 div
+	/a exch def
+	p 0
+	eq
+	{d}
+	{d
+	a sin
+	div}
+	ifelse
+	B1x exch
+	B1y exch
+	vscale
+	B0y B0x atan
+	B1y B1x atan
+	ge
+	{a}
+	{a
+	p add}
+	ifelse
+	neg matrotarb vapply
+	g AN
+	vget
+	vadd
+	vput
+	pop
+	} for
+	dup -1
+	g -2 vget
+	g -1 vget
+	vsub
+	d vscale
+	matrot90cc vapply
+	g -1 vget
+	vadd
+	vput
+end
+} def
+% [ <p0> ... <pN> ] glen <int>
+/glen {
+2 dict begin
+	vcon
+	dup 0
+	vget
+	vabs
+	/l exch def
+	dup length
+	2 div
+	dec
+	1 exch
+	1 exch
+	{
+	2 copy
+	vget
+	vabs
+	l add
+	/l exch def
+	pop
+	} for
+	pop
+	l
+end
+} def
+% [ <p0> ... <pN> ] grev [ <pN> ... <p0> ]
+/grev {
+	dup length
+	array
+	dup length
+	2 div
+	dec
+	0 exch
+	1 exch
+	{
+	3 copy
+	3 copy
+	exch pop
+	vget
+	4 2 roll
+	neg
+	dec
+	4 2 roll
+	vput
+	pop
+	pop
+	} for
+	exch
+	pop
+} def
