@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.Calendar;
-
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -10,8 +8,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation ;
-import caa.CAADate;
-import caa.CAANutation;
+import caa.CAASidereal;
 
 @SuppressWarnings("serial")
 public class HorizonLocal extends astrolabe.model.HorizonLocal implements PostscriptEmitter, Projector {
@@ -25,82 +22,80 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		this.projector = projector ;
 	}
 
-	public double date() {
-		Calendar calendar ;
-		CAADate datetime ;
-		double jd ;
-
-		if ( getDate() == null ) {
-			calendar = Calendar.getInstance() ;
-
-			datetime = new CAADate(
-					calendar.get( Calendar.YEAR ),
-					calendar.get( Calendar.MONTH ),
-					calendar.get( Calendar.DAY_OF_MONTH ),
-					calendar.get( Calendar.HOUR_OF_DAY ),
-					calendar.get( Calendar.MINUTE ), 0, true ) ;
-			jd = datetime.Julian() ;
-			datetime.delete() ;
-
-			return jd ;
-		} else
-			return valueOf( getDate() ) ;
-	}
-
 	public double longitude() {
-		if ( getLongitude() == null )
-			return 0 ;
-		else
-			return valueOf( getLongitude() ) ;
+		double lo ;
+
+		lo = valueOf( getLongitude() ) ;
+
+		if ( lo>180 )
+			while ( lo>180 )
+				lo = lo-180 ;
+		if ( -180>lo )
+			while ( -180>lo )
+				lo = lo+180 ;
+
+		return lo ;
 	}
 
-	public double getLT( double jd ) {
-		double lo, lt ;
-		CAADate d ;
+	public double latitude() {
+		double la ;
 
-		d = new CAADate() ;
-		d.Set( jd, true ) ;
+		la = valueOf( getLatitude() ) ;
 
-		lt = CAACoordinateTransformation.HoursToDegrees( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
-		lo = longitude() ;
+		if ( la>90 )
+			while ( la>90 )
+				la = la-90 ;
+		if ( -90>la )
+			while ( -90>la )
+				la = la+90 ;
 
-		d.delete() ;
-
-		return lt+( lo>180?lo-360:lo ) ;
+		return la ;
 	}
 
-	public double getST( double jd ) {
-		double la0, lo0, e, ra0, lt ;
+	public double getST() {
+		double jd0, gmst ;
 		Double Epoch ;
 		double epoch ;
-		CAA2DCoordinate c ;
 
-		la0 = BodySun.meanEclipticLatitude( jd ) ;
-		lo0 = BodySun.meanEclipticLongitude( jd ) ;
 		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		else
 			epoch = Epoch.doubleValue() ;
-		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
-		c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
-		ra0 = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+		jd0 = (int) ( epoch-.5 )+.5 ;
+		gmst = CAASidereal.MeanGreenwichSiderealTime( jd0+utc()/24 ) ;
 
-		lt = getLT( jd ) ;
+		return gmst+longitude()/15 ;
+	}
 
-		return CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
+	private double standard() {
+		String utc[] ;
+		int h, m ;
+		double t ;
+
+		utc = getTime().getStandard()
+		.substring( 4 )
+		.split( ":" ) ;
+		h = Integer.parseInt( utc[0] )%24 ;
+		m = 0 ;
+		if ( utc.length>1 )
+			m = Integer.parseInt( utc[1] )%60 ;
+		t = h+m/60. ;
+
+		return getTime().getStandard().charAt( 3 ) == '-' ? -t : t ;
+	}
+
+	private double utc() {
+		return CAACoordinateTransformation.MapTo0To24Range( valueOf( getTime() )-standard() ) ;
 	}
 
 	public void register() {
-		double jd ;
 		DMS dms ;
 
-		jd = date() ;
-
-		dms = new DMS( getLT( jd )/15 ) ;
+		dms = new DMS( utc()+longitude()/15 ) ;
 		dms.register( this, QK_LOCALTIME ) ;
-		dms.set( getST( jd )/15, -1 ) ;
+		dms.set( getST(), -1 ) ;
 		dms.register( this, QK_SIDEREAL ) ;
 	}
 
@@ -110,12 +105,15 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		GSPaintColor practicality ;
+		String gstate ;
 
-		practicality = new GSPaintColor( getPracticality() ) ;
-		practicality.headPS( ps ) ;
-		practicality.emitPS( ps ) ;
-		practicality.tailPS( ps ) ;
+		gstate = Configuration.getValue( this, getPracticality(), null ) ;	
+
+		if ( gstate == null || gstate.length() == 0 )
+			return ;
+
+		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
+			ps.push( token ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
@@ -199,20 +197,11 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public double[] convert( double A, double h ) {
-		double[] r = new double[2] ;
 		CAA2DCoordinate c ;
-		double la ;
 
-		la = valueOf( getLatitude() ) ;
+		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, latitude() ) ;
 
-		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, la ) ;
-		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
-		r[1] = c.Y() ;
-
-		// r[0] is HA is ST-lo-RA.
-		r[0] = getST( date() )-r[0] ;
-
-		return r ;
+		return new double[] { CAACoordinateTransformation.HoursToDegrees( getST()-c.X() ), c.Y() } ;
 	}
 
 	public double[] unconvert( double[] eq ) {
@@ -220,18 +209,15 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public double[] unconvert( double RA, double d ) {
-		double[] r = new double[2];
+		double st, ra ;
 		CAA2DCoordinate c ;
-		double la ;
 
-		la = valueOf( getLatitude() ) ;
+		st = Math.truncate( getST() ) ;
+		ra = Math.truncate( CAACoordinateTransformation.DegreesToHours( RA ) ) ;
 
-		c = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( getST( date() )-RA ), d, la ) ;
-		r[0] = c.X() ;
-		r[1] = c.Y() ;
+		c = CAACoordinateTransformation.Equatorial2Horizontal( st-ra, d, latitude() ) ;
 
-		return r ;
+		return new double [] { c.X(), c.Y() } ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleMeridian peer ) {

@@ -9,10 +9,6 @@ public class Rational extends astrolabe.model.Rational {
 
 	private final static int DEFAULT_PRECISION	= 6 ;
 
-	// castor requirement for (un)marshalling
-	public Rational() {
-	}
-
 	public Rational( double value ) {
 		this( value, -1 ) ;
 	}

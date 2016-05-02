@@ -9,12 +9,12 @@
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a0" view="100"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>

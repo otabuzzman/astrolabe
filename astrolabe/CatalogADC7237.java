@@ -128,6 +128,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 		} ;
 		BodyStellar star ;
 		BodyAreal area ;
+		String name ;
 		astrolabe.model.ShapeElliptical shapeElliptical ;
 		astrolabe.model.Position position ;
 		double ra, de ;
@@ -146,17 +147,14 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 			record.register() ;
 
 			position = new astrolabe.model.Position() ;
-			// astrolabe.model.SphericalType
-			position.setDistance( new astrolabe.model.Distance() ) ;
-			position.getDistance().setValue( 1 ) ;
 			// astrolabe.model.AngleType
-			position.setDeviation( new astrolabe.model.Deviation() ) ;
-			position.getDeviation().setRational( new astrolabe.model.Rational() ) ;
-			position.getDeviation().getRational().setValue( ra ) ;  
+			position.setLon( new astrolabe.model.Lon() ) ;
+			position.getLon().setRational( new astrolabe.model.Rational() ) ;
+			position.getLon().getRational().setValue( ra ) ;  
 			// astrolabe.model.AngleType
-			position.setElevation( new astrolabe.model.Elevation() ) ;
-			position.getElevation().setRational( new astrolabe.model.Rational() ) ;
-			position.getElevation().getRational().setValue( de ) ;  
+			position.setLat( new astrolabe.model.Lat() ) ;
+			position.getLat().setRational( new astrolabe.model.Rational() ) ;
+			position.getLat().getRational().setValue( de ) ;  
 
 			d = 0 ;
 			s = 0 ;
@@ -175,10 +173,13 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 
 				if ( s>threshold ) {
 					area = new BodyAreal( projector ) ;
-					area.setName( record.PGC ) ;
+					name = getClass().getSimpleName() ;
+					if ( record.OType.equals( "M" ) )
+						name = name+":M" ;
+					area.setName( name ) ;
 					area.initValues() ;
 
-					area.setNature( record.getNature() ) ;
+					area.setNature( "authentic" ) ;
 
 					area.setAnnotation( record.getAnnotation() ) ;
 

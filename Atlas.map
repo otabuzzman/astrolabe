@@ -37,7 +37,7 @@
 			<bind-xml name="Rational" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.DMS">
+	<class name="astrolabe.DMS" verify-constructable="false">
 		<description>Default mapping for class astrolabe.DMS</description>
 		<map-to xml="DMS" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="neg" type="boolean" required="true">
@@ -53,7 +53,7 @@
 			<bind-xml name="sec" node="attribute"/>
 		</field>
 	</class>
-	<class name="astrolabe.Rational">
+	<class name="astrolabe.Rational" verify-constructable="false">
 		<description>Default mapping for class astrolabe.Rational</description>
 		<map-to xml="Rational" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="value" type="double" required="true">
@@ -63,32 +63,32 @@
 	<class name="astrolabe.model.P3">
 		<description>Default mapping for class astrolabe.model.P3</description>
 		<map-to xml="P3" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
 	<class name="astrolabe.model.P0">
 		<description>Default mapping for class astrolabe.model.P0</description>
 		<map-to xml="P0" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.model.Elevation">
-		<description>Default mapping for class astrolabe.model.Elevation</description>
-		<map-to xml="elevation" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+	<class name="astrolabe.model.Lat">
+		<description>Default mapping for class astrolabe.model.Lat</description>
+		<map-to xml="lat" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="DMS" type="astrolabe.model.DMS">
 			<bind-xml name="DMS" node="element"/>
 		</field>
@@ -102,32 +102,32 @@
 	<class name="astrolabe.model.Center">
 		<description>Default mapping for class astrolabe.model.Center</description>
 		<map-to xml="Center" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
 	<class name="astrolabe.model.P2">
 		<description>Default mapping for class astrolabe.model.P2</description>
 		<map-to xml="P2" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.model.Distance">
-		<description>Default mapping for class astrolabe.model.Distance</description>
-		<map-to xml="distance" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+	<class name="astrolabe.model.Rad">
+		<description>Default mapping for class astrolabe.model.Rad</description>
+		<map-to xml="rad" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="value" type="double" required="true">
 			<bind-xml name="value" node="attribute"/>
 		</field>
@@ -135,27 +135,27 @@
 	<class name="astrolabe.model.Bottom">
 		<description>Default mapping for class astrolabe.model.Bottom</description>
 		<map-to xml="Bottom" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
 	<class name="astrolabe.model.P1">
 		<description>Default mapping for class astrolabe.model.P1</description>
 		<map-to xml="P1" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
 	<class name="astrolabe.model.HMS">
@@ -174,28 +174,28 @@
 			<bind-xml name="sec" node="attribute"/>
 		</field>
 	</class>
-	<class name="astrolabe.AtlasStereographic">
+	<class name="astrolabe.AtlasStereographic" verify-constructable="false">
 		<description>Default mapping for class astrolabe.AtlasStereographic</description>
 		<map-to xml="Atlas" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="atlasPage" type="astrolabe.model.AtlasPage" collection="array">
 			<bind-xml name="AtlasPage" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.AtlasEquidistant">
+	<class name="astrolabe.AtlasEquidistant" verify-constructable="false">
 		<description>Default mapping for class astrolabe.AtlasStereographic</description>
 		<map-to xml="Atlas" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="atlasPage" type="astrolabe.model.AtlasPage" collection="array">
 			<bind-xml name="AtlasPage" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.AtlasOrthographic">
+	<class name="astrolabe.AtlasOrthographic" verify-constructable="false">
 		<description>Default mapping for class astrolabe.AtlasStereographic</description>
 		<map-to xml="Atlas" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="atlasPage" type="astrolabe.model.AtlasPage" collection="array">
 			<bind-xml name="AtlasPage" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.AtlasGnomonic">
+	<class name="astrolabe.AtlasGnomonic" verify-constructable="false">
 		<description>Default mapping for class astrolabe.AtlasStereographic</description>
 		<map-to xml="Atlas" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="atlasPage" type="astrolabe.model.AtlasPage" collection="array">
@@ -205,17 +205,17 @@
 	<class name="astrolabe.model.Extent">
 		<description>Default mapping for class astrolabe.model.Extent</description>
 		<map-to xml="Extent" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.AtlasPage">
+	<class name="astrolabe.AtlasPage" verify-constructable="false">
 		<description>Default mapping for class astrolabe.AtlasPage</description>
 		<map-to xml="AtlasPage" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="scale" type="double" required="true">
@@ -306,19 +306,19 @@
 	<class name="astrolabe.model.Top">
 		<description>Default mapping for class astrolabe.model.Top</description>
 		<map-to xml="Top" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
-		<field name="deviation" type="astrolabe.model.Deviation" required="true">
-			<bind-xml name="deviation" node="element"/>
+		<field name="lon" type="astrolabe.model.Lon" required="true">
+			<bind-xml name="lon" node="element"/>
 		</field>
-		<field name="elevation" type="astrolabe.model.Elevation" required="true">
-			<bind-xml name="elevation" node="element"/>
+		<field name="lat" type="astrolabe.model.Lat" required="true">
+			<bind-xml name="lat" node="element"/>
 		</field>
-		<field name="distance" type="astrolabe.model.Distance">
-			<bind-xml name="distance" node="element"/>
+		<field name="rad" type="astrolabe.model.Rad">
+			<bind-xml name="rad" node="element"/>
 		</field>
 	</class>
-	<class name="astrolabe.model.Deviation">
-		<description>Default mapping for class astrolabe.model.Deviation</description>
-		<map-to xml="deviation" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+	<class name="astrolabe.model.Lon">
+		<description>Default mapping for class astrolabe.model.Lon</description>
+		<map-to xml="lon" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
 		<field name="DMS" type="astrolabe.model.DMS">
 			<bind-xml name="DMS" node="element"/>
 		</field>

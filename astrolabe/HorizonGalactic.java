@@ -40,12 +40,15 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		GSPaintColor practicality ;
+		String gstate ;
 
-		practicality = new GSPaintColor( getPracticality() ) ;
-		practicality.headPS( ps ) ;
-		practicality.emitPS( ps ) ;
-		practicality.tailPS( ps ) ;
+		gstate = Configuration.getValue( this, getPracticality(), null ) ;	
+
+		if ( gstate == null || gstate.length() == 0 )
+			return ;
+
+		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
+			ps.push( token ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

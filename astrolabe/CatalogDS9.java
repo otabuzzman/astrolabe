@@ -139,9 +139,10 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 				for ( CatalogDS9Record element : entry ) {
 					body = new astrolabe.model.Body() ;
 					body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
+					body.getBodyAreal().setName( getClass().getSimpleName() ) ;
 					body.getBodyAreal().initValues() ;
 
-					body.getBodyAreal().setNature( element.getNature() ) ;
+					body.getBodyAreal().setNature( "authentic" ) ;
 
 					body.getBodyAreal().setAnnotation( element.getAnnotation() ) ;
 
@@ -151,17 +152,14 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 					for ( int p=0 ; p<list.size() ; p++ ) {
 						eq = list.get( p ) ;
 						pm = new astrolabe.model.Position() ;
-						// astrolabe.model.SphericalType
-						pm.setDistance( new astrolabe.model.Distance() ) ;
-						pm.getDistance().setValue( 1 ) ;
 						// astrolabe.model.AngleType
-						pm.setDeviation( new astrolabe.model.Deviation() ) ;
-						pm.getDeviation().setRational( new astrolabe.model.Rational() ) ;
-						pm.getDeviation().getRational().setValue( eq[0] ) ;  
+						pm.setLon( new astrolabe.model.Lon() ) ;
+						pm.getLon().setRational( new astrolabe.model.Rational() ) ;
+						pm.getLon().getRational().setValue( eq[0] ) ;  
 						// astrolabe.model.AngleType
-						pm.setElevation( new astrolabe.model.Elevation() ) ;
-						pm.getElevation().setRational( new astrolabe.model.Rational() ) ;
-						pm.getElevation().getRational().setValue( eq[1] ) ;  
+						pm.setLat( new astrolabe.model.Lat() ) ;
+						pm.getLat().setRational( new astrolabe.model.Rational() ) ;
+						pm.getLat().getRational().setValue( eq[1] ) ;  
 
 						body.getBodyAreal().getBodyArealTypeChoice().addPosition( pm ) ;
 					}

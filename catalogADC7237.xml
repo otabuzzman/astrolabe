@@ -9,12 +9,12 @@
 		<ChartStereographic scale="300" northern="true">
 			<ChartPage size="a0" view="100"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
@@ -55,7 +55,7 @@
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VII/237/pgc.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7237/pgc.dat.gz-->
 						<CatalogADC7237 name="7237" url="lib/cat/7237/10000.dat.gz">
-							<CatalogADC7237Record select="true" nature="{OType==&#x0022;G&#x0022;?&#x0022;.28:0&#x0022;:OType==&#x0022;M&#x0022;?&#x0022;.28:0.4:0.5&#x0022;:&#x0022;.28:0&#x0022;}">
+							<CatalogADC7237Record select="true">
 								<Script value="{OType~&#x0022;G&#x0022;?(logR25>0.5?&#x0022;&#xf820;&#x0022;:logR25>0.3?&#x0022;&#xf821;&#x0022;:&#x0022;&#xf822;&#x0022;):&#x0022;&#xf813;&#x0022;}" purpose="{log_D25&#x003c;9?4.4:log_D25&#x003c;3?3.7:log_D25&#x003c;2?3.0:log_D245&#x003c;1?2.3:1.6}"/>
 							</CatalogADC7237Record>
 						</CatalogADC7237>

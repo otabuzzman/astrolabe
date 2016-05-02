@@ -87,13 +87,15 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		GSPaintStroke nature ;
+		String gstate ;
 
-		nature = new GSPaintStroke( getNature() ) ;
+		gstate = Configuration.getValue( this, getNature(), null ) ;	
 
-		nature.headPS( ps ) ;
-		nature.emitPS( ps ) ;
-		nature.tailPS( ps ) ;
+		if ( gstate == null || gstate.length() == 0 )
+			return ;
+
+		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
+			ps.push( token ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

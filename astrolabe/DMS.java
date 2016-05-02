@@ -16,10 +16,6 @@ public class DMS extends astrolabe.model.DMS {
 	private final static String QK_SEC = "sec" ;
 	private final static String QK_FRC = "frc" ;
 
-	// castor requirement for (un)marshalling
-	public DMS() {
-	}
-
 	public DMS( double value ) {
 		this( value, -1 ) ;
 	}

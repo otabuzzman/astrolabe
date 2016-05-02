@@ -9,12 +9,12 @@
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a0" view="100"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
@@ -105,7 +105,7 @@
 					<Catalog>
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
 						<CatalogDS9 name="MCCM" url="lib/cat/MCCM/cat_%04d.con">
-							<CatalogDS9Record select="true" nature="0.24:0"/>
+							<CatalogDS9Record select="true"/>
 							<Level url="lib/cat/MCCM/catalog.lev"/>
 						</CatalogDS9>
 					</Catalog>

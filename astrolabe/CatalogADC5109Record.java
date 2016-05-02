@@ -203,7 +203,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 	public String date		; // ?Year of observation (AD)
 	public String r_Dup		; // ?Source of multiplicity data
 	public String n_Dmag	; // Passband of multiple star mag. dif.
-	public String dist1		; // ?Distance to nearest neighboring star in
+	public String dist1		; // ?Rad to nearest neighboring star in
 	// the master catalog 
 	public String dist2		; // ?Dist. to nearest neighboring master
 	// cat. star no more than 2 mag. fainter 

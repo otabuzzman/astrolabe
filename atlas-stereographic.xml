@@ -9,12 +9,12 @@
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a3" view="82"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90.0"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<Horizon>
 				<HorizonEquatorial practicality="none">
@@ -26,20 +26,20 @@
 			</Horizon>
 			<Atlas picker="atlas-stereographic-northern.xml">
 				<Origin>
-					<deviation>
+					<lon>
 						<Rational value="0"/>
-					</deviation>
-					<elevation>
+					</lon>
+					<lat>
 						<Rational value="92"/>
-					</elevation>
+					</lat>
 				</Origin>
 				<Extent>
-					<deviation>
+					<lon>
 						<Rational value="359.9999"/>
-					</deviation>
-					<elevation>
+					</lon>
+					<lat>
 						<Rational value="117.8"/>
-					</elevation>
+					</lat>
 				</Extent>
 				<SpanDeclination>
 					<Rational value="28"/>
@@ -57,12 +57,12 @@
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a3" view="82"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90.0"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
@@ -758,12 +758,12 @@
 		<ChartStereographic scale="100" northern="false">
 			<ChartPage size="a3" view="82"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="-90.0"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<Horizon>
 				<HorizonEquatorial practicality="none">
@@ -775,20 +775,20 @@
 			</Horizon>
 			<Atlas picker="atlas-stereographic-southern.xml">
 				<Origin>
-					<deviation>
+					<lon>
 						<Rational value="0"/>
-					</deviation>
-					<elevation>
+					</lon>
+					<lat>
 						<Rational value="-92"/>
-					</elevation>
+					</lat>
 				</Origin>
 				<Extent>
-					<deviation>
+					<lon>
 						<Rational value="359.9999"/>
-					</deviation>
-					<elevation>
+					</lon>
+					<lat>
 						<Rational value="-117.8"/>
-					</elevation>
+					</lat>
 				</Extent>
 				<SpanDeclination>
 					<Rational value="-28"/>
@@ -806,12 +806,12 @@
 		<ChartStereographic scale="100" northern="false">
 			<ChartPage size="a3" view="82"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="-90.0"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>

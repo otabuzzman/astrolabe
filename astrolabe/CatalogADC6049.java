@@ -131,7 +131,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 			body.getBodyAreal().setName( record.con ) ;
 			body.getBodyAreal().initValues() ;
 
-			body.getBodyAreal().setNature( record.getNature() ) ;
+			body.getBodyAreal().setNature( "arbitrary" ) ;
 
 			body.getBodyAreal().setAnnotation( record.getAnnotation() ) ;
 
@@ -142,17 +142,14 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 				eq = list.get( p ) ;
 				ceq = CAAPrecession.PrecessEquatorial( eq[0], eq[1], 2451545./*J2000*/, epoch ) ;
 				pm = new astrolabe.model.Position() ;
-				// astrolabe.model.SphericalType
-				pm.setDistance( new astrolabe.model.Distance() ) ;
-				pm.getDistance().setValue( 1 ) ;
 				// astrolabe.model.AngleType
-				pm.setDeviation( new astrolabe.model.Deviation() ) ;
-				pm.getDeviation().setRational( new astrolabe.model.Rational() ) ;
-				pm.getDeviation().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
+				pm.setLon( new astrolabe.model.Lon() ) ;
+				pm.getLon().setRational( new astrolabe.model.Rational() ) ;
+				pm.getLon().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
 				// astrolabe.model.AngleType
-				pm.setElevation( new astrolabe.model.Elevation() ) ;
-				pm.getElevation().setRational( new astrolabe.model.Rational() ) ;
-				pm.getElevation().getRational().setValue( ceq.Y() ) ;  
+				pm.setLat( new astrolabe.model.Lat() ) ;
+				pm.getLat().setRational( new astrolabe.model.Rational() ) ;
+				pm.getLat().getRational().setValue( ceq.Y() ) ;  
 
 				body.getBodyAreal().getBodyArealTypeChoice().addPosition( pm ) ;
 				ceq.delete() ;

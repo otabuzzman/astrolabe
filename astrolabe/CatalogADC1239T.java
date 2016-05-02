@@ -165,17 +165,14 @@ public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements 
 			body.getBodyStellar().setAnnotation( record.getAnnotation() ) ;
 
 			pm = new astrolabe.model.Position() ;
-			// astrolabe.model.SphericalType
-			pm.setDistance( new astrolabe.model.Distance() ) ;
-			pm.getDistance().setValue( 1 ) ;
 			// astrolabe.model.AngleType
-			pm.setDeviation( new astrolabe.model.Deviation() ) ;
-			pm.getDeviation().setRational( new astrolabe.model.Rational() ) ;
-			pm.getDeviation().getRational().setValue( ra ) ;  
+			pm.setLon( new astrolabe.model.Lon() ) ;
+			pm.getLon().setRational( new astrolabe.model.Rational() ) ;
+			pm.getLon().getRational().setValue( ra ) ;  
 			// astrolabe.model.AngleType
-			pm.setElevation( new astrolabe.model.Elevation() ) ;
-			pm.getElevation().setRational( new astrolabe.model.Rational() ) ;
-			pm.getElevation().getRational().setValue( de ) ;  
+			pm.setLat( new astrolabe.model.Lat() ) ;
+			pm.getLat().setRational( new astrolabe.model.Rational() ) ;
+			pm.getLat().getRational().setValue( de ) ;  
 
 			body.getBodyStellar().setPosition( pm ) ;
 

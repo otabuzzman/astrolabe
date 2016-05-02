@@ -122,12 +122,15 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		GSPaintStroke importance ;
+		String gstate ;
 
-		importance = new GSPaintStroke( getImportance() ) ;
-		importance.headPS( ps ) ;
-		importance.emitPS( ps ) ;
-		importance.tailPS( ps ) ;
+		gstate = Configuration.getValue( this, getImportance(), null ) ;	
+
+		if ( gstate == null || gstate.length() == 0 )
+			return ;
+
+		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
+			ps.push( token ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

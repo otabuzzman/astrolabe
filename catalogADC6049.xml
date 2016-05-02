@@ -9,12 +9,12 @@
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a0" view="100"/>
 			<Oblique>
-				<deviation>
+				<lon>
 					<Rational value="0"/>
-				</deviation>
-				<elevation>
+				</lon>
+				<lat>
 					<Rational value="90"/>
-				</elevation>
+				</lat>
 			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
@@ -140,12 +140,12 @@
 							<ShapeElliptical proportion=".5" PA="90">
 								<DMS neg="false" deg="30" min="0" sec="0.0"/>
 								<Position>
-									<deviation>
+									<lon>
 										<DMS neg="false" deg="25" min="0" sec="0.0"/>
-									</deviation>
-									<elevation>
+									</lon>
+									<lat>
 										<DMS neg="false" deg="20" min="0" sec="0.0"/>
-									</elevation>
+									</lat>
 								</Position>
 							</ShapeElliptical>
 						</BodyAreal>
@@ -157,28 +157,28 @@
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
 						<CatalogADC6049 name="6049" url="lib/cat/6049/bound_20.dat.gz">
-							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}" nature=".36:1.8:0.25">
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</CatalogADC6049Record>
-							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;AQL&#x0022;||abk&#x00fc;rzung~&#x0022;AUR&#x0022;||abk&#x00fc;rzung~&#x0022;CAM&#x0022;||abk&#x00fc;rzung~&#x0022;CAS&#x0022;||abk&#x00fc;rzung~&#x0022;CEP&#x0022;||abk&#x00fc;rzung~&#x0022;CRT&#x0022;||abk&#x00fc;rzung~&#x0022;CRV&#x0022;||abk&#x00fc;rzung~&#x0022;CVN&#x0022;||abk&#x00fc;rzung~&#x0022;LEO&#x0022;||abk&#x00fc;rzung~&#x0022;ORI&#x0022;||abk&#x00fc;rzung~&#x0022;PSC&#x0022;||abk&#x00fc;rzung~&#x0022;PUP&#x0022;||abk&#x00fc;rzung~&#x0022;SER1&#x0022;||abk&#x00fc;rzung~&#x0022;SEX&#x0022;||abk&#x00fc;rzung~&#x0022;SGR&#x0022;||abk&#x00fc;rzung~&#x0022;UMI&#x0022;||abk&#x00fc;rzung~&#x0022;VIR&#x0022;}" nature=".36:1.8:0.25">
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;AQL&#x0022;||abk&#x00fc;rzung~&#x0022;AUR&#x0022;||abk&#x00fc;rzung~&#x0022;CAM&#x0022;||abk&#x00fc;rzung~&#x0022;CAS&#x0022;||abk&#x00fc;rzung~&#x0022;CEP&#x0022;||abk&#x00fc;rzung~&#x0022;CRT&#x0022;||abk&#x00fc;rzung~&#x0022;CRV&#x0022;||abk&#x00fc;rzung~&#x0022;CVN&#x0022;||abk&#x00fc;rzung~&#x0022;LEO&#x0022;||abk&#x00fc;rzung~&#x0022;ORI&#x0022;||abk&#x00fc;rzung~&#x0022;PSC&#x0022;||abk&#x00fc;rzung~&#x0022;PUP&#x0022;||abk&#x00fc;rzung~&#x0022;SER1&#x0022;||abk&#x00fc;rzung~&#x0022;SEX&#x0022;||abk&#x00fc;rzung~&#x0022;SGR&#x0022;||abk&#x00fc;rzung~&#x0022;UMI&#x0022;||abk&#x00fc;rzung~&#x0022;VIR&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</CatalogADC6049Record>
-							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;LAC&#x0022;||abk&#x00fc;rzung~&#x0022;LEP&#x0022;||abk&#x00fc;rzung~&#x0022;SCT&#x0022;||abk&#x00fc;rzung~&#x0022;SER2&#x0022;}" nature=".36:1.8:0.25">
+							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;LAC&#x0022;||abk&#x00fc;rzung~&#x0022;LEP&#x0022;||abk&#x00fc;rzung~&#x0022;SCT&#x0022;||abk&#x00fc;rzung~&#x0022;SER2&#x0022;}">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topright" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>
 									</AnnotationStraight>
 								</Annotation>
 							</CatalogADC6049Record>
-							<CatalogADC6049Record select="true" nature=".36:1.8:0.25">
+							<CatalogADC6049Record select="true">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="bottomleft" radiant="false">
 										<Script purpose="bodylettering0" value="{abk&#x00fc;rzung}"/>

@@ -28,13 +28,13 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		double center[], phi, sin, cos ;
 		Vector vp, v0 ;
 
-		vp = new Vector( polarToWorld( hemisphereToPolar( oblique( eq, false ) ) ) ) ;
+		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
 
 		if ( getChartPage().getCenter() == null )
 			return vp.mul( scale() ).toArray() ;
 
 		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToWorld( hemisphereToPolar( oblique( new double[] { center[1], center[2] }, false ) ) ) ) ;
+		v0 = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		vp.sub( v0 ) ;
 		phi = 90+Math.atan2( v0.y, v0.x ) ;
 		sin = Math.sin( phi ) ;
@@ -56,17 +56,17 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		vp.mul( 1/scale() ) ;
 
 		if ( getChartPage().getCenter() == null )
-			return oblique( polarToHemisphere( worldToPolar( vp.toArray() ) ), true ) ;
+			return polarToHemisphere( worldToPolar( vp.toArray() ) ) ;
 
 		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToWorld( hemisphereToPolar( oblique( new double[] { center[1], center[2] }, false ) ) ) ) ;
+		v0 = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		phi = 90+Math.atan2( v0.y, v0.x ) ;
 		sin = Math.sin( phi ) ;
 		cos = Math.cos( phi ) ;
 		vp.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ;
 		vp.add( v0 ) ;
 
-		return oblique( polarToHemisphere( worldToPolar( vp.toArray() ) ), true ) ;
+		return polarToHemisphere( worldToPolar( vp.toArray() ) ) ;
 	}
 
 	public double[] convert( double[] eq ) {
@@ -83,24 +83,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public double[] unconvert( double RA, double d ) {
 		return new double[] { RA, d } ;
-	}
-
-	private double[] oblique( double[] coordinate, boolean reverse ) {
-		double[] oblique ;
-
-		oblique = valueOf( getOblique() ) ;			
-
-		if ( getNorthern() ) {
-			if ( reverse )
-				return new double[] { coordinate[0]-oblique[1], coordinate[1]-90+oblique[2] } ;
-			else
-				return new double[] { coordinate[0]+oblique[1], coordinate[1]+90-oblique[2] } ;
-		} else {
-			if ( reverse )
-				return new double[] { coordinate[0]-oblique[1], coordinate[1]-90-oblique[2] } ;
-			else
-				return new double[] { coordinate[0]+oblique[1], coordinate[1]+90+oblique[2] } ;
-		}
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {

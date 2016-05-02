@@ -285,9 +285,9 @@
 			<xs:complexContent>
 				<xs:extension base="HorizonType">
 					<xs:sequence>
+						<xs:element ref="Longitude"/>
 						<xs:element ref="Latitude"/>
-						<xs:element ref="Longitude" minOccurs="0"/>
-						<xs:element ref="Date" minOccurs="0"/>
+						<xs:element ref="Time"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -689,7 +689,6 @@
 				<xs:restriction base="xs:string">
 					<xs:pattern value="arbitrary"/>
 					<xs:pattern value="authentic"/>
-					<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -734,7 +733,6 @@
 				<xs:restriction base="xs:string">
 					<xs:pattern value="artificial"/>
 					<xs:pattern value="celestial"/>
-					<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -985,16 +983,7 @@
 	<xs:element name="CatalogADC6049Record">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="CatalogRecordType">
-					<xs:attribute name="nature" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
+				<xs:extension base="CatalogRecordType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1005,14 +994,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="nature" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="[0-9]+|[0-9]*\.[0-9]+(:[0-9]+|[0-9]*\.[0-9]+){1,2}"/>
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -1024,14 +1005,6 @@
 					<xs:sequence>
 						<xs:element ref="Script"/>
 					</xs:sequence>
-					<xs:attribute name="nature" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="[0-9]+|[0-9]*\.[0-9]+(:[0-9]+|[0-9]*\.[0-9]+){1,2}"/>
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
@@ -1039,16 +1012,7 @@
 	<xs:element name="CatalogDS9Record">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="CatalogRecordType">
-					<xs:attribute name="nature" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="([0-9]+|[0-9]*\.[0-9]+)(:([0-9]+|[0-9]*\.[0-9]+)){1,2}"/>
-								<xs:pattern value="\{.+\}"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
+				<xs:extension base="CatalogRecordType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1170,14 +1134,22 @@
 	<xs:element name="Latitude" type="AngleType"/>
 	<xs:element name="Longitude" type="AngleType"/>
 	<xs:element name="HA" type="TimeType"/>
-	<xs:element name="deviation" type="AngleType"/>
-	<xs:element name="elevation" type="AngleType"/>
-	<xs:element name="distance" type="RationalType"/>
+	<xs:element name="lon" type="AngleType"/>
+	<xs:element name="lat" type="AngleType"/>
+	<xs:element name="rad" type="RationalType"/>
+	<xs:element name="phi" type="AngleType"/>
 	<xs:complexType name="TimeType">
 		<xs:choice>
 			<xs:element ref="HMS"/>
 			<xs:element ref="Rational"/>
 		</xs:choice>
+		<xs:attribute name="standard" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="UTC[-+][0-9][0-9]?(:[0-9][0-9])?"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Time" type="TimeType"/>
 	<xs:complexType name="DateType">
@@ -1202,16 +1174,16 @@
 	<xs:element name="Cartesian" type="CartesianType"/>
 	<xs:complexType name="PolarType">
 		<xs:sequence>
-			<xs:element ref="deviation"/>
-			<xs:element ref="distance" minOccurs="0"/>
+			<xs:element ref="phi"/>
+			<xs:element ref="rad" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Polar" type="PolarType"/>
 	<xs:complexType name="SphericalType">
 		<xs:sequence>
-			<xs:element ref="deviation"/>
-			<xs:element ref="elevation"/>
-			<xs:element ref="distance" minOccurs="0"/>
+			<xs:element ref="lon"/>
+			<xs:element ref="lat"/>
+			<xs:element ref="rad" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Spherical" type="SphericalType"/>

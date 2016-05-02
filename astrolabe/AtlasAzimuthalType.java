@@ -47,10 +47,6 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	private double spanme = Double.NEGATIVE_INFINITY ;
 	private double spanpa = Double.NEGATIVE_INFINITY ;
 
-	// castor requirement for (un)marshalling
-	public AtlasAzimuthalType() {
-	}
-
 	public AtlasAzimuthalType( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
 		astrolabe.model.AngleType angle ;
 
@@ -196,59 +192,59 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 					eqp0 = projector.unproject( p0.x, p0.y ) ;
 					atlasPage.setP0( new astrolabe.model.P0() ) ;
-					atlasPage.getP0().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP0().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP0().getDeviation(), false, false, eqp0[0] ) ;
-					modelOf( atlasPage.getP0().getElevation(), false, false, eqp0[1] ) ;
+					atlasPage.getP0().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP0().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP0().getLon(), false, false, eqp0[0] ) ;
+					modelOf( atlasPage.getP0().getLat(), false, false, eqp0[1] ) ;
 
 					eqp1 = projector.unproject( p1.x, p1.y ) ;
 					atlasPage.setP1( new astrolabe.model.P1() ) ;
-					atlasPage.getP1().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP1().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP1().getDeviation(), false, false, eqp1[0] ) ;
-					modelOf( atlasPage.getP1().getElevation(), false, false, eqp1[1] ) ;
+					atlasPage.getP1().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP1().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP1().getLon(), false, false, eqp1[0] ) ;
+					modelOf( atlasPage.getP1().getLat(), false, false, eqp1[1] ) ;
 
 					eqp2 = projector.unproject( p2.x, p2.y ) ;
 					atlasPage.setP2( new astrolabe.model.P2() ) ;
-					atlasPage.getP2().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP2().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP2().getDeviation(), false, false, eqp2[0] ) ;
-					modelOf( atlasPage.getP2().getElevation(), false, false, eqp2[1] ) ;
+					atlasPage.getP2().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP2().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP2().getLon(), false, false, eqp2[0] ) ;
+					modelOf( atlasPage.getP2().getLat(), false, false, eqp2[1] ) ;
 
 					eq = projector.unproject( p3.x, p3.y ) ;
 					atlasPage.setP3( new astrolabe.model.P3() ) ;
-					atlasPage.getP3().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP3().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP3().getDeviation(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP3().getElevation(), false, false, eq[1] ) ;
+					atlasPage.getP3().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP3().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP3().getLon(), false, false, eq[0] ) ;
+					modelOf( atlasPage.getP3().getLat(), false, false, eq[1] ) ;
 
 					atlasPage.setCenterx( vcen.x ) ;
 					atlasPage.setCentery( vcen.y ) ;
 					eq = projector.unproject( vcen.x, vcen.y ) ;
 					eq[0] = CAACoordinateTransformation.DegreesToHours( eq[0] ) ;
 					atlasPage.setCenter( new astrolabe.model.Center() ) ;
-					atlasPage.getCenter().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getCenter().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getCenter().getDeviation(), true, true, eq[0] ) ;
-					modelOf( atlasPage.getCenter().getElevation(), true, false, eq[1] ) ;
+					atlasPage.getCenter().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getCenter().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getCenter().getLon(), true, true, eq[0] ) ;
+					modelOf( atlasPage.getCenter().getLat(), true, false, eq[1] ) ;
 
 					atlasPage.setTopx( vtop.x ) ;
 					atlasPage.setTopy( vtop.y ) ;
 					eqt = projector.unproject( vtop.x, vtop.y ) ;
 					atlasPage.setTop( new astrolabe.model.Top() ) ;
-					atlasPage.getTop().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getTop().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getTop().getDeviation(), false, false, eqt[0] ) ;
-					modelOf( atlasPage.getTop().getElevation(), false, false, eqt[1] ) ;
+					atlasPage.getTop().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getTop().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getTop().getLon(), false, false, eqt[0] ) ;
+					modelOf( atlasPage.getTop().getLat(), false, false, eqt[1] ) ;
 
 					atlasPage.setBottomx( vbot.x ) ;
 					atlasPage.setBottomy( vbot.y ) ;
 					eq = projector.unproject( vbot.x, vbot.y ) ;
 					atlasPage.setBottom( new astrolabe.model.Bottom() ) ;
-					atlasPage.getBottom().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getBottom().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getBottom().getDeviation(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getBottom().getElevation(), false, false, eq[1] ) ;
+					atlasPage.getBottom().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getBottom().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getBottom().getLon(), false, false, eq[0] ) ;
+					modelOf( atlasPage.getBottom().getLat(), false, false, eq[1] ) ;
 
 					if ( spanme>Double.NEGATIVE_INFINITY ) {
 						if ( atlasPage.getPicker() == null )
@@ -362,59 +358,59 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 					eqp0 = projector.unproject( p0.x, p0.y ) ;
 					atlasPage.setP0( new astrolabe.model.P0() ) ;
-					atlasPage.getP0().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP0().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP0().getDeviation(), false, false, eqp0[0] ) ;
-					modelOf( atlasPage.getP0().getElevation(), false, false, eqp0[1] ) ;
+					atlasPage.getP0().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP0().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP0().getLon(), false, false, eqp0[0] ) ;
+					modelOf( atlasPage.getP0().getLat(), false, false, eqp0[1] ) ;
 
 					eqp1 = projector.unproject( p1.x, p1.y ) ;
 					atlasPage.setP1( new astrolabe.model.P1() ) ;
-					atlasPage.getP1().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP1().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP1().getDeviation(), false, false, eqp1[0] ) ;
-					modelOf( atlasPage.getP1().getElevation(), false, false, eqp1[1] ) ;
+					atlasPage.getP1().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP1().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP1().getLon(), false, false, eqp1[0] ) ;
+					modelOf( atlasPage.getP1().getLat(), false, false, eqp1[1] ) ;
 
 					eqp2 = projector.unproject( p2.x, p2.y ) ;
 					atlasPage.setP2( new astrolabe.model.P2() ) ;
-					atlasPage.getP2().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP2().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP2().getDeviation(), false, false, eqp2[0] ) ;
-					modelOf( atlasPage.getP2().getElevation(), false, false, eqp2[1] ) ;
+					atlasPage.getP2().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP2().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP2().getLon(), false, false, eqp2[0] ) ;
+					modelOf( atlasPage.getP2().getLat(), false, false, eqp2[1] ) ;
 
 					eq = projector.unproject( p3.x, p3.y ) ;
 					atlasPage.setP3( new astrolabe.model.P3() ) ;
-					atlasPage.getP3().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getP3().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getP3().getDeviation(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP3().getElevation(), false, false, eq[1] ) ;
+					atlasPage.getP3().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getP3().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getP3().getLon(), false, false, eq[0] ) ;
+					modelOf( atlasPage.getP3().getLat(), false, false, eq[1] ) ;
 
 					atlasPage.setCenterx( vcen.x ) ;
 					atlasPage.setCentery( vcen.y ) ;
 					eq = projector.unproject( vcen.x, vcen.y ) ;
 					eq[0] = CAACoordinateTransformation.DegreesToHours( eq[0] ) ;
 					atlasPage.setCenter( new astrolabe.model.Center() ) ;
-					atlasPage.getCenter().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getCenter().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getCenter().getDeviation(), true, true, eq[0] ) ;
-					modelOf( atlasPage.getCenter().getElevation(), true, false, eq[1] ) ;
+					atlasPage.getCenter().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getCenter().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getCenter().getLon(), true, true, eq[0] ) ;
+					modelOf( atlasPage.getCenter().getLat(), true, false, eq[1] ) ;
 
 					atlasPage.setTopx( vtop.x ) ;
 					atlasPage.setTopy( vtop.y ) ;
 					eqt = projector.unproject( vtop.x, vtop.y ) ;
 					atlasPage.setTop( new astrolabe.model.Top() ) ;
-					atlasPage.getTop().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getTop().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getTop().getDeviation(), false, false, eqt[0] ) ;
-					modelOf( atlasPage.getTop().getElevation(), false, false, eqt[1] ) ;
+					atlasPage.getTop().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getTop().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getTop().getLon(), false, false, eqt[0] ) ;
+					modelOf( atlasPage.getTop().getLat(), false, false, eqt[1] ) ;
 
 					atlasPage.setBottomx( vbot.x ) ;
 					atlasPage.setBottomy( vbot.y ) ;
 					eq = projector.unproject( vbot.x, vbot.y ) ;
 					atlasPage.setBottom( new astrolabe.model.Bottom() ) ;
-					atlasPage.getBottom().setDeviation( new astrolabe.model.Deviation() ) ;
-					atlasPage.getBottom().setElevation( new astrolabe.model.Elevation() ) ;
-					modelOf( atlasPage.getBottom().getDeviation(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getBottom().getElevation(), false, false, eq[1] ) ;
+					atlasPage.getBottom().setLon( new astrolabe.model.Lon() ) ;
+					atlasPage.getBottom().setLat( new astrolabe.model.Lat() ) ;
+					modelOf( atlasPage.getBottom().getLon(), false, false, eq[0] ) ;
+					modelOf( atlasPage.getBottom().getLat(), false, false, eq[1] ) ;
 
 					if ( spanme>Double.NEGATIVE_INFINITY ) {
 						if ( atlasPage.getPicker() == null )
@@ -558,7 +554,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		// 1. make AtlasStereographic.map (e.g.)
 		// 2. remove unused class definitions from AtlasStereographic.map
 		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
-		// 4. remove required attribute from field definitions for Deviation and Elevation
+		// 4. remove required attribute from field definitions for Lon and Lat
 		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
 		// 6. rename AtlasStereographic to Atlas
 		// 7. rename AtlasStereographic.map to Atlas.map
