@@ -1,8 +1,12 @@
 
 package astrolabe;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.BackingStoreException;
@@ -100,12 +104,11 @@ public class UnicodePostscriptStream extends PostscriptStream {
 		characterUnicodeBlock = Character.UnicodeBlock.of( blockstart ) ;
 		if ( characterUnicodeBlock == null )
 			return false ;
-		characterUnicodeBlock = Character.UnicodeBlock.of( blockend ) ;
-		if ( characterUnicodeBlock == null )
-			return false ;
 
 		unicodeBlock = UnicodeBlock.forName( characterUnicodeBlock.toString() ) ;
 		if ( unicodeBlock == null )
+			return false ;
+		if ( blockend>unicodeBlock.start+unicodeBlock.size )
 			return false ;
 		if ( chart*chartsize>unicodeBlock.size )
 			return false ;
@@ -114,12 +117,8 @@ public class UnicodePostscriptStream extends PostscriptStream {
 			return false ;
 
 		encodingVector = encoding.trim().split( "\\p{Space}+" ) ;
-		if ( unicodeBlock.size<chartsize ) {
-			if ( encodingVector.length != unicodeBlock.size )
-				return false ;
-		} else
-			if ( encodingVector.length != chartsize )
-				return false ;
+		if ( encodingVector.length>chartsize )
+			return false ;
 
 		block.put( name, new UnicodeControlBlock( fontname, encodingVector ) ) ;
 
@@ -227,5 +226,79 @@ public class UnicodePostscriptStream extends PostscriptStream {
 		}
 
 		return r.toArray( new UnicodeControlBlock[0] ) ;
+	}
+
+	public static void main( String[] argv ) {
+		HashMap<String, String[]> block ;
+		BufferedReader stdin ;
+		String line, token[], name, nameArray[], encodingVector[] ;
+		int chartsize ;
+		int codepoint ;
+		java.lang.Character.UnicodeBlock characterUnicodeBlock ;
+		UnicodeBlock unicodeBlock ;
+
+		block = new HashMap<String, String[]>() ;
+		chartsize = Configuration.getValue(
+				Configuration.getClassNode( UnicodePostscriptStream.class, null , null ),
+				ApplicationConstant.PK_POSTSCRIPT_CHARTSIZE, DEFAULT_CHARTSIZE ) ;
+
+		try {
+			stdin = new BufferedReader( new InputStreamReader( System.in ) ) ;
+			while ( ( line = stdin.readLine() ) != null ) {
+				token = line.trim()
+				.split( "\\p{Space}+" ) ;
+
+				codepoint = Integer.valueOf( token[1], 16 ) ;
+				characterUnicodeBlock = Character.UnicodeBlock.of( codepoint ) ;
+				if ( characterUnicodeBlock == null ) {
+					System.err.println( line ) ;
+
+					continue ;
+				}
+				unicodeBlock = UnicodeBlock.forName( characterUnicodeBlock.toString() ) ;
+				if ( unicodeBlock == null ) {
+					System.err.println( line ) ;
+
+					continue ;
+				}
+
+				name = String.format( codepoint>0xffff?"%X..%X-%d":"%04X..%04X-%d",
+						unicodeBlock.start,
+						unicodeBlock.start+unicodeBlock.size-1,
+						( codepoint-unicodeBlock.start )/chartsize ) ;
+				encodingVector = block.get( name ) ;
+				if ( encodingVector == null ) {
+					encodingVector = new String[chartsize] ;
+					for ( int i=0 ; i<chartsize ; i++ )
+						encodingVector[i] = DEFAULT_CHARPROC ;
+					block.put( name, encodingVector ) ;
+				}
+				encodingVector[( codepoint-unicodeBlock.start )%chartsize] = token[2] ;
+			}
+		} catch ( IOException e ) {
+			System.exit( 1 ) ;
+		}
+
+		nameArray = block.keySet().toArray( new String[0] ) ;
+		Arrays.sort( nameArray ) ;
+
+		for ( String key : nameArray ) {
+			System.out.print( String.format( "<node name=\"%s\">", key ) ) ;
+
+			System.out.print( "<map>" ) ;
+
+			System.out.print( String.format( "<entry key=\"fontname\" value=\"%s\"/>", argv[0] ) ) ;
+
+			System.out.print( "<entry key=\"encoding\" value=\"" ) ;
+			encodingVector = block.get( key ) ;
+			System.out.print( encodingVector[0] ) ;
+			for ( int i=1 ; i<encodingVector.length ; i++ )
+				System.out.print( " "+encodingVector[i] ) ;
+			System.out.print( "\"/>" ) ;
+
+			System.out.print( "</map>" ) ;
+
+			System.out.print( "</node>" ) ;
+		}
 	}
 }

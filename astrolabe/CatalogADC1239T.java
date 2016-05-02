@@ -1,15 +1,22 @@
 
 package astrolabe;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,124 +26,114 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC1239T extends CatalogType implements Catalog {
+public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements Catalog {
 
 	private final static int C_CHUNK = 350+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC1239T.class ) ;
 
-	private astrolabe.model.Script script ;
-
-	private Hashtable<String, CatalogRecord> catalogT ;
-	private List<String> catalogL ;
+	private Hashtable<String, CatalogADC1239TRecord> catalog = new Hashtable<String, CatalogADC1239TRecord>() ;
 
 	private Projector projector ;
 
 	public CatalogADC1239T( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+		Geometry fov, fovu, fove ;
+
+		peer.setupCompanion( this ) ;
 
 		this.projector = projector ;
 
-		script = ( (astrolabe.model.CatalogADC1239T) peer ).getScript() ;
-
-		catalogT = new Hashtable<String, CatalogRecord>() ;
-		catalogL = new java.util.Vector<String>() ;
+		if ( getFov() == null ) {
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+		} else {
+			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
+			fov = fovu.intersection( fove ) ;
+		}
+		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
 	public void addAllCatalogRecord() {
-		Reader catalogR ;
+		Reader reader ;
 		CatalogADC1239TRecord record ;
-		List<double[]> bodyL ;
-		Geometry bodyG, fov ;
-		String id ;
-		Comparator<String> c = new Comparator<String>() {
-			public int compare( String a, String b ) {
-				CatalogADC1239TRecord x, y ;
-				double xmag, ymag ;
-
-				x = (CatalogADC1239TRecord) catalogT.get( a ) ;
-				y = (CatalogADC1239TRecord) catalogT.get( b ) ;
-
-				xmag = Double.valueOf( x.Vmag ).doubleValue() ;
-				ymag = Double.valueOf( y.Vmag ).doubleValue() ;
-
-				return xmag<ymag?-1:
-					xmag>ymag?1:
-						0 ;
-			}
-		} ;
-
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+		String ident ;
 
 		try {
-			catalogR = reader() ;
+			reader = reader() ;
+
+			while ( ( record = record( reader ) ) != null ) {
+				try {
+					record.validate() ;
+				} catch ( ParameterNotValidException e ) {
+					String msg ;
+
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record.TYC+"\"" } ) ;
+					log.warn( msg ) ;
+
+					continue ;
+				}
+
+				ident = record.TYC
+				.replaceAll( "[ ]+", "-" ) ;
+				catalog.put( ident, record ) ;
+			}
+
+			reader.close() ;
 		} catch ( URISyntaxException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( MalformedURLException e ) {
 			throw new RuntimeException( e.toString() ) ;
-		}
-
-		while ( ( record = record( catalogR ) ) != null ) {
-			id = record.TYC.replaceAll( "[ ]+", "-" ) ;
-
-			if ( record.Vmag.length() == 0 ) {
-				String msg ;
-
-				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { id+".Vmag 0", "" } ) ;
-				log.warn( msg ) ;
-
-				continue ;
-			}
-
-			bodyL = record.list( projector ) ;
-
-			if ( bodyL.size() == 1 ) {
-				if ( ! fov.covers( new GeometryFactory().createPoint(
-						new JTSCoordinate( bodyL.get( 0 ) ) ) ) )
-					continue ;
-			} else {
-				bodyL.add( bodyL.get( 0 ) ) ;
-				bodyG = new GeometryFactory().createPolygon(
-						new GeometryFactory().createLinearRing(
-								new JTSCoordinateArraySequence( bodyL ) ), null ) ;
-
-				if ( ! ( fov.covers( bodyG ) || fov.overlaps( bodyG ) ) )
-					continue ;
-			}
-
-			catalogT.put( id, record ) ;
-			catalogL.add( id ) ;
-		}
-
-		try {
-			catalogR.close() ;
-		} catch (IOException e) {
+		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
-
-		Collections.sort( catalogL, c ) ;
 	}
 
 	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalogT.get( ident ) ;
+		return catalog.get( ident ) ;
 	}
 
 	public CatalogRecord[] getCatalogRecord() {
-		return catalogT.values().toArray( new CatalogRecord[0] ) ;
+		return catalog.values().toArray( new CatalogRecord[0] ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		Geometry fov ;
+		double[] xy ;
 		ParserAttribute parser ;
+		List<CatalogADC1239TRecord> catalog ;
+		Comparator<CatalogADC1239TRecord> comparator = new Comparator<CatalogADC1239TRecord>() {
+			public int compare( CatalogADC1239TRecord a, CatalogADC1239TRecord b ) {
+				double xmag, ymag ;
+
+				xmag = Double.valueOf( a.Vmag ).doubleValue() ;
+				ymag = Double.valueOf( b.Vmag ).doubleValue() ;
+
+				return xmag<ymag?-1:
+					xmag>ymag?1:
+						0 ;
+			}
+		} ;
 		astrolabe.model.Body body ;
 		BodyStellar bodyStellar ;
 
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+
 		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
 
-		for ( CatalogRecord record : catalogT.values() ) {
+		catalog = Arrays.asList( this.catalog
+				.values()
+				.toArray( new CatalogADC1239TRecord[0] ) ) ;
+		Collections.sort( catalog, comparator ) ;
+
+		for ( CatalogRecord record : catalog ) {
+			xy = projector.project( record.RA()[0], record.de()[0] ) ;
+			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( xy ) ) ) )
+				continue ;
+
 			record.register() ;
 
 			if ( getRestrict() != null )
@@ -151,7 +148,7 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
 			AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
 
-			body.getBodyStellar().setScript( script ) ;
+			body.getBodyStellar().setScript( getScript() ) ;
 			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
 
 			for ( astrolabe.model.Select select : getSelect() ) {
@@ -182,6 +179,38 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
+	}
+
+	public Reader reader() throws URISyntaxException, MalformedURLException {
+		InputStreamReader r ;
+		URI cURI ;
+		URL cURL ;
+		File cFile ;
+		InputStream cIS ;
+		GZIPInputStream cF ;
+
+		cURI = new URI( getUrl() ) ;
+		if ( cURI.isAbsolute() ) {
+			cFile = new File( cURI ) ;	
+		} else {
+			cFile = new File( cURI.getPath() ) ;
+		}
+		cURL = cFile.toURL() ;
+
+		try {
+			cIS = cURL.openStream() ;
+		} catch ( IOException e ) {
+			throw new RuntimeException ( e.toString() ) ;
+		}
+
+		try {
+			cF = new GZIPInputStream( cIS ) ;
+			r = new InputStreamReader( cF ) ;
+		} catch ( IOException e ) {
+			r = new InputStreamReader( cIS ) ;
+		}
+
+		return r ;
 	}
 
 	public CatalogADC1239TRecord record( java.io.Reader catalog ) {
@@ -216,12 +245,6 @@ public class CatalogADC1239T extends CatalogType implements Catalog {
 
 			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
-			log.warn( msg ) ;
-		} catch ( NumberFormatException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+record+"\"" } ) ;
 			log.warn( msg ) ;
 		}
 

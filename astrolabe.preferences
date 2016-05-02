@@ -516,6 +516,72 @@
 					<entry key="precision" value="6"/>
 				</map>
 			</node>
+			<node name="CatalogADC1239HRecord">
+				<map>
+					<entry key="RAhms" value=".+"/>
+					<entry key="DEdms" value=".+"/>
+					<entry key="Vmag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC1239TRecord">
+				<map>
+					<entry key="RAhms" value=".+"/>
+					<entry key="DEdms" value=".+"/>
+					<entry key="Vmag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC5050Record">
+				<map>
+					<entry key="RAh" value=".+"/>
+					<entry key="RAm" value=".+"/>
+					<entry key="RAs" value=".+"/>
+					<entry key="DE" value=".+"/>
+					<entry key="DEd" value=".+"/>
+					<entry key="DEm" value=".+"/>
+					<entry key="DEs" value=".+"/>
+					<entry key="Vmag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC5109Record">
+				<map>
+					<entry key="RAh" value=".+"/>
+					<entry key="RAm" value=".+"/>
+					<entry key="RAs" value=".+"/>
+					<entry key="DE" value=".+"/>
+					<entry key="DEd" value=".+"/>
+					<entry key="DEm" value=".+"/>
+					<entry key="DEs" value=".+"/>
+					<entry key="Vmag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC6049Record">
+				<map>
+					<entry key="RAh" value=".+"/>
+					<entry key="DEd" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC7118Record">
+				<map>
+					<entry key="RAh" value=".+"/>
+					<entry key="RAm" value=".+"/>
+					<entry key="DE" value=".+"/>
+					<entry key="DEd" value=".+"/>
+					<entry key="DEm" value=".+"/>
+					<entry key="mag" value=".+"/>
+				</map>
+			</node>
+			<node name="CatalogADC7237Record">
+				<map>
+					<entry key="RAh" value=".+"/>
+					<entry key="RAm" value=".+"/>
+					<entry key="RAs" value=".+"/>
+					<entry key="DE" value=".+"/>
+					<entry key="DEd" value=".+"/>
+					<entry key="DEm" value=".+"/>
+					<entry key="DEs" value=".+"/>
+					<entry key="logD25" value=".+"/>
+				</map>
+			</node>
 		</node>
 	</root>
 </preferences>

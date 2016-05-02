@@ -3,6 +3,9 @@ package astrolabe;
 
 import java.text.MessageFormat;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -47,7 +50,17 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		Geometry fov ;
 		Script script ;
+
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+		if ( fov == null ) {
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+		}
+
+		if ( ! fov.covers( new GeometryFactory().createPoint(
+				new JTSCoordinate( new double[] { x, y } ) ) ) )
+			return ;
 
 		ps.push( x ) ;
 		ps.push( y ) ;

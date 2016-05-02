@@ -4,8 +4,11 @@ package astrolabe;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -15,24 +18,26 @@ import caa.CAAPrecession;
 
 public class CatalogADC6049Record implements CatalogRecord {
 
+	private final static String DEFAULT_TOKENPATTERN = ".+" ;
+
 	private final static int CR_LENGTH18 = 25 ;
 	private final static int CR_LENGTH20 = 29 ;
 
 	private int _le = 0 ;
 
-	public List<String>	RAhr  ; // Right ascension in decimal hours (J2000)
-	public List<String>	DEdeg ; // Declination in degrees (J2000)
+	public List<String>	RAh  ; // Right ascension in decimal hours (J2000)
+	public List<String>	DEd ; // Declination in degrees (J2000)
 	public String		con   ; // Constellation abbreviation
 	public String		type  ; // [OI] Type of point (Original or Interpolated)
 
-	public CatalogADC6049Record( String data ) throws ParameterNotValidException, NumberFormatException {
+	public CatalogADC6049Record( String data ) throws ParameterNotValidException {
 		BufferedReader b ;
 		String l, lv[] = null ;
-		double ra, pra ;
-		double de, pde ;
+		String ra, pra ;
+		String de, pde ;
 
-		RAhr = new java.util.Vector<String>() ;
-		DEdeg = new java.util.Vector<String>() ;
+		RAh = new java.util.Vector<String>() ;
+		DEd = new java.util.Vector<String>() ;
 
 		if ( data.charAt( CR_LENGTH18 ) == '\n' )
 			_le = CR_LENGTH18 ;
@@ -48,8 +53,8 @@ public class CatalogADC6049Record implements CatalogRecord {
 				}
 
 				lv = l.trim().split( "[ ]+" ) ;
-				RAhr.add( lv[0] ) ;
-				DEdeg.add( lv[1] ) ;
+				RAh.add( lv[0] ) ;
+				DEd.add( lv[1] ) ;
 			}
 			con  = lv[2] ;
 			type = lv[3] ;
@@ -57,64 +62,56 @@ public class CatalogADC6049Record implements CatalogRecord {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		// validation
-		pra = RAhr( RAhr.size()-1 ) ;
-		pde = DEdeg( DEdeg.size()-1 ) ;
-		for ( int position=0 ; position<RAhr.size() ; position++ ) {
-			ra = RAhr( position ) ;
-			de = DEdeg( position ) ; // continue new methods
-			if ( ra==pra && de==pde ) {
-				RAhr.remove( position ) ;
-				DEdeg.remove( position ) ;
+		pra = RAh.get( RAh.size()-1 ) ;
+		pde = DEd.get( DEd.size()-1 ) ;
+		for ( int position=0 ; position<RAh.size() ; position++ ) {
+			ra = RAh.get( position ) ;
+			de = DEd.get( position ) ;
+			if ( ra.equals( pra ) && de.equals( pde ) ) {
+				RAh.remove( position ) ;
+				DEd.remove( position ) ;
 			}
 			pra = ra ;
 			pde = de ;
 		}
 	}
 
-	public void toModel( astrolabe.model.Body body ) throws ValidationException {
-		astrolabe.model.Position pm ;
-		CAA2DCoordinate ceq ;
-		double epoch ;
-
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
-
-		body.getBodyAreal().setName( con ) ;
-
-		for ( int p=0 ; p<RAhr.size() ; p++ ) {
-			ceq = CAAPrecession.PrecessEquatorial( RAhr( p ), DEdeg( p ), 2451545./*J2000*/, epoch ) ;
-			pm = new astrolabe.model.Position() ;
-			// astrolabe.model.SphericalType
-			pm.setR( new astrolabe.model.R() ) ;
-			pm.getR().setValue( 1 ) ;
-			// astrolabe.model.AngleType
-			pm.setPhi( new astrolabe.model.Phi() ) ;
-			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-			pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
-			// astrolabe.model.AngleType
-			pm.setTheta( new astrolabe.model.Theta() ) ;
-			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-			pm.getTheta().getRational().setValue( ceq.Y() ) ;  
-
-			body.getBodyAreal().addPosition( pm ) ;
-			ceq.delete() ;
+	public boolean isValid() {
+		try {
+			validate() ;
+		} catch ( ParameterNotValidException e ) {
+			return false ;
 		}
 
-		body.validate() ;
+		return true ;
 	}
 
-	public List<double[]> list( Projector projector ) {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-		double ra, de, xy[] ;
+	public void validate() throws ParameterNotValidException {
+		Preferences node ;
+		Field token ;
+		Object value ;
+		String pattern ;
 
-		for ( int position=0 ; position<RAhr.size() ; position++ ) {
-			ra = RAhr( position ) ;
-			de = DEdeg( position ) ;
-			xy = projector.project( CAACoordinateTransformation.HoursToDegrees( ra ), de ) ;
-			r.add( xy ) ;
+		node = Configuration.getClassNode( this, null, null ) ;
+
+		try {
+			for ( String key : node.keys() ) {
+				try {
+					token = getClass().getDeclaredField( key ) ;
+					value = token.get( this ) ;
+					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
+					for ( String v : (List<String>) value )
+						if ( ! v.matches( pattern ) )
+							throw new ParameterNotValidException( key ) ;
+				} catch ( NoSuchFieldException e ) {
+					continue ;
+				} catch ( IllegalAccessException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+			}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
-
-		return r ;
 	}
 
 	public void register() {
@@ -144,11 +141,60 @@ public class CatalogADC6049Record implements CatalogRecord {
 		Registry.registerName( k, v ) ;
 	}
 
-	private double RAhr( int index ) {
-		return new Double( RAhr.get( index ) ).doubleValue() ;		
+	public void toModel( astrolabe.model.Body body ) throws ValidationException {
+		astrolabe.model.Position pm ;
+		CAA2DCoordinate ceq ;
+		double epoch ;
+
+		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+
+		body.getBodyAreal().setName( con ) ;
+
+		for ( int p=0 ; p<RAh.size() ; p++ ) {
+			ceq = CAAPrecession.PrecessEquatorial( RAh( p ), DEd( p ), 2451545./*J2000*/, epoch ) ;
+			pm = new astrolabe.model.Position() ;
+			// astrolabe.model.SphericalType
+			pm.setR( new astrolabe.model.R() ) ;
+			pm.getR().setValue( 1 ) ;
+			// astrolabe.model.AngleType
+			pm.setPhi( new astrolabe.model.Phi() ) ;
+			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
+			pm.getPhi().getRational().setValue( CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ) ;  
+			// astrolabe.model.AngleType
+			pm.setTheta( new astrolabe.model.Theta() ) ;
+			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
+			pm.getTheta().getRational().setValue( ceq.Y() ) ;  
+
+			body.getBodyAreal().addPosition( pm ) ;
+			ceq.delete() ;
+		}
+
+		body.validate() ;
 	}
 
-	private double DEdeg( int index ) {
-		return new Double( DEdeg.get( index ) ).doubleValue() ;
+	public double[] RA() {
+		double[] ra = new double[RAh.size()] ;
+
+		for ( int i=0 ; i<RAh.size() ; i++ )
+			ra[i] = RAh( i ) ;
+
+		return ra ;
+	}
+
+	public double[] de() {
+		double[] r = new double[DEd.size()] ;
+
+		for ( int i=0 ; i<DEd.size() ; i++ )
+			r[i] = DEd( i ) ;
+
+		return r ;
+	}
+
+	private double RAh( int index ) {
+		return new Double( RAh.get( index ) ).doubleValue() ;		
+	}
+
+	private double DEd( int index ) {
+		return new Double( DEd.get( index ) ).doubleValue() ;
 	}
 }

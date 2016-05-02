@@ -1,15 +1,22 @@
 
 package astrolabe;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,121 +26,112 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-public class CatalogADC7118 extends CatalogType implements Catalog {
+public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Catalog {
 
 	private final static int C_CHUNK = 96+1/*0x0a*/ ;
 
 	private final static Log log = LogFactory.getLog( CatalogADC7118.class ) ;
 
-	private astrolabe.model.Script script ;
-
-	private Hashtable<String, CatalogRecord> catalogT ;
-	private List<String> catalogL ;
+	private Hashtable<String, CatalogADC7118Record> catalog = new Hashtable<String, CatalogADC7118Record>() ;
 
 	private Projector projector ;
 
 	public CatalogADC7118( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+		Geometry fov, fovu, fove ;
+
+		peer.setupCompanion( this ) ;
 
 		this.projector = projector ;
 
-		script = ( (astrolabe.model.CatalogADC7118) peer ).getScript() ;
+		if ( getFov() == null ) {
+			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+		} else {
+			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
+			fov = fovu.intersection( fove ) ;
+		}
+		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 
-		catalogT = new Hashtable<String, CatalogRecord>() ;
-		catalogL = new java.util.Vector<String>() ;
 	}
 
 	public void addAllCatalogRecord() {
-		Reader catalogR ;
+		Reader reader ;
 		CatalogADC7118Record record ;
-		List<double[]> bodyL ;
-		Geometry bodyG, fov ;
-		Comparator<String> c = new Comparator<String>() {
-			public int compare( String a, String b ) {
-				CatalogADC7118Record x, y ;
-				double xmag, ymag ;
-
-				x = (CatalogADC7118Record) catalogT.get( a ) ;
-				y = (CatalogADC7118Record) catalogT.get( b ) ;
-
-				xmag = Double.valueOf( x.mag ).doubleValue() ;
-				ymag = Double.valueOf( y.mag ).doubleValue() ;
-
-				return xmag<ymag?-1:
-					xmag>ymag?1:
-						0 ;
-			}
-		} ;
-
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
 		try {
-			catalogR = reader() ;
+			reader = reader() ;
+
+			while ( ( record = record( reader ) ) != null ) {
+				try {
+					record.validate() ;
+				} catch ( ParameterNotValidException e ) {
+					String msg ;
+
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
+					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), record.Name } ) ;
+					log.warn( msg ) ;
+
+					continue ;
+				}
+
+				catalog.put( record.Name, record ) ;
+			}
+
+			reader.close() ;
 		} catch ( URISyntaxException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( MalformedURLException e ) {
 			throw new RuntimeException( e.toString() ) ;
-		}
-
-		while ( ( record = record( catalogR ) ) != null ) {
-			if ( record.mag.length() == 0 ) {
-				String msg ;
-
-				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { record.Name+".mag 0", "" } ) ;
-				log.warn( msg ) ;
-
-				continue ;
-			}
-
-			bodyL = record.list( projector ) ;
-
-			if ( bodyL.size() == 1 ) {
-				if ( ! fov.covers( new GeometryFactory().createPoint(
-						new JTSCoordinate( bodyL.get( 0 ) ) ) ) )
-					continue ;
-			} else {
-				bodyL.add( bodyL.get( 0 ) ) ;
-				bodyG = new GeometryFactory().createPolygon(
-						new GeometryFactory().createLinearRing(
-								new JTSCoordinateArraySequence( bodyL ) ), null ) ;
-
-				if ( ! ( fov.covers( bodyG ) || fov.overlaps( bodyG ) ) )
-					continue ;
-			}
-
-			catalogT.put( record.Name, record ) ;
-			catalogL.add( record.Name ) ;
-		}
-
-		try {
-			catalogR.close() ;
-		} catch (IOException e) {
+		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
-
-		Collections.sort( catalogL, c ) ;
 	}
 
 	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalogT.get( ident ) ;
+		return catalog.get( ident ) ;
 	}
 
 	public CatalogRecord[] getCatalogRecord() {
-		return catalogT.values().toArray( new CatalogRecord[0] ) ;
+		return catalog.values().toArray( new CatalogRecord[0] ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		Geometry fov ;
+		double[] xy ;
 		ParserAttribute parser ;
+		List<CatalogADC7118Record> catalog ;
+		Comparator<CatalogADC7118Record> comparator = new Comparator<CatalogADC7118Record>() {
+			public int compare( CatalogADC7118Record a, CatalogADC7118Record b ) {
+				double xmag, ymag ;
+
+				xmag = Double.valueOf( a.mag ).doubleValue() ;
+				ymag = Double.valueOf( b.mag ).doubleValue() ;
+
+				return xmag<ymag?-1:
+					xmag>ymag?1:
+						0 ;
+			}
+		} ;
 		astrolabe.model.Body body ;
 		BodyStellar bodyStellar ;
 
+		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+
 		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
 
-		for ( CatalogRecord record : catalogT.values() ) {
+		catalog = Arrays.asList( this.catalog
+				.values()
+				.toArray( new CatalogADC7118Record[0] ) ) ;
+		Collections.sort( catalog, comparator ) ;
+
+		for ( CatalogRecord record : catalog ) {
+			xy = projector.project( record.RA()[0], record.de()[0] ) ;
+			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( xy ) ) ) )
+				continue ;
+
 			record.register() ;
 
 			if ( getRestrict() != null )
@@ -148,7 +146,7 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
 			AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
 
-			body.getBodyStellar().setScript( script ) ;
+			body.getBodyStellar().setScript( getScript() ) ;
 			body.getBodyStellar().setAnnotation( getAnnotation() ) ;
 
 			for ( astrolabe.model.Select select : getSelect() ) {
@@ -179,6 +177,38 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
+	}
+
+	public Reader reader() throws URISyntaxException, MalformedURLException {
+		InputStreamReader r ;
+		URI cURI ;
+		URL cURL ;
+		File cFile ;
+		InputStream cIS ;
+		GZIPInputStream cF ;
+
+		cURI = new URI( getUrl() ) ;
+		if ( cURI.isAbsolute() ) {
+			cFile = new File( cURI ) ;	
+		} else {
+			cFile = new File( cURI.getPath() ) ;
+		}
+		cURL = cFile.toURL() ;
+
+		try {
+			cIS = cURL.openStream() ;
+		} catch ( IOException e ) {
+			throw new RuntimeException ( e.toString() ) ;
+		}
+
+		try {
+			cF = new GZIPInputStream( cIS ) ;
+			r = new InputStreamReader( cF ) ;
+		} catch ( IOException e ) {
+			r = new InputStreamReader( cIS ) ;
+		}
+
+		return r ;
 	}
 
 	public CatalogADC7118Record record( java.io.Reader catalog ) {
@@ -213,12 +243,6 @@ public class CatalogADC7118 extends CatalogType implements Catalog {
 
 			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
 			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
-			log.warn( msg ) ;
-		} catch ( NumberFormatException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { "("+e.getMessage()+")", "\""+record+"\"" } ) ;
 			log.warn( msg ) ;
 		}
 

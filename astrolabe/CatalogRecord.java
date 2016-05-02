@@ -1,12 +1,13 @@
 
 package astrolabe;
 
-import java.util.List;
-
 import org.exolab.castor.xml.ValidationException;
 
 public interface CatalogRecord {
-	public abstract List<double[]> list( Projector projector ) ;
-	public abstract void toModel( astrolabe.model.Body body ) throws ValidationException ;
-	public abstract void register() ;
+	public boolean isValid() ;
+	public void validate() throws ParameterNotValidException ;
+	public void toModel( astrolabe.model.Body body ) throws ValidationException ;
+	public void register() ;
+	public double[] RA() ;
+	public double[] de() ;
 }

@@ -234,7 +234,7 @@ public class ParserSubstitute extends ReflectSemantic {
 		try {
 			r = new BufferedReader( new InputStreamReader( System.in ) ) ;
 			while ( ( s = r.readLine() ) != null )
-				System.err.println( new ParserSubstitute().parse( s ) ) ;
+				System.out.println( new ParserSubstitute().parse( s ) ) ;
 		} catch ( IOException e ) {
 			System.exit( 1 ) ;
 		}

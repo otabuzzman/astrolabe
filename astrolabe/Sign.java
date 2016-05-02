@@ -59,7 +59,7 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 						AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
 
 						body.getBodyStellar().setScript( new astrolabe.model.Script() ) ;
-						body.getBodyStellar().getScript().setPurpose( "none" ) ;
+						body.getBodyStellar().getScript().setPurpose( ApplicationConstant.AV_SCRIPT_NONE ) ;
 						body.getBodyStellar().getScript().setValue( "" ) ;
 
 						record.toModel( body ) ;

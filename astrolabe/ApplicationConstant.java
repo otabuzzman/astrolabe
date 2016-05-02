@@ -488,11 +488,6 @@ public final class ApplicationConstant {
 	public final static String LK_DMS_SECONDS	= "message.dms.seconds" ;
 
 	// attribute values (AV_), patterns (AP_)
-	public final static String AV_GENERAL_CARDINAL	= "cardinal" ;
-	public final static String AV_GENERAL_CANONICAL	= "canonical" ;
-	public final static String AV_GENERAL_DIVIDING	= "dividing" ;
-	public final static String AV_GENERAL_GRAPHICAL	= "graphical" ;
-
 	public final static String AV_CIRCLE_CHASING = "chasing" ;
 	public final static String AV_CIRCLE_LEADING = "leading" ;
 
@@ -506,15 +501,14 @@ public final class ApplicationConstant {
 	public final static String AV_ANNOTATION_BOTTOMMIDDLE	= "bottommiddle" ;
 	public final static String AV_ANNOTATION_BOTTOMRIGHT	= "bottomright" ;
 
-	public final static String AV_BODY_DIVIDING		= AV_GENERAL_DIVIDING ;
-	public final static String AV_BODY_GRAPHICAL	= AV_GENERAL_GRAPHICAL ;
+	public final static String AV_SCRIPT_NONE = "none" ;
 
 	// preferences keys (PK_), nodes (PN_)
-	public final static String PK_GENERAL_RISE			= "rise" ;
-	public final static String PK_GENERAL_SPACE			= "space" ;
-	public final static String PK_GENERAL_INTERVAL		= "interval" ;
-	public final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
-	public final static String PK_GENERAL_PRECISION		= "precision" ;
+	private final static String PK_GENERAL_RISE			= "rise" ;
+	private final static String PK_GENERAL_SPACE			= "space" ;
+	private final static String PK_GENERAL_INTERVAL		= "interval" ;
+	private final static String PK_GENERAL_LINEWIDTH		= "linewidth" ;
+	private final static String PK_GENERAL_PRECISION		= "precision" ;
 
 	// PostscriptStream
 	public final static String PK_POSTSCRIPT_PRECISION	= PK_GENERAL_PRECISION ;

@@ -22,7 +22,7 @@ public class PostscriptStream extends FilterOutputStream {
 		int precision ;
 
 		clazz = this.getClass() ;
-		while ( ! clazz.getSimpleName().equals( "UnicodePostscriptStream" ) )
+		while ( ! clazz.getSimpleName().equals( "PostscriptStream" ) )
 			clazz = clazz.getSuperclass() ;
 
 		precision = Configuration.getValue(
