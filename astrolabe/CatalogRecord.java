@@ -1,12 +1,12 @@
 
 package astrolabe;
 
-import java.util.List;
+import com.vividsolutions.jts.geom.Coordinate;
 
 public interface CatalogRecord {
 	public boolean isOK() ;
 	public void inspect() throws ParameterNotValidException ;
 	public double RA() ;
 	public double de() ;
-	public List<double[]> list() ;
+	public Coordinate[] list() ;
 }

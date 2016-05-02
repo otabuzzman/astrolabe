@@ -40,11 +40,10 @@ public class ChartGnomonic extends ChartAzimuthalType {
 		}
 	}
 
-	public double thetaToDistance( double de ) {
-		return Math.tan( 90-de ) ;
-	}
-
-	public double distanceToTheta( double d ) {
-		return 90-Math.atan( d ) ;
+	public double distance( double value, boolean inverse ) {
+		if ( inverse )
+			return 90-Math.atan( value ) ;
+		else
+			return Math.tan( 90-value ) ;
 	}
 }

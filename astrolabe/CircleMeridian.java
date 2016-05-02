@@ -11,6 +11,7 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -20,7 +21,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 	// qualifier key (QK_)
 	private final static String QK_AZIMUTH			= "azimuth" ;
-	private final static String QK_TERMINUS			= "terminius" ;
+	private final static String QK_TERMINUS			= "terminus" ;
 
 	private final static Log log = LogFactory.getLog( CircleMeridian.class ) ;
 
@@ -49,10 +50,6 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 	public CircleMeridian( Projector projector ) {
 		this.projector = projector ;
-	}
-
-	public double[] project( double al ) {
-		return project( al, 0 ) ;
 	}
 
 	public double begin() {
@@ -106,12 +103,12 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public void register() {
-		Point point ;
+		astrolabe.Coordinate currentpoint ;
 		double az ;
 		DMS dms ;
 
-		point = new Point( convert( end() ) ) ;
-		point.register( this, QK_TERMINUS ) ;
+		currentpoint = new astrolabe.Coordinate( project( end(), 0 ) ) ;
+		currentpoint.register( this, QK_TERMINUS ) ;
 
 		az = valueOf( getAngle() ) ;
 		dms = new DMS( az/15 ) ;
@@ -119,7 +116,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public void degister() {
-		Point.degister( this, QK_TERMINUS ) ;
+		astrolabe.Coordinate.degister( this, QK_TERMINUS ) ;
 
 		DMS.degister( this, QK_AZIMUTH ) ;
 	}
@@ -143,19 +140,18 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
 		Configuration conf ;
 		ListCutter cutter ;
-		List<List<double[]>> segment ;
-		List<double[]> list ;
+		List<Coordinate[]> segment ;
+		Coordinate[] list ;
 		ChartPage page ;
 		Geometry fov ;
 		astrolabe.model.CircleMeridian peer ;
 		CircleMeridian circle ;
-		double[] lob, loe, xy ;
+		Coordinate lob, loe ;
 		astrolabe.model.Annotation annotation ;
 		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
 		if ( cut ) {
-			list = list( null, begin(), end(), 0 ) ;
 			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
 
 			if ( page == null ) {
@@ -164,14 +160,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				return ;
 			}
 
+			list = list( null, begin(), end(), 0 ) ;
 			fov = page.getViewGeometry() ;
 			cutter = new ListCutter( list, fov ) ;
 			segment = cutter.segmentsIntersecting( true ) ;
 
-			for ( List<double[]> s : segment ) {
-				lob = projector.unproject( s.get( 0 ) ) ;
-				xy = s.get( s.size()-1 ) ;
-				loe = projector.unproject( xy ) ; 
+			for ( Coordinate[] s : segment ) {
+				lob = projector.project( s[0], true ) ;
+				loe = projector.project( s[s.length-1], true ) ; 
 
 				try {
 					peer = new astrolabe.model.CircleMeridian() ;
@@ -188,12 +184,12 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 					// astrolabe.model.AngleType
 					peer.getBegin().setAngle( new astrolabe.model.Angle() ) ;
 					peer.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getBegin().getAngle().getRational().setValue( lob[1] ) ;
+					peer.getBegin().getAngle().getRational().setValue( lob.y ) ;
 					peer.setEnd( new astrolabe.model.End() ) ;
 					// astrolabe.model.AngleType
 					peer.getEnd().setAngle( new astrolabe.model.Angle() ) ;
 					peer.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getEnd().getAngle().getRational().setValue( loe[1] ) ;
+					peer.getEnd().getAngle().getRational().setValue( loe.y ) ;
 
 					peer.setDial( getDial() ) ;
 					peer.setAnnotation( getAnnotation() ) ;
@@ -219,10 +215,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		} else {
 			list = list( null, begin(), end(), 0 ) ;
 			ps.array( true ) ;
-			for ( int n=0 ; n<list.size() ; n++ ) {
-				xy = list.get( n ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
+			for ( Coordinate xy : list ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
 			}
 			ps.array( false ) ;
 
@@ -298,55 +293,53 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double al, double shift ) {
-		double xy[], az ;
+	public Coordinate project( double al, double shift ) {
+		Coordinate xy ;
+		double az ;
 		Vector v, t ;
 
 		az = valueOf( getAngle() ) ;	
-		xy = projector.project( az, al ) ;
-		v = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( new Coordinate( az, al ), false ) ;
+		v = new Vector( xy ) ;
 
 		if ( shift != 0 ) {
 			xy = tangent( al ) ;
-			t = new Vector( xy[0], xy[1] ) ;
+			t = new Vector( xy ) ;
 			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
 			t.scale( shift ) ;
 			v.add( t ) ;
 		}
 
-		return new double[] { v.x, v.y } ;
+		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public double[] convert( double angle ) {
-		return projector.convert( valueOf( getAngle() ), angle ) ;
-	}
-
-	public double unconvert( double[] eq ) {
-		return projector.unconvert( eq )[1] ;
-	}
-
-	public double[] tangent( double al ) {
+	public Coordinate tangent( double al ) {
 		Vector a, b ;
-		double xy[], az ;
+		double az ;
+		Coordinate xy ;
 
 		az = valueOf( getAngle() ) ;
-		xy = projector.project( az, al+10./3600 ) ;
-		a = new Vector( xy[0], xy[1] ) ;
-		xy = projector.project( az, al ) ;
-		b = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( new Coordinate( az, al+10./3600 ), false ) ;
+		a = new Vector( xy ) ;
+		xy = projector.project( new Coordinate( az, al ), false ) ;
+		b = new Vector( xy ) ;
 
 		a.sub( b ) ;
 
-		return new double[] { a.x, a.y } ;
+		return new Coordinate( a.x, a.y ) ;
 	}
 
-	public List<double[]> list( List<Double> lista, double begin, double end, double shift ) {
-		List<double[]> listxy ;
+	public double scaleMarkNth( int mark, double span ) {
+		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
+	}
+
+	public Coordinate[] list( final List<Double> lista, double begin, double end, double shift ) {
+		List<Coordinate> listxy ;
 		double interval ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		listxy = new java.util.Vector<double[]>() ;
+		listxy = new java.util.Vector<Coordinate>() ;
 
 		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval ) {
 			listxy.add( project( al, shift ) ) ;
@@ -358,33 +351,36 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		if ( lista != null )
 			lista.add( end ) ;
 
-		return listxy ;
+		return listxy.toArray( new Coordinate[0] ) ;
+	}
+
+	public Coordinate convert( double angle ) {
+		return projector.convert( new Coordinate( valueOf( getAngle() ), angle ), false ) ;
+	}
+
+	public double reverse( Coordinate eq ) {
+		return projector.convert( eq, true ).y ;
 	}
 
 	public LineString getCircleGeometry() {
-		List<double[]> list;
+		Coordinate[] list;
 		LineString line ;
 
 		list = list( null, begin(), end(), 0 ) ;
-		line = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
+		line = new GeometryFactory().createLineString( list ) ;
 
 		return line ;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
-		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
-	}
-
 	private double[] transform() {
-		CAA2DCoordinate c ;
 		double[] r = new double[3] ;
 		double blB, vlA, vlD, vlAl, vlDe ;
-		double gneq[], gnho[] = new double[2], az, gnaz ;
-		double rdhoC[], rdST, rdLa ;
+		double az, gnaz, rdST, rdLa ;
+		Coordinate rdhoC, gneq, gnho ;
 
 		rdhoC = zenit() ;
-		rdST = rdhoC[0] ;
-		rdLa = rdhoC[1] ;
+		rdST = rdhoC.x ;
+		rdLa = rdhoC.y ;
 
 		blB = 90-rdLa;
 		if ( blB==0 ) {	// prevent infinity from tan
@@ -393,16 +389,13 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		// convert actual gn into local
 		az = valueOf( getAngle() ) ;
-		gneq = projector.convert( az, 0 ) ;
-		c = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa/*horizon.getLa()*/ ) ;
-		gnho[0] = c.X() ;
-		gnho[1] = c.Y() ;
-		gnaz = gnho[0] ;
+		gneq = projector.convert( new Coordinate( az, 0 ), false ) ;
+		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa/*horizon.getLa()*/ ) ) ;
+		gnaz = gnho.x ;
 		if ( gnaz==0 ) { // prevent infinity from tan
 			gnaz = Math.lim0 ;
 		}
-
 
 		if ( Math.tan( gnaz )>0 ) {	// QI, QIII
 			vlAl = gnaz ;
@@ -455,22 +448,20 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public double transformMeridianAl( double vlaz ) {
-		CAA2DCoordinate c ;
-		double gneq[], gnho[] = new double[2], az, gnaz, gnal, vlD ;
-		double rdhoC[], rdST, rdLa ;
+		double az, gnaz, gnal, vlD ;
+		double rdST, rdLa ;
+		Coordinate rdhoC, gneq, gnho ;
 
 		rdhoC = zenit() ;
-		rdST = rdhoC[0] ;
-		rdLa = rdhoC[1] ;
+		rdST = rdhoC.x ;
+		rdLa = rdhoC.y ;
 
 		// convert actual gn into local
 		az = valueOf( getAngle() ) ;
-		gneq = projector.convert( az, 0 ) ;
-		c = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa ) ;
-		gnho[0] = c.X() ;
-		gnho[1] = c.Y() ;
-		gnaz = gnho[0] ;
+		gneq = projector.convert( new Coordinate( az, 0 ), false ) ;
+		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa ) ) ;
+		gnaz = gnho.x ;
 		if ( gnaz==0 ) { // prevent infinity from tan
 			gnaz = Math.lim0 ;
 		}
@@ -489,19 +480,19 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
 		CAA2DCoordinate cA, cO ;
 		double blA, blB, blGa, gnB ;
-		double[] gneqA = new double[2], gneqO = new double[2], gnhoA, gnhoO ;
-		double rdhoC[], rdST, gnhoC[], gnST, gnLa ;
+		double rdST, gnST, gnLa ;
 		double inaz[], gnaz, gnal ;
 		double gnb, gne ;
+		Coordinate rdhoC, gnhoC, gneqA, gneqO, gnhoA, gnhoO ;
 		MessageCatalog cat ;
 		StringBuffer msg ;
 		String fmt ;
 
 		rdhoC = zenit() ;
-		rdST = rdhoC[0] ;
+		rdST = rdhoC.x ;
 		gnhoC = gn.zenit() ;
-		gnST = gnhoC[0] ;
-		gnLa = gnhoC[1] ;
+		gnST = gnhoC.x ;
+		gnLa = gnhoC.y ;
 
 		gnal = valueOf( gn.getAngle() ) ;
 
@@ -518,16 +509,12 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		// unconvert local gn into actual
 		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[2], gnal, gnLa ) ;
-		gneqA[0] = CAACoordinateTransformation.HoursToDegrees( cA.X() ) ;
-		gneqA[1] = cA.Y() ;
-		gneqA[0] = rdST-gneqA[0];
-		gnhoA = projector.unconvert( gneqA ) ;
+		gneqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
+		gnhoA = projector.convert( gneqA, true ) ;
 
 		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[3], gnal, gnLa ) ;
-		gneqO[0] = CAACoordinateTransformation.HoursToDegrees( cO.X() ) ;
-		gneqO[1] = cO.Y() ;
-		gneqO[0] = rdST-gneqO[0];
-		gnhoO = projector.unconvert( gneqO ) ;
+		gneqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
+		gnhoO = projector.convert( gneqO, true ) ;
 
 		// sort associated values
 		if ( inaz[0]>inaz[1] ) {
@@ -537,12 +524,12 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			inaz[0] = inaz[1] ;
 			inaz[1] = v ;
 
-			v = gnhoA[0] ;
-			gnhoA[0] = gnhoO[0] ;
-			gnhoO[0] = v ;
+			v = gnhoA.x ;
+			gnhoA.x = gnhoO.x ;
+			gnhoO.x = v ;
 		}
 
-		gnaz = leading?gnhoO[0]:gnhoA[0] ;
+		gnaz = leading?gnhoO.x:gnhoA.x ;
 
 		gnb = gn.begin() ;
 		gne = gn.end() ;
@@ -615,8 +602,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return leading?inaz[1]:inaz[0] ;
 	}
 
-	public double[] zenit() {
-		return projector.convert( 0, 90 ) ;
+	public Coordinate zenit() {
+		return projector.convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

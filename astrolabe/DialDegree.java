@@ -4,6 +4,8 @@ package astrolabe;
 import java.util.Collections;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class DialDegree extends astrolabe.model.DialDegree implements PostscriptEmitter {
 
@@ -58,11 +60,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		public void emitPS(ApplicationPostscriptStream ps) {
 			Configuration conf ;
-			List<double[]> v ;
+			List<Coordinate> v ;
 			double ma, mo, o, span ;
 			int m ;
 
-			v = new java.util.Vector<double[]>() ;
+			v = new java.util.Vector<Coordinate>() ;
 
 			span = getSpan() ;
 			o = baseline.scaleMarkNth( -1, span ) ;
@@ -71,18 +73,17 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ma = baseline.scaleMarkNth( m, span ) ;
 				mo = baseline.scaleMarkNth( m+1, span ) ;
 
-				v.addAll( baseline.list( null, ma, mo, getReflect()?-space:space ) ) ;
+				for ( Coordinate xy : baseline.list( null, ma, mo, getReflect()?-space:space ) )
+					v.add( xy ) ;
 
 				if ( mo==o )
 					break ;
 			}
-			double[] xy ;
 
 			ps.array( true ) ;
-			for ( int n=0 ; n<v.size() ; n++ ) {
-				xy = (double[]) v.get( n ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
+			for ( Coordinate xy : v ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
 			}
 			ps.array( false ) ;
 
@@ -152,7 +153,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		public void emitPS(ApplicationPostscriptStream ps) {
 			Configuration conf ;
-			List<double[]> vDFw = null, vDRv = null, rvDRv ;
+			List<Coordinate> vDFw, vDRv, rvDRv ;
 			double ma, mo, o, s, span ;
 			int m = 0 ;
 
@@ -165,12 +166,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 				s = m%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
-				vDFw = baseline.list( null, ma, mo, s ) ;
+				vDFw = new java.util.Vector<Coordinate>() ;
+				for ( Coordinate xy : baseline.list( null, ma, mo, s ) )
+					vDFw.add( xy ) ;
 				ps.array( true ) ;
-				for ( int n=0 ; n<vDFw.size() ; n++ ) {
-					double[] xy = (double[]) vDFw.get( n ) ;
-					ps.push( xy[0] ) ;
-					ps.push( xy[1] ) ;
+				for ( Coordinate xy : vDFw ) {
+					ps.push( xy.x ) ;
+					ps.push( xy.y ) ;
 				}
 				ps.array( false ) ;
 
@@ -200,12 +202,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 				s = space+( m%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
-				vDRv = baseline.list( null, ma, mo, s ) ;
+				vDRv = new java.util.Vector<Coordinate>() ;
+				for ( Coordinate xy : baseline.list( null, ma, mo, s ) )
+					vDRv.add( xy ) ;
 				ps.array( true ) ;
-				for ( int n=0 ; n<vDRv.size() ; n++ ) {
-					double[] xy = (double[]) vDRv.get( n ) ;
-					ps.push( xy[0] ) ;
-					ps.push( xy[1] ) ;
+				for ( Coordinate xy : vDRv ) {
+					ps.push( xy.x ) ;
+					ps.push( xy.y ) ;
 				}
 				ps.array( false ) ;
 
@@ -233,18 +236,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ps.operator.stroke() ;
 				ps.operator.grestore() ;
 
-				rvDRv = new java.util.Vector<double[]>( vDRv ) ;
+				rvDRv = new java.util.Vector<Coordinate>( vDRv ) ;
 				Collections.reverse( rvDRv ) ;
 				vDFw.addAll( rvDRv ) ;
 
 				if ( m%2 == 0 ) { // subunit filled
-					double[] xy ;
-
 					ps.array( true ) ;
-					for ( int n=0 ; n<vDFw.size() ; n++ ) {
-						xy = (double[]) vDFw.get( n ) ;
-						ps.push( xy[0] ) ;
-						ps.push( xy[1] ) ;
+					for ( Coordinate xy : vDFw ) {
+						ps.push( xy.x ) ;
+						ps.push( xy.y ) ;
 					}
 					ps.array( false ) ;
 
@@ -253,17 +253,15 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.operator.closepath() ;
 					ps.operator.fill() ;
 				} else { // subunit unfilled
-					java.util.Vector<double[]> fw, rv ;
-					double[] xy ;
+					java.util.Vector<Coordinate> fw, rv ;
 
-					fw = new java.util.Vector<double[]>( vDFw.subList( 0, vDFw.size()/2 ) ) ;
-					rv = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ;
+					fw = new java.util.Vector<Coordinate>( vDFw.subList( 0, vDFw.size()/2 ) ) ;
+					rv = new java.util.Vector<Coordinate>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ;
 
 					ps.array( true ) ;
-					for ( int n=0 ; n<fw.size() ; n++ ) {
-						xy = (double[]) fw.get( n ) ;
-						ps.push( xy[0] ) ;
-						ps.push( xy[1] ) ;
+					for ( Coordinate xy : fw ) {
+						ps.push( xy.x ) ;
+						ps.push( xy.y ) ;
 					}
 					ps.array( false ) ;
 
@@ -273,10 +271,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
 					ps.array( true ) ;
-					for ( int n=0 ; n<rv.size() ; n++ ) {
-						xy = (double[]) rv.get( n ) ;
-						ps.push( xy[0] ) ;
-						ps.push( xy[1] ) ;
+					for ( Coordinate xy : rv ) {
+						ps.push( xy.x ) ;
+						ps.push( xy.y ) ;
 					}
 					ps.array( false ) ;
 
@@ -291,18 +288,17 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					break ;
 			}
 			if ( m%2 == 1 ) {// close unfilled subunit
-				List<double[]> vector ;
-				double[] xy ;
-
-				vector = new java.util.Vector<double[]>( vDFw.subList( vDFw.size()/2-1, vDFw.size()/2+1 ) ) ;
+				Coordinate xy ;
+				int i ;
 
 				ps.operator.newpath() ;
-				xy = (double[]) vector.get( 1 ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
-				xy = (double[]) vector.get( 0 ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
+				i = vDFw.size()/2 ;
+				xy = vDFw.get( i ) ;
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
+				xy = vDFw.get( i-1 ) ;
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
 				ps.operator.moveto() ;
 				ps.operator.lineto() ;
 
@@ -408,10 +404,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		List<double[]> v ;
 		double space, thickness ;
-		double xy[], a, o, s, rise ;
-		double mo, b[], t[], span, half, full ;
+		double a, o, s, rise ;
+		double mo, span, half, full ;
+		Coordinate b, t ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -450,8 +446,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			b = baseline.project( mo, getReflect()?-( space+thickness ):space+thickness ) ;
 			t = baseline.tangent( mo ) ;
 			if ( getReflect() ) {
-				t[0] = -t[0] ;
-				t[1] = -t[1] ;
+				t.x = -t.x ;
+				t.y = -t.y ;
 			}
 
 			register( mo ) ;
@@ -483,12 +479,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		rise = Configuration.getValue( this, CK_RISE, DEFAULT_RISE ) ;
 
 		s = ( ( space+thickness )+rise ) ;
-		v = baseline.list( null, a, o, getReflect()?-s:s ) ;
 		ps.array( true ) ;
-		for ( int n=0 ; n<v.size() ; n++ ) {
-			xy = (double[]) v.get( n ) ;
-			ps.push( xy[0] ) ;
-			ps.push( xy[1] ) ;
+		for ( Coordinate xy : baseline.list( null, a, o, getReflect()?-s:s ) ) {
+			ps.push( xy.x ) ;
+			ps.push( xy.y ) ;
 		}
 		ps.array( false ) ;
 

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implements CatalogRecord {
 
@@ -56,18 +58,20 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 		return Double.valueOf( element.get( 0 )[1] ) ;
 	}
 
-	public List<double[]> list() {
-		List<double[]> r = new java.util.Vector<double[]>() ;
+	public Coordinate[] list() {
+		Coordinate[] list ;
 		String[] eq ;
+
+		list = new Coordinate[ element.size() ] ;
 
 		for ( int i=0 ; i<element.size() ; i++ ) {
 			eq = element.get( i ) ;
 
-			r.add( new double[] {
+			list[i] = new Coordinate(
 					Double.valueOf( eq[0] ),
-					Double.valueOf( eq[1] ) } ) ;
+					Double.valueOf( eq[1] ) ) ;
 		}
 
-		return r ;
+		return list ;
 	}
 }

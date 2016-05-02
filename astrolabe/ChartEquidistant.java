@@ -40,11 +40,10 @@ public class ChartEquidistant extends ChartAzimuthalType {
 		}
 	}
 
-	public double thetaToDistance( double de ) {
-		return ( 90-de )/90 ;
-	}
-
-	public double distanceToTheta( double d ) {
-		return 90-d*90 ;
+	public double distance( double value, boolean inverse ) {
+		if ( inverse )
+			return 90-value*90 ;
+		else
+			return ( 90-value )/90 ;
 	}
 }

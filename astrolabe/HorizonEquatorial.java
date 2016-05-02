@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -118,46 +119,22 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double[] ho ) {
-		return project( ho[0], ho[1] ) ;
+	public Coordinate project( Coordinate local, boolean inverse ) {
+		return inverse ?
+				convert( projector.project( local, inverse ), inverse ) :
+					projector.project( convert( local, inverse ), inverse ) ;
 	}
 
-	public double[] project( double RA, double d ) {
-		return projector.project( convert( RA, d ) ) ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return inverse ? inverse( local ) : convert( local ) ;
 	}
 
-	public double[] unproject( double[] xy ) {
-		return unproject( xy[0], xy[1] ) ;
+	private Coordinate convert( Coordinate local ) {
+		return new Coordinate( local ) ;
 	}
 
-	public double[] unproject( double x, double y ) {
-		return unconvert( projector.unproject( x, y ) ) ;
-	}
-
-	public double[] convert( double[] ho ) {
-		return convert( ho[0], ho[1] ) ;
-	}
-
-	public double[] convert( double RA, double d ) {
-		double[] r = new double[2] ;
-
-		r[0] = RA ;
-		r[1] = d ;
-
-		return r ;
-	}
-
-	public double[] unconvert( double[] eq ) {
-		return unconvert( eq[0], eq[1] ) ;
-	}
-
-	public double[] unconvert( double RA, double d ) {
-		double[] r = new double[2] ;
-
-		r[0] = RA ;
-		r[1] = d ;
-
-		return r ;
+	private Coordinate inverse( Coordinate equatorial ) {
+		return new Coordinate( equatorial ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleMeridian peer ) {

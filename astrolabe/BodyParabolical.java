@@ -3,6 +3,8 @@ package astrolabe;
 
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class BodyParabolical extends astrolabe.model.BodyParabolical implements PostscriptEmitter, Baseline {
 
@@ -21,27 +23,12 @@ public class BodyParabolical extends astrolabe.model.BodyParabolical implements 
 		// TODO Auto-generated method stub
 	}
 
-	public double[] project( double angle, double shift ) {
+	public Coordinate project( double angle, double shift ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public double[] convert( double angle ) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public double unconvert( double[] eq ) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public double[] tangent( double angle ) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<double[]> list( List<Double> list, double begin, double end, double shift ) {
+	public Coordinate tangent( double angle ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -49,5 +36,10 @@ public class BodyParabolical extends astrolabe.model.BodyParabolical implements 
 	public double scaleMarkNth( int mark, double span ) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public Coordinate[] list( final List<Double> list, double begin, double end, double shift ) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

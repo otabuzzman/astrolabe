@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -14,6 +15,7 @@ import caa.CAASidereal;
 public class HorizonLocal extends astrolabe.model.HorizonLocal implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
+
 	// qualifier key (QK_)
 	private final static String QK_LOCALTIME	= "localtime" ;
 	private final static String QK_SIDEREAL		= "sidereal" ;
@@ -176,48 +178,32 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double[] ho ) {
-		return project( ho[0], ho[1] ) ;
+	public Coordinate project( Coordinate local, boolean inverse ) {
+		return inverse ?
+				convert( projector.project( local, inverse ), inverse ) :
+					projector.project( convert( local, inverse ), inverse ) ;
 	}
 
-	public double[] project( double A, double h ) {
-		return projector.project( convert( A, h ) ) ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return inverse ? inverse( local ) : convert( local ) ;
 	}
 
-	public double[] unproject( double[] xy ) {
-		return unproject( xy[0], xy[1] ) ;
-	}
-
-	public double[] unproject( double x, double y ) {
-		return unconvert( projector.unproject( x, y ) ) ;
-	}
-
-	public double[] convert( double[] ho ) {
-		return convert( ho[0], ho[1] ) ;
-	}
-
-	public double[] convert( double A, double h ) {
+	private Coordinate convert( Coordinate local ) {
 		CAA2DCoordinate c ;
 
-		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, latitude() ) ;
+		c = CAACoordinateTransformation.Horizontal2Equatorial( local.x, local.y, latitude() ) ;
 
-		return new double[] { CAACoordinateTransformation.HoursToDegrees( getST()-c.X() ), c.Y() } ;
+		return new Coordinate( CAACoordinateTransformation.HoursToDegrees( getST()-c.X() ), c.Y() ) ;
 	}
 
-	public double[] unconvert( double[] eq ) {
-		return unconvert( eq[0], eq[1] ) ;
-	}
-
-	public double[] unconvert( double RA, double d ) {
+	private Coordinate inverse( Coordinate equatorial ) {
 		double st, ra ;
-		CAA2DCoordinate c ;
 
 		st = Math.truncate( getST() ) ;
-		ra = Math.truncate( CAACoordinateTransformation.DegreesToHours( RA ) ) ;
+		ra = Math.truncate( CAACoordinateTransformation.DegreesToHours( equatorial.x ) ) ;
 
-		c = CAACoordinateTransformation.Equatorial2Horizontal( st-ra, d, latitude() ) ;
-
-		return new double [] { c.X(), c.Y() } ;
+		return new astrolabe.Coordinate(
+				CAACoordinateTransformation.Equatorial2Horizontal( st-ra, equatorial.y, latitude() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleMeridian peer ) {

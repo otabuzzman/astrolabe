@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
-public class ListCutter extends java.util.Vector<double[]> implements PostscriptEmitter {
+public class ListCutter extends java.util.Vector<Coordinate> implements PostscriptEmitter {
 
 	// configuration key (CK_)
 	private final static String CK_HALO			= "halo" ;
@@ -25,9 +25,9 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		this( null, fov ) ;
 	}
 
-	public ListCutter( List<double[]> list, Geometry fov ) {
+	public ListCutter( Coordinate[] list, Geometry fov ) {
 		if ( list != null )
-			for ( double[] xy : list )
+			for ( Coordinate xy : list )
 				add( xy ) ;
 
 		this.fov = new GeometryFactory().createGeometry( fov ) ;
@@ -38,14 +38,12 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		double[] xy ;
 
-		for ( List<double[]> l : segmentsInterior() ) {
+		for ( Coordinate[] l : segmentsInterior() ) {
 			ps.array( true ) ;
-			for ( int n=0 ; n<l.size() ; n++ ) {
-				xy = (double[]) l.get( n ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
+			for ( Coordinate xy : l ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
 			}
 			ps.array( false ) ;
 
@@ -83,17 +81,17 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public List<List<double[]>> segmentsIntersecting( boolean interior ) {
-		List<List<double[]>> l ;
-		List<double[]> s ;
+	public List<Coordinate[]> segmentsIntersecting( boolean interior ) {
+		List<Coordinate[]> l ;
+		Coordinate[] s ;
 		List<int[]> segmentsByIndex ;
-		List<double[]> segmentByValue ;
+		Coordinate[] segmentByValue ;
 		Geometry gRaw, gCut ;
 		Coordinate[] segmentByCoordinate ;
-		double[] xyA, xyO ;
+		Coordinate xyA, xyO ;
 		int ia, io ;
 
-		l = new java.util.Vector<List<double[]>>() ;
+		l = new java.util.Vector<Coordinate[]>() ;
 
 		segmentsByIndex = new java.util.Vector<int[]>() ;
 		if ( interior ) {
@@ -102,30 +100,30 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			segmentsExterior( segmentsByIndex ) ;
 		}
 		for ( int[] segmentByIndex : segmentsByIndex ) {
-			segmentByValue = subList( segmentByIndex[0], segmentByIndex[1]+1 ) ;
+			segmentByValue = subList( segmentByIndex[0], segmentByIndex[1]+1 ).toArray( new Coordinate[0] ) ;
 
-			gRaw = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( segmentByValue ) ) ;
+			gRaw = new GeometryFactory().createLineString( segmentByValue ) ;
 			gCut = gRaw.intersection( fov ) ;
 
 			segmentByCoordinate = gCut.getCoordinates() ;
-			xyA = new double[] {
+			xyA = new Coordinate(
 					segmentByCoordinate[0].x,
-					segmentByCoordinate[0].y } ;
-			xyO = new double[] {
+					segmentByCoordinate[0].y ) ;
+			xyO = new Coordinate(
 					segmentByCoordinate[ segmentByCoordinate.length-1 ].x,
-					segmentByCoordinate[ segmentByCoordinate.length-1 ].y } ;
-
-			s = new java.util.Vector<double[]>() ;
-			s.add( xyA ) ;
+					segmentByCoordinate[ segmentByCoordinate.length-1 ].y ) ;
 
 			ia = segmentByIndex[0]+1 ;
 			io = segmentByIndex[1]-1 ;
-			if ( io>=ia )
-				for ( double[] xy : subList( ia, io+1 ) ) {
-					s.add( xy ) ;
-				}
+			if ( io>=ia ) {
+				s = new Coordinate[1+io-ia+2] ;
+				for ( int c=0 ; c<1+io-ia ; c++ )
+					s[c+1] = get( ia+c ) ;
+			} else
+				s = new Coordinate[2] ;
 
-			s.add( xyO ) ;
+			s[0] = xyA ;
+			s[s.length-1] = xyO ;
 
 			l.add( s ) ;
 		}
@@ -133,28 +131,28 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		return l ;
 	}
 
-	public List<List<double[]>> segmentsInterior() {
+	public List<Coordinate[]> segmentsInterior() {
 		return segmentsInterior( null ) ;
 	}
 
-	public List<List<double[]>> segmentsInterior( List<int[]> index ) {
+	public List<Coordinate[]> segmentsInterior( final List<int[]> index ) {
 		return segments( index, true ) ;
 	}
 
-	public List<List<double[]>> segmentsExterior() {
+	public List<Coordinate[]> segmentsExterior() {
 		return segmentsExterior( null ) ;
 	}
 
-	public List<List<double[]>> segmentsExterior( List<int[]> index ) {
+	public List<Coordinate[]> segmentsExterior( final List<int[]> index ) {
 		return segments( index, false ) ;
 	}
 
-	public List<List<double[]>> segments( boolean interior ) {
+	public List<Coordinate[]> segments( boolean interior ) {
 		return segments( null, interior ) ;
 	}
 
-	public List<List<double[]>> segments( List<int[]> index, boolean interior ) {
-		List<List<double[]>> r = new java.util.Vector<List<double[]>>() ;
+	public List<Coordinate[]> segments( final List<int[]> index, boolean interior ) {
+		List<Coordinate[]> r = new java.util.Vector<Coordinate[]>() ;
 		int ib, ie ;
 
 		for ( ib = nearest( 0, interior ) ; ib>-1 ; ib = nearestFirst( ie, interior ) ) {
@@ -164,7 +162,7 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			if ( ib>0 )
 				ib = ib-1 ;
 
-			r.add( subList( ib, ie+1 ) ) ;
+			r.add( subList( ib, ie+1 ).toArray( new Coordinate[0] ) ) ;
 
 			if ( index != null )
 				index.add( new int[] { ib, ie } ) ;
@@ -202,6 +200,6 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	}
 
 	public boolean check( int index, boolean interior ) {
-		return interior==fov.contains( new GeometryFactory().createPoint( new JTSCoordinate( get( index ) ) ) ) ;
+		return interior == fov.contains( new GeometryFactory().createPoint( get( index ) ) ) ;
 	}
 }

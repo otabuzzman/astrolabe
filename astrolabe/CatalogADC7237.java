@@ -21,6 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -111,7 +113,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		double threshold, d, s ;
 		double d25, r25, pa ;
-		double[] p, a ;
+		Coordinate p, a ;
 		Vector vp, va ;
 		List<CatalogADC7237Record> catalog ;
 		Comparator<CatalogADC7237Record> comparator = new Comparator<CatalogADC7237Record>() {
@@ -161,9 +163,9 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 			d25 = Double.valueOf( record.logD25 ) ;
 			if ( d25<9.99 ) {
 				d = java.lang.Math.pow( 10, d25 )*.1/60. ;
-				p = projector.project( ra, de ) ;
+				p = projector.project( new Coordinate( ra, de ), false ) ;
 				vp = new Vector( p ) ;
-				a = projector.project( ra+d, de ) ;
+				a = projector.project( new Coordinate( ra+d, de ), false ) ;
 				va = new Vector( a ) ;
 				s = va.sub( vp ).abs() ;
 			}

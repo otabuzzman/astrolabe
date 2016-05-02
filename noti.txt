@@ -376,3 +376,17 @@ X&#x003e;119.7||Y&#x003e;170.2||X&#x003c;-119.7||Y&#x003c;-170.2?&#x0022;guidanc
 			ps.operator.setrgbcolor( 0, 0, 1 ) ;
 			ps.gdraw() ;
 			ps.operator.stroke() ;
+
+		Coordinate xy = projector.project( new Coordinate( 25.67, -56.78 ), false ) ;
+		Coordinate eq = projector.project( xy, true ) ;
+		eq = convert( new Coordinate( 25.67, -56.78 ), false ) ;
+		Coordinate ga = convert( eq, true ) ;
+		xy = project( new Coordinate( 25.67, -56.78 ), false ) ;
+		ga = project( xy, true ) ;
+		xy = projector.project( eq, false ) ;
+		ga = projector.project( xy, true ) ;
+
+Bad Birnbach, 16. Juli 2012
+x Vector( Coordinate ) : Coordinate.x = NaN
+x CircleParallel.emitPS() : segment.size() == list.size() ? lob/loe = Begin/End : lob/loe = unproject...
+

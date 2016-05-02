@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import caa.CAACoordinateTransformation;
@@ -113,8 +114,8 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		List<Double> listjd ;
 		double jdAe, jdOe ;
 		Baseline circle ;
-		List<double[]> list ;
-		double[] epoch, xy ;
+		Coordinate[] list ;
+		double[] epoch ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -133,7 +134,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			list = list( listjd, epoch[0], epoch[1], 0 ) ;
 
 			if ( fov == null ) {
-				listid.add( new int[] { 0, list.size()-1 } ) ;
+				listid.add( new int[] { 0, list.length-1 } ) ;
 			} else {
 				cutter = new ListCutter( list, fov ) ;
 				cutter.segmentsInterior( listid ) ;
@@ -187,10 +188,9 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			if ( circle==null ) {
 				list = list( null, epoch[0], epoch[1], 0 ) ;
 				ps.array( true ) ;
-				for ( int n=0 ; n<list.size() ; n++ ) {
-					xy = (double[]) list.get( n ) ;
-					ps.push( xy[0] ) ;
-					ps.push( xy[1] ) ;
+				for ( Coordinate xy : list ) {
+					ps.push( xy.x ) ;
+					ps.push( xy.y ) ;
 				}
 				ps.array( false ) ;
 
@@ -279,8 +279,8 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double jd, double shift ) {
-		double[] r, ec, xy ;
+	public Coordinate project( double jd, double shift ) {
+		Coordinate ec, xy ;
 		Baseline circle ;
 		double a ;
 		Vector v, t ;
@@ -289,67 +289,25 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 		if ( circle==null ) {
 			ec = convert( jd ) ;
-			xy = projector.project( ec ) ;
-			v = new Vector( xy[0], xy[1] ) ;
+			xy = projector.project( ec, false ) ;
+			v = new Vector( xy ) ;
 
 			if ( shift != 0 ) {
 				xy = tangent( jd ) ;
-				t = new Vector( xy[0], xy[1] ) ;
+				t = new Vector( xy ) ;
 				t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 				t.scale( shift ) ;
 				v.add( t ) ;
 			}
 
-			r = new double[] { v.x, v.y } ;
+			return new Coordinate( v.x, v.y ) ;
 		} else {
 			a = angle( jd ) ;
-			r = circle.project( a, shift ) ;
+			return circle.project( a, shift ) ;
 		}
-
-		return r ;
 	}
 
-	public double[] convert( double jd ) {
-		double[] r = new double[2] ;
-		double l, b ;
-		double stretch ;
-		Method eclipticLongitude ;
-		Method eclipticLatitude ;
-
-		l = 0 ;
-		b = 0 ;
-
-		if ( getStretch() )
-			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
-		else
-			stretch = 0 ;
-
-		try {
-			eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
-			eclipticLatitude = getClass().getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
-
-			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
-			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } ) ;
-		} catch ( NoSuchMethodException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( InvocationTargetException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IllegalAccessException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-
-		r[0] = l ;
-		r[1] = b+( jd-epoch()[0] )*stretch ;
-
-		return r ;
-	}
-
-	public double unconvert( double[] eq ) {
-		return Double.NaN ;
-	}
-
-	public double[] tangent( double jd ) {
-		double[] r ;
+	public Coordinate tangent( double jd ) {
 		Baseline circle ;
 		double stretch ;
 		double l, b, a ;
@@ -381,37 +339,38 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			r = new double[] { l, b+( jd-epoch()[0] )*stretch } ;
+			return new Coordinate( l, b+( jd-epoch()[0] )*stretch ) ;
 		} else {
 			a = angle( jd ) ;
-			r = circle.tangent( a ) ;
+			return circle.tangent( a ) ;
 		}
-
-		return r ;
 	}
 
 	private double angle( double jd ) {
-		double r ;
-		Baseline circle ;
-		double[] ec, eq ;
-
-		circle = (Baseline) Registry.retrieve( getCircle() ) ;
+		Object circle ;
+		Coordinate ec, eq ;
 
 		ec = convert( jd ) ;
-		eq = projector.convert( ec ) ;
-		r = circle.unconvert( eq ) ;
+		eq = projector.convert( ec, false ) ;
 
-		return r ;
+		circle = Registry.retrieve( getCircle() ) ;
+		if ( circle instanceof CircleMeridian )
+			return ( (CircleMeridian) circle ).reverse( eq ) ;
+		return ( (CircleParallel) circle ).reverse( eq ) ;
 	}
 
-	public List<double[]> list( List<Double> listjd, double jdA, double jdO, double shift ) {
-		List<double[]> listxy ;
+	public double scaleMarkNth( int mark, double span ) {
+		return new LinearScale( span, epoch() ).markN( mark ) ;
+	}
+
+	public Coordinate[] list( final List<Double> listjd, double jdA, double jdO, double shift ) {
+		List<Coordinate> listxy ;
 		double interval ;
 		double d, e, g ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		listxy = new java.util.Vector<double[]>() ;
+		listxy = new java.util.Vector<Coordinate>() ;
 
 		listxy.add( project( jdA, shift ) ) ;
 		if ( listjd != null )
@@ -431,11 +390,38 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		if ( listjd != null )
 			listjd.add( jdO ) ;
 
-		return listxy ;
+		return listxy.toArray( new Coordinate[0] ) ;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
-		return new LinearScale( span, epoch() ).markN( mark ) ;
+	public Coordinate convert( double jd ) {
+		double l, b ;
+		double stretch ;
+		Method eclipticLongitude ;
+		Method eclipticLatitude ;
+
+		l = 0 ;
+		b = 0 ;
+
+		if ( getStretch() )
+			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
+		else
+			stretch = 0 ;
+
+		try {
+			eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
+			eclipticLatitude = getClass().getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
+
+			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
+			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } ) ;
+		} catch ( NoSuchMethodException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( InvocationTargetException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IllegalAccessException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+
+		return new Coordinate( l, b+( jd-epoch()[0] )*stretch ) ;
 	}
 
 	public static double meanEclipticLongitude( double JD ) {

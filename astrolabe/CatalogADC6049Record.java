@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record implements CatalogRecord {
 
@@ -226,19 +228,21 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		return new Double( DEd.get( 0 ) ).doubleValue() ;
 	}
 
-	public List<double[]> list() {
-		List<double[]> r = new java.util.Vector<double[]>() ;
+	public Coordinate[] list() {
+		Coordinate[] list ;
 		String RA, de ;
+
+		list = new Coordinate[ RAh.size() ] ;
 
 		for ( int i=0 ; i<RAh.size() ; i++ ) {
 			RA = RAh.get( i ) ;
 			de = DEd.get( i ) ;
 
-			r.add( new double[] {
+			list[i] = new Coordinate(
 					Double.valueOf( RA ),
-					Double.valueOf( de ) } ) ;
+					Double.valueOf( de ) ) ;
 		}
 
-		return r ;
+		return list ;
 	}
 }

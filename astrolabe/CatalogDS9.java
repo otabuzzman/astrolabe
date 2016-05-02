@@ -21,6 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements PostscriptEmitter {
 
@@ -127,8 +129,6 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 		astrolabe.model.Body body ;
 		BodyDS9 bodyDS9 ;
 		astrolabe.model.Position pm ;
-		List<double[]> list ;
-		double eq[] ;
 
 		catalog = Arrays.asList( this.catalog
 				.toArray( new ContourLevel[0] ) ) ;
@@ -148,18 +148,16 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 
 					body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
 
-					list = element.list() ;
-					for ( int p=0 ; p<list.size() ; p++ ) {
-						eq = list.get( p ) ;
+					for ( Coordinate eq : element.list() ) {
 						pm = new astrolabe.model.Position() ;
 						// astrolabe.model.AngleType
 						pm.setLon( new astrolabe.model.Lon() ) ;
 						pm.getLon().setRational( new astrolabe.model.Rational() ) ;
-						pm.getLon().getRational().setValue( eq[0] ) ;  
+						pm.getLon().getRational().setValue( eq.x ) ;  
 						// astrolabe.model.AngleType
 						pm.setLat( new astrolabe.model.Lat() ) ;
 						pm.getLat().setRational( new astrolabe.model.Rational() ) ;
-						pm.getLat().getRational().setValue( eq[1] ) ;  
+						pm.getLat().getRational().setValue( eq.y ) ;  
 
 						body.getBodyAreal().getBodyArealTypeChoice().addPosition( pm ) ;
 					}

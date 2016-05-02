@@ -1,7 +1,7 @@
 
 package astrolabe;
 
-import java.util.List;
+import com.vividsolutions.jts.geom.Coordinate;
 
 @SuppressWarnings("serial")
 public class GraduationSpan extends astrolabe.model.GraduationSpan implements PostscriptEmitter {
@@ -27,14 +27,14 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	private double linelength ;
 	private double linewidth ;
 
-	private Vector tangent ;
 	private Vector origin ;
+	private Vector tangent ;
 
-	public GraduationSpan( double[] origin, double[] tangent ) {
+	public GraduationSpan( Coordinate origin, Coordinate tangent ) {
 		Configuration conf ;
 
-		this.origin = new Vector( origin[0], origin[1] ) ;
-		this.tangent = new Vector( tangent[0], tangent[1] ) ;
+		this.origin = new Vector( origin ) ;
+		this.tangent = new Vector( tangent ) ;
 
 		this.tangent.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 
@@ -51,16 +51,11 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		List<double[]> v ;
-		double[] xy ;
-
-		v = list() ;
 
 		ps.array( true ) ;
-		for ( int n=0 ; n<v.size() ; n++ ) {
-			xy = (double[]) v.get( n ) ;
-			ps.push( xy[0] ) ;
-			ps.push( xy[1] ) ;
+		for ( Coordinate xy : list() ) {
+			ps.push( xy.x ) ;
+			ps.push( xy.y ) ;
 		}
 		ps.array( false ) ;
 
@@ -116,24 +111,15 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	private List<double[]> list() {
-		List<double[]> list ;
+	private Coordinate[] list() {
 		Vector a, b ;
-
-		list = new java.util.Vector<double[]>() ;
 
 		a = new Vector( tangent ) ;
 		b = new Vector( tangent ) ;
 
-		a.scale( space ) ;
-		a.add( origin ) ;
-		list.add( new double[] { a.x, a.y } ) ;
-
-		b.scale( space+linelength ) ;
-		b.add( origin ) ;
-		list.add( new double[] { b.x, b.y } ) ;
-
-		return list ;
+		return new Coordinate[] {
+				a.scale( space ).add( origin ),
+				b.scale( space+linelength ).add( origin )
+		} ;
 	}
-
 }

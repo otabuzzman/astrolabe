@@ -40,11 +40,10 @@ public class ChartStereographic extends ChartAzimuthalType {
 		}
 	}
 
-	public double thetaToDistance( double de ) {
-		return Math.tan( ( 90-de )/2 ) ;
-	}
-
-	public double distanceToTheta( double d ) {
-		return 90-Math.atan( d )*2 ;
+	public double distance( double value, boolean inverse ) {
+		if ( inverse )
+			return 90-Math.atan( value )*2 ;
+		else
+			return Math.tan( ( 90-value )/2 ) ;
 	}
 }

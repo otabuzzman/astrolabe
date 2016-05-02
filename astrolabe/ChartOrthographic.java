@@ -40,11 +40,10 @@ public class ChartOrthographic extends ChartAzimuthalType {
 		}
 	}
 
-	public double thetaToDistance( double de ) {
-		return Math.cos( de ) ;
-	}
-
-	public double distanceToTheta( double d ) {
-		return Math.acos( d ) ;
+	public double distance( double value, boolean inverse ) {
+		if ( inverse )
+			return Math.acos( value ) ;
+		else
+			return Math.cos( value ) ;
 	}
 }

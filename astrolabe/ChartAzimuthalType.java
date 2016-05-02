@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
@@ -18,71 +20,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		return java.lang.Math.min( view[0], view[1] )/2
 		/Math.goldensection
 		*getScale()/100 ;
-	}
-
-	public double[] project( double RA, double d ) {
-		return project( new double[] { RA, d } ) ;
-	}
-
-	public double[] project( double[] eq ) {
-		double center[], phi, sin, cos ;
-		Vector vp, v0 ;
-
-		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
-
-		if ( getChartPage().getCenter() == null )
-			return vp.mul( scale() ).toArray() ;
-
-		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
-		vp.sub( v0 ) ;
-		phi = 90+Math.atan2( v0.y, v0.x ) ;
-		sin = Math.sin( phi ) ;
-		cos = Math.cos( phi ) ;
-		vp.apply( new double[] { cos, sin, 0, -sin, cos, 0, 0, 0, 1 } ) ;
-
-		return vp.mul( scale() ).toArray() ;
-	}
-
-	public double[] unproject( double x, double y ) {
-		return unproject( new double[] { x, y } ) ;
-	}
-
-	public double[] unproject( double[] xy ) {
-		double center[], phi, sin, cos ;
-		Vector vp, v0 ;
-
-		vp = new Vector( xy ) ;
-		vp.mul( 1/scale() ) ;
-
-		if ( getChartPage().getCenter() == null )
-			return polarToHemisphere( worldToPolar( vp.toArray() ) ) ;
-
-		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
-		phi = 90+Math.atan2( v0.y, v0.x ) ;
-		sin = Math.sin( phi ) ;
-		cos = Math.cos( phi ) ;
-		vp.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ;
-		vp.add( v0 ) ;
-
-		return polarToHemisphere( worldToPolar( vp.toArray() ) ) ;
-	}
-
-	public double[] convert( double[] eq ) {
-		return eq ;
-	}
-
-	public double[] convert( double RA, double d ) {
-		return new double[] { RA, d } ;
-	}
-
-	public double[] unconvert( double[] eq ) {
-		return eq ;
-	}
-
-	public double[] unconvert( double RA, double d ) {
-		return new double[] { RA, d } ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -119,40 +56,90 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dsc.pageTrailer() ;
 	}
 
-	public double[] hemisphereToPolar( double[] eq ) {
-		return getNorthern()?flipNorthern( eq ):flipSouthern( eq ) ;
+	public Coordinate project( Coordinate local, boolean inverse ) {
+		return inverse ? inverse( local ) : project( local ) ;
 	}
 
-	public double[] polarToHemisphere( double[] p ) {
-		return getNorthern()?flipNorthern( p ):flipSouthern( p ) ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return project( local, inverse ) ;
 	}
 
-	private double[] flipNorthern( double[] eq ) {
-		return new double[] { CAACoordinateTransformation.MapTo0To360Range( -eq[0] ), eq[1] } ;
+	private Coordinate project( Coordinate azimuthal ) {
+		Coordinate center ;
+		double phi, sin, cos ;
+		Vector vp, v0 ;
+
+		vp = new Vector( polarToCartesianCS( localToPolarCS( azimuthal ) ) ) ;
+
+		if ( getChartPage().getCenter() == null )
+			return vp.mul( scale() ).toCoordinate() ;
+
+		center = valueOf( getChartPage().getCenter() ) ;
+		v0 = new Vector( polarToCartesianCS( localToPolarCS( center ) ) ) ;
+		vp.sub( v0 ) ;
+		phi = 90+Math.atan2( v0.y, v0.x ) ;
+		sin = Math.sin( phi ) ;
+		cos = Math.cos( phi ) ;
+		vp.apply( new double[] { cos, sin, 0, -sin, cos, 0, 0, 0, 1 } ) ;
+
+		return vp.mul( scale() ).toCoordinate() ;
 	}
 
-	private double[] flipSouthern( double[] eq ) {
-		return new double[] { CAACoordinateTransformation.MapTo0To360Range( 180+eq[0] ), -eq[1] } ;
+	private Coordinate inverse( Coordinate cartesian ) {
+		Coordinate center ;
+		double phi, sin, cos ;
+		Vector vp, v0 ;
+
+		vp = new Vector( cartesian ) ;
+		vp.mul( 1/scale() ) ;
+
+		if ( getChartPage().getCenter() == null )
+			return polarToLocalCS( cartesianToPolarCS( vp.toCoordinate() ) ) ;
+
+		center = valueOf( getChartPage().getCenter() ) ;
+		v0 = new Vector( polarToCartesianCS( localToPolarCS( center ) ) ) ;
+		phi = 90+Math.atan2( v0.y, v0.x ) ;
+		sin = Math.sin( phi ) ;
+		cos = Math.cos( phi ) ;
+		vp.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ;
+		vp.add( v0 ) ;
+
+		return polarToLocalCS( cartesianToPolarCS( vp.toCoordinate() ) ) ;
 	}
 
-	public double[] polarToWorld( double[] eq ) {
+	private Coordinate localToPolarCS( Coordinate local ) {
+		return getNorthern()?flipNorthern( local ):flipSouthern( local ) ;
+	}
+
+	private Coordinate polarToCartesianCS( Coordinate polar ) {
 		double d ;
 
-		d = thetaToDistance( eq[1] ) ;
+		d = distance( polar.y, false ) ;
 
-		return new double[] {
-				d*Math.cos( eq[0] ),
-				d*Math.sin( eq[0] ) } ;
+		return new Coordinate(
+				d*Math.cos( polar.x ),
+				d*Math.sin( polar.x ) ) ;
 	}
 
-	public double[] worldToPolar( double[] xy ) {
-		return new double[] {
-				CAACoordinateTransformation.MapTo0To360Range( Math.atan2( xy[1], xy[0] ) ),
-				distanceToTheta( java.lang.Math.sqrt( xy[0]*xy[0]+xy[1]*xy[1] ) ) } ;
+	private Coordinate polarToLocalCS( Coordinate polar ) {
+		return getNorthern()?flipNorthern( polar ):flipSouthern( polar ) ;
 	}
 
-	abstract public double thetaToDistance( double de ) ;
-	abstract public double distanceToTheta( double d ) ;
+	private Coordinate cartesianToPolarCS( Coordinate cartesian ) {
+		return new Coordinate(
+				CAACoordinateTransformation.MapTo0To360Range( Math.atan2( cartesian.y, cartesian.x ) ),
+				distance( java.lang.Math.sqrt( cartesian.x*cartesian.x+cartesian.y*cartesian.y ), true ) ) ;
+	}
+
+	private Coordinate flipNorthern( Coordinate value ) {
+		return new Coordinate( CAACoordinateTransformation.MapTo0To360Range( -value.x ), value.y ) ;
+	}
+
+	private Coordinate flipSouthern( Coordinate value ) {
+		return new Coordinate( CAACoordinateTransformation.MapTo0To360Range( 180+value.x ), -value.y ) ;
+	}
+
+	abstract public double distance( double value, boolean inverse ) ;
 
 	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonLocal peer ) {
 		HorizonLocal horizon ;

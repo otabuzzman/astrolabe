@@ -3,6 +3,8 @@ package astrolabe;
 
 import java.util.List;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 @SuppressWarnings("serial")
 public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements PostscriptEmitter {
 
@@ -26,16 +28,16 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		this.projector = projector ;
 	}
 
-	public void headPS(ApplicationPostscriptStream ps) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS(ApplicationPostscriptStream ps) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
 
 		ps.array( true ) ;
-		for ( double[] xy : list() ) {
-			ps.push( xy[0] ) ;
-			ps.push( xy[1] ) ;
+		for ( Coordinate xy : list() ) {
+			ps.push( xy.x ) ;
+			ps.push( xy.y ) ;
 		}
 		ps.array( false ) ;
 
@@ -72,25 +74,27 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		ps.operator.grestore() ;
 	}
 
-	public void tailPS(ApplicationPostscriptStream ps) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public List<double[]> list() {
-		List<double[]> list ;
-		double d, a, p[] ;
-		Vector vp, vd, va ;
+	public Coordinate[] list() {
+		List<Coordinate> list ;
+		double interval, d, a ;
 		double pa, pas, pac, mrot[] ;
-		double interval ;
+		Coordinate p ;
+		Vector vp, vd, va ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		list = new java.util.Vector<double[]>() ;
+		list = new java.util.Vector<Coordinate>() ;
 
 		d = valueOf( this ) ;
 		p = valueOf( getPosition() ) ;
 
-		vp = new Vector( projector.project( p[1], p[2] ) ) ;
-		vd = new Vector( projector.project( p[1]-d, p[2] ) ) ;
+		vp = new Vector( projector.project( p, false ) ) ;
+
+		p.x = p.x-d ;
+		vd = new Vector( projector.project( p, false ) ) ;
 
 		pa = getPA() ;
 		pas = Math.sin( pa ) ;
@@ -104,13 +108,14 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		a = new Vector( vd ).sub( vp ).abs()/2 ;
 
 		for ( double i=0 ; i<360 ; i=i+interval ) {
-			va.set( -a*Math.sin( i ), a*Math.cos( i )*getProportion() ) ;
-			va.apply( mrot ) ;
-			va.add( vp ) ;
+			va.x = -a*Math.sin( i ) ;
+			va.y = a*Math.cos( i )*getProportion() ;
+			va.apply( mrot )
+			.add( vp ) ;
 
-			list.add( new double[] { va.x, va.y } ) ;
+			list.add( new Coordinate( va.x, va.y ) ) ;
 		}
 
-		return list ;
+		return list.toArray( new Coordinate[0] ) ;
 	}
 }

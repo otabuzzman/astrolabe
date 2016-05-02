@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 import caa.CAADate;
@@ -109,8 +110,8 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		List<int[]> listid ;
 		List<Double> listjd ;
 		double jdAe, jdOe ;
-		List<double[]> list ;
-		double[] epoch, xy ;
+		Coordinate[] list ;
+		double[] epoch ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -129,7 +130,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 			list = list( listjd, epoch[0], epoch[1], 0 ) ;
 
 			if ( fov == null ) {
-				listid.add( new int[] { 0, list.size()-1 } ) ;
+				listid.add( new int[] { 0, list.length-1 } ) ;
 			} else {
 				cutter = new ListCutter( list, fov ) ;
 				cutter.segmentsInterior( listid ) ;
@@ -177,10 +178,9 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		} else {
 			list = list( null, epoch[0], epoch[1], 0 ) ;
 			ps.array( true ) ;
-			for ( int n=0 ; n<list.size() ; n++ ) {
-				xy = list.get( n ) ;
-				ps.push( xy[0] ) ;
-				ps.push( xy[1] ) ;
+			for ( Coordinate xy : list ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
 			}
 			ps.array( false ) ;
 
@@ -253,69 +253,53 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double jd, double shift ) {
-		double[] ec, xy ;
+	public Coordinate project( double jd, double shift ) {
+		Coordinate ec, xy ;
 		Vector v, t ;
 
 		ec = convert( jd ) ;
-		xy = projector.project( ec ) ;
-		v = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( ec, false ) ;
+		v = new Vector( xy ) ;
 
 		if ( shift != 0 ) {
 			xy = tangent( jd ) ;
-			t = new Vector( xy[0], xy[1] ) ;
+			t = new Vector( xy ) ;
 			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 			t.scale( shift ) ;
 			v.add( t ) ;
 		}
 
-		return new double[] { v.x, v.y } ;
+		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public double[] convert( double jd ) {
-		double[] r = new double[2] ;
-		double stretch ;
-
-		if ( getStretch() )
-			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
-		else
-			stretch = 0 ;
-
-		r[0] = CAAMoon.EclipticLongitude( jd ) ;
-		r[1] = CAAMoon.EclipticLatitude( jd ) ;
-		r[1] = r[1]+( jd-epoch()[0] )*stretch ;
-
-		return r ;
-	}
-
-	public double unconvert( double[] eq ) {
-		return Double.NaN ;
-	}
-
-	public double[] tangent( double jd ) {
-		double[] ec, xy ;
+	public Coordinate tangent( double jd ) {
+		Coordinate ec, xy ;
 		Vector v, t ;
 
 		ec = convert( jd+1./86400 ) ;
-		xy = projector.project( ec ) ;
-		v = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( ec, false ) ;
+		v = new Vector( xy ) ;
 		ec = convert( jd ) ;
-		xy = projector.project( ec ) ;
-		t = new Vector( xy[0], xy[1] ) ;
+		xy = projector.project( ec, false ) ;
+		t = new Vector( xy ) ;
 
 		v.sub( t ) ;
 
-		return new double[] { v.x, v.y } ;
+		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public List<double[]> list( List<Double> listjd, double jdA, double jdO, double shift ) {
-		List<double[]> listxy ;
+	public double scaleMarkNth( int mark, double span ) {
+		return new LinearScale( span, epoch() ).markN( mark ) ;
+	}
+
+	public Coordinate[] list( final List<Double> listjd, double jdA, double jdO, double shift ) {
+		List<Coordinate> listxy ;
 		double interval ;
 		double d, e, g ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		listxy = new java.util.Vector<double[]>() ;
+		listxy = new java.util.Vector<Coordinate>() ;
 
 		listxy.add( project( jdA, shift ) ) ;
 		if ( listjd != null )
@@ -335,11 +319,21 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		if ( listjd != null )
 			listjd.add( jdO ) ;
 
-		return listxy ;
+		return listxy.toArray( new Coordinate[0] ) ;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
-		return new LinearScale( span, epoch() ).markN( mark ) ;
+	public Coordinate convert( double jd ) {
+		double stretch ;
+	
+		if ( getStretch() )
+			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
+		else
+			stretch = 0 ;
+	
+		return new Coordinate(
+				CAAMoon.EclipticLongitude( jd ),
+				CAAMoon.EclipticLatitude( jd )
+				+( jd-epoch()[0] )*stretch ) ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

@@ -6,7 +6,6 @@ import java.util.Date;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 @SuppressWarnings("serial")
 public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEmitter {
@@ -217,7 +216,6 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 		} ;
 
 		return new GeometryFactory().createPolygon(
-				new GeometryFactory().createLinearRing(
-						new CoordinateArraySequence( c ) ), null ) ;
+				new GeometryFactory().createLinearRing( c ), null ) ;
 	}
 }

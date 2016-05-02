@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -20,15 +21,15 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	}
 
 	public void register() {
-		double[] lo, eq ;
+		Coordinate lo, eq ;
 		DMS dms ;
 
 		lo = valueOf( getPosition() ) ;
-		eq = projector.convert( lo[1], lo[2] ) ;
+		eq = projector.convert( lo, false ) ;
 
-		dms = new DMS( eq[0] ) ;
+		dms = new DMS( eq.x ) ;
 		dms.register( this, QK_RA ) ;
-		dms.set( eq[1], -1 ) ;
+		dms.set( eq.y, -1 ) ;
 		dms.register( this, QK_DECLINATION ) ;
 	}
 
@@ -45,7 +46,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		Geometry fov ;
 		ChartPage page ;
 		double height ;
-		double[] lo, xy ;
+		Coordinate lo, xy ;
 		double turn, spin ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
@@ -58,10 +59,9 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		}
 
 		lo = valueOf( getPosition() ) ;
-		xy = projector.project( lo[1], lo[2] ) ;
+		xy = projector.project( lo, false ) ;
 
-		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint(
-				new JTSCoordinate( new double[] { xy[0], xy[1] } ) ) ) )
+		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint( xy ) ) )
 			return ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
@@ -69,8 +69,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.operator.mark() ;
 
-		ps.push( xy[0] ) ;
-		ps.push( xy[1] ) ;
+		ps.push( xy.x ) ;
+		ps.push( xy.y ) ;
 		ps.operator.moveto() ;
 
 		ps.operator.currentpoint() ;

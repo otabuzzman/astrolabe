@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.List;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -13,27 +11,26 @@ public class PolygonPlane {
 
 	private Polygon polygon ;
 
-	public PolygonPlane( List<double[]> polygon ) {
+	public PolygonPlane( Coordinate[] polygon ) {
 		Coordinate[] c ;
-		double[] a, o, xy ;
+		Coordinate a, o ;
 		LinearRing r ;
 		int ea, eo ;
 
 		ea = 0 ;
-		eo = polygon.size()-1 ;
+		eo = polygon.length-1 ;
 
-		a = polygon.get( ea ) ; // firstElement() ;
-		o = polygon.get( eo ) ; // lastElement() ;
-		if ( a[0]!=o[0]&&a[1]!=o[1] ) {
-			c = new Coordinate[polygon.size()+1] ;
-			c[c.length-1] = new Coordinate( a[0], a[1] ) ;
+		a = polygon[ea] ; // firstElement() ;
+		o = polygon[eo] ; // lastElement() ;
+		if ( a.x!=o.x&&a.y!=o.y ) {
+			c = new Coordinate[polygon.length+1] ;
+			c[c.length-1] = new Coordinate( a.x, a.y ) ;
 		} else {
-			c = new Coordinate[polygon.size()] ;
+			c = new Coordinate[polygon.length] ;
 		}
 
-		for ( int n=0 ; n<polygon.size() ; n++ ) {
-			xy = polygon.get( n ) ;
-			c[n] = new Coordinate( xy[0], xy[1] ) ;
+		for ( int n=0 ; n<polygon.length ; n++ ) {
+			c[n] = new Coordinate( polygon[n] ) ;
 		}
 
 		r = new GeometryFactory().createLinearRing( c ) ;
@@ -73,8 +70,8 @@ public class PolygonPlane {
 
 		c = polygon.getCoordinates() ;
 
-		a0 = new Vector( c[0].x, c[0].y ) ;
-		a1 = new Vector( c[1].x, c[1].y ) ;
+		a0 = new Vector( c[0] ) ;
+		a1 = new Vector( c[1] ) ;
 		b0 = new Vector( a1.sub( a0 ) ) ;
 		b0.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ; // rotate 1 degree counter clockwise
 		a0.add( b0 ) ;

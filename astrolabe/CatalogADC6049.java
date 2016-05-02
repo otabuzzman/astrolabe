@@ -11,12 +11,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -113,8 +114,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 		BodyAreal bodyAreal ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
-		List<double[]> list ;
-		double epoch, eq[] ;
+		double epoch ;
 		Double Epoch ;
 
 		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
@@ -137,10 +137,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 
 			body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
 
-			list = record.list() ;
-			for ( int p=0 ; p<list.size() ; p++ ) {
-				eq = list.get( p ) ;
-				ceq = CAAPrecession.PrecessEquatorial( eq[0], eq[1], 2451545./*J2000*/, epoch ) ;
+			for ( Coordinate eq : record.list() ) {
+				ceq = CAAPrecession.PrecessEquatorial( eq.x, eq.y, 2451545./*J2000*/, epoch ) ;
 				pm = new astrolabe.model.Position() ;
 				// astrolabe.model.AngleType
 				pm.setLon( new astrolabe.model.Lon() ) ;

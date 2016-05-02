@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -114,54 +115,34 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public double[] project( double[] ho ) {
-		return project( ho[0], ho[1] ) ;
+	public Coordinate project( Coordinate local, boolean inverse ) {
+		return inverse ?
+				convert( projector.project( local, inverse ), inverse ) :
+					projector.project( convert( local, inverse ), inverse ) ;
 	}
 
-	public double[] project( double l, double b ) {
-		return projector.project( convert( l, b ) ) ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return inverse ? inverse( local ) : convert( local ) ;
 	}
 
-	public double[] unproject( double[] xy ) {
-		return unproject( xy[0], xy[1] ) ;
-	}
-
-	public double[] unproject( double x, double y ) {
-		return unconvert( projector.unproject( x, y ) ) ;
-	}
-
-	public double[] convert( double[] ho ) {
-		return convert( ho[0], ho[1] ) ;
-	}
-
-	public double[] convert( double l, double b ) {
+	private Coordinate convert( Coordinate local ) {
 		CAA2DCoordinate c ;
-		double[] r = new double[2] ;
 		double e ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch() ) ;
-		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, e ) ;
-		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
-		r[1] = c.Y() ;
+		c = CAACoordinateTransformation.Ecliptic2Equatorial( local.x, local.y, e ) ;
 
-		return r ;
+		return new Coordinate( CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
 	}
 
-	public double[] unconvert( double[] eq ) {
-		return unconvert( eq[0], eq[1] ) ;
-	}
-
-	public double[] unconvert( double RA, double d ) {
-		CAA2DCoordinate c ;
-		double[] r = new double[2] ;
+	private Coordinate inverse( Coordinate equatorial ) {
 		double e ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch() ) ;
-		c = CAACoordinateTransformation.Equatorial2Ecliptic( CAACoordinateTransformation.DegreesToHours( RA ), d, e ) ;
-		r[0] = c.X() ;
-		r[1] = c.Y() ;
 
-		return r ;
+		return new astrolabe.Coordinate(
+				CAACoordinateTransformation.Equatorial2Ecliptic(
+						CAACoordinateTransformation.DegreesToHours( equatorial.x ), equatorial.y, e ) ) ;
 	}
 
 	private double epoch() {

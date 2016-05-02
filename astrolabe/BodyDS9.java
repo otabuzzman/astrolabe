@@ -1,8 +1,6 @@
 
 package astrolabe;
 
-import java.util.List;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -16,19 +14,13 @@ public class BodyDS9 extends BodyAreal {
 		super( projector ) ;
 	}
 
-	public List<double[]> list() {
-		List<double[]> r ;
+	public Coordinate[] list() {
 		LineString list ;
 		Geometry simp ;
 
-		list = new GeometryFactory().createLineString(
-				new JTSCoordinateArraySequence( super.list() ) ) ;
+		list = new GeometryFactory().createLineString( super.list() )  ;
 		simp = DouglasPeuckerSimplifier.simplify( list, .1 ) ;	
 
-		r = new java.util.Vector<double[]>() ;
-		for ( Coordinate c : simp.getCoordinates() )
-			r.add( new double[] { c.x, c.y } ) ;
-
-		return r ;
+		return simp.getCoordinates() ;
 	}
 }

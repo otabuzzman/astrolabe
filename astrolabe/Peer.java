@@ -5,7 +5,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -17,6 +16,8 @@ import org.exolab.castor.xml.TypeValidator;
 import org.exolab.castor.xml.ValidationContext;
 import org.exolab.castor.xml.XMLClassDescriptor;
 import org.exolab.castor.xml.XMLFieldDescriptor;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 import caa.CAACoordinateTransformation;
 import caa.CAADate;
@@ -214,24 +215,26 @@ public class Peer {
 		return rational.getValue() ;
 	} 
 
-	public static List<double[]> valueOf( SphericalType[] spherical ) {
-		List<double[]> r = new java.util.Vector<double[]>() ;
+	public static Coordinate[] valueOf( SphericalType[] spherical ) {
+		Coordinate[] list = new Coordinate[ spherical.length ] ;
 
-		for ( int n=0 ; n<spherical.length ; n++ )
-			r.add( valueOf( spherical[n] ) ) ;
+		for ( int s=0 ; s<spherical.length ; s++ )
+			list[s] = valueOf( spherical[s] ) ;
 
-		return r ;
+		return list ;
 	}
 
-	public static double[] valueOf( SphericalType spherical ) {
-		double[] r = { 1, 0, 0 } ;
+	public static Coordinate valueOf( SphericalType spherical ) {
+		double lon, lat, rad ;
 
+		lon = valueOf( spherical.getLon() ) ;
+		lat = valueOf( spherical.getLat() ) ;
 		if ( spherical.getRad() != null )
-			r[0] = valueOf( spherical.getRad() ) ;
-		r[1] = valueOf( spherical.getLon() ) ;
-		r[2] = valueOf( spherical.getLat() ) ;
+			rad = valueOf( spherical.getRad() ) ;
+		else
+			rad = 0 ;
 
-		return r ;
+		return new Coordinate( lon, lat, rad ) ;
 	}
 
 	public static double valueOf( AngleType angle ) {

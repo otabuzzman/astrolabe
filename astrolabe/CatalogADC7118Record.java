@@ -3,9 +3,10 @@ package astrolabe;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 @SuppressWarnings("serial")
 public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record implements CatalogRecord {
@@ -228,11 +229,7 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 		return new Double( DE+DEm ).doubleValue() ;
 	}
 
-	public List<double[]> list() {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-
-		r.add( new double[] { RA(), de() } ) ;
-
-		return r ;
+	public Coordinate[] list() {
+		return new Coordinate[] { new Coordinate( RA(), de() )  } ;
 	}
 }

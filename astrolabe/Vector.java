@@ -1,59 +1,24 @@
 
 package astrolabe;
 
-import java.util.List;
+import com.vividsolutions.jts.geom.Coordinate;
 
-public class Vector {
-
-	public double x = 0 ;
-	public double y = 0 ;
-	public double z = 0 ;
+@SuppressWarnings("serial")
+public class Vector extends Coordinate {
 
 	public Vector() {
-		set( 0, 0, 0 ) ;
+		super( 0, 0, 0 ) ;
 	}
 
 	public Vector( Vector v ) {
-		set( v.x, v.y, v.z ) ;
+		super( v.x, v.y, v.z ) ;
 	}
 
-	public Vector( double[] xyz ) {
-		set( xyz ) ;
-	}
+	public Vector( Coordinate c ) {
+		super( c.x, c.y, c.z ) ;
 
-	public Vector( double x, double y ) {
-		set( x, y, 0 ) ;
-	}
-
-	public Vector( double x, double y, double z ) {
-		set ( x, y, z )	;
-	}
-
-	public void set( Vector v ) {
-		set( v.x, v.y, v.z ) ;
-	}
-
-	public void set( double[] xyz ) {
-		switch ( xyz.length ) {
-		case 3:
-			set( xyz[0], xyz[1], xyz[2] ) ;
-			break ;
-		case 2:
-			set( xyz[0], xyz[1], 0 ) ;
-			break ;
-		default:
-			set( 0, 0, 0 ) ;
-		}
-	}
-
-	public void set( double x, double y ) {
-		set( x, y, 0 ) ;
-	}
-
-	public void set( double x, double y, double z ) {
-		this.x = x ;
-		this.y = y ;
-		this.z = z ;
+		if ( Double.doubleToRawLongBits( z ) == Double.doubleToRawLongBits( Double.NaN ) )
+			z = 0 ;
 	}
 
 	public Vector neg() {
@@ -139,34 +104,36 @@ public class Vector {
 		return this ;
 	}
 
-	public double[] toArray() {
-		return new double[] { x, y, z } ;
+	public Coordinate toCoordinate() {
+		return new Coordinate( x, y, z ) ;
+	}
+
+	public static Coordinate[] con( Coordinate[] list ) {
+		Coordinate[] con ;
+		Vector a, b ;
+
+		con = new Coordinate[ list.length-1 ] ;
+
+		for ( int c=1 ; list.length>c ; c++ ) {
+			a = new Vector( list[c] ) ;
+			b = new Vector( list[c-1] ) ;
+
+			con[c-1] = a.sub( b ).toCoordinate() ;
+		}
+
+		return con ;
+	}
+
+	public static double len( Coordinate[] list ) {
+		double len = 0 ;
+
+		for ( Coordinate c : list )
+			len = len+new Vector( c ).abs() ;
+
+		return len ;
 	}
 
 	public String toString() {
 		return "["+x+","+y+","+z+"]" ;
-	}
-
-	public static List<double[]> con( List<double[]> list ) {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-		Vector a, b ;
-
-		for ( int p=1 ; p<list.size() ; p++ ) {
-			a = new Vector( list.get( p ) ) ;
-			b = new Vector( list.get( p-1 ) ) ;
-
-			r.add( a.sub( b ).toArray() ) ;
-		}
-
-		return r ;
-	}
-
-	public static double len( List<double[]> list ) {
-		double r = 0 ;
-
-		for ( double[] v : list )
-			r = r+new Vector( v ).abs() ;
-
-		return r ;
 	}
 }

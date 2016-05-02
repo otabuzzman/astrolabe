@@ -1,43 +1,44 @@
 
 package astrolabe;
 
-import java.util.List;
+import com.vividsolutions.jts.geom.Coordinate;
 
 import caa.CAACoordinateTransformation;
 
 public class PolygonSphere {
 
-	private List<double[]> polygon ;
+	private Coordinate[] polygon ;
 
-	public PolygonSphere( List<double[]> polygon ) {
-		this.polygon = polygon ;
+	public PolygonSphere( Coordinate[] polygon ) {
+		this.polygon = new Coordinate[polygon.length] ;
+		System.arraycopy( polygon, 0, this.polygon, 0, polygon.length ) ;
 	}
 
 	public double area() {
 		double d, s ;
-		double[] b, f, v ;
+		Coordinate b, f, v ;
 		int n ;
 
 		s = 0 ;
 		n = 1 ;
 
-		for ( ; n<=polygon.size() ; n++ ) {
-			b = polygon.get( n-1 ) ;
-			v = polygon.get( n%polygon.size() ) ;
-			f = polygon.get( ( n+1 )%polygon.size() ) ;
+		for ( ; n<=polygon.length ; n++ ) {
+			b = polygon[ n-1 ] ;
+			v = polygon[ n%polygon.length ] ;
+			f = polygon[ ( n+1 )%polygon.length ] ;
 			d = transform( v, b )-transform( v, f ) ;
 			s = s+( d<0?d+360:d ) ;
 		}
 
-		return CAACoordinateTransformation.DegreesToRadians( s-180*( polygon.size()-2 ) ) ;
+		return CAACoordinateTransformation.DegreesToRadians( s-180*( polygon.length-2 ) ) ;
 	}
 
-	private static double transform( double[] p, double[] q ) {
+	private static double transform( Coordinate p, Coordinate q ) {
 		double t, b ;
 
-		t = Math.sin( q[0]-p[0] )*Math.cos( q[1] ) ;
-		b = Math.sin( q[1] )*Math.cos( p[1] )
-		-Math.cos( q[1] )*Math.sin( p[1] )*Math.cos( q[0]-p[0] ) ;
+		t = Math.sin( q.x-p.x )*Math.cos( q.y ) ;
+		b = Math.sin( q.y )*Math.cos( p.y )
+		-Math.cos( q.y )*Math.sin( p.y )*Math.cos( q.x-p.x ) ;
 
 		return Math.atan2( t, b ) ;
 	}
