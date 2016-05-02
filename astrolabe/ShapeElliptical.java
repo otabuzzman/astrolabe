@@ -19,7 +19,7 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 	public void emitPS(AstrolabePostscriptStream ps) {
 		ps.array( true ) ;
-		for ( double [] xy : list() ) {
+		for ( double[] xy : list() ) {
 			ps.push( xy[0] ) ;
 			ps.push( xy[1] ) ;
 		}
@@ -27,6 +27,8 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 		ps.operator.newpath() ;
 		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+
+		ps.operator.closepath() ;
 
 		// halo stroke
 		ps.operator.currentlinewidth() ;
@@ -60,56 +62,40 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 	public List<double[]> list() {
 		List<double[]> list ;
-		double d, d2, p[] ;
-		Vector vp, va, vd2, vh ;
+		double d, a, p[] ;
+		Vector vp, vd, va ;
 		double pa, pas, pac, mrot[] ;
-		double phi, phis, phic ;
 		double interval ;
 
 		interval = Configuration.getValue(
 				Configuration.getClassNode( this, null, null ),
-				ApplicationConstant.PK_OUTLINE_INTERVAL, DEFAULT_INTERVAL ) ;
+				ApplicationConstant.PK_SHAPE_INTERVAL, DEFAULT_INTERVAL ) ;
+
+		list = new java.util.Vector<double[]>() ;
 
 		d = AstrolabeFactory.valueOf( this ) ;
 		p = AstrolabeFactory.valueOf( getPosition() ) ;
 
 		vp = new Vector( projector.project( p[1], p[2] ) ) ;
-		va = new Vector( projector.project( p[1]-d/2, p[2] ) ) ;
-		vd2 = new Vector( va ).sub( vp ) ;
-		d2 = vd2.abs() ;
-
-		vh = new Vector( vp ) ;
-		vh.scale( vd2.abs() ) ;
-		vh.neg() ;
+		vd = new Vector( projector.project( p[1]-d, p[2] ) ) ;
 
 		pa = getPA() ;
 		pas = Math.sin( pa ) ;
 		pac = Math.cos( pa ) ;
 		mrot = new double[] {
-				pac,	pas,	0,
-				-pas,	pac,	0,
+				pac,	-pas,	0,
+				pas,	pac,	0,
 				0,		0,		1 } ;
-		vh.apply( mrot ) ;
 
-		phi = java.lang.Math.atan2( vh.y, vh.x ) ;
-		phis = java.lang.Math.sin( phi ) ;
-		phic = java.lang.Math.cos( phi ) ;
-		mrot[0] = phic ;
-		mrot[1] = -phis ;
-		mrot[3] = phis ;
-		mrot[4] = phic ;
+		va = new Vector() ;
+		a = new Vector( vd ).sub( vp ).abs()/2 ;
 
-		vh.add( vp ) ;
+		for ( double i=0 ; i<360 ; i=i+interval ) {
+			va.set( -a*Math.sin( i ), a*Math.cos( i )*getProportion() ) ;
+			va.apply( mrot ) ;
+			va.add( vp ) ;
 
-		list = new java.util.Vector<double[]>() ;
-
-		list.add( new double[] { vh.x, vh.y } ) ;
-		for ( double i=interval ; i<360 ; i=i+interval ) {
-			vh.set( d2*Math.cos( i ), d2*Math.sin( i )*getProportion() ) ;
-			vh.apply( mrot ) ;
-			vh.add( vp ) ;
-
-			list.add( new double[] { vh.x, vh.y } ) ;
+			list.add( new double[] { va.x, va.y } ) ;
 		}
 
 		return list ;

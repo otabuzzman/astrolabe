@@ -329,14 +329,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		listxy = new java.util.Vector<double[]>() ;
 
-		listxy.add( project( begin, shift ) ) ;
-		if ( lista != null )
-			lista.add( begin ) ;
-
-		for (
-				double al=begin>end ? begin-interval : begin+interval ;
-				begin>end ? al>end : al<end ;
-				al=begin>end ? al-interval : al+interval ) {
+		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval ) {
 			listxy.add( project( al, shift ) ) ;
 			if ( lista != null )
 				lista.add( al ) ;

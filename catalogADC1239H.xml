@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
-astrolabe.xsd">
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd">
 	<Epoch>
 		<Calendar>
 			<YMD y="2000" m="1" d="1"/>

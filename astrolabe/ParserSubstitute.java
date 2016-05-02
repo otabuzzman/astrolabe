@@ -23,7 +23,7 @@ public class ParserSubstitute extends ReflectSemantic {
 	private Lexer lexer ;
 	private Parser parser ;
 
-	private static String [][] rules = {
+	private static String[][] rules = {
 		{ "SUBSTITUTE", "DEFINITION" }, // single top level rule to avoid warning
 		{ "DEFINITION", "CONDITION" },
 		{ "DEFINITION", "CONDITION", "'?'", "DEFINITION", "':'", "DEFINITION" },

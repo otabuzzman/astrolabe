@@ -26,4 +26,7 @@
 	<complexTypeBinding name="/AtlasPageType/@fcp">
 		<member java-type="int"/>
 	</complexTypeBinding>
+	<elementBinding name="/SpanMeridian/@limit">
+		<member java-type="int"/>
+	</elementBinding>
 </binding>

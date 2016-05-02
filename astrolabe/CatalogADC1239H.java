@@ -231,12 +231,11 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
-		InputStreamReader r ;
 		URI cURI ;
 		URL cURL ;
 		File cFile ;
-		InputStream cIS ;
-		GZIPInputStream cF ;
+		InputStream cCon ;
+		GZIPInputStream cGZ ;
 
 		cURI = new URI( getUrl() ) ;
 		if ( cURI.isAbsolute() ) {
@@ -247,19 +246,19 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 		cURL = cFile.toURL() ;
 
 		try {
-			cIS = cURL.openStream() ;
-		} catch ( IOException e ) {
-			throw new RuntimeException ( e.toString() ) ;
-		}
+			cCon = cURL.openStream() ;
 
-		try {
-			cF = new GZIPInputStream( cIS ) ;
-			r = new InputStreamReader( cF ) ;
-		} catch ( IOException e ) {
-			r = new InputStreamReader( cIS ) ;
-		}
+			cGZ = new GZIPInputStream( cCon ) ;
+			return new InputStreamReader( cGZ ) ;
+		} catch ( IOException egz ) {
+			try {
+				cCon = cURL.openStream() ;
 
-		return r ;
+				return new InputStreamReader( cCon ) ;
+			} catch ( IOException eis ) {
+				throw new RuntimeException ( egz.toString() ) ;
+			}
+		}
 	}
 
 	public CatalogADC1239HRecord record( java.io.Reader catalog ) {

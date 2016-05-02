@@ -7,7 +7,7 @@ public final class ApplicationConstant {
 	}
 
 	// general constants (GC_), patterns (GP_)
-	public final static String GC_APPLICATION	= "astrolabe" ;			// application name
+	public final static String GC_APPLICATION	= "astrolabe" ;		// application name
 	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;		// native library
 	public final static String GC_NS_CAT		= "cat:" ;				// name space, application generated
 	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
@@ -562,7 +562,7 @@ public final class ApplicationConstant {
 	public final static String PK_BODY_INTERVAL	= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH	= "stretch" ;
 
-	public final static String PK_OUTLINE_INTERVAL			= PK_GENERAL_INTERVAL ;
+	public final static String PK_SHAPE_INTERVAL			= PK_GENERAL_INTERVAL ;
 
 	public final static String PK_DMS_PRECISION				= PK_GENERAL_PRECISION ;
 

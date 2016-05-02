@@ -28,7 +28,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	private double extentRA ;
 	private double extentde ;
 
-	private String marshalURI ;
+	private String pickerURI ;
 
 	private double sizex ;
 	private double sizey ;
@@ -39,6 +39,10 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 	private double spanRA = Double.NEGATIVE_INFINITY ;
 	private double spande = Double.NEGATIVE_INFINITY ;
+
+	private int spanlim = -1 ;
+	private double spanme = Double.NEGATIVE_INFINITY ;
+	private double spanpa = Double.NEGATIVE_INFINITY ;
 
 	// castor requirement for (un)marshalling
 	public AtlasAzimuthalType() {
@@ -52,7 +56,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		extentRA = AstrolabeFactory.valueOf( atlas.getExtent() )[1] ;
 		extentde = AstrolabeFactory.valueOf( atlas.getExtent() )[2] ;
 
-		marshalURI = atlas.getMarshal() ;
+		pickerURI = atlas.getPicker() ;
 
 		sizex = size[0] ;
 		sizey = size[1] ;
@@ -67,6 +71,16 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 			spanRA = AstrolabeFactory.valueOf( angle ) ;
 		} else
 			spande = AstrolabeFactory.valueOf( angle ) ;
+
+		angle = atlas.getSpanMeridian() ;
+		if ( angle != null ) {
+			if ( atlas.getSpanMeridian().hasLimit() )
+				spanlim = atlas.getSpanMeridian().getLimit() ;
+			spanme = AstrolabeFactory.valueOf( angle ) ;
+		}
+		angle = atlas.getSpanParallel() ;
+		if ( angle != null )
+			spanpa = AstrolabeFactory.valueOf( angle ) ;
 	}
 
 	public void addAllAtlasPage() throws ValidationException {
@@ -76,7 +90,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		Vector va, vb, vcen, vtop, vbot ;
 		double ra, de, a, b, sina, r, cen, de0, sde, ra0, sra ;
 		double rado, rade, rad, ho, he, h, s, c, p, g ;
-		double[] xy, eq ;
+		double[] xy, eq, eqp0, eqp1, eqp2, eqt ;
 		double r90[] = new double[] {
 				0, -1, 0,
 				1, 0, 0,
@@ -177,26 +191,26 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					atlasPage.setP3x( p3.x ) ;
 					atlasPage.setP3y( p3.y ) ;
 
-					eq = projector.unproject( p0.x, p0.y ) ;
+					eqp0 = projector.unproject( p0.x, p0.y ) ;
 					atlasPage.setP0( new astrolabe.model.P0() ) ;
 					atlasPage.getP0().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP0().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP0().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP0().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP0().getPhi(), false, false, eqp0[0] ) ;
+					modelOf( atlasPage.getP0().getTheta(), false, false, eqp0[1] ) ;
 
-					eq = projector.unproject( p1.x, p1.y ) ;
+					eqp1 = projector.unproject( p1.x, p1.y ) ;
 					atlasPage.setP1( new astrolabe.model.P1() ) ;
 					atlasPage.getP1().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP1().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP1().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP1().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP1().getPhi(), false, false, eqp1[0] ) ;
+					modelOf( atlasPage.getP1().getTheta(), false, false, eqp1[1] ) ;
 
-					eq = projector.unproject( p2.x, p2.y ) ;
+					eqp2 = projector.unproject( p2.x, p2.y ) ;
 					atlasPage.setP2( new astrolabe.model.P2() ) ;
 					atlasPage.getP2().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP2().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP2().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP2().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP2().getPhi(), false, false, eqp2[0] ) ;
+					modelOf( atlasPage.getP2().getTheta(), false, false, eqp2[1] ) ;
 
 					eq = projector.unproject( p3.x, p3.y ) ;
 					atlasPage.setP3( new astrolabe.model.P3() ) ;
@@ -205,7 +219,6 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					modelOf( atlasPage.getP3().getPhi(), false, false, eq[0] ) ;
 					modelOf( atlasPage.getP3().getTheta(), false, false, eq[1] ) ;
 
-					// atlas page equatorial center (origin)
 					atlasPage.setCenterx( vcen.x ) ;
 					atlasPage.setCentery( vcen.y ) ;
 					eq = projector.unproject( vcen.x, vcen.y ) ;
@@ -216,15 +229,14 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					modelOf( atlasPage.getCenter().getPhi(), true, true, eq[0] ) ;
 					modelOf( atlasPage.getCenter().getTheta(), true, false, eq[1] ) ;
 
-					// declination in middle center of atlas page top
 					atlasPage.setTopx( vtop.x ) ;
 					atlasPage.setTopy( vtop.y ) ;
-					eq = projector.unproject( vtop.x, vtop.y ) ;
+					eqt = projector.unproject( vtop.x, vtop.y ) ;
 					atlasPage.setTop( new astrolabe.model.Top() ) ;
 					atlasPage.getTop().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getTop().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getTop().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getTop().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getTop().getPhi(), false, false, eqt[0] ) ;
+					modelOf( atlasPage.getTop().getTheta(), false, false, eqt[1] ) ;
 
 					atlasPage.setBottomx( vbot.x ) ;
 					atlasPage.setBottomy( vbot.y ) ;
@@ -234,6 +246,17 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					atlasPage.getBottom().setTheta( new astrolabe.model.Theta() ) ;
 					modelOf( atlasPage.getBottom().getPhi(), false, false, eq[0] ) ;
 					modelOf( atlasPage.getBottom().getTheta(), false, false, eq[1] ) ;
+
+					if ( spanme>Double.NEGATIVE_INFINITY ) {
+						if ( atlasPage.getPicker() == null )
+							atlasPage.setPicker( new astrolabe.model.Picker() ) ;
+						addAllSpanMeridian( atlasPage, eqp1, eqp2 );
+					}
+					if ( spanpa>Double.NEGATIVE_INFINITY ) {
+						if ( atlasPage.getPicker() == null )
+							atlasPage.setPicker( new astrolabe.model.Picker() ) ;
+						addAllSpanParallel( atlasPage, eqp0, eqt );
+					}
 
 					atlasPage.validate() ;
 
@@ -334,26 +357,26 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					atlasPage.setP3x( p3.x ) ;
 					atlasPage.setP3y( p3.y ) ;
 
-					eq = projector.unproject( p0.x, p0.y ) ;
+					eqp0 = projector.unproject( p0.x, p0.y ) ;
 					atlasPage.setP0( new astrolabe.model.P0() ) ;
 					atlasPage.getP0().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP0().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP0().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP0().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP0().getPhi(), false, false, eqp0[0] ) ;
+					modelOf( atlasPage.getP0().getTheta(), false, false, eqp0[1] ) ;
 
-					eq = projector.unproject( p1.x, p1.y ) ;
+					eqp1 = projector.unproject( p1.x, p1.y ) ;
 					atlasPage.setP1( new astrolabe.model.P1() ) ;
 					atlasPage.getP1().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP1().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP1().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP1().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP1().getPhi(), false, false, eqp1[0] ) ;
+					modelOf( atlasPage.getP1().getTheta(), false, false, eqp1[1] ) ;
 
-					eq = projector.unproject( p2.x, p2.y ) ;
+					eqp2 = projector.unproject( p2.x, p2.y ) ;
 					atlasPage.setP2( new astrolabe.model.P2() ) ;
 					atlasPage.getP2().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getP2().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getP2().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getP2().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getP2().getPhi(), false, false, eqp2[0] ) ;
+					modelOf( atlasPage.getP2().getTheta(), false, false, eqp2[1] ) ;
 
 					eq = projector.unproject( p3.x, p3.y ) ;
 					atlasPage.setP3( new astrolabe.model.P3() ) ;
@@ -362,7 +385,6 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					modelOf( atlasPage.getP3().getPhi(), false, false, eq[0] ) ;
 					modelOf( atlasPage.getP3().getTheta(), false, false, eq[1] ) ;
 
-					// atlas page equatorial center (origin)
 					atlasPage.setCenterx( vcen.x ) ;
 					atlasPage.setCentery( vcen.y ) ;
 					eq = projector.unproject( vcen.x, vcen.y ) ;
@@ -373,15 +395,14 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					modelOf( atlasPage.getCenter().getPhi(), true, true, eq[0] ) ;
 					modelOf( atlasPage.getCenter().getTheta(), true, false, eq[1] ) ;
 
-					// declination in middle center of atlas page top
 					atlasPage.setTopx( vtop.x ) ;
 					atlasPage.setTopy( vtop.y ) ;
-					eq = projector.unproject( vtop.x, vtop.y ) ;
+					eqt = projector.unproject( vtop.x, vtop.y ) ;
 					atlasPage.setTop( new astrolabe.model.Top() ) ;
 					atlasPage.getTop().setPhi( new astrolabe.model.Phi() ) ;
 					atlasPage.getTop().setTheta( new astrolabe.model.Theta() ) ;
-					modelOf( atlasPage.getTop().getPhi(), false, false, eq[0] ) ;
-					modelOf( atlasPage.getTop().getTheta(), false, false, eq[1] ) ;
+					modelOf( atlasPage.getTop().getPhi(), false, false, eqt[0] ) ;
+					modelOf( atlasPage.getTop().getTheta(), false, false, eqt[1] ) ;
 
 					atlasPage.setBottomx( vbot.x ) ;
 					atlasPage.setBottomy( vbot.y ) ;
@@ -391,6 +412,17 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					atlasPage.getBottom().setTheta( new astrolabe.model.Theta() ) ;
 					modelOf( atlasPage.getBottom().getPhi(), false, false, eq[0] ) ;
 					modelOf( atlasPage.getBottom().getTheta(), false, false, eq[1] ) ;
+
+					if ( spanme>Double.NEGATIVE_INFINITY ) {
+						if ( atlasPage.getPicker() == null )
+							atlasPage.setPicker( new astrolabe.model.Picker() ) ;
+						addAllSpanMeridian( atlasPage, eqp1, eqp2) ;
+					}
+					if ( spanpa>Double.NEGATIVE_INFINITY ) {
+						if ( atlasPage.getPicker() == null )
+							atlasPage.setPicker( new astrolabe.model.Picker() ) ;
+						addAllSpanParallel( atlasPage, eqp0, eqt );
+					}
 
 					atlasPage.validate() ;
 
@@ -427,6 +459,42 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		}
 	}
 
+	private void addAllSpanMeridian( AtlasPage atlasPage, double[] eqp1, double[] eqp2 ) {
+		double sNth, sh ;
+		int sn, sl ;
+
+		sNth = ( java.lang.Math.floor( eqp1[0]/spanme )+1 )*spanme ;
+		sn = (int) ( ( eqp2[0]-sNth )/spanme )+1 ;
+
+		if ( sNth>eqp2[0] )
+			sn = (int) ( ( eqp2[0]-( sNth-360 )  )/spanme ) ;
+		if ( sn*spanme>180 )
+			sn = (int) ( 360/spanme ) ;
+		sl = 1 ;
+		if ( spanlim>0 && sn>spanlim )
+			sl = sn/spanlim ;
+
+		for ( int sc=0 ; sc*sl<sn ; sc++ ) {
+			atlasPage.getPicker().addSpanMeridian( sc, new astrolabe.model.SpanMeridian() ) ;
+			sh = CAACoordinateTransformation.MapTo0To24Range(
+					CAACoordinateTransformation.DegreesToHours( sNth+sc*sl*spanme ) ) ;
+			modelOf( atlasPage.getPicker().getSpanMeridian( sc ), true, true, sh==24?0:sh ) ;
+		}
+	}
+
+	private void addAllSpanParallel( AtlasPage atlasPage, double[] eqp0, double[] eqt ) {
+		double sNth;
+		int sn;
+
+		sNth = ( java.lang.Math.floor( eqp0[1]/spanpa )+1 )*spanpa ;
+		sn = (int) ( ( eqt[1]-eqp0[1] )/spanpa )+1 ;
+
+		for ( int sc=0 ; sc<sn ; sc++ ) {
+			atlasPage.getPicker().addSpanParallel( sc, new astrolabe.model.SpanParallel() ) ;
+			modelOf( atlasPage.getPicker().getSpanParallel( sc ), true, false, sNth+sc*spanpa ) ;
+		}
+	}
+
 	public void headAUX() {
 	}
 
@@ -435,7 +503,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		File xmlf ;
 
 		try {
-			xmlu = new URI( marshalURI ) ;
+			xmlu = new URI( pickerURI ) ;
 			if ( xmlu.isAbsolute() ) {
 				xmlf = new File( xmlu ) ;	
 			} else {

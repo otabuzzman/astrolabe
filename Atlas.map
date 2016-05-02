@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping xmlns="http://castor.exolab.org/" xmlns:cst="http://castor.exolab.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="mapping">
 	<description>Castor generated mapping file</description>
+	<class name="astrolabe.model.Picker">
+		<description xmlns="">Default mapping for class astrolabe.model.Picker</description>
+		<map-to xml="Picker" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+		<field name="spanParallel" type="astrolabe.model.SpanParallel">
+			<bind-xml name="SpanParallel" node="element"/>
+		</field>
+		<field name="spanMeridian" type="astrolabe.model.SpanMeridian">
+			<bind-xml name="SpanMeridian" node="element"/>
+		</field>
+	</class>
+	<class name="astrolabe.model.SpanParallel">
+		<description xmlns="">Default mapping for class astrolabe.model.SpanParallel</description>
+		<map-to xml="SpanParallel" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+		<field name="DMS" type="astrolabe.model.DMS">
+			<bind-xml name="DMS" node="element"/>
+		</field>
+		<field name="HMS" type="astrolabe.model.HMS">
+			<bind-xml name="HMS" node="element"/>
+		</field>
+		<field name="rational" type="astrolabe.model.Rational">
+			<bind-xml name="Rational" node="element"/>
+		</field>
+	</class>
+	<class name="astrolabe.model.SpanMeridian">
+		<description xmlns="">Default mapping for class astrolabe.model.SpanMeridian</description>
+		<map-to xml="SpanMeridian" ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
+		<field name="DMS" type="astrolabe.model.DMS">
+			<bind-xml name="DMS" node="element"/>
+		</field>
+		<field name="HMS" type="astrolabe.model.HMS">
+			<bind-xml name="HMS" node="element"/>
+		</field>
+		<field name="rational" type="astrolabe.model.Rational">
+			<bind-xml name="Rational" node="element"/>
+		</field>
+	</class>
 	<class cst:name="astrolabe.DMS">
 		<description>Default mapping for class astrolabe.DMS</description>
 		<map-to cst:xml="DMS" cst:ns-uri="http://www.chartacaeli.eu/astrolabe/model"/>
@@ -262,6 +298,9 @@
 		</field>
 		<field cst:name="bottom" cst:type="astrolabe.model.Bottom" cst:required="true">
 			<bind-xml name="Bottom" node="element"/>
+		</field>
+		<field cst:name="picker" cst:type="astrolabe.model.Picker">
+			<bind-xml name="Picker" node="element"/>
 		</field>
 	</class>
 	<class cst:name="astrolabe.model.Top">

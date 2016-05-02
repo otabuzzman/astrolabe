@@ -13,9 +13,8 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	private Geometry fov ;
 
 	public ListCutter( List<double[]> list, Geometry fov ) {
-		for ( double[] xy : list ) {
+		for ( double[] xy : list )
 			add( xy ) ;
-		}
 
 		this.fov = new GeometryFactory().createGeometry( fov ) ;
 	}
@@ -49,7 +48,7 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
 			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
-			
+
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
 			ps.operator.gsave() ;
@@ -87,14 +86,7 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			segmentsExterior( segmentsByIndex ) ;
 		}
 		for ( int[] segmentByIndex : segmentsByIndex ) {
-			ia = segmentByIndex[0]-1 ;
-			io = segmentByIndex[1]+1 ;
-			if ( ia<0 )
-				ia++ ;
-			if ( io>size()-1 )
-				io-- ;
-
-			segmentByValue = subList( ia, io+1 ) ;
+			segmentByValue = subList( segmentByIndex[0], segmentByIndex[1]+1 ) ;
 
 			gRaw = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( segmentByValue ) ) ;
 			gCut = gRaw.intersection( fov ) ;
@@ -154,17 +146,17 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		List<List<double[]>> r = new java.util.Vector<List<double[]>>() ;
 		int ib, ie ;
 
-		for ( ib = nearest( 0, interior ) ; ib>-1&&ib<size()-1 ; ib = nearestFirst( ib+1, interior ) ) {
+		for ( ib = nearest( 0, interior ) ; ib>-1 ; ib = nearestFirst( ie, interior ) ) {
 			ie = nearestFirst( ib, ! interior ) ;
-			if ( ie<0 ) {
-				ie = size() ;
-			}
+			if ( 0>ie )
+				ie = size()-1 ;
+			if ( ib>0 )
+				ib = ib-1 ;
 
-			r.add( subList( ib, ie ) ) ;
+			r.add( subList( ib, ie+1 ) ) ;
 
-			if ( index != null ) {
-				index.add( new int[] { ib, ie-1 } ) ;
-			}
+			if ( index != null )
+				index.add( new int[] { ib, ie } ) ;
 		}
 
 		return r ;
@@ -179,33 +171,23 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 	}
 
 	public int nearestFirst( int index, boolean interior ) {
-		int r = -1 ;
 		int i ;
 
 		if ( check( index, interior ) ) {
 			i = nearest( index, ! interior ) ;
-			if ( i>-1 ) {
-				r = nearest( i, interior ) ;
-			}
-		} else {
-			r = nearest( index, interior ) ;
-		}
-
-		return r ;
+			if ( 0>i )
+				return -1 ;
+			return nearest( i, interior ) ;
+		} else
+			return nearest( index, interior ) ;
 	}
 
 	public int nearest( int index, boolean interior ) {
-		int r = -1 ;
+		for ( int i=index ; i<size() ; i++ )
+			if ( check( i, interior ) )
+				return i ;
 
-		for ( int i=index ; i<size() ; i++ ) {
-			if ( check( i, interior ) ) {
-				r = i ;
-
-				break ;
-			}
-		}
-
-		return r ;
+		return -1 ;
 	}
 
 	public boolean check( int index, boolean interior ) {

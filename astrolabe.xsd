@@ -113,17 +113,51 @@
 			<xs:element ref="Origin"/>
 			<xs:element name="Extent" type="SphericalType"/>
 			<xs:choice>
-				<xs:element name="SpanRA" type="AngleType"/>
-				<xs:element name="SpanDeclination" type="AngleType"/>
+				<xs:element name="SpanRA">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="AngleType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SpanDeclination">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="AngleType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
 			</xs:choice>
+			<xs:element ref="SpanParallel" minOccurs="0"/>
+			<xs:element ref="SpanMeridian" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="marshal" type="xs:anyURI" use="required"/>
+		<xs:attribute name="picker" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:anyURI"/>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="Atlas" type="AtlasType"/>
 	<xs:element name="Origin" type="SphericalType"/>
+	<xs:element name="SpanParallel">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AngleType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SpanMeridian">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AngleType">
+					<xs:attribute name="limit" type="xs:positiveInteger" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:complexType name="AtlasAzimuthalType">
 		<xs:sequence>
-			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="AtlasPage" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
@@ -164,6 +198,14 @@
 			<xs:element ref="Center"/>
 			<xs:element name="Top" type="SphericalType"/>
 			<xs:element name="Bottom" type="SphericalType"/>
+			<xs:element name="Picker" minOccurs="0">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element ref="SpanParallel" maxOccurs="unbounded"/>
+						<xs:element ref="SpanMeridian" maxOccurs="unbounded"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="scale" type="xs:double" use="required"/>

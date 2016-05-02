@@ -321,22 +321,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	public List<double[]> list( List<Double> lista, double begin, double end, double shift ) {
 		List<double[]> listxy ;
 		double interval ;
-		double b, e ;
 
 		interval = Configuration.getValue(
 				Configuration.getClassNode( this, getName(), null ),
 				ApplicationConstant.PK_CIRCLE_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		b = begin+interval ;
-		e = begin>end?360+end:end ;
-
 		listxy = new java.util.Vector<double[]>() ;
 
-		listxy.add( project( begin, shift ) ) ;
-		if ( lista != null )
-			lista.add( begin ) ;
-
-		for ( double az=b ; az<e ; az=az+interval ) {
+		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval ) {
 			listxy.add( project( CAACoordinateTransformation.MapTo0To360Range( az ), shift ) ) ;
 			if ( lista != null )
 				lista.add( az ) ;

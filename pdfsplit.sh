@@ -7,7 +7,7 @@ export page1st=$1 ; shift
 export pageNth=$1 ; shift
 export pageoff=$1 ; shift
 export pagefmt=$1 ; shift
-export pdf=$1 ; shift
+export pdf=$1
 
 n=`expr $page1st + $pageoff`
 
