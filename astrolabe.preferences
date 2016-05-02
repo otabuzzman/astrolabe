@@ -8,15 +8,6 @@
 			<map/>
 			<node name="model">
 				<map/>
-				<node name="HorizonEquatorial">
-					<map/>
-					<node name="default">
-						<map>
-							<!--keys must equal to method names in model class.-->
-							<entry key="setPracticality,java.lang.String" value="always"/>
-						</map>
-					</node>
-				</node>
 				<node name="CircleParallel">
 					<map/>
 					<node name="default">
@@ -62,16 +53,6 @@
 				<node name="astrolabe">
 					<map>
 						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=astrolabe.pdf -q -"/>
-					</map>
-				</node>
-				<node name="atlas-stereographic">
-					<map>
-						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=atlas-stereographic.pdf -q -"/>
-					</map>
-				</node>
-				<node name="atlas-catalogADC7237">
-					<map>
-						<entry key="viewer" value="gswin32c.exe -sDEVICE=pdfwrite -sOutputFile=atlas-catalogADC7237.pdf -q -"/>
 					</map>
 				</node>
 			</node>
@@ -219,7 +200,7 @@
 					<entry key="always" value="0"/>
 				</map>
 			</node>
-			<node name="GSPaintStyle">
+			<node name="GSPaintStroke">
 				<map>
 					<!--value="<linewidth>:<linedash>[:<linedash>]" or value="<linewidth>"-->
 					<!--keys must equal to allowed values for importance and nature attributes in XSD.-->
@@ -254,34 +235,23 @@
 					<entry key="a3" value="297x420"/>
 					<entry key="a4" value="210x297"/>
 					<entry key="a5" value="148x210"/>
+					<entry key="layout" value="100x100"/>
 				</map>
-				<node name="layout">
+				<node name="quart">
 					<map>
-						<entry key="default" value="100x100"/>
-						<entry key="atlaspage" value="9:82:9x4.5:4.5:82:2.6:2.6:2.6:1.2"/>
+						<entry key="layout" value="50:50x50:50"/>
+					</map>
+				</node>
+				<node name="atlas">
+					<map>
+						<entry key="layout" value="9:82:9x4.5:4.5:82:2.6:2.6:2.6:1.2"/>
 					</map>
 				</node>
 			</node>
-			<node name="AtlasStereographic">
+			<node name="AtlasAzimuthalType">
 				<map>
-					<entry key="urlModelMap" value="AtlasStereographic.map"/>
-					<!--degrees-->
-					<entry key="limitDe" value="0"/>
-					<!--6h,3h,2h,1h,30',20',10',5',2',1',30",20",10",5",2",1" in seconds, descending order (must), remainder of 24h divided by value equals 0 (must)-->
-					<entry key="intervalUnitsH" value="21600:10800:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1"/>
-					<!--90°,60°,30°,20°,10°,5°,2°,1°,30',20',10',5',2',1',30",20",10",5",2",1" in seconds, descending order (must), remainder of 360° divided by value equals 0 (must)-->
-					<entry key="intervalUnitsD" value="324000:216000:108000:72000:36000:18000:7200:3600:1800:1200:600:300:120:60:30:20:10:5:2:1"/>
+					<entry key="map" value="Atlas.map"/>
 				</map>
-				<node name="northern">
-					<map>
-						<entry key="limitDe" value="89."/>
-					</map>
-				</node>
-				<node name="southern">
-					<map>
-						<entry key="limitDe" value="-89."/>
-					</map>
-				</node>
 			</node>
 			<node name="CircleParallel">
 				<map>

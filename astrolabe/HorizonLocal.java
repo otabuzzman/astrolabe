@@ -7,7 +7,7 @@ import caa.CAADate;
 import caa.CAANutation;
 
 @SuppressWarnings("serial")
-public class HorizonLocal extends HorizonType implements PostscriptEmitter, Projector {
+public class HorizonLocal extends astrolabe.model.HorizonLocal implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
 
@@ -16,7 +16,7 @@ public class HorizonLocal extends HorizonType implements PostscriptEmitter, Proj
 	private double lo ;
 
 	public HorizonLocal( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+		peer.setupCompanion( this ) ;
 
 		String key ;
 		MessageCatalog m ;
@@ -70,6 +70,15 @@ public class HorizonLocal extends HorizonType implements PostscriptEmitter, Proj
 		}
 	}
 
+	public void headPS( AstrolabePostscriptStream ps ) {
+		GSPaintColor practicality ;
+
+		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality.headPS( ps ) ;
+		practicality.emitPS( ps ) ;
+		practicality.tailPS( ps ) ;
+	}
+
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			PostscriptEmitter annotation ;
@@ -112,30 +121,29 @@ public class HorizonLocal extends HorizonType implements PostscriptEmitter, Proj
 
 			ps.operator.grestore() ;
 		}
+	}
 
-		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
-			Catalog catalog ;
+	public void tailPS( AstrolabePostscriptStream ps ) {
+	}
 
-			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
-
-			catalog.addAllCatalogRecord() ;
-
-			ps.operator.gsave() ;
-
-			catalog.headPS( ps ) ;
-			catalog.emitPS( ps ) ;
-			catalog.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
+	public double[] project( double[] ho ) {
+		return project( ho[0], ho[1] ) ;
 	}
 
 	public double[] project( double A, double h ) {
 		return projector.project( convert( A, h ) ) ;
 	}
 
+	public double[] unproject( double[] xy ) {
+		return unproject( xy[0], xy[1] ) ;
+	}
+
 	public double[] unproject( double x, double y ) {
 		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] ho ) {
+		return convert( ho[0], ho[1] ) ;
 	}
 
 	public double[] convert( double A, double h ) {
@@ -150,6 +158,10 @@ public class HorizonLocal extends HorizonType implements PostscriptEmitter, Proj
 		r[0] = ST-r[0] ;
 
 		return r ;
+	}
+
+	public double[] unconvert( double[] eq ) {
+		return unconvert( eq[0], eq[1] ) ;
 	}
 
 	public double[] unconvert( double RA, double d ) {

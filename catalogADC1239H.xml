@@ -8,18 +8,22 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" real="100" layout="default"/>
-			<Origin>
+			<ChartPage size="a0" view="100"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="90"/>
 				</theta>
-			</Origin>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="ADC1239"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
@@ -43,6 +47,10 @@ astrolabe.xsd">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="ADC1239"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--ADC1239-->
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->

@@ -10,9 +10,15 @@ import caa.CAACoordinateTransformation;
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
 
 	private final static double DEFAULT_UNIT = 2.834646 ;
+
 	private final static double DEFAULT_HALO = 4 ;
 	private final static double DEFAULT_HALOMIN = .08 ;
 	private final static double DEFAULT_HALOMAX = .4 ;
+
+	private double sizex ;
+	private double sizey ;
+	protected double viewx ;
+	protected double viewy ;
 
 	private double unit ;
 	private double scale ;
@@ -23,24 +29,23 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private double halomin ;
 	private double halomax ;
 
-	private ChartPage page ;
-
 	public ChartAzimuthalType( Peer peer ) {
+		ChartPage page ;
 		double[] origin ;
 		Preferences node ;
 
 		peer.setupCompanion( this ) ;
 
 		page = new ChartPage( getChartPage() ) ;
-
-		origin = AstrolabeFactory.valueOf( getOrigin() ) ;
-		this.origin[0] = origin[1] ;
-		this.origin[1] = origin[2] ;
+		sizex = page.sizex() ;
+		sizey = page.sizey() ;
+		viewx = page.viewx() ;
+		viewy = page.viewy() ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
 		unit = Configuration.getValue( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
-		scale = java.lang.Math.min( page.sizex(), page.sizey() )/2/Math.goldensection*page.getReal()/100*getScale()/100 ;
+		scale = java.lang.Math.min( sizex, sizey )/2/Math.goldensection*getChartPage().getView()/100*getScale()/100 ;
 
 		halo = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
 		halomin = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
@@ -49,9 +54,9 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		Registry.register( ApplicationConstant.PK_CHART_HALOMIN, new Double( halomin ) ) ;
 		Registry.register( ApplicationConstant.PK_CHART_HALOMAX, new Double( halomax ) ) ;
 
-		if ( getAtlasPage() != null ) {
-			( (AtlasPage) getAtlasPage() ).register() ;
-		}
+		origin = AstrolabeFactory.valueOf( getCenter() ) ;
+		this.origin[0] = origin[1] ;
+		this.origin[1] = origin[2] ;
 	}
 
 	public double[] project( double RA, double d ) {
@@ -129,8 +134,8 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dict( true ) ;
 		ps.push( "/PageSize" ) ;
 		ps.array( true ) ;
-		ps.push( page.sizex()*unit ) ;
-		ps.push( page.sizey()*unit ) ;
+		ps.push( sizex*unit ) ;
+		ps.push( sizey*unit ) ;
 		ps.array( false ) ;
 		ps.dict( false ) ;
 		ps.operator.setpagedevice() ;
@@ -145,21 +150,20 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.operator.scale( unit ) ;
 
 		ps.dsc.endPageSetup() ;
-
 		ps.dsc.page( getName(), 1 ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		if ( page.sizex()>page.realx() ) {
+		if ( sizex>viewx ) {
 			ps.array( true ) ;
-			ps.push( -page.realx()/2 ) ;
-			ps.push( -page.realy()/2 ) ;
-			ps.push( -page.realx()/2 ) ;
-			ps.push( page.realy()/2 ) ;
-			ps.push( page.realx()/2 ) ;
-			ps.push( page.realy()/2 ) ;
-			ps.push( page.realx()/2 ) ;
-			ps.push( -page.realy()/2 ) ;
+			ps.push( -viewx/2 ) ;
+			ps.push( -viewy/2 ) ;
+			ps.push( -viewx/2 ) ;
+			ps.push( viewy/2 ) ;
+			ps.push( viewx/2 ) ;
+			ps.push( viewy/2 ) ;
+			ps.push( viewx/2 ) ;
+			ps.push( -viewy/2 ) ;
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;

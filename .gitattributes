@@ -4,5 +4,6 @@
 *.png	binary
 *.ppt	binary
 *.pptm	binary
+*.pptx	binary
 *.xcf	binary
 *.xls	binary

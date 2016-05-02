@@ -64,8 +64,8 @@ public final class ApplicationConstant {
 	public final static String LK_ATLASPAGE_P2DE	= "substitute.atlaspage.p2de" ;
 	public final static String LK_ATLASPAGE_P3RA	= "substitute.atlaspage.p3ra" ;
 	public final static String LK_ATLASPAGE_P3DE	= "substitute.atlaspage.p3de" ;
-	public final static String LK_ATLASPAGE_ORA		= "substitute.atlaspage.ora" ;
-	public final static String LK_ATLASPAGE_ODE		= "substitute.atlaspage.ode" ;
+	public final static String LK_ATLASPAGE_CRA		= "substitute.atlaspage.cra" ;
+	public final static String LK_ATLASPAGE_CDE		= "substitute.atlaspage.cde" ;
 	public final static String LK_ATLASPAGE_TRA		= "substitute.atlaspage.tra" ;
 	public final static String LK_ATLASPAGE_TDE		= "substitute.atlaspage.tde" ;
 	public final static String LK_ATLASPAGE_BRA		= "substitute.atlaspage.bra" ;
@@ -534,12 +534,9 @@ public final class ApplicationConstant {
 	public final static String PK_CHART_HALOMIN			= "halomin" ;
 	public final static String PK_CHART_HALOMAX			= "halomax" ;
 
-	public final static String PN_CHARTPAGE_LAYOUT		= "layout" ;
+	public final static String PK_CHARTPAGE_LAYOUT		= "layout" ;
 
-	public final static String PK_ATLAS_URLMODELMAP		= "urlModelMap" ;
-	public final static String PK_ATLAS_LIMITDE			= "limitDe" ;
-	public final static String PK_ATLAS_INTERVALUNITSH	= "intervalUnitsH" ;
-	public final static String PK_ATLAS_INTERVALUNITSD	= "intervalUnitsD" ;
+	public final static String PK_ATLAS_MAP			= "map" ;
 
 	public final static String PK_CIRCLE_INTERVAL	= PK_GENERAL_INTERVAL ;
 

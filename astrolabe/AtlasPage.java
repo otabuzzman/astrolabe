@@ -26,7 +26,7 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		ps.push( getP3x() ) ;
 		ps.push( getP3y() ) ;
 		ps.array( false ) ;
-		
+
 		ps.operator.newpath() ;
 		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 
@@ -70,10 +70,10 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getPhi() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_P3DE ) ;
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP3().getTheta() ) ) ;
-		key = m.message( ApplicationConstant.LK_ATLASPAGE_ORA ) ;
-		AstrolabeRegistry.registerHMS( key, AstrolabeFactory.valueOf( getOrigin().getPhi() ) ) ;
-		key = m.message( ApplicationConstant.LK_ATLASPAGE_ODE ) ;
-		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getOrigin().getTheta() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_CRA ) ;
+		AstrolabeRegistry.registerHMS( key, AstrolabeFactory.valueOf( getCenter().getPhi() ) ) ;
+		key = m.message( ApplicationConstant.LK_ATLASPAGE_CDE ) ;
+		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getCenter().getTheta() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_TDE ) ;

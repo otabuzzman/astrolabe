@@ -5,7 +5,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class HorizonGalactic extends HorizonType implements PostscriptEmitter, Projector {
+public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
 
@@ -13,7 +13,7 @@ public class HorizonGalactic extends HorizonType implements PostscriptEmitter, P
 	private double ST ;
 
 	public HorizonGalactic( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+		peer.setupCompanion( this ) ;
 
 		CAA2DCoordinate c ;
 		double[] eq = new double[2] ;
@@ -34,6 +34,15 @@ public class HorizonGalactic extends HorizonType implements PostscriptEmitter, P
 		AstrolabeRegistry.registerDMS( key, la ) ;		
 		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
 		AstrolabeRegistry.registerHMS( key, ST ) ;
+	}
+
+	public void headPS( AstrolabePostscriptStream ps ) {
+		GSPaintColor practicality ;
+
+		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality.headPS( ps ) ;
+		practicality.emitPS( ps ) ;
+		practicality.tailPS( ps ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
@@ -78,30 +87,29 @@ public class HorizonGalactic extends HorizonType implements PostscriptEmitter, P
 
 			ps.operator.grestore() ;
 		}
+	}
 
-		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
-			Catalog catalog ;
+	public void tailPS( AstrolabePostscriptStream ps ) {
+	}
 
-			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
-
-			catalog.addAllCatalogRecord() ;
-
-			ps.operator.gsave() ;
-
-			catalog.headPS( ps ) ;
-			catalog.emitPS( ps ) ;
-			catalog.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
+	public double[] project( double[] ho ) {
+		return project( ho[0], ho[1] ) ;
 	}
 
 	public double[] project( double l, double b ) {
 		return projector.project( convert( l, b ) ) ;
 	}
 
+	public double[] unproject( double[] xy ) {
+		return unproject( xy[0], xy[1] ) ;
+	}
+
 	public double[] unproject( double x, double y ) {
 		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] ho ) {
+		return convert( ho[0], ho[1] ) ;
 	}
 
 	public double[] convert( double l, double b ) {
@@ -113,6 +121,10 @@ public class HorizonGalactic extends HorizonType implements PostscriptEmitter, P
 		r[1] = c.Y() ;
 
 		return r ;
+	}
+
+	public double[] unconvert( double[] eq ) {
+		return unconvert( eq[0], eq[1] ) ;
 	}
 
 	public double[] unconvert( double RA, double d ) {

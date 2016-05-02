@@ -117,9 +117,9 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		GSPaintStyle nature ;
+		GSPaintStroke nature ;
 
-		nature = new GSPaintStyle( getNature() ) ;
+		nature = new GSPaintStroke( getNature(), getName() ) ;
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;

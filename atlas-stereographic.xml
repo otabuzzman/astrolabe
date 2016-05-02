@@ -6,334 +6,66 @@ astrolabe.xsd" name="atlas-stereographic">
 			<YMD y="2000" m="1" d="1"/>
 		</Calendar>
 	</Epoch>
-	<Atlas>
-		<AtlasStereographic name="northern" marshal="AtlasStereographic-northern.xml">
-			<Origin>
-				<phi>
-					<Rational value="0"/>
-				</phi>
-				<theta>
-					<Rational value="94"/>
-				</theta>
-			</Origin>
-			<Extent>
-				<phi>
-					<Rational value="360"/>
-				</phi>
-				<theta>
-					<Rational value="119.2"/>
-				</theta>
-			</Extent>
-			<SpanParallel>
-				<Rational value="33"/>
-			</SpanParallel>
-			<CheckerParallel value="5">
-				<Annotation>
-					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-						<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
-					</AnnotationStraight>
-				</Annotation>
-			</CheckerParallel>
-			<CheckerMeridian value="5">
-				<Annotation>
-					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-						<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-							<Superscript value="h"/>
-						</Script>
-						<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-							<Superscript value="m"/>
-						</Script>
-					</AnnotationStraight>
-				</Annotation>
-			</CheckerMeridian>
-			<ChartStereographic scale="100" northern="true">
-				<ChartPage size="a4" real="82" layout="atlaspage"/>
-				<Origin>
-					<phi>
-						<Rational value="0"/>
-					</phi>
-					<theta>
-						<Rational value="90.0"/>
-					</theta>
-				</Origin>
-				<Horizon>
-					<HorizonEquatorial practicality="always">
-						<!--$pagetitle-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<!--"CHARTA CAELI"-->
-							<Script purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
-							<Frame number="2" anchor="bottommiddle"/>
-						</AnnotationStraight>
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<Script purpose="textlettering" value="Atlas zum Sternkatalog The Bright Star Catalogue (Nordhimmel)"/>
-							<Frame number="5" anchor="middle"/>
-						</AnnotationStraight>
-						<!--$legendmagnitude-->
-						<AnnotationStraight anchor="middleleft" reverse="false" radiant="false">
-							<Script purpose="circlelettering" value="Helligkeit (Vmag):"/>
-							<Script purpose="circlelettering" value=" -1(&#x2264;)"/>
-							<Script purpose="4.98" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 0"/>
-							<Script purpose="4.02" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 1"/>
-							<Script purpose="3.24" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 2"/>
-							<Script purpose="2.61" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 3"/>
-							<Script purpose="2.11" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 4"/>
-							<Script purpose="1.70" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 5"/>
-							<Script purpose="1.37" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 6(&#x2265;)"/>
-							<Script purpose="1.10" value="&#xf811;"/>
-							<Frame number="14" anchor="middleleft"/>
-						</AnnotationStraight>
-						<!--$legendtopcon-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="topmiddle">
-							<Script purpose="{anschlussoben>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussoben}"/>
-							<Frame number="2" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$legendbotcon-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<Script purpose="{anschlussunten>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussunten}"/>
-							<Frame number="20" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$origin-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{seite%2>0?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}">
-							<Script purpose="textlettering" value="{mitterastd}">
-								<Superscript value="h"/>
-							</Script>
-							<Script purpose="textlettering" value="{mitterastdmin}">
-								<Superscript value="m"/>
-							</Script>
-							<Script purpose="textlettering" value=" (&#x03b1;)"/>
-							<Frame number="{seite%2>0?6:4}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<AnnotationStraight reverse="false" radiant="false" anchor="{seite%2>0?&#x0022;topright&#x0022;:&#x0022;topleft&#x0022;}">
-							<Script purpose="textlettering" value="{mittedebeide}{mittedegrd}"/>
-							<Script purpose="textlettering" value="&#x00b0;"/>
-							<Script purpose="textlettering" value="{mittedegrdmin}"/>
-							<Script purpose="textlettering" value="'"/>
-							<Script purpose="textlettering" value=" (&#x03b4;)"/>
-							<Frame number="{seite%2>0?6:4}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$atlasequinox-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{seite%2>0?&#x0022;middleleft&#x0022;:&#x0022;middleright&#x0022;}">
-							<Script purpose="textlettering" value="J2000.0"/>
-							<Frame number="{seite%2>0?4:6}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--AtlasPage.num-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="middle">
-							<Script purpose="titlelettering" value="{seite}"/>
-							<Frame number="{seite%2>0?15:13}" anchor="middle"/>
-						</AnnotationStraight>
-						<!--$catdatsource-->
-						<AnnotationStraight reverse="{seite%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomleft">
-							<Script purpose="guidance" value="Sternkatalogquelle: ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz"/>
-							<Frame number="{seite%2>0?7:9}" anchor="{seite%2>0?&#x0022;bottomright&#x0022;:&#x0022;topleft&#x0022;}"/>
-						</AnnotationStraight>
-						<!--$trademark-->
-						<AnnotationStraight reverse="{seite%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
-							<Script purpose="guidance" value="2010 CHARTA CAELI"/>
-							<Frame number="{seite%2>0?7:9}" anchor="{seite%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
-						</AnnotationStraight>
-						<!--$legendlcon-->
-						<AnnotationStraight reverse="{seite%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{seite%2>0?&#x0022;topmiddle&#x0022;:&#x0022;bottommiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussfolgend:anschlussvorig}"/>
-							<Frame number="7" anchor="middleleft"/>
-						</AnnotationStraight>
-						<!--$legendrcon-->
-						<AnnotationStraight reverse="{seite%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{seite%2>0?&#x0022;bottommiddle&#x0022;:&#x0022;topmiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussvorig:anschlussfolgend}"/>
-							<Frame number="9" anchor="middleright"/>
-						</AnnotationStraight>
-						<!--ADC5050-->
-						<Catalog>
-							<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
-							<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-							<CatalogADC5050 name="atlas-stereographic" url="lib/cat/5050/catalog.dat.gz">
-								<CatalogADC5050Record select="true">
-									<Script purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:1.10}" value="&#xf811;"/>
-								</CatalogADC5050Record>
-							</CatalogADC5050>
-						</Catalog>
-					</HorizonEquatorial>
-				</Horizon>
-			</ChartStereographic>
-		</AtlasStereographic>
-	</Atlas>
-	<Atlas>
-		<AtlasStereographic name="southern" marshal="AtlasStereographic-southern.xml">
-			<Origin>
-				<phi>
-					<Rational value="0"/>
-				</phi>
-				<theta>
-					<Rational value="-94"/>
-				</theta>
-			</Origin>
-			<Extent>
-				<phi>
-					<Rational value="360"/>
-				</phi>
-				<theta>
-					<Rational value="-119.2"/>
-				</theta>
-			</Extent>
-			<SpanParallel>
-				<Rational value="-33"/>
-			</SpanParallel>
-			<CheckerParallel value="5">
-				<Annotation>
-					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-						<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
-					</AnnotationStraight>
-				</Annotation>
-			</CheckerParallel>
-			<CheckerMeridian value="5">
-				<Annotation>
-					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-						<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-							<Superscript value="h"/>
-						</Script>
-						<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-							<Superscript value="m"/>
-						</Script>
-					</AnnotationStraight>
-				</Annotation>
-			</CheckerMeridian>
-			<ChartStereographic scale="100" northern="false">
-				<ChartPage size="a4" real="82" layout="atlaspage"/>
-				<Origin>
-					<phi>
-						<Rational value="0"/>
-					</phi>
-					<theta>
-						<Rational value="-90.0"/>
-					</theta>
-				</Origin>
-				<Horizon>
-					<HorizonEquatorial practicality="always">
-						<!--$pagetitle-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<!--"CHARTA CAELI"-->
-							<Script purpose="titlelettering" value="&#xf743;&#xf748;&#xf741;&#xf752;&#xf754;&#xf741; &#xf743;&#xf741;&#xf745;&#xf74c;&#xf749;"/>
-							<Frame number="2" anchor="bottommiddle"/>
-						</AnnotationStraight>
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<Script purpose="textlettering" value="Atlas zum Sternkatalog The Bright Star Catalogue (S&#x00fc;dhimmel)"/>
-							<Frame number="5" anchor="middle"/>
-						</AnnotationStraight>
-						<!--$legendmagnitude-->
-						<AnnotationStraight anchor="middleleft" reverse="false" radiant="false">
-							<Script purpose="circlelettering" value="Helligkeit (Vmag):"/>
-							<Script purpose="circlelettering" value=" -1(&#x2264;)"/>
-							<Script purpose="4.98" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 0"/>
-							<Script purpose="4.02" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 1"/>
-							<Script purpose="3.24" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 2"/>
-							<Script purpose="2.61" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 3"/>
-							<Script purpose="2.11" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 4"/>
-							<Script purpose="1.70" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 5"/>
-							<Script purpose="1.37" value="&#xf811;"/>
-							<Script purpose="circlelettering" value=" 6(&#x2265;)"/>
-							<Script purpose="1.10" value="&#xf811;"/>
-							<Frame number="14" anchor="middleleft"/>
-						</AnnotationStraight>
-						<!--$legendtopcon-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="topmiddle">
-							<Script purpose="{anschlussoben>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussoben+63}"/>
-							<Frame number="2" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$legendbotcon-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<Script purpose="{anschlussunten>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussunten+63}"/>
-							<Frame number="20" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$origin-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}">
-							<Script purpose="textlettering" value="{mitterastd}">
-								<Superscript value="h"/>
-							</Script>
-							<Script purpose="textlettering" value="{mitterastdmin}">
-								<Superscript value="m"/>
-							</Script>
-							<Script purpose="textlettering" value=" (&#x03b1;)"/>
-							<Frame number="{(seite+63)%2>0?6:4}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;topright&#x0022;:&#x0022;topleft&#x0022;}">
-							<Script purpose="textlettering" value="{mittedebeide}{mittedegrd}"/>
-							<Script purpose="textlettering" value="&#x00b0;"/>
-							<Script purpose="textlettering" value="{mittedegrdmin}"/>
-							<Script purpose="textlettering" value="'"/>
-							<Script purpose="textlettering" value=" (&#x03b4;)"/>
-							<Frame number="{(seite+63)%2>0?6:4}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--$atlasequinox-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;middleleft&#x0022;:&#x0022;middleright&#x0022;}">
-							<Script purpose="textlettering" value="J2000.0"/>
-							<Frame number="{(seite+63)%2>0?4:6}" anchor="topmiddle"/>
-						</AnnotationStraight>
-						<!--AtlasPage.num-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="middle">
-							<Script purpose="titlelettering" value="{seite+63}"/>
-							<Frame number="{(seite+63)%2>0?15:13}" anchor="middle"/>
-						</AnnotationStraight>
-						<!--$catdatsource-->
-						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomleft">
-							<Script purpose="guidance" value="Sternkatalogquelle: ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz"/>
-							<Frame number="{(seite+63)%2>0?7:9}" anchor="{(seite+63)%2>0?&#x0022;bottomright&#x0022;:&#x0022;topleft&#x0022;}"/>
-						</AnnotationStraight>
-						<!--$trademark-->
-						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
-							<Script purpose="guidance" value="2010 CHARTA CAELI"/>
-							<Frame number="{(seite+63)%2>0?7:9}" anchor="{(seite+63)%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
-						</AnnotationStraight>
-						<!--$legendlcon-->
-						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+63)%2>0?&#x0022;topmiddle&#x0022;:&#x0022;bottommiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussfolgend+63:anschlussvorig+63}"/>
-							<Frame number="7" anchor="middleleft"/>
-						</AnnotationStraight>
-						<!--$legendrcon-->
-						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+63)%2>0?&#x0022;bottommiddle&#x0022;:&#x0022;topmiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussvorig+63:anschlussfolgend+63}"/>
-							<Frame number="9" anchor="middleright"/>
-						</AnnotationStraight>
-						<!--ADC5050-->
-						<Catalog>
-							<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
-							<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-							<CatalogADC5050 name="atlas-stereographic" url="lib/cat/5050/catalog.dat.gz">
-								<CatalogADC5050Record select="true">
-									<Script purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:1.10}" value="&#xf811;"/>
-								</CatalogADC5050Record>
-							</CatalogADC5050>
-						</Catalog>
-					</HorizonEquatorial>
-				</Horizon>
-			</ChartStereographic>
-		</AtlasStereographic>
-	</Atlas>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a3" real="100" layout="default"/>
-			<Origin>
+			<ChartPage size="a3" view="82"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="90.0"/>
 				</theta>
-			</Origin>
+			</Center>
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="Nordhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+				</HorizonEquatorial>
+			</Horizon>
+			<Atlas marshal="atlas-stereographic-northern-picker.xml">
+				<Origin>
+					<phi>
+						<Rational value="0"/>
+					</phi>
+					<theta>
+						<Rational value="92"/>
+					</theta>
+				</Origin>
+				<Extent>
+					<phi>
+						<Rational value="360"/>
+					</phi>
+					<theta>
+						<Rational value="117.8"/>
+					</theta>
+				</Extent>
+				<SpanDeclination>
+					<Rational value="28"/>
+				</SpanDeclination>
+			</Atlas>
+		</ChartStereographic>
+	</Chart>
+	<Chart>
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a3" view="82"/>
+			<Center>
+				<phi>
+					<Rational value="0"/>
+				</phi>
+				<theta>
+					<Rational value="90.0"/>
+				</theta>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="Nordhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="northern" importance="canonical">
@@ -357,6 +89,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="Nordhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -600,7 +336,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -617,7 +353,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -634,7 +370,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -651,7 +387,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -668,7 +404,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -685,7 +421,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -702,7 +438,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -719,7 +455,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -736,7 +472,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -753,7 +489,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -770,7 +506,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -787,7 +523,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -804,7 +540,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -821,7 +557,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -838,7 +574,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -855,7 +591,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -872,7 +608,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -889,7 +625,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -906,7 +642,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -923,7 +659,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -940,7 +676,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -957,7 +693,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -974,7 +710,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -991,7 +727,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1003,7 +739,7 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 fov="northern" url="lib/cat/5050/catalog.dat.gz">
+						<CatalogADC5050 name="ADC5050" fov="northern" url="lib/cat/5050/catalog.dat.gz">
 							<CatalogADC5050Record select="{Vmag&#x003c;4}">
 								<Script purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:1.10}" value="&#xf811;"/>
 							</CatalogADC5050Record>
@@ -1015,18 +751,64 @@ astrolabe.xsd" name="atlas-stereographic">
 	</Chart>
 	<Chart>
 		<ChartStereographic scale="100" northern="false">
-			<ChartPage size="a3" real="100" layout="default"/>
-			<Origin>
+			<ChartPage size="a3" view="82"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="-90.0"/>
 				</theta>
-			</Origin>
+			</Center>
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="S&#x00fc;dhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+				</HorizonEquatorial>
+			</Horizon>
+			<Atlas marshal="atlas-stereographic-southern-picker.xml">
+				<Origin>
+					<phi>
+						<Rational value="0"/>
+					</phi>
+					<theta>
+						<Rational value="-92"/>
+					</theta>
+				</Origin>
+				<Extent>
+					<phi>
+						<Rational value="360"/>
+					</phi>
+					<theta>
+						<Rational value="-117.8"/>
+					</theta>
+				</Extent>
+				<SpanDeclination>
+					<Rational value="-28"/>
+				</SpanDeclination>
+			</Atlas>
+		</ChartStereographic>
+	</Chart>
+	<Chart>
+		<ChartStereographic scale="100" northern="false">
+			<ChartPage size="a3" view="82"/>
+			<Center>
+				<phi>
+					<Rational value="0"/>
+				</phi>
+				<theta>
+					<Rational value="-90.0"/>
+				</theta>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="S&#x00fc;dhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp24.5" fov="southern" importance="canonical">
@@ -1050,6 +832,10 @@ astrolabe.xsd" name="atlas-stereographic">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="S&#x00fc;dhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -1293,7 +1079,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1310,7 +1096,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1327,7 +1113,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1344,7 +1130,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1361,7 +1147,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1378,7 +1164,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1395,7 +1181,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1412,7 +1198,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1429,7 +1215,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1446,7 +1232,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1463,7 +1249,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1480,7 +1266,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1497,7 +1283,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1514,7 +1300,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1531,7 +1317,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1548,7 +1334,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1565,7 +1351,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1582,7 +1368,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1599,7 +1385,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1616,7 +1402,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1633,7 +1419,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1650,7 +1436,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1667,7 +1453,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1684,7 +1470,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1696,7 +1482,7 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 fov="southern" url="lib/cat/5050/catalog.dat.gz">
+						<CatalogADC5050 name="ADC5050" fov="southern" url="lib/cat/5050/catalog.dat.gz">
 							<CatalogADC5050Record select="{Vmag&#x003c;4}">
 								<Script purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:1.10}" value="&#xf811;"/>
 							</CatalogADC5050Record>

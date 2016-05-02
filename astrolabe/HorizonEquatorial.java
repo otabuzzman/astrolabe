@@ -2,14 +2,23 @@
 package astrolabe;
 
 @SuppressWarnings("serial")
-public class HorizonEquatorial extends HorizonType implements PostscriptEmitter, Projector {
+public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
 
 	public HorizonEquatorial( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+		peer.setupCompanion( this ) ;
 
 		this.projector = projector ;
+	}
+
+	public void headPS( AstrolabePostscriptStream ps ) {
+		GSPaintColor practicality ;
+
+		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality.headPS( ps ) ;
+		practicality.emitPS( ps ) ;
+		practicality.tailPS( ps ) ;
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
@@ -59,9 +68,7 @@ public class HorizonEquatorial extends HorizonType implements PostscriptEmitter,
 			Catalog catalog ;
 
 			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
-System.err.println( new java.util.Date().toString() ) ;
 			catalog.addAllCatalogRecord() ;
-System.err.println( new java.util.Date().toString() ) ;
 
 			ps.operator.gsave() ;
 
@@ -73,12 +80,27 @@ System.err.println( new java.util.Date().toString() ) ;
 		}
 	}
 
+	public void tailPS( AstrolabePostscriptStream ps ) {
+	}
+
+	public double[] project( double[] ho ) {
+		return project( ho[0], ho[1] ) ;
+	}
+
 	public double[] project( double RA, double d ) {
 		return projector.project( convert( RA, d ) ) ;
 	}
 
+	public double[] unproject( double[] xy ) {
+		return unproject( xy[0], xy[1] ) ;
+	}
+
 	public double[] unproject( double x, double y ) {
 		return unconvert( projector.unproject( x, y ) ) ;
+	}
+
+	public double[] convert( double[] ho ) {
+		return convert( ho[0], ho[1] ) ;
 	}
 
 	public double[] convert( double RA, double d ) {
@@ -88,6 +110,10 @@ System.err.println( new java.util.Date().toString() ) ;
 		r[1] = d ;
 
 		return r ;
+	}
+
+	public double[] unconvert( double[] eq ) {
+		return unconvert( eq[0], eq[1] ) ;
 	}
 
 	public double[] unconvert( double RA, double d ) {

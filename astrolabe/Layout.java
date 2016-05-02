@@ -3,17 +3,11 @@ package astrolabe;
 
 public class Layout {
 
-	private final static String DEFAULT_LAYOUT = "100x100" ;
-
 	private double[] frameColLE ; // left edge
 	private double[] frameRowTE ; // top edge
 
 	private double[] origin = new double[2] ; // bottom left x/y
 	private double[] extent = new double[2] ; // pagesize x/y
-
-	public Layout( double[] userspace ) {
-		this( DEFAULT_LAYOUT, userspace ) ;
-	}
 
 	public Layout( String layout, double[] userspace ) {
 		origin[0] = userspace[0] ;

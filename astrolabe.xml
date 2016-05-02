@@ -8,18 +8,22 @@ astrolabe.xsd" name="astrolabe">
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" real="100" layout="50:50x50:50"/>
-			<Origin>
+			<ChartPage name="quart" size="a0" view="100"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="90"/>
 				</theta>
-			</Origin>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
@@ -43,6 +47,10 @@ astrolabe.xsd" name="astrolabe">
 			<!--galaktisch-->
 			<Horizon>
 				<HorizonGalactic practicality="seldom">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -195,7 +203,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -210,7 +218,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -225,7 +233,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -237,12 +245,12 @@ astrolabe.xsd" name="astrolabe">
 						<CircleMeridian importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -254,12 +262,12 @@ astrolabe.xsd" name="astrolabe">
 						<CircleMeridian importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -271,12 +279,12 @@ astrolabe.xsd" name="astrolabe">
 						<CircleMeridian importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="-85" min="0" sec="0.0"/>
+									<DMS neg="true" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -291,7 +299,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -320,7 +328,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -335,7 +343,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -350,7 +358,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -365,7 +373,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -380,7 +388,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -421,11 +429,15 @@ astrolabe.xsd" name="astrolabe">
 			<!--sonnenskalen-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical" name="suntrue">
 							<Begin>
 								<Angle>
-									<DMS min="0" sec="0.0" deg="0"/>
+									<DMS min="0" sec="0.0" neg="false" deg="0"/>
 								</Angle>
 							</Begin>
 							<End>
@@ -442,7 +454,7 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical" name="sunmean">
 							<Begin>
 								<Angle>
-									<DMS min="0" sec="0.0" deg="0"/>
+									<DMS min="0" sec="0.0" neg="false" deg="0"/>
 								</Angle>
 							</Begin>
 							<End>
@@ -460,6 +472,10 @@ astrolabe.xsd" name="astrolabe">
 			<!--ekliptisch-->
 			<Horizon>
 				<HorizonEcliptical practicality="sometimes">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -602,7 +618,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -617,7 +633,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -632,7 +648,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -647,7 +663,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -676,7 +692,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -691,7 +707,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -706,7 +722,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -721,7 +737,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -736,7 +752,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -751,7 +767,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -766,7 +782,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -781,7 +797,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -796,7 +812,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -811,7 +827,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -826,7 +842,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -841,7 +857,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -856,7 +872,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -871,7 +887,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -886,7 +902,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -901,7 +917,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -916,7 +932,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -931,7 +947,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -946,7 +962,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -961,7 +977,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1140,6 +1156,10 @@ astrolabe.xsd" name="astrolabe">
 			<!--51d30m58s-->
 			<Horizon>
 				<HorizonLocal practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--astronomical twilight-->
 					<Circle>
 						<CircleParallel importance="canonical">
@@ -1155,7 +1175,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
-								<DMS deg="-18" min="0" sec="0.0"/>
+								<DMS neg="true" deg="18" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1174,7 +1194,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
-								<DMS deg="-12" min="0" sec="0.0"/>
+								<DMS neg="true" deg="12" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1193,7 +1213,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
-								<DMS deg="-6" min="0" sec="0.0"/>
+								<DMS neg="true" deg="6" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1246,7 +1266,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
-								<DMS deg="0" min="0" sec="0.0"/>
+								<DMS neg="false" deg="0" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1259,7 +1279,7 @@ astrolabe.xsd" name="astrolabe">
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
 							<Angle>
-								<DMS deg="10" min="0" sec="0.0"/>
+								<DMS neg="false" deg="10" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1267,16 +1287,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="20" min="0" sec="0.0"/>
+								<DMS neg="false" deg="20" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1284,12 +1304,12 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -1307,7 +1327,7 @@ astrolabe.xsd" name="astrolabe">
 								</DialDegree>
 							</Dial>
 							<Angle>
-								<DMS deg="30" min="0" sec="0.0"/>
+								<DMS neg="false" deg="30" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1315,16 +1335,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="40" min="0" sec="0.0"/>
+								<DMS neg="false" deg="40" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1332,16 +1352,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="50" min="0" sec="0.0"/>
+								<DMS neg="false" deg="50" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1349,16 +1369,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="60" min="0" sec="0.0"/>
+								<DMS neg="false" deg="60" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1366,16 +1386,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="70" min="0" sec="0.0"/>
+								<DMS neg="false" deg="70" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1383,16 +1403,16 @@ astrolabe.xsd" name="astrolabe">
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS deg="80" min="0" sec="0.0"/>
+								<DMS neg="false" deg="80" min="0" sec="0.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -1404,7 +1424,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1419,7 +1439,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1434,7 +1454,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1449,7 +1469,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1464,7 +1484,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -1493,7 +1513,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1508,7 +1528,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1523,7 +1543,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1538,7 +1558,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1553,7 +1573,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1568,7 +1588,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1583,7 +1603,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1598,7 +1618,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1613,7 +1633,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1628,7 +1648,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1643,7 +1663,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1658,7 +1678,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1673,7 +1693,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1688,7 +1708,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1703,7 +1723,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1718,7 +1738,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -1747,7 +1767,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1762,7 +1782,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1777,7 +1797,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1804,13 +1824,13 @@ astrolabe.xsd" name="astrolabe">
 						</BodyStellar>
 					</Body>
 					<Latitude>
-						<DMS deg="51" min="30" sec="58.0"/>
+						<DMS neg="false" deg="51" min="30" sec="58.0"/>
 					</Latitude>
 					<Date>
 						<Calendar>
 							<YMD y="2000" m="3" d="3"/>
 							<Time>
-								<HMS hrs="21" min="17" sec="0.0"/>
+								<HMS neg="false" hrs="21" min="17" sec="0.0"/>
 							</Time>
 						</Calendar>
 					</Date>
@@ -1819,6 +1839,10 @@ astrolabe.xsd" name="astrolabe">
 			<!--fov horizont-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel name="eqp-24.4" fov="horizon" importance="canonical">
 							<Begin>
@@ -1837,16 +1861,20 @@ astrolabe.xsd" name="astrolabe">
 			<!--51d30m58s zirkumpolarkreis-->
 			<Horizon>
 				<HorizonLocal practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="cardinal">
 							<Begin>
 								<Angle>
-									<DMS deg="0" min="0" sec="0.0"/>
+									<DMS neg="false" deg="0" min="0" sec="0.0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="360" min="0" sec="0.0"/>
+									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
 							<Annotation>
@@ -1855,18 +1883,22 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
-								<DMS deg="38" min="29" sec="2.0"/>
+								<DMS neg="false" deg="38" min="29" sec="2.0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
 					<Latitude>
-						<DMS deg="90" min="0" sec="0.0"/>
+						<DMS neg="false" deg="90" min="0" sec="0.0"/>
 					</Latitude>
 				</HorizonLocal>
 			</Horizon>
 			<!--51d30m58s lokalzeitskala-->
 			<Horizon>
 				<HorizonLocal practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -1911,13 +1943,13 @@ astrolabe.xsd" name="astrolabe">
 						</CircleParallel>
 					</Circle>
 					<Latitude>
-						<DMS deg="90" min="0" sec="0.0"/>
+						<DMS neg="false" deg="90" min="0" sec="0.0"/>
 					</Latitude>
 					<Date>
 						<Calendar>
 							<YMD y="2000" m="3" d="3"/>
 							<Time>
-								<HMS hrs="21" min="17" sec="0.0"/>
+								<HMS neg="false" hrs="21" min="17" sec="0.0"/>
 							</Time>
 						</Calendar>
 					</Date>
@@ -1926,6 +1958,10 @@ astrolabe.xsd" name="astrolabe">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
@@ -2225,7 +2261,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2242,7 +2278,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2259,7 +2295,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2276,7 +2312,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2293,7 +2329,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -2324,7 +2360,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2341,7 +2377,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2358,7 +2394,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2375,7 +2411,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2392,7 +2428,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2409,7 +2445,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2426,7 +2462,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2443,7 +2479,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -2474,7 +2510,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2491,7 +2527,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2508,7 +2544,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2525,7 +2561,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2542,7 +2578,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2559,7 +2595,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2576,7 +2612,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2593,7 +2629,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Dial>
@@ -2624,7 +2660,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2641,7 +2677,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2658,7 +2694,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<DMS deg="85" min="0" sec="0.0"/>
+									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
 							<Angle>

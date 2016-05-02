@@ -7,13 +7,20 @@ public class GSPaintColor implements PostscriptEmitter {
 	private double[] colorRGB = null ;
 	private double colorGray = -1 ;
 
-	public GSPaintColor( String paintcolor ) {
+	public GSPaintColor( String param ) {
+		this( param, null ) ;
+	}
+
+	public GSPaintColor( String param, String name ) {
 		String pv, pd[] ;
 
 		pv = Configuration.getValue(
-				Configuration.getClassNode( this, null, null ),
-				paintcolor, paintcolor ) ;
-		pd = pv.split( ":" ) ;
+				Configuration.getClassNode( this, name, null ),
+				param, null ) ;
+		if ( pv == null )
+			pd = param.split( ":" ) ;
+		else
+			pd = pv.split( ":" ) ;
 
 		try {
 			if ( pd.length>1 ) {

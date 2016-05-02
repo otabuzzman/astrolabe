@@ -8,18 +8,22 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" real="100" layout="default"/>
-			<Origin>
+			<ChartPage size="a0" view="100"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="90.0"/>
 				</theta>
-			</Origin>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="ADC5050"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
@@ -43,6 +47,10 @@ astrolabe.xsd">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="ADC5050"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--ADC5050-->
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
@@ -65,6 +73,27 @@ astrolabe.xsd">
 					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>
+			<Atlas marshal="atlas-stereographic-5050-northern.xml">
+				<Origin>
+					<phi>
+						<Rational value="0"/>
+					</phi>
+					<theta>
+						<Rational value="94"/>
+					</theta>
+				</Origin>
+				<Extent>
+					<phi>
+						<Rational value="360"/>
+					</phi>
+					<theta>
+						<Rational value="119.2"/>
+					</theta>
+				</Extent>
+				<SpanDeclination>
+					<Rational value="33"/>
+				</SpanDeclination>
+			</Atlas>
 		</ChartStereographic>
 	</Chart>
 </Astrolabe>

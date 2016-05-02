@@ -32,24 +32,6 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static Atlas companionOf( astrolabe.model.Atlas at ) {
-		astrolabe.model.AtlasStereographic atS ;
-		astrolabe.model.AtlasOrthographic atO ;
-		astrolabe.model.AtlasEquidistant atE ;
-		Atlas atlas ;
-
-		if ( ( atS = at.getAtlasStereographic() ) != null ) {
-			atlas = new AtlasStereographic( atS ) ;
-		} else if ( ( atO = at.getAtlasOrthographic() ) != null ) {
-			atlas = new AtlasOrthographic( atO ) ;
-		} else if ( ( atE = at.getAtlasEquidistant() ) != null ) {
-			atlas = new AtlasEquidistant( atE ) ;
-		} else { // at.getAtlasGnomonic() != null
-			atlas = new AtlasGnomonic( at.getAtlasGnomonic() ) ;
-		}
-		return atlas ;
-	}
-
 	public static PostscriptEmitter companionOf( astrolabe.model.Chart ch ) {
 		astrolabe.model.ChartStereographic chS ;
 		astrolabe.model.ChartOrthographic chO ;
@@ -458,11 +440,19 @@ public final class AstrolabeFactory {
 	}
 
 	public static double valueOf( DMSType dms ) {
-		return dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
+		double r ;
+
+		r = dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
+
+		return dms.getNeg()?-r:r ;
 	}
 
 	public static double valueOf( HMSType hms ) {
-		return hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ;
+		double r ;
+
+		r = hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ;
+
+		return hms.getNeg()?-r:r ;
 	}
 
 	public static double valueOf( RationalType rational ) {

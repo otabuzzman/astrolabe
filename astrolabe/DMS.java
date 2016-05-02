@@ -6,13 +6,6 @@ public class DMS extends astrolabe.model.DMS {
 
 	private final static int DEFAULT_PRECISISON	= 2 ;
 
-	private boolean sign ;
-
-	private int deg ;
-	private int min ;
-	private int sec ;
-	private int frc ;
-
 	// castor requirement for (un)marshalling
 	public DMS() {
 	}
@@ -27,77 +20,35 @@ public class DMS extends astrolabe.model.DMS {
 
 	public void setup( double value, int precision ) {
 		double d, m, s, p ;
+		double sec, frc ;
+		int deg, min ;
 		int e ;
 
-		sign = 0>value ;
-
-		if ( precision>-1 ) {
+		if ( precision>-1 )
 			e = precision ;
-		} else {
-			e = Configuration.getValue(
-					Configuration.getClassNode( this, null, null ),
-					ApplicationConstant.PK_DMS_PRECISION, DEFAULT_PRECISISON ) ;
-		}
+		else
+			e = precision() ;
 		p = java.lang.Math.pow( 10, e ) ;
 
 		d = ( java.lang.Math.abs( value*3600. )*p+.5 )/p ;
 		deg = (int) d/3600 ;
-		setDeg( sign?-deg:deg ) ;
+		setDeg( deg ) ;
 
 		m = ( d-deg*3600 )/60 ;
 		min = (int) m ;
-		setMin( sign?-min:min ) ;
+		setMin( min ) ;
 
 		s = d-deg*3600-min*60 ;
 		sec = (int) s ;
 		frc = (int) ( ( s-sec )*p ) ;
-		setSec( sign?-( sec+frc/p ):( sec+frc/p ) ) ;
+		setSec( sec+frc/p ) ;
+
+		setNeg( 0>value ) ;
 	}
 
-	public boolean sign() {
-		return sign ;
-	}
-
-	public int deg() {
-		return deg ;
-	}
-
-	public int min() {
-		return min ;
-	}
-
-	public int sec() {
-		return sec ;
-	}
-
-	public int frc() {
-		return frc ;
-	}
-
-	public int[] discrete() {
-		return new int[] { deg(), min(), sec(), frc() } ;
-	}
-
-	public int[] relevant() {
-		int v[], a, o ;
-
-		v = discrete() ;
-		for ( a=0 ; a<4 ; a++ ) {
-			if ( v[a] > 0 ) {
-				break ;
-			}
-		}
-		if ( a == 4 ) { // all zero
-			a = 0 ;
-			o = 0 ;
-		} else {
-			for ( o=4 ; o>0 ; o-- ) {
-				if ( v[o-1] > 0 ) {
-					break ;
-				}
-			}
-		}
-
-		return new int[] { a, o } ;
+	public int precision() {
+		return Configuration.getValue(
+				Configuration.getClassNode( this, null, null ),
+				ApplicationConstant.PK_DMS_PRECISION, DEFAULT_PRECISISON ) ;
 	}
 }

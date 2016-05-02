@@ -141,7 +141,7 @@ public class Configuration {
 				r = Preferences.systemRoot().node( n ) ;
 			} else {
 				if ( instance == null ) {
-					r = Preferences.systemRoot() ;
+					r = null ;
 				} else {
 					pd = instance.lastIndexOf( "/" ) ;
 					pi = pd<0?null:instance.substring( 0, pd ) ;

@@ -210,9 +210,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
-		GSPaintStyle importance ;
+		GSPaintStroke importance ;
 
-		importance = new GSPaintStyle( getImportance() ) ;
+		importance = new GSPaintStroke( getImportance(), getName() ) ;
 		importance.headPS( ps ) ;
 		importance.emitPS( ps ) ;
 		importance.tailPS( ps ) ;

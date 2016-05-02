@@ -1,20 +1,24 @@
 
 package astrolabe;
 
-import java.util.List;
-
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 @SuppressWarnings("serial")
 public class ChartPage extends astrolabe.model.ChartPage {
 
-	private double[] size = new double[2] ;
-	private double[] real = new double[2] ;
+	private final static String DEFAULT_LAYOUT = "100x100" ;
+
+	private double sizex ;
+	private double sizey ;
+	private double viewx ;
+	private double viewy ;
 
 	public ChartPage( Peer peer ) {
-		String sv, sd[], lv ;
-		List<double[]> cl ;
+		String sv, sd[], l ;
+		Coordinate[] c ;
 		Geometry fov ;
 
 		peer.setupCompanion( this ) ;
@@ -27,57 +31,45 @@ public class ChartPage extends astrolabe.model.ChartPage {
 		} else {
 			sd = sv.split( "x" ) ;
 		}
-		size[0] = new Double( sd[0] ).doubleValue() ;
-		size[1] = new Double( sd[1] ).doubleValue() ;
-		real[0] = size[0]*getReal()/100 ;
-		real[1] = size[1]*getReal()/100 ;
+		sizex = new Double( sd[0] ).doubleValue() ;
+		sizey = new Double( sd[1] ).doubleValue() ;
+		viewx = sizex*getView()/100 ;
+		viewy = sizey*getView()/100 ;
 
-		lv = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), ApplicationConstant.PN_CHARTPAGE_LAYOUT ),
-				getLayout(), null ) ;
-		if ( lv == null ) {
-			lv = getLayout() ;
-		}
+		l = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_CHARTPAGE_LAYOUT, DEFAULT_LAYOUT ) ;
 		Registry.register( ApplicationConstant.GC_LAYOUT,
-				new Layout( lv, new double[] {
-						-size[0]/2, -size[1]/2,
-						size[0]/2, size[1]/2 } ) ) ;
+				new Layout( l, new double[] {
+						-sizex/2, -sizey/2,
+						sizex/2, sizey/2 } ) ) ;
 
-		cl = new java.util.Vector<double[]>() ;
-		cl.add( new double[] { -real[0]/2, -real[1]/2 } ) ;
-		cl.add( new double[] { -real[0]/2, real[1]/2 } ) ;
-		cl.add( new double[] { real[0]/2, real[1]/2 } ) ;
-		cl.add( new double[] { real[0]/2, -real[1]/2 } ) ;
-		cl.add( cl.get( 0 ) ) ;
-
+		c = new Coordinate[] {
+				new Coordinate( -viewx/2, -viewy/2 ),
+				new Coordinate( -viewx/2, viewy/2 ),
+				new Coordinate( viewx/2, viewy/2 ),
+				new Coordinate( viewx/2, -viewy/2 ),
+				new Coordinate( -viewx/2, -viewy/2 ),
+		} ;
 		fov = new GeometryFactory().createPolygon(
 				new GeometryFactory().createLinearRing(
-						new JTSCoordinateArraySequence( cl ) ), null ) ;
-
+						new CoordinateArraySequence( c ) ), null ) ;
 		Registry.register( ApplicationConstant.GC_FOVUNI, fov ) ;
 	}
 
-	public double[] size() {
-		return new double[] { size[0], size[1] } ;
-	}
-
 	public double sizex() {
-		return size[0] ;
+		return sizex ;
 	}
 
 	public double sizey() {
-		return size[1] ;
+		return sizey ;
 	}
 
-	public double[] real() {
-		return new double[] { real[0], real[1] } ;
+	public double viewx() {
+		return viewx ;
 	}
 
-	public double realx() {
-		return real[0] ;
-	}
-
-	public double realy() {
-		return real[1] ;
+	public double viewy() {
+		return viewy ;
 	}
 }

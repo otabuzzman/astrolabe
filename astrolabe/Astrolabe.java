@@ -10,8 +10,6 @@ import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
-import org.exolab.castor.xml.ValidationException;
-
 import caa.CAADate ;
 
 @SuppressWarnings("serial")
@@ -66,36 +64,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		for ( int at=0 ; at<getAtlasCount() ; at++ ) {
-			Atlas atlas ;
-
-			atlas = AstrolabeFactory.companionOf( getAtlas( at ) ) ;
-
-			// Atlas interface
-			try {
-				atlas.addAllAtlasPage() ;
-				for ( astrolabe.model.Chart atlasPage : atlas.toModel() ) {
-					addChart( atlasPage ) ;
-				}
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
-			}
-
-			// AuxiliaryEmitter interface
-			atlas.headAUX() ;
-			atlas.emitAUX() ;
-			atlas.tailAUX() ;
-
-			// PostscriptEmitter interface
-			ps.operator.gsave() ;
-
-			atlas.headPS( ps ) ;
-			atlas.emitPS( ps ) ;
-			atlas.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
-
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			PostscriptEmitter chart ;
 

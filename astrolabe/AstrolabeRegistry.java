@@ -51,18 +51,19 @@ public class AstrolabeRegistry extends Registry {
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURS ) ;
-		registerNumber( key+ind, hDMS.deg() ) ;
+		registerNumber( key+ind, hDMS.getDeg() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURMINUTES ) ;
-		registerNumber( key+ind, hDMS.min() ) ;
+		registerNumber( key+ind, hDMS.getMin() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURSECONDS ) ;
-		registerNumber( key+ind, hDMS.sec() ) ;
+		registerNumber( key+ind, (int) hDMS.getSec() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_HMS_HOURFRACTION ) ;
-		registerNumber( key+ind, hDMS.frc() ) ;
+		registerNumber( key+ind,
+				(int) ( hDMS.getSec()-(int) hDMS.getSec() )*java.lang.Math.pow( 10, hDMS.precision() ) ) ;
 
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
-		registerName( key+ind, hDMS.sign()?"-":"" ) ;
+		registerName( key+ind, hDMS.getNeg()?"-":"" ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
-		registerName( key+ind, hDMS.sign()?"-":"+" ) ;
+		registerName( key+ind, hDMS.getNeg()?"-":"+" ) ;
 	}
 
 	public static void registerDMS( String key, double dms ) {
@@ -75,18 +76,19 @@ public class AstrolabeRegistry extends Registry {
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREES ) ;
-		registerNumber( key+ind, dDMS.deg() ) ;
+		registerNumber( key+ind, dDMS.getDeg() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEMINUTES ) ;
-		registerNumber( key+ind, dDMS.min() ) ;
+		registerNumber( key+ind, dDMS.getMin() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREESECONDS ) ;
-		registerNumber( key+ind, dDMS.sec() ) ;
+		registerNumber( key+ind, (int) dDMS.getSec() ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_DMS_DEGREEFRACTION ) ;
-		registerNumber( key+ind, dDMS.frc() ) ;
+		registerNumber( key+ind,
+				(int) ( dDMS.getSec()-(int) dDMS.getSec() )*java.lang.Math.pow( 10, dDMS.precision() ) ) ;
 
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_SIG_MATH ) ;
-		registerName( key+ind, dDMS.sign()?"-":"" ) ;
+		registerName( key+ind, dDMS.getNeg()?"-":"" ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_SIG_BOTH ) ;
-		registerName( key+ind, dDMS.sign()?"-":"+" ) ;
+		registerName( key+ind, dDMS.getNeg()?"-":"+" ) ;
 	}
 
 	public static void registerJTSCoordinate( String key, JTSCoordinate jtscoordinate ) {

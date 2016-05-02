@@ -26,10 +26,4 @@
 	<complexTypeBinding name="/AtlasPageType/@fcp">
 		<member java-type="int"/>
 	</complexTypeBinding>
-	<complexTypeBinding name="/AtlasAzimuthalType/CheckerParallel/@value">
-		<member java-type="int"/>
-	</complexTypeBinding>
-	<complexTypeBinding name="/AtlasAzimuthalType/CheckerMeridian/@value">
-		<member java-type="int"/>
-	</complexTypeBinding>
 </binding>

@@ -8,18 +8,22 @@ astrolabe.xsd">
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" real="100" layout="default"/>
-			<Origin>
+			<ChartPage size="a0" view="100"/>
+			<Center>
 				<phi>
 					<Rational value="0"/>
 				</phi>
 				<theta>
 					<Rational value="90.0"/>
 				</theta>
-			</Origin>
+			</Center>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="ADC6049"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
 						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
@@ -43,20 +47,24 @@ astrolabe.xsd">
 			<!--äquatorial-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="ADC6049"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
 					<Circle>
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS min="0" deg="5" sec="0"/>
+									<DMS neg="false" deg="5" min="0" sec="0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS min="0" deg="45" sec="0"/>
+									<DMS neg="false" deg="45" min="0" sec="0"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS min="0" deg="20" sec="0"/>
+								<DMS neg="false" deg="20" min="0" sec="0"/>
 							</Angle>
 						</CircleParallel>
 					</Circle>
@@ -64,29 +72,29 @@ astrolabe.xsd">
 						<CircleMeridian importance="canonical">
 							<Begin>
 								<Angle>
-									<DMS min="0" deg="0" sec="0"/>
+									<DMS neg="false" deg="0" min="0" sec="0"/>
 								</Angle>
 							</Begin>
 							<End>
 								<Angle>
-									<DMS min="0" deg="90" sec="0"/>
+									<DMS neg="false" deg="90" min="0" sec="0"/>
 								</Angle>
 							</End>
 							<Angle>
-								<DMS min="0" deg="25" sec="0"/>
+								<DMS neg="false" deg="25" min="0" sec="0"/>
 							</Angle>
 						</CircleMeridian>
 					</Circle>
 					<Body>
 						<BodyAreal nature="authentic">
 							<OutlineElliptical proportion=".5" PA="90">
-								<DMS deg="30" min="0" sec="0.0"/>
+								<DMS neg="false" deg="30" min="0" sec="0.0"/>
 								<Position>
 									<phi>
-										<DMS deg="25" min="0" sec="0.0"/>
+										<DMS neg="false" deg="25" min="0" sec="0.0"/>
 									</phi>
 									<theta>
-										<DMS deg="20" min="0" sec="0.0"/>
+										<DMS neg="false" deg="20" min="0" sec="0.0"/>
 									</theta>
 								</Position>
 							</OutlineElliptical>

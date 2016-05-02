@@ -87,9 +87,8 @@ catalogADC6049.pdf: catalogADC6049.xml
 catalogADC7118.pdf: catalogADC7118.xml
 catalogADC7237.pdf: catalogADC7237.xml
 
-.SECONDARY: atlas-stereographic-nostar.ps
-atlas-stereographic-nostar.pdf: atlas-stereographic-nostar.xml
 .SECONDARY: atlas-stereographic.ps
 atlas-stereographic.pdf: atlas-stereographic.xml
 
-atlas-catalogADC7237.pdf: atlas-catalogADC7237.xml
+atlas-stereographic-northern.pdf: atlas-stereographic-northern.xml
+atlas-stereographic-southern.pdf: atlas-stereographic-southern.xml
