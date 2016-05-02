@@ -58,7 +58,7 @@
 							<CatalogADC5050Record select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Script purpose="{Vmag&#x003c;3?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{Name}"/>
+										<Script purpose="{Name~&#x0022;.*[0-9a-zA-Z].*&#x0022;&#x0026;&#x0026;Vmag&#x003c;3?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{Name~&#x0022;.*[0-9a-zA-Z].*&#x0022;?Name:&#x0022;default&#x0022;}"/>
 									</AnnotationStraight>
 								</Annotation>
 								<Annotation>

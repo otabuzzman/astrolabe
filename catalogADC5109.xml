@@ -57,7 +57,7 @@
 						<!--...-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5109/sky2kv4.dat.23.gz-->
 						<CatalogADC5109 name="5109" fov="chart" url="lib/cat/5109/sky2kv4.dat.00.gz">
-							<CatalogADC5109Record select="{Name~&#x0022;.+&#x0022;&#x0026;&#x0026;Vmag>0&#x0026;&#x0026;Vmag&#x003c;6}">
+							<CatalogADC5109Record select="{Name~&#x0022;.+&#x0022;&#x0026;&#x0026;Vmag>0&#x0026;&#x0026;Vmag&#x003c;3}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Script purpose="{Vmag&#x003c;3?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{Name}"/>

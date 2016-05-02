@@ -64,7 +64,7 @@ public class DMS extends astrolabe.model.DMS {
 		SubstituteCatalog cat ;
 		String sub, sec[], k ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, clazz ) ;
+		cat = new SubstituteCatalog( clazz ) ;
 
 		if ( key == null ) {
 			sub = cat.substitute( QK_NEG, null ) ;

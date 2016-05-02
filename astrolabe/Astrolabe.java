@@ -3,37 +3,27 @@ package astrolabe;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Locale;
-import java.util.prefs.InvalidPreferencesFormatException;
-import java.util.prefs.Preferences;
+
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
 public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEmitter {
 
 	// configuration key (CK_)
-	private final static String CK_VIEWER = "viewer" ;
+	private final static String CK_VIEWER		= "viewer" ;
+	private final static String CK_LIBCAA		= "libcaa" ;
+
+	private final static String DEFAULT_LIBCAA	= "caa" ;
 
 	public Astrolabe() {
-		String pn ;
-		FileInputStream pr ;
 		Locale dl ;
 		String ln, lc[] ;
-
-		try {
-			pn = ApplicationConstant.GC_APPLICATION ;
-			pn = pn+".preferences" ;
-			pr = new FileInputStream( pn ) ;
-			Preferences.importPreferences( pr ) ;
-		} catch ( FileNotFoundException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IOException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( InvalidPreferencesFormatException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
 
 		ln = getLocale() ;
 		if ( ln != null ) {			
@@ -48,7 +38,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		double jd ;
 
 		jd = ApplicationFactory.valueOf( getEpoch() ) ;
-		Registry.register( ApplicationConstant.GC_EPOCH, jd ) ;
+		Registry.register( Epoch.RK_EPOCH, jd ) ;
+	}
+
+	public void unregister() {
+		Registry.unregister( Epoch.RK_EPOCH ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -90,12 +84,17 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			f = new File( argv[0] ) ;
 			s = new FileInputStream( f ) ;
 			r = new InputStreamReader( s, "UTF-8" ) ;
-			astrolabe = new AstrolabeReader().read( r ) ;
+			astrolabe = new Astrolabe() ;
+			readModel( r ).copyValues( astrolabe ) ;
+
+			astrolabe.register() ;
 
 			out =  new TeeOutputStream( System.out ) ;
 
 			// Configuration.verbose() ;
 			// ApplicationResource.verbose() ;
+
+			Configuration.init() ;
 
 			viewerDecl = Configuration.getValue(
 					Astrolabe.class, CK_VIEWER, null ) ;
@@ -128,6 +127,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			if ( viewerDecl != null )
 				viewerProc.waitFor() ;
 
+			astrolabe.unregister() ;
 			Registry.remove() ;
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
@@ -137,7 +137,38 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		System.exit( 0 ) ;
 	} 
 
+	public static astrolabe.model.Astrolabe readModel( Reader model ) {
+		try {
+			return (astrolabe.model.Astrolabe) astrolabe.model.Astrolabe.unmarshal( model ) ;
+		} catch ( MarshalException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( ValidationException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+	}
+
+	public static astrolabe.model.Astrolabe readModel( String model ) {
+		StringReader r ;
+		astrolabe.model.Astrolabe a ;
+
+		r = new StringReader( model ) ;
+
+		try {
+			a = readModel( r ) ;
+		} finally {
+			r.close() ;
+		}
+
+		return a ;
+	}
+
 	static {
-		System.loadLibrary( ApplicationConstant.GC_NATLIB_CAA ) ;
+		String libcaa ;
+
+		Configuration.init() ;
+
+		libcaa = Configuration.getValue(
+				Astrolabe.class, CK_LIBCAA, DEFAULT_LIBCAA ) ;
+		System.loadLibrary( libcaa ) ;
 	}
 }

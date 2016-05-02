@@ -142,7 +142,7 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 
 		token = data.split( "\\|" ) ;
 		if ( token.length != CR_TOKEN ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_ERECLEN, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
@@ -217,7 +217,7 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 		SubstituteCatalog cat ;
 		String sub ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new SubstituteCatalog( this ) ;
 
 		sub = cat.substitute( QK_CATALOG, null ) ;
 		Registry.register( sub, Catalog ) ;
@@ -363,7 +363,7 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 					value = (String) token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					if ( ! value.matches( pattern ) ) {
-						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						cat = new MessageCatalog( this ) ;
 						fmt = cat.message( MK_ERECVAL, null ) ;
 						if ( fmt != null ) {
 							msg = new StringBuffer() ;

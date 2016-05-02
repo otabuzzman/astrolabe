@@ -20,7 +20,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 	private final static String QK_M_HD		= "m_HD" ;
 	private final static String QK_U_HD		= "u_HD" ;
 	private final static String QK_SAO		= "SAO" ;
-	private final static String QK_M_SAO		= "m_SAO" ;
+	private final static String QK_M_SAO	= "m_SAO" ;
 	private final static String QK_DM		= "DM" ;
 	private final static String QK_M_DM		= "m_DM" ;
 	private final static String QK_U_DM		= "u_DM" ;
@@ -251,7 +251,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 		String fmt ;
 
 		if ( data.length() != CR_LENGTH ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_ERECLEN, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
@@ -376,7 +376,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 		SubstituteCatalog cat ;
 		String sub ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new SubstituteCatalog( this ) ;
 
 		sub = cat.substitute( QK_SKY2000, null ) ;
 		Registry.register( sub, SKY2000 ) ;
@@ -626,7 +626,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 					value = (String) token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					if ( ! value.matches( pattern ) ) {
-						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						cat = new MessageCatalog( this ) ;
 						fmt = cat.message( MK_ERECVAL, null ) ;
 						if ( fmt != null ) {
 							msg = new StringBuffer() ;

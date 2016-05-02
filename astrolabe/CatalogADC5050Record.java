@@ -41,7 +41,7 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 			SubstituteCatalog cat ;
 			String sub ;
 
-			cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new SubstituteCatalog( this ) ;
 
 			sub = cat.substitute( QK_FLAMSTEED, null ) ;
 			Registry.register( sub, flamsteed ) ;
@@ -172,7 +172,7 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 		String fmt ;
 
 		if ( data.length() != CR_LENGTH ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_ERECLEN, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
@@ -242,7 +242,7 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 		SubstituteCatalog cat ;
 		String sub ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new SubstituteCatalog( this ) ;
 
 		sub = cat.substitute( QK_HR, null ) ;
 		Registry.register( sub, HR ) ;
@@ -383,7 +383,7 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 					value = (String) token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					if ( ! value.matches( pattern ) ) {
-						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						cat = new MessageCatalog( this ) ;
 						fmt = cat.message( MK_ERECVAL, null ) ;
 						if ( fmt != null ) {
 							msg = new StringBuffer() ;

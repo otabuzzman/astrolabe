@@ -55,7 +55,7 @@
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
 						<CatalogADC1239H name="1239H" fov="chart" url="lib/cat/1239/hip_main.dat.gz">
-							<CatalogADC1239HRecord select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
+							<CatalogADC1239HRecord select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;3}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
 										<Script value="{HIP}" purpose="{Vmag&#x003c;4?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}"/>

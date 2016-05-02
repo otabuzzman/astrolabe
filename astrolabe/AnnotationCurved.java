@@ -67,7 +67,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		ps.array( true ) ;
 		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
 			script = new astrolabe.model.Script() ;
-			getScript( ns ).setupCompanion( script ) ;
+			getScript( ns ).copyValues( script ) ;
 
 			p = Configuration.getValue( script, script.getPurpose(), -1. ) ;
 			if ( p<0 )

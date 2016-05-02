@@ -2,25 +2,16 @@
 package astrolabe;
 
 import java.util.List;
-import java.util.prefs.Preferences;
-
-import org.exolab.castor.xml.ValidationException;
 
 import astrolabe.model.AngleType;
-import astrolabe.model.AnnotationType;
-import astrolabe.model.BodyArealType;
-import astrolabe.model.BodyStellarType;
 import astrolabe.model.CalendarType;
 import astrolabe.model.CartesianType;
-import astrolabe.model.CircleType;
 import astrolabe.model.DateType;
 import astrolabe.model.DMSType;
 import astrolabe.model.HMSType;
-import astrolabe.model.HorizonType;
 import astrolabe.model.RationalType;
 import astrolabe.model.PolarType;
 import astrolabe.model.SphericalType;
-import astrolabe.model.TextType;
 import astrolabe.model.TimeType;
 import astrolabe.model.YMDType;
 
@@ -28,9 +19,6 @@ import caa.CAACoordinateTransformation;
 import caa.CAADate;
 
 public final class ApplicationFactory {
-
-	// configuration key (CK_), node (CN_)
-	private final static String CN_DEFAULT = "default" ;
 
 	private ApplicationFactory() {
 	}
@@ -44,22 +32,26 @@ public final class ApplicationFactory {
 
 		if ( chart.getChartStereographic() != null ) {
 			cCS = new ChartStereographic() ;
-			chart.getChartStereographic().setupCompanion( cCS ) ;
+			chart.getChartStereographic().copyValues( cCS ) ;
+			cCS.register() ;
 
 			pse = cCS ;
 		} else if ( chart.getChartOrthographic() != null ) {
 			cCO = new ChartOrthographic() ;
-			chart.getChartStereographic().setupCompanion( cCO ) ;
+			chart.getChartStereographic().copyValues( cCO ) ;
+			cCO.register() ;
 
 			pse = cCO ;
 		} else if (  chart.getChartEquidistant() != null ) {
 			cCE = new ChartEquidistant() ;
-			chart.getChartStereographic().setupCompanion( cCE ) ;
+			chart.getChartStereographic().copyValues( cCE ) ;
+			cCE.register() ;
 
 			pse = cCE ;
 		} else { // chart.getChartGnomonic() != null
 			cCG = new ChartGnomonic() ;
-			chart.getChartStereographic().setupCompanion( cCG ) ;
+			chart.getChartStereographic().copyValues( cCG ) ;
+			cCG.register() ;
 
 			pse = cCG ;
 		}
@@ -76,24 +68,24 @@ public final class ApplicationFactory {
 
 		if ( horizon.getHorizonLocal() != null  ) {
 			hLo = new HorizonLocal( projector ) ;
-			horizon.getHorizonLocal().setupCompanion( hLo ) ;
+			horizon.getHorizonLocal().copyValues( hLo ) ;
 			hLo.register() ;
 
 			pse = hLo ;
 		} else if ( horizon.getHorizonEquatorial() != null  ) {
 			hEq = new HorizonEquatorial( projector ) ;
-			horizon.getHorizonEquatorial().setupCompanion( hEq ) ;
+			horizon.getHorizonEquatorial().copyValues( hEq ) ;
 
 			pse = hEq ;
 		} else if ( horizon.getHorizonEcliptical() != null  ) {
 			hEc = new HorizonEcliptical( projector ) ;
-			horizon.getHorizonEcliptical().setupCompanion( hEc ) ;
+			horizon.getHorizonEcliptical().copyValues( hEc ) ;
 			hEc.register() ;
 
 			pse = hEc ;
 		} else { // horizon.getHorizonGalactic() != null
 			hGa = new HorizonGalactic( projector ) ;
-			horizon.getHorizonGalactic().setupCompanion( hGa ) ;
+			horizon.getHorizonGalactic().copyValues( hGa ) ;
 			hGa.register() ;
 
 			pse = hGa ;
@@ -113,37 +105,37 @@ public final class ApplicationFactory {
 
 		if ( circle.getCircleParallel() != null ) {
 			cPl = new CircleParallel( projector ) ;
-			circle.getCircleParallel().setupCompanion( cPl ) ;
+			circle.getCircleParallel().copyValues( cPl ) ;
 			cPl.register() ;
 
 			pse = cPl ;
 		} else if ( circle.getCircleMeridian() != null ) {
 			cMn = new CircleMeridian( projector ) ;
-			circle.getCircleMeridian().setupCompanion( cMn ) ;
+			circle.getCircleMeridian().copyValues( cMn ) ;
 			cMn.register() ;
 
 			pse = cMn ;
 		} else if ( circle.getCircleSouthernPolar() != null ) {
 			cSP = new CircleSouthernPolar( projector ) ;
-			circle.getCircleSouthernPolar().setupCompanion( cSP ) ;
+			circle.getCircleSouthernPolar().copyValues( cSP ) ;
 			cSP.register() ;
 
 			pse = cSP ;
 		} else if ( circle.getCircleNorthernPolar() != null ) {
 			cNP = new CircleNorthernPolar( projector ) ;
-			circle.getCircleNorthernPolar().setupCompanion( cNP ) ;
+			circle.getCircleNorthernPolar().copyValues( cNP ) ;
 			cNP.register() ;
 
 			pse = cNP ;
 		} else if (  circle.getCircleSouthernTropic() != null ) {
 			cST = new CircleSouthernTropic( projector ) ;
-			circle.getCircleSouthernTropic().setupCompanion( cST ) ;
+			circle.getCircleSouthernTropic().copyValues( cST ) ;
 			cST.register() ;
 
 			pse = cST ;
 		} else { // circle.getCircleNorthernTropic() != null
 			cNT = new CircleNorthernTropic( projector ) ;
-			circle.getCircleNorthernTropic().setupCompanion( cNT ) ;
+			circle.getCircleNorthernTropic().copyValues( cNT ) ;
 			cNT.register() ;
 
 			pse = cNT ;
@@ -159,12 +151,12 @@ public final class ApplicationFactory {
 
 		if ( dial.getDialDegree() != null ) {
 			dD = new DialDegree( baseline ) ;
-			dial.getDialDegree().setupCompanion( dD ) ;
+			dial.getDialDegree().copyValues( dD ) ;
 
 			pse = dD ;
 		} else { // dial.getDialHour() != null
 			dH = new DialHour( baseline ) ;
-			dial.getDialHour().setupCompanion( dH ) ;
+			dial.getDialHour().copyValues( dH ) ;
 
 			pse = dH ;
 		}
@@ -179,13 +171,13 @@ public final class ApplicationFactory {
 
 		if ( annotation.getAnnotationStraight() != null ) {
 			aS = new AnnotationStraight() ;
-			annotation.getAnnotationStraight().setupCompanion( aS ) ;
+			annotation.getAnnotationStraight().copyValues( aS ) ;
 			aS.register() ;
 
 			pse = aS ;
 		} else { // annotation.getAnnotationCurved() != null
 			aC = new AnnotationCurved() ;
-			annotation.getAnnotationCurved().setupCompanion( aC ) ;
+			annotation.getAnnotationCurved().copyValues( aC ) ;
 			aC.register() ;
 
 			pse = aC ;
@@ -206,39 +198,39 @@ public final class ApplicationFactory {
 
 		if ( body.getBodyStellar() != null ) {
 			cBSr = new BodyStellar( projector ) ;
-			body.getBodyStellar().setupCompanion( cBSr ) ;
+			body.getBodyStellar().copyValues( cBSr ) ;
 			cBSr.register() ;
 
 			pse = cBSr ;
 		} else if ( body.getBodyAreal() != null ) {
 			cBAl = new BodyAreal( projector ) ;
-			body.getBodyAreal().setupCompanion( cBAl ) ;
+			body.getBodyAreal().copyValues( cBAl ) ;
 			cBAl.register() ;
 
 			pse = cBAl ;
 		} else if ( body.getBodyPlanet() != null ) {
 			cBPt = new BodyPlanet( projector ) ;
-			body.getBodyPlanet().setupCompanion( cBPt ) ;
+			body.getBodyPlanet().copyValues( cBPt ) ;
 
 			pse = cBPt ;
 		} else if ( body.getBodyMoon() != null ) {
 			cBMn = new BodyMoon( projector ) ;
-			body.getBodyMoon().setupCompanion( cBMn ) ;
+			body.getBodyMoon().copyValues( cBMn ) ;
 
 			pse = cBMn ;
 		} else if ( body.getBodySun() != null ) {
 			cBSn = new BodySun( projector ) ;
-			body.getBodySun().setupCompanion( cBSn ) ;
+			body.getBodySun().copyValues( cBSn ) ;
 
 			pse = cBSn ;
 		} else if ( body.getBodyElliptical() != null ) {
 			cBEl = new BodyElliptical( projector ) ;
-			body.getBodyElliptical().setupCompanion( cBEl ) ;
+			body.getBodyElliptical().copyValues( cBEl ) ;
 
 			pse = cBEl ;
 		} else { // body.getBodyParabolical() != null
 			cBPl = new BodyParabolical( projector ) ;
-			body.getBodyParabolical().setupCompanion( cBPl ) ;
+			body.getBodyParabolical().copyValues( cBPl ) ;
 
 			pse = cBPl ;
 		}
@@ -258,234 +250,73 @@ public final class ApplicationFactory {
 
 		if ( catalog.getCatalogADC1239H() != null ) {
 			c1239h = new CatalogADC1239H( projector ) ;
-			catalog.getCatalogADC1239H().setupCompanion( c1239h ) ;
+			catalog.getCatalogADC1239H().copyValues( c1239h ) ;
 			c1239h.register() ;
 
 			return c1239h ;
 		} else if (  catalog.getCatalogADC1239T() != null ) {
 			c1239t = new CatalogADC1239T( projector ) ;
-			catalog.getCatalogADC1239T().setupCompanion( c1239t ) ;
+			catalog.getCatalogADC1239T().copyValues( c1239t ) ;
 			c1239t.register() ;
 
 			return c1239t ;
 		} else if ( catalog.getCatalogADC5050() != null ) {
 			c5050 = new CatalogADC5050( projector ) ;
-			catalog.getCatalogADC5050().setupCompanion( c5050 ) ;
+			catalog.getCatalogADC5050().copyValues( c5050 ) ;
 			c5050.register() ;
 
 			return c5050 ;
 		} else if (  catalog.getCatalogADC5109() != null ) {
 			c5109 = new CatalogADC5109( projector ) ;
-			catalog.getCatalogADC5109().setupCompanion( c5109 ) ;
+			catalog.getCatalogADC5109().copyValues( c5109 ) ;
 			c5109.register() ;
 
 			return c5109 ;
 		} else if ( catalog.getCatalogADC6049() != null ) {
 			c6049 = new CatalogADC6049( projector ) ;
-			catalog.getCatalogADC6049().setupCompanion( c6049 ) ;
+			catalog.getCatalogADC6049().copyValues( c6049 ) ;
 			c6049.register() ;
 
 			return c6049 ;
 		} else if ( catalog.getCatalogADC7118() != null ) {
 			c7118 = new CatalogADC7118( projector ) ;
-			catalog.getCatalogADC7118().setupCompanion( c7118 ) ;
+			catalog.getCatalogADC7118().copyValues( c7118 ) ;
 			c7118.register() ;
 
 			return c7118 ;
 		} else if ( catalog.getCatalogADC7237() != null ) {
 			c7237 = new CatalogADC7237( projector ) ;
-			catalog.getCatalogADC7237().setupCompanion( c7237 ) ;
+			catalog.getCatalogADC7237().copyValues( c7237 ) ;
 			c7237.register() ;
 
 			return c7237 ;
 		} else { // catalog.getCatalogDS9() != null
 			cDS9 = new CatalogDS9( projector ) ;
-			catalog.getCatalogDS9().setupCompanion( cDS9 ) ;
+			catalog.getCatalogDS9().copyValues( cDS9 ) ;
 			cDS9.register() ;
 
 			return cDS9 ;
 		}
 	}
 
-	public static void modelOf( HorizonType horizon ) throws ValidationException {
-		if ( ! modelOf( horizon, true ) ) {
-			throw new ValidationException( horizon.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( HorizonType horizon, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( horizon, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		horizon.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				horizon.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
-	public static void modelOf( CircleType circle ) throws ValidationException {
-		if ( ! modelOf( circle, true ) ) {
-			throw new ValidationException( circle.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( CircleType circle, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( circle, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		circle.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				circle.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
-	public static void modelOf( AnnotationType annotation ) throws ValidationException {
-		if ( ! modelOf( annotation, true ) ) {
-			throw new ValidationException( annotation.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( AnnotationType annotation, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( annotation, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		annotation.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				annotation.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
-	public static void modelOf( TextType text ) throws ValidationException {
-		if ( ! modelOf( text, true ) ) {
-			throw new ValidationException( text.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( TextType text, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( text, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		text.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				text.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
-	public static void modelOf( BodyStellarType body ) throws ValidationException {
-		if ( ! modelOf( body, true ) ) {
-			throw new ValidationException( body.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( BodyStellarType body, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( body, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		body.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				body.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
-	public static void modelOf( BodyArealType body ) throws ValidationException {
-		if ( ! modelOf( body, true ) ) {
-			throw new ValidationException( body.getClass().getSimpleName() ) ;
-		}
-	}
-
-	public static boolean modelOf( BodyArealType body, boolean validate ) {
-		Preferences node ;
-
-		node = Configuration.getNode( body, CN_DEFAULT ) ;
-		if ( node == null )
-			return false ;
-
-		body.setupPeer( node ) ;
-
-		if ( validate ) {
-			try {
-				body.validate() ;
-			} catch ( ValidationException e ) {
-				return false ;
-			}
-		}
-
-		return true ;
-	}
-
 	public static double valueOf( DateType date ) {
-		double r ;
-
-		if ( date.getJD() == null ) {
-			r = valueOf( date.getCalendar() ) ;
-		} else {
-			r = valueOf( date.getJD() ) ;
-		}
-
-		return r ;
+		if ( date.getJD() == null )
+			return valueOf( date.getCalendar() ) ;
+		else
+			return valueOf( date.getJD() ) ;
 	}
 
 	public static double valueOf( CalendarType calendar ) {
-		double r ;
+		double r, t ;
 		CAADate d ;
 		long[] c ;
-		double t = 0 ;
 
 		c = valueOf( calendar.getYMD() ) ;
 
-		if ( calendar.getTime() != null ) {
+		if ( calendar.getTime() != null )
 			t = valueOf( calendar.getTime() ) ;
-		}
+		else
+			t = 0 ;
 
 		d = new CAADate( c[0], c[1], c[2]+t, true ) ;
 		r = d.Julian() ;
@@ -495,23 +326,17 @@ public final class ApplicationFactory {
 	}
 
 	public static double valueOf( TimeType time ) {
-		double r = 0 ;
-
-		if ( time.getRational() == null ) {
-			r = ApplicationFactory.valueOf( time.getHMS() ) ;
-		} else {
-			r = ApplicationFactory.valueOf( time.getRational() ) ;
-		}
-
-		return r ;
+		if ( time.getRational() == null )
+			return ApplicationFactory.valueOf( time.getHMS() ) ;
+		else
+			return ApplicationFactory.valueOf( time.getRational() ) ;
 	}
 
 	public static List<double[]> valueOf( SphericalType[] spherical ) {
 		List<double[]> r = new java.util.Vector<double[]>() ;
 
-		for ( int n=0 ; n<spherical.length ; n++ ) {
+		for ( int n=0 ; n<spherical.length ; n++ )
 			r.add( valueOf( spherical[n] ) ) ;
-		}
 
 		return r ;
 	}
@@ -519,9 +344,8 @@ public final class ApplicationFactory {
 	public static double[] valueOf( SphericalType spherical ) {
 		double[] r = { 1, 0, 0 } ;
 
-		if ( spherical.getR() != null ) {
+		if ( spherical.getR() != null )
 			r[0] = valueOf( spherical.getR() ) ;
-		}
 		r[1] = valueOf( spherical.getPhi() ) ;
 		r[2] = valueOf( spherical.getTheta() ) ;
 
@@ -531,9 +355,8 @@ public final class ApplicationFactory {
 	public static double[] valueOf( PolarType polar ) {
 		double[] r = { 1, 0 } ;
 
-		if ( polar.getR() != null ) {
+		if ( polar.getR() != null )
 			r[0] = valueOf( polar.getR() ) ;
-		}
 		r[1] = valueOf( polar.getPhi() ) ;
 
 		return r ;
@@ -544,20 +367,13 @@ public final class ApplicationFactory {
 	}
 
 	public static double valueOf( AngleType angle ) {
-		double r ;
-
 		if ( angle.getRational() == null ) {
-			if ( angle.getDMS() == null ) {
-				r = CAACoordinateTransformation.HoursToDegrees( valueOf( angle.getHMS() ) ) ;
-			} else {
-				r = valueOf( angle.getDMS() ) ;
-			}
-
-		} else {
-			r = valueOf( angle.getRational() ) ;
-		}
-
-		return r ;
+			if ( angle.getDMS() == null )
+				return CAACoordinateTransformation.HoursToDegrees( valueOf( angle.getHMS() ) ) ;
+			else
+				return valueOf( angle.getDMS() ) ;
+		} else
+			return valueOf( angle.getRational() ) ;
 	}
 
 	public static long[] valueOf( YMDType ymd ) {

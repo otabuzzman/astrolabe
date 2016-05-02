@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
 <preferences>
+	<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 	<root type="system">
 		<map/>
 		<node name="java">
@@ -48,29 +49,10 @@
 				</node>
 			</node>
 		</node>
-		<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 		<node name="astrolabe">
 			<map/>
 			<node name="model">
 				<map/>
-				<node name="CircleParallel">
-					<map/>
-					<node name="default">
-						<map>
-							<!--keys must equal to method names in model class.-->
-							<entry key="setImportance,java.lang.String" value="canonical"/>
-						</map>
-					</node>
-				</node>
-				<node name="CircleMeridian">
-					<map/>
-					<node name="default">
-						<map>
-							<!--keys must equal to method names in model class.-->
-							<entry key="setImportance,java.lang.String" value="canonical"/>
-						</map>
-					</node>
-				</node>
 				<node name="BodyStellar">
 					<map/>
 					<node name="default">
@@ -110,6 +92,7 @@
 			<node name="Astrolabe">
 				<map>
 					<entry key="viewer" value="gswin32c.exe -dBATCH -dNOPAUSE -q -"/>
+					<entry key="libcaa" value="cygcaa-1.17"/>
 				</map>
 				<node name="astrolabe">
 					<map>
@@ -277,14 +260,10 @@
 					<entry key="celestial" value=".38:0"/>
 				</map>
 			</node>
-			<node name="ChartStereographic">
+			<node name="ChartPage">
 				<map>
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
-				</map>
-			</node>
-			<node name="ChartPage">
-				<map>
 					<!--keys must equal to allowed values of concerning attributes in XSD.-->
 					<entry key="a0" value="840x1188"/>
 					<entry key="a1" value="594x840"/>
@@ -418,6 +397,16 @@
 					<entry key="superscriptshrink" value=".8"/>
 					<entry key="margin" value="1.2"/>
 					<entry key="rise" value="1.2"/>
+					<!--Frame-->
+					<entry key="topleft" value="0:1"/>
+					<entry key="topmiddle" value=".5:1"/>
+					<entry key="topright" value="1:1"/>
+					<entry key="middleleft" value="0:.5"/>
+					<entry key="middle" value=".5:.5"/>
+					<entry key="middleright" value="1:.5"/>
+					<entry key="bottomleft" value="0:0"/>
+					<entry key="bottommiddle" value=".5:0"/>
+					<entry key="bottomright" value="1:0"/>
 				</map>
 			</node>
 			<node name="AnnotationCurved">
@@ -428,19 +417,6 @@
 					<entry key="superscriptshrink" value=".8"/>
 					<entry key="margin" value="1.2"/>
 					<entry key="rise" value="1.2"/>
-				</map>
-			</node>
-			<node name="Frame">
-				<map>
-					<entry key="topleft" value="0:1"/>
-					<entry key="topmiddle" value=".5:1"/>
-					<entry key="topright" value="1:1"/>
-					<entry key="middleleft" value="0:.5"/>
-					<entry key="middle" value=".5:.5"/>
-					<entry key="middleright" value="1:.5"/>
-					<entry key="bottomleft" value="0:0"/>
-					<entry key="bottommiddle" value=".5:0"/>
-					<entry key="bottomright" value="1:0"/>
 				</map>
 			</node>
 			<node name="BodyPlanet">
@@ -516,6 +492,7 @@
 			</node>
 			<node name="CatalogADC1239HRecord">
 				<map>
+					<entry key="HIP" value=".+"/>
 					<entry key="RAhms" value=".+"/>
 					<entry key="DEdms" value=".+"/>
 					<entry key="Vmag" value=".+"/>
@@ -523,6 +500,7 @@
 			</node>
 			<node name="CatalogADC1239TRecord">
 				<map>
+					<entry key="TYC" value=".+"/>
 					<entry key="RAhms" value=".+"/>
 					<entry key="DEdms" value=".+"/>
 					<entry key="Vmag" value=".+"/>
@@ -530,6 +508,7 @@
 			</node>
 			<node name="CatalogADC5050Record">
 				<map>
+					<entry key="HR" value=".+"/>
 					<entry key="RAh" value=".+"/>
 					<entry key="RAm" value=".+"/>
 					<entry key="RAs" value=".+"/>
@@ -542,6 +521,7 @@
 			</node>
 			<node name="CatalogADC5109Record">
 				<map>
+					<entry key="ID" value=".+"/>
 					<entry key="RAh" value=".+"/>
 					<entry key="RAm" value=".+"/>
 					<entry key="RAs" value=".+"/>
@@ -554,6 +534,7 @@
 			</node>
 			<node name="CatalogADC6049Record">
 				<map>
+					<entry key="con" value=".+"/>
 					<entry key="RAh" value=".+"/>
 					<entry key="DEd" value=".+"/>
 				</map>
@@ -565,6 +546,7 @@
 			</node>
 			<node name="CatalogADC7118Record">
 				<map>
+					<entry key="Name" value=".+"/>
 					<entry key="RAh" value=".+"/>
 					<entry key="RAm" value=".+"/>
 					<entry key="DE" value=".+"/>
@@ -580,6 +562,8 @@
 			</node>
 			<node name="CatalogADC7237Record">
 				<map>
+					<entry key="PGC" value=".+"/>
+					<entry key="PA" value=".+"/>
 					<entry key="RAh" value=".+"/>
 					<entry key="RAm" value=".+"/>
 					<entry key="RAs" value=".+"/>
@@ -587,6 +571,7 @@
 					<entry key="DEd" value=".+"/>
 					<entry key="DEm" value=".+"/>
 					<entry key="DEs" value=".+"/>
+					<entry key="logR25" value=".+"/>
 					<entry key="logD25" value=".+"/>
 				</map>
 			</node>

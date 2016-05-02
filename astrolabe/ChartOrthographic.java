@@ -29,8 +29,7 @@ public class ChartOrthographic extends ChartAzimuthalType implements PostscriptE
 
 		if ( getAtlas() != null ) {
 			page = new ChartPage() ;
-			getChartPage().setupCompanion( page ) ;
-			page.register() ;
+			getChartPage().copyValues( page ) ;
 
 			view = page.view() ;
 

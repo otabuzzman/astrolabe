@@ -1,6 +1,7 @@
 
 package astrolabe;
 
+import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -44,6 +45,22 @@ public final class Configuration {
 
 	public Configuration( Class<?> clazz ) {
 		this.clazz = clazz ;
+	}
+
+	public static boolean init() {
+		String file ;
+
+		file = Configuration.class.getPackage().getName()+".preferences" ;
+
+		try {
+			Preferences.importPreferences( new FileInputStream( file ) ) ;
+		} catch (Exception e) {
+			if ( verbose )
+				log.info( ParameterNotValidError.errmsg( file, e.getLocalizedMessage() ) ) ;
+			return false ;
+		}
+
+		return true ;
 	}
 
 	public Configuration() {
@@ -276,7 +293,7 @@ public final class Configuration {
 		StringBuffer msg ;
 		String fmt ;
 
-		cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new MessageCatalog( this ) ;
 		fmt = cat.message( MK_DEFAULT, null ) ;
 		if ( fmt != null ) {
 			msg = new StringBuffer() ;

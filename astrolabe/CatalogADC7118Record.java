@@ -54,7 +54,7 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 		String fmt ;
 
 		if ( data.length() != CR_LENGTH ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_ERECLEN, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
@@ -85,7 +85,7 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 		SubstituteCatalog cat ;
 		String sub ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new SubstituteCatalog( this ) ;
 
 		sub = cat.substitute( QK_NAME, null ) ;
 		Registry.register( sub, Name ) ;
@@ -147,7 +147,7 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 					value = (String) token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					if ( ! value.matches( pattern ) ) {
-						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						cat = new MessageCatalog( this ) ;
 						fmt = cat.message( MK_ERECVAL, null ) ;
 						if ( fmt != null ) {
 							msg = new StringBuffer() ;

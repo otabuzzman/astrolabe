@@ -13,21 +13,19 @@ public class DialDay extends DialDegree {
 	private Baseline baseline ;
 
 	public DialDay( Baseline baseline ) {
-		super( baseline, 1 ) ;
+		super( baseline ) ;
 
 		this.baseline = baseline ;
 	}
 
-	public void register( int index ) {
+	protected void register( double jd ) {
 		SubstituteCatalog cat ;
 		String sub ;
 		CAADate date ;
 		DMS hms ;
-		double jd, eot ;
+		double eot ;
 
-		jd = baseline.scaleMarkNth( index, getGraduationSpan().getValue() ) ;
-
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		cat = new SubstituteCatalog( this ) ;
 		sub = cat.substitute( QK_DAY, null ) ;
 		Registry.register( sub, (long) ( jd*100+.5 )/100 ) ;
 

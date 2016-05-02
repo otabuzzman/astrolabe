@@ -24,7 +24,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 			AnnotationStraight annotation ;
 
 			annotation = new AnnotationStraight() ;
-			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			getAnnotationStraight( an ).copyValues( annotation ) ;
 			annotation.register() ;
 
 			ps.operator.gsave() ;

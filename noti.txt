@@ -295,3 +295,84 @@ Y&#x003e;=0 &#x0026;&#x0026; X/Y &#x003c; 0.707 &#x0026;&#x0026; X/Y &#x003e;= -
 X > Xa3*82%/2-2 || Y > Ya3/2*82%/2-2 || X < -Xa3/2*82%/2-2 || Y < -Ya3/2*82%/2-2
 X &#x003e; 119.7 || Y &#x003e; 170.2 || X &#x003c; -119.7 || Y &#x003c; -170.2
 X&#x003e;119.7||Y&#x003e;170.2||X&#x003c;-119.7||Y&#x003c;-170.2?&#x0022;guidance&#x0022;:&#x0022;none&#x0022;
+
+			Coordinate[] coordRing = new Coordinate[] {
+					new Coordinate( -50, -50 ),
+					new Coordinate( 50, -50 ),
+					new Coordinate( 50, 50 ),
+					new Coordinate( -50, 50 ),
+					new Coordinate( -50, -50 )
+			} ;
+			LinearRing ring = new GeometryFactory().createLinearRing( coordRing ) ;
+			Polygon poly = new GeometryFactory().createPolygon( ring, null ) ;
+
+			Coordinate[] coordLineCov = new Coordinate[] {
+					new Coordinate( -30, -70 ),
+					new Coordinate( 30, 70 ),
+			} ;
+			LineString lineCov = new GeometryFactory().createLineString( coordLineCov ) ;
+
+			Coordinate[] coordLineInj = new Coordinate[] {
+					new Coordinate( 30, -70 ),
+					new Coordinate( -30, 20 ),
+			} ;
+			LineString lineInj = new GeometryFactory().createLineString( coordLineInj ) ;
+
+			Geometry geometry = null ;
+			geometry = poly
+			.symDifference( lineCov ). ;
+			
+			
+			ps.array( true ) ;
+			for ( Coordinate xy : lineCov.getCoordinates() ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
+			}
+			ps.array( false ) ;
+
+			ps.operator.newpath() ;
+			ps.operator.setrgbcolor( 1, 0, 0 ) ;
+			ps.gdraw() ;
+			ps.operator.stroke() ;
+			
+			
+			
+			ps.array( true ) ;
+			for ( Coordinate xy : lineInj.getCoordinates() ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
+			}
+			ps.array( false ) ;
+
+			ps.operator.newpath() ;
+			ps.operator.setrgbcolor( 1, 0, 0 ) ;
+			ps.gdraw() ;
+			ps.operator.stroke() ;
+			
+			
+			
+			ps.array( true ) ;
+			for ( Coordinate xy : poly.getCoordinates() ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
+			}
+			ps.array( false ) ;
+
+			ps.operator.newpath() ;
+			ps.operator.setrgbcolor( 1, 0, 0 ) ;
+			ps.gdraw() ;
+			ps.operator.stroke() ;
+			
+			
+			
+			ps.array( true ) ;
+			for ( Coordinate xy : geometry.getCoordinates() ) {
+				ps.push( xy.x ) ;
+				ps.push( xy.y ) ;
+			}
+			ps.array( false ) ;
+
+			ps.operator.newpath() ;
+			ps.operator.setrgbcolor( 0, 0, 1 ) ;
+			ps.gdraw() ;
+			ps.operator.stroke() ;

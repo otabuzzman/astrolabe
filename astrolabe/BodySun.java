@@ -43,7 +43,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		CAADate epoch ;
 		long year ;
 
-		epochgc = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epochgc = Epoch.retrieve() ;
 
 		epoch = new CAADate() ;
 		epoch.Set( epochgc, true ) ;
@@ -99,37 +99,43 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		Configuration conf ;
 		ListCutter cutter ;
 		Geometry fov ;
+		ChartPage page ;
 		astrolabe.model.BodySun peer ;
 		BodySun body ;
 		List<int[]> listid ;
 		List<Double> listjd ;
 		double jdAe, jdOe ;
 		Baseline circle ;
-		List<double[]> l ;
+		List<double[]> list ;
 		double[] epoch, xy ;
 
 		epoch = epoch() ;
 
 		if ( cut ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+			fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
 			if ( fov == null ) {
-				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+				page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+				if ( page != null )
+					fov = page.getViewGeometry() ;
 			}
 
 			listjd = new java.util.Vector<Double>() ;
-			cutter = new ListCutter( list( listjd, epoch[0], epoch[1], 0 ), fov ) ;
-
 			listid = new java.util.Vector<int[]>() ;
-			cutter.segmentsInterior( listid ) ;
+			list = list( listjd, epoch[0], epoch[1], 0 ) ;
+
+			if ( fov == null ) {
+				listid.add( new int[] { 0, list.size()-1 } ) ;
+			} else {
+				cutter = new ListCutter( list, fov ) ;
+				cutter.segmentsInterior( listid ) ;
+			}
+
 			for ( int[] jdid : listid ) {
 				jdAe = listjd.get( jdid[0] ) ;
 				jdOe = listjd.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodySun() ;
-				if ( getName() == null )
-					peer.setName( ApplicationConstant.GC_NS_CUT ) ;
-				else
-					peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
+				peer.setName( getName() ) ;
 
 				peer.setStretch( getStretch() ) ;
 				peer.setType( getType() ) ;
@@ -156,7 +162,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				}
 
 				body = new BodySun( projector ) ;
-				peer.setupCompanion( body ) ;
+				peer.copyValues( body ) ;
 
 				ps.operator.gsave();
 
@@ -170,10 +176,10 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			circle = (Baseline) Registry.retrieve( getCircle() ) ;
 
 			if ( circle==null ) {
-				l = list( null, epoch[0], epoch[1], 0 ) ;
+				list = list( null, epoch[0], epoch[1], 0 ) ;
 				ps.array( true ) ;
-				for ( int n=0 ; n<l.size() ; n++ ) {
-					xy = (double[]) l.get( n ) ;
+				for ( int n=0 ; n<list.size() ; n++ ) {
+					xy = (double[]) list.get( n ) ;
 					ps.push( xy[0] ) ;
 					ps.push( xy[1] ) ;
 				}
@@ -212,7 +218,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					PostscriptEmitter dial ;
 
 					dial = new DialDay( this ) ;
-					getDialDay().setupCompanion( dial ) ;
+					getDialDay().copyValues( dial ) ;
 
 					ps.operator.gsave() ;
 
@@ -227,7 +233,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					PostscriptEmitter dial ;
 
 					dial = new DialDay( this ) ;
-					getDialDay().setupCompanion( dial ) ;
+					getDialDay().copyValues( dial ) ;
 
 					ps.operator.gsave() ;
 

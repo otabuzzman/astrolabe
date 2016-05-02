@@ -1,31 +1,29 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-
 @SuppressWarnings("serial")
 public class DialHour extends DialDegree {
 
 	// qualifier key (QK_)
 	private final static String QK_ANGLE = "angle" ;
 
-	private Baseline baseline ;
-	private double unit ;
-
 	public DialHour( Baseline baseline ) {
-		super( baseline, CAACoordinateTransformation.HoursToDegrees( 1 ) ) ;
-
-		this.baseline = baseline ;	
-		this.unit = CAACoordinateTransformation.HoursToDegrees( 1 ) ;
+		super( baseline ) ;
 	}
 
-	public void register( int index ) {
-		double a ;
-		DMS dms ;
+	public double getSpan() {
+		return super.getSpan()*15 ;
+	}
 
-		a = baseline.scaleMarkNth( index, getGraduationSpan().getValue()*unit ) ;
+	public double getHalf() {
+		return super.getHalf()*15 ;
+	}
 
-		dms = new DMS( a/15 ) ;
-		dms.register( this, QK_ANGLE ) ;
+	public double getFull() {
+		return super.getFull()*15 ;
+	}
+
+	protected void register( double angle ) {
+		new DMS( angle/15 ).register( this, QK_ANGLE ) ;
 	}
 }

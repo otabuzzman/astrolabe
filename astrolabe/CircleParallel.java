@@ -11,6 +11,8 @@ import org.exolab.castor.xml.ValidationException;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -91,7 +93,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			} catch ( ParameterNotValidException e ) {
 				log.warn( e.getMessage() ) ;
 
-				r = 359.9999 ;
+				r = 360 ;
 			}
 		} else {
 			r = ApplicationFactory.valueOf( getEnd().getAngle() ) ;
@@ -102,11 +104,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void register() {
-		LineString fov ;
 		List<double[]> list ;
+		Geometry fov ;
+		LineString fovL ;
+		LinearRing fovR ;
+		Polygon fovP ;
 		Point point ;
-		DMS dms ;
 		double al ;
+		DMS dms ;
 
 		if ( getName() != null )
 			Registry.register( getName(), this ) ;
@@ -116,14 +121,18 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		point.register() ;
 
 		if ( getFov() != null ) {
-			fov = new GeometryFactory().createLineString(
-					new JTSCoordinateArraySequence( list ) ) ;
+			fovL = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
 
-			if ( fov.isRing() ) {
-				Registry.register( getFov(),
-						new GeometryFactory().createPolygon(
-								new GeometryFactory().createLinearRing( fov.getCoordinateSequence() ), null ) ) ;
-			} else { // extend
+			if ( fovL.isRing() ) {
+				fovR = new GeometryFactory().createLinearRing( fovL.getCoordinates() ) ;
+				fovP = new GeometryFactory().createPolygon( fovR, null ) ;
+
+				Registry.register( getFov(), fovP ) ;
+			} else {
+				fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
+				if ( fov != null ) {
+					// extend by fovL
+				}
 			}
 		}
 
@@ -142,40 +151,42 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		Geometry fov, circle ;
-
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-
-		circle = new GeometryFactory().createLineString(
-				new JTSCoordinateArraySequence( list( null, begin(), end(), 0 ) ) ) ;
-
-		emitPS( ps, !fov.covers( circle ) ) ;
+		emitPS( ps, true ) ;
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
 		Configuration conf ;
 		ListCutter cutter ;
+		List<List<double[]>> segment ;
+		List<double[]> list ;
+		ChartPage page ;
 		Geometry fov ;
 		astrolabe.model.CircleParallel peer ;
 		CircleParallel circle ;
 		double[] lob, loe, xy ;
-		List<double[]> l ;
 
 		if ( cut ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			cutter = new ListCutter( list( null, begin(), end(), 0 ), fov ) ;
-			for ( List<double[]> s : cutter.segmentsIntersecting( true ) ) {
+			list = list( null, begin(), end(), 0 ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+
+			if ( page == null ) {
+				emitPS( ps, false ) ;
+
+				return ;
+			}
+
+			fov = page.getViewGeometry() ;
+			cutter = new ListCutter( list, fov ) ;
+			segment = cutter.segmentsIntersecting( true ) ;
+
+			for ( List<double[]> s : segment ) {
 				lob = projector.unproject( s.get( 0 ) ) ;
 				xy = s.get( s.size()-1 ) ;
 				loe = projector.unproject( xy ) ; 
 
 				try {
 					peer = new astrolabe.model.CircleParallel() ;
-					if ( getName() == null )
-						peer.setName( ApplicationConstant.GC_NS_CUT ) ;
-					else
-						peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-					ApplicationFactory.modelOf( peer, false ) ;
+					peer.setName( getName() ) ;
 
 					peer.setImportance( getImportance() ) ;
 
@@ -206,7 +217,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				}
 
 				circle = new CircleParallel( projector ) ;
-				peer.setupCompanion( circle ) ;
+				peer.copyValues( circle ) ;
 				circle.register() ;
 
 				ps.operator.gsave() ;
@@ -218,10 +229,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				ps.operator.grestore() ;
 			}
 		} else {
-			l = list( null, begin(), end(), 0 ) ;
+			list = list( null, begin(), end(), 0 ) ;
 			ps.array( true ) ;
-			for ( int n=0 ; n<l.size() ; n++ ) {
-				xy = l.get( n ) ;
+			for ( int n=0 ; n<list.size() ; n++ ) {
+				xy = list.get( n ) ;
 				ps.push( xy[0] ) ;
 				ps.push( xy[1] ) ;
 			}
@@ -584,11 +595,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 		gnaz = CAACoordinateTransformation.MapTo0To360Range( gnho[0] ) ;
 		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_EINTSEC, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
-				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+getName()+'>' } ) ) ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
 			} else
 				msg = null ;
 
@@ -654,11 +665,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		gne = gn.end() ;
 
 		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne ) {
-			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			cat = new MessageCatalog( this ) ;
 			fmt = cat.message( MK_EINTSEC, null ) ;
 			if ( fmt != null ) {
 				msg = new StringBuffer() ;
-				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+getName()+'>' } ) ) ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
 			} else
 				msg = null ;
 

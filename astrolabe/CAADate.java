@@ -77,8 +77,8 @@ public class CAADate extends caa.CAADate {
 		MessageCatalog mcat ;
 		String sub, val, k ;
 
-		scat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, clazz ) ;
-		mcat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		scat = new SubstituteCatalog( clazz ) ;
+		mcat = new MessageCatalog( this ) ;
 
 		if ( key == null ) {
 			sub = scat.substitute( QK_NUMBEROFYYYY, null ) ;

@@ -60,7 +60,7 @@ public class Point {
 		SubstituteCatalog cat ;
 		String sub, k ;
 
-		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, clazz ) ;
+		cat = new SubstituteCatalog( clazz ) ;
 
 		if ( key == null ) {
 			sub = cat.substitute( QK_X, null ) ;

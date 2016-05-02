@@ -70,7 +70,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 		la0 = BodySun.meanEclipticLatitude( jd ) ;
 		lo0 = BodySun.meanEclipticLongitude( jd ) ;
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ; 
+		epoch = Epoch.retrieve() ; 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
@@ -107,7 +107,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 			AnnotationStraight annotation ;
 
 			annotation = new AnnotationStraight() ;
-			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			getAnnotationStraight( an ).copyValues( annotation ) ;
 			annotation.register() ;
 
 			ps.operator.gsave() ;

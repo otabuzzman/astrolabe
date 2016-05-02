@@ -67,6 +67,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		Configuration conf ;
 		ListCutter cutter ;
 		List<List<double[]>> segment ;
+		List<double[]> list ;
 		Comparator<List<double[]>> comparator = new Comparator<List<double[]>>() {
 			public int compare( List<double[]> a, List<double[]> b ) {
 				double alen, blen ;
@@ -80,19 +81,28 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 		} ;
 		Geometry fov ;
+		ChartPage page ;
 		double[] xy ;
 		Vector z, p ;
 		double a ;
 
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
 		if ( fov == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			if ( page != null )
+				fov = page.getViewGeometry() ;
 		}
 
-		cutter = new ListCutter( list(), fov ) ;
-		segment = cutter.segmentsIntersecting( true ) ;
-		if ( segment.size()>1 )
-			Collections.sort( segment, comparator ) ;
+		list = list() ;
+
+		if ( fov == null )
+			( segment = new java.util.Vector<List<double[]>>() ).add( list ) ;
+		else {
+			cutter = new ListCutter( list(), fov ) ;
+			segment = cutter.segmentsIntersecting( true ) ;
+			if ( segment.size()>1 )
+				Collections.sort( segment, comparator ) ;
+		}
 
 		for ( int s=0 ; s<segment.size() ; s++ ) {
 			ps.operator.gsave() ;
@@ -193,7 +203,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 		} else {
 			ellipse = new ShapeElliptical( projector ) ;
-			getBodyArealTypeChoice().getShapeElliptical().setupCompanion( ellipse ) ;
+			getBodyArealTypeChoice().getShapeElliptical().copyValues( ellipse ) ;
 
 			outline.addAll( ellipse.list() ) ;
 		}

@@ -61,7 +61,7 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 			while ( ( l = b.readLine() ) != null ) {
 				if ( l.length() != _le ) {
-					cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+					cat = new MessageCatalog( this ) ;
 					fmt = cat.message( MK_ERECLEN, null ) ;
 					if ( fmt != null ) {
 						msg = new StringBuffer() ;
@@ -75,7 +75,7 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 				lv = l.trim().split( "[ ]+" ) ;
 				if ( lv.length != 4 ) {
 					msg = new StringBuffer() ;
-					msg.append( MessageCatalog.message( ApplicationConstant.GC_APPLICATION, this, MK_ERECFMT, null ) ) ;
+					msg.append( MessageCatalog.message( this, MK_ERECFMT, null ) ) ;
 
 					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg.toString() ) ) ;
 				}
@@ -112,8 +112,8 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		MessageCatalog mcat ;
 		String sub, val ;
 
-		scat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
-		mcat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		scat = new SubstituteCatalog( this ) ;
+		mcat = new MessageCatalog( this ) ;
 
 		sub = scat.substitute( QK_CON, null ) ;
 		Registry.register( sub , con ) ;
@@ -167,7 +167,7 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					for ( String v : unsafecast( value ) )
 						if ( ! v.matches( pattern ) ) {
-							cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+							cat = new MessageCatalog( this ) ;
 							fmt = cat.message( MK_ERECVAL, null ) ;
 							if ( fmt != null ) {
 								msg = new StringBuffer() ;

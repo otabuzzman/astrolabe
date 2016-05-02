@@ -34,6 +34,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private final static double DEFAULT_MARGIN				= 1.2 ;
 	private final static double DEFAULT_RISE				= 1.2 ;
 
+	private final static String DEFAULT_ANCHOR				= "0:0" ; // bottomleft
+
 	private double subscriptshrink ;
 	private double subscriptshift ;
 	private double superscriptshrink ;
@@ -61,29 +63,35 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Script script ;
-		Layout layout ;
-		Frame frame ;
-		int number, ns, n0 ;
+		ChartPage page ;
+		int num, ns, n0 ;
 		double p, height ;
+		String[] xyRaw ;
+		double[] frame, xyVal ;
 
 		ps.operator.gsave() ;
 
 		if ( getFrame() != null ) {
-			layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
-			number = Integer.parseInt( getFrame().getNumber() ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			if ( page != null ) {
+				num = Integer.parseInt( getFrame().getNumber() ) ;
+				frame = page.getFrameDef( num ) ;
 
-			frame = new Frame( layout.frame( number ) ) ;
-			getFrame().setupCompanion( frame ) ;
+				xyRaw = Configuration.getValue( this, getFrame().getAnchor(), DEFAULT_ANCHOR )
+				.split( ":" ) ;
 
-			frame.headPS( ps ) ;
-			frame.emitPS( ps ) ;
-			frame.tailPS( ps ) ;
+				xyVal = new double[2] ;
+				xyVal[0] = frame[0]+frame[2]*new Double( xyRaw[0] ).doubleValue() ;
+				xyVal[1] = frame[1]+frame[3]*new Double( xyRaw[1] ).doubleValue() ;
+
+				ps.operator.moveto( xyVal ) ;
+			}
 		}
 
 		ps.array( true ) ;
 		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
 			script = new astrolabe.model.Script() ;
-			getScript( ns ).setupCompanion( script ) ;
+			getScript( ns ).copyValues( script ) ;
 
 			p = Configuration.getValue( script, script.getPurpose(), -1. ) ;
 			if ( p<0 )

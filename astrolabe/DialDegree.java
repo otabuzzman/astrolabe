@@ -64,7 +64,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 			v = new java.util.Vector<double[]>() ;
 
-			span = getGraduationSpan().getValue()*unit ;
+			span = getSpan() ;
 			o = baseline.scaleMarkNth( -1, span ) ;
 
 			for ( m=0 ; ; m++ ) {
@@ -156,7 +156,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			double ma, mo, o, s, span ;
 			int m = 0 ;
 
-			span = ( getGraduationSpan().getValue()/getGraduationSpan().getDivision() )*unit ;
+			span = getSpan()/getGraduationSpan().getDivision() ;
 			o = baseline.scaleMarkNth( -1, span ) ;
 
 			for ( ; ; m++ ) {
@@ -359,7 +359,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	private final static double DEFAULT_HALOMAX	= .4 ;
 
 	private Baseline baseline ;
-	private double unit ;
+	//	private double unit ;
 
 	// attribute value (AV_)
 	private final static String AV_NONE = "none" ;
@@ -367,22 +367,23 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	private final static String AV_RAIL = "rail" ;
 
 	public DialDegree( Baseline baseline ) {
-		this( baseline, 1 ) ;
-	}
-
-	public DialDegree( Baseline baseline, double unit ) {
 		this.baseline = baseline ;	
-		this.unit = unit ;
 	}
 
-	public void register( int index ) {
-		double a ;
-		DMS dms ;
+	public double getSpan() {
+		return getGraduationSpan().getValue() ;
+	}
 
-		a = baseline.scaleMarkNth( index, getGraduationSpan().getValue()*unit ) ;
+	public double getHalf() {
+		return getGraduationHalf() == null ? 0 : getGraduationHalf().getValue() ;
+	}
 
-		dms = new DMS( a ) ;
-		dms.register( this, QK_ANGLE ) ;
+	public double getFull() {
+		return getGraduationFull() == null ? 0 : getGraduationFull().getValue() ;
+	}
+
+	protected void register( double angle ) {
+		new DMS( angle ).register( this, QK_ANGLE ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -406,7 +407,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		List<double[]> v ;
 		double space, thickness ;
 		double xy[], a, o, s, rise ;
-		double mo, b[], t[] ;
+		double mo, b[], t[], span, half, full ;
 		PostscriptEmitter g ;
 
 		switch ( baseline() ) {
@@ -434,13 +435,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			break ;
 		}
 
-		a = baseline.scaleMarkNth( 0, 1 ) ;
-		o = baseline.scaleMarkNth( -1, getGraduationSpan().getValue()*unit ) ;
+		span = getSpan() ;
+		a = baseline.scaleMarkNth( 0, span ) ;
+		o = baseline.scaleMarkNth( -1, span ) ;
 
 		for ( int m=0 ; ; m++ ) {
-			mo = baseline.scaleMarkNth( m, getGraduationSpan().getValue()*unit ) ;
+			mo = baseline.scaleMarkNth( m, span ) ;
 
-			register( m ) ;
+			register( mo ) ;
 
 			b = baseline.project( mo, getReflect()?-( space+thickness ):space+thickness ) ;
 			t = baseline.tangent( mo ) ;
@@ -452,19 +454,17 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.operator.gsave() ;
 
 			g = new GraduationSpan( b, t ) ;
-			getGraduationSpan().setupCompanion( g ) ;
-			if ( getGraduationHalf() != null ) {
-				if ( isMultipleSpan( mo, getGraduationHalf().getValue()*unit ) ) {
+			getGraduationSpan().copyValues( g ) ;
+			if ( ( half = getHalf() )>0 )
+				if ( isMultipleSpan( mo, half ) ) {
 					g = new GraduationHalf( b, t ) ;
-					getGraduationHalf().setupCompanion( g ) ;
+					getGraduationHalf().copyValues( g ) ;
 				}
-			}
-			if ( getGraduationFull() != null ) {
-				if ( isMultipleSpan( mo, getGraduationFull().getValue()*unit ) ) {
+			if ( ( full = getFull() )>0 )
+				if ( isMultipleSpan( mo, full ) ) {
 					g = new GraduationFull( b, t ) ;
-					getGraduationFull().setupCompanion( g ) ;
+					getGraduationFull().copyValues( g ) ;
 				}
-			}
 			g.headPS( ps ) ;
 			g.emitPS( ps ) ;
 			g.tailPS( ps ) ;

@@ -24,7 +24,6 @@ import org.exolab.castor.xml.ValidationException;
 import caa.CAACoordinateTransformation;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
 public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Catalog {
@@ -47,16 +46,27 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 	}
 
 	public void register() {
-		Geometry fov, fovu, fove ;
+		ChartPage page ;
+		Geometry fovg, fovl ;
 
-		if ( getFov() == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-		} else {
-			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) Registry.retrieve( getFov() ) ;
-			fov = fovu.intersection( fove ) ;
+		fovg = null ;
+		fovl = null ;
+
+		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+		if ( page != null )
+			fovg = page.getViewGeometry() ;
+
+		if ( getFov() != null )
+			fovl = (Geometry) Registry.retrieve( getFov() ) ;
+
+		if ( fovg != null && fovl != null )
+			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
+		else {
+			if ( fovg != null )
+				Registry.register( FOV.RK_FOV, fovg ) ;
+			if ( fovl != null )
+				Registry.register( FOV.RK_FOV, fovl ) ;
 		}
-		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -92,7 +102,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				record.register() ;
 
 				for ( astrolabe.model.CatalogADC7237Record select : getCatalogADC7237Record() ) {
-					select.setupCompanion( record ) ;
+					select.copyValues( record ) ;
 					if ( Boolean.parseBoolean( record.getSelect() ) ) {
 						catalog.put( record.PGC, record ) ;
 
@@ -123,7 +133,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		Geometry fov ;
 		double threshold, d, s ;
 		double d25, r25, pa ;
 		double[] p, a ;
@@ -147,8 +156,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		astrolabe.model.Position pm ;
 		double ra, de ;
 
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-
 		threshold = Configuration.getValue( this, CK_THRESHOLDSCALE, DEFAULT_THRESHOLDSCALE ) ;
 
 		catalog = Arrays.asList( this.catalog
@@ -159,9 +166,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		for ( CatalogADC7237Record record : catalog ) {
 			ra = CAACoordinateTransformation.HoursToDegrees( record.RA() ) ;
 			de = record.de() ;
-			p = projector.project( ra, de ) ;
-			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( p ) ) ) )
-				continue ;
 
 			record.register() ;
 			body = new astrolabe.model.Body() ;
@@ -184,20 +188,17 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 			d25 = Double.valueOf( record.logD25 ) ;
 			if ( d25<9.99 ) {
 				d = java.lang.Math.pow( 10, d25 )*.1/60. ;
-				a = projector.project( ra+d, de ) ;
+				p = projector.project( ra, de ) ;
 				vp = new Vector( p ) ;
+				a = projector.project( ra+d, de ) ;
 				va = new Vector( a ) ;
 				s = va.sub( vp ).abs() ;
 			}
 
 			if ( s>threshold ) {
 				body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-				if ( getName() == null )
-					body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
-				else
-					body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-				ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
 				body.getBodyAreal().setName( record.PGC ) ;
+				body.getBodyAreal().initValues() ;
 
 				body.getBodyAreal().setNature( record.getNature() ) ;
 
@@ -216,12 +217,8 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				shapeElliptical.setPosition( pm ) ;
 			} else {
 				body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-				if ( getName() == null )
-					body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT ) ;
-				else
-					body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-				ApplicationFactory.modelOf( body.getBodyStellar(), false ) ;
 				body.getBodyStellar().setName( record.PGC ) ;
+				body.getBodyStellar().initValues() ;
 
 				body.getBodyStellar().setScript( record.getScript() ) ;
 				body.getBodyStellar().setAnnotation( record.getAnnotation() ) ;

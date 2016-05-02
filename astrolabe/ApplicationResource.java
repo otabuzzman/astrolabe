@@ -49,6 +49,18 @@ public class ApplicationResource {
 		this( catalog, ApplicationResource.class ) ;
 	}
 
+	public ApplicationResource( Object clazz ) {
+		this( clazz.getClass() ) ;
+	}
+
+	public ApplicationResource( Class<?> clazz ) {
+		this( clazz.getPackage().getName(), clazz ) ;
+	}
+
+	public ApplicationResource() {
+		this( ApplicationResource.class.getPackage().getName(), ApplicationResource.class ) ;
+	}
+
 	public String getString( String key, String def  ) {
 		String val ;
 

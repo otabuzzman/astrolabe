@@ -102,7 +102,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 				ps.operator.gsave() ;
 
 				annotation = new AnnotationStraight() ;
-				getAnnotationStraight( i ).setupCompanion( annotation ) ;
+				getAnnotationStraight( i ).copyValues( annotation ) ;
 				annotation.register() ;
 
 				annotation.headPS( ps ) ;

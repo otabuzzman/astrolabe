@@ -24,7 +24,7 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 			while ( ( cl = b.readLine() ) != null ) {
 				eq = cl.trim().split( "\\p{Space}+" ) ;
 				if ( eq.length != 2 ) {
-					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, this, MK_ERECFMT, null ) ;
+					msg = MessageCatalog.message( this, MK_ERECFMT, null ) ;
 
 					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg ) ) ;
 				}

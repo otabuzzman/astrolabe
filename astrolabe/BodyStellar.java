@@ -38,19 +38,22 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Script script ;
 		Geometry fov ;
+		ChartPage page ;
 		double height ;
 		double[] lo, xy ;
 		double turn, spin ;
 
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
+		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
 		if ( fov == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			if ( page != null )
+				fov = page.getViewGeometry() ;
 		}
 
 		lo = ApplicationFactory.valueOf( getPosition() ) ;
 		xy = projector.project( lo[1], lo[2] ) ;
 
-		if ( ! fov.covers( new GeometryFactory().createPoint(
+		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint(
 				new JTSCoordinate( new double[] { xy[0], xy[1] } ) ) ) )
 			return ;
 
@@ -70,7 +73,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.moveto() ;
 
 		script = new astrolabe.model.Script() ;
-		getScript().setupCompanion( script ) ;
+		getScript().copyValues( script ) ;
 
 		height = Configuration.getValue( script, script.getPurpose(), -1. ) ;
 		if ( height<0 )

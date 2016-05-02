@@ -90,4 +90,7 @@ public class Registry {
 	public static void register( String key, boolean value ) {
 		register( key, new String( Boolean.toString( value ) ) ) ;
 	}
+
+	public static void unregister( String key ) {
+	}
 }

@@ -4,7 +4,7 @@
 # Gebrauch:
 # numoff=0
 # export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
-# numoff=`xml select -N ns=http://www.chartacaeli.eu/astrolabe/model -t -v count(ns:Astrolabe/ns:Chart) atlas-stereographic-northern.xml`
+# numoff=`xml select -t -v 'count(Atlas/AtlasPage)' atlas-stereographic-northern.xml`
 # export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
 #
 
@@ -89,7 +89,7 @@ convert $atlasposterpng - -composite - |\
 convert - -resize ${aimedge}x${aimedge} $atlastargetpng
 
 #? ${pickerchart}@name
-psunit=`xml select -t -v "preferences/root/node[@name='astrolabe']/node[@name='"$pickerchart"']/map/entry[@key='unit']/@value" $astrolabeprf`
+psunit=`xml select -t -v "preferences/root/node[@name='astrolabe']/node[@name='ChartPage']/map/entry[@key='unit']/@value" $astrolabeprf`
 aimpgr=`echo "scale=4;${aimedge}/${apge}*$psunit" | bc -l`
 xml transform $atlasmapxsl $atlastargetdef |\
 >$atlastargethtm ./prepAtlasHTML.sh $atlastargetpng $aimpgr $apgurldict/${atlastargetnam}${apgurlqual}.pdf

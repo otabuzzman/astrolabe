@@ -14,7 +14,7 @@ public class CircleSouthernPolar extends CircleParallel {
 		astrolabe.model.Angle r ;
 		double e, o ;
 
-		e = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		e = Epoch.retrieve() ;
 		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
 
 		r = new astrolabe.model.Angle() ;

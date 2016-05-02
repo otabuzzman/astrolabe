@@ -1,37 +1,32 @@
 
 package astrolabe;
 
-import java.util.Date;
-
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
-
-	// configuration key (CK_)
-	private final static String CK_UNIT			= "unit" ;
-
-	private final static double DEFAULT_UNIT	= 2.834646 ;
-
-	private double unit ;
-
-	public ChartAzimuthalType() {
-		unit = Configuration.getValue( this, CK_UNIT, DEFAULT_UNIT ) ;
-	}
 
 	public double scale() {
 		ChartPage page ;
 		double[] view ;
 
 		page = new ChartPage() ;
-		getChartPage().setupCompanion( page ) ;
-		page.register() ;
+		getChartPage().copyValues( page ) ;
 
 		view = page.view() ;
 
 		return java.lang.Math.min( view[0], view[1] )/2
 		/Math.goldensection
 		*getScale()/100 ;
+	}
+
+	public void register() {
+		ChartPage page ;
+
+		page = new ChartPage() ;
+		getChartPage().copyValues( page ) ;
+
+		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
 	}
 
 	public double[] project( double RA, double d ) {
@@ -105,69 +100,16 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public void headPS( ApplicationPostscriptStream ps ) {
 		ChartPage page ;
-		double[] size ;
-		long seed ;
-
 
 		page = new ChartPage() ;
-		getChartPage().setupCompanion( page ) ;
-		page.register() ;
+		getChartPage().copyValues( page ) ;
 
-		size = page.size() ;
-
-		ps.dsc.beginSetup() ;
-
-		ps.dict( true ) ;
-		ps.push( "/PageSize" ) ;
-		ps.array( true ) ;
-		ps.push( size[0]*unit ) ;
-		ps.push( size[1]*unit ) ;
-		ps.array( false ) ;
-		ps.dict( false ) ;
-		ps.operator.setpagedevice() ;
-
-		seed = new Date().getTime()/1000 ;
-		ps.operator.srand( seed ) ;
-
-		ps.dsc.endSetup() ;
-
-		ps.dsc.beginPageSetup() ;
-
-		ps.operator.scale( unit ) ;
-
-		ps.dsc.endPageSetup() ;
-		ps.dsc.page( getName(), 1 ) ;
+		page.headPS( ps ) ;
+		page.emitPS( ps ) ;
+		page.tailPS( ps ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		ChartPage page ;
-		double[] size, view ;
-
-		page = new ChartPage() ;
-		getChartPage().setupCompanion( page ) ;
-		page.register() ;
-
-		size = page.size() ;
-		view = page.view() ;
-
-		if ( size[0]>view[0] ) {
-			ps.array( true ) ;
-			ps.push( -view[0]/2 ) ;
-			ps.push( -view[1]/2 ) ;
-			ps.push( -view[0]/2 ) ;
-			ps.push( view[1]/2 ) ;
-			ps.push( view[0]/2 ) ;
-			ps.push( view[1]/2 ) ;
-			ps.push( view[0]/2 ) ;
-			ps.push( -view[1]/2 ) ;
-			ps.array( false ) ;
-
-			ps.operator.newpath() ;
-			ps.gdraw() ;
-
-			ps.operator.closepath() ;
-			ps.operator.stroke() ;
-		}
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {

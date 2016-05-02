@@ -11,6 +11,9 @@ public class Layout {
 	private double[] frameColLE ; // left edge
 	private double[] frameRowTE ; // top edge
 
+	// registry key (RK_)
+	public final static String RK_LAYOUT = Layout.class.getName() ;
+
 	public Layout( String layout, double[] dimension ) {
 		String[] frameValsRaw, frameColsRaw, frameRowsRaw ;
 		double[] frameColsVal, frameRowsVal ;
@@ -49,6 +52,18 @@ public class Layout {
 		for ( int row=0 ; row<frameRowsVal.length ; row++ ) {
 			frameRowTE[row] = 1-frameRowsVal[row]/frameRowsVal[frameRowsVal.length-1] ;
 		}
+	}
+
+	public static Layout retrieve() {
+		Layout layout ;
+
+		layout = (Layout) Registry.retrieve( RK_LAYOUT ) ;
+		if ( layout == null ) {
+			layout = new Layout( "100x100", new double[] { -210/2, -297/2, 210/2, 297/2 } ) ;
+			Registry.register( RK_LAYOUT, layout ) ;
+		}
+
+		return layout ;
 	}
 
 	public double[] frame( int index ) {

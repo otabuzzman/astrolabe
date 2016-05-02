@@ -23,7 +23,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		double epoch, e ;
 		DMS dms ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = Epoch.retrieve() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
@@ -48,7 +48,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 			AnnotationStraight annotation ;
 
 			annotation = new AnnotationStraight() ;
-			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			getAnnotationStraight( an ).copyValues( annotation ) ;
 			annotation.register() ;
 
 			ps.operator.gsave() ;
@@ -117,7 +117,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		double[] r = new double[2] ;
 		double epoch, e ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = Epoch.retrieve() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, e ) ;
@@ -136,7 +136,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		double[] r = new double[2] ;
 		double epoch, e ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = Epoch.retrieve() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Equatorial2Ecliptic( CAACoordinateTransformation.DegreesToHours( RA ), d, e ) ;

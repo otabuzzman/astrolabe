@@ -43,7 +43,7 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 			AnnotationStraight annotation ;
 
 			annotation = new AnnotationStraight() ;
-			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			getAnnotationStraight( an ).copyValues( annotation ) ;
 			annotation.register() ;
 
 			ps.operator.gsave() ;

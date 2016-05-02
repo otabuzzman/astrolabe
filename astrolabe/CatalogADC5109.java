@@ -26,7 +26,6 @@ import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
 public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Catalog {
@@ -44,16 +43,27 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 	}
 
 	public void register() {
-		Geometry fov, fovu, fove ;
+		ChartPage page ;
+		Geometry fovg, fovl ;
 
-		if ( getFov() == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-		} else {
-			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) Registry.retrieve( getFov() ) ;
-			fov = fovu.intersection( fove ) ;
+		fovg = null ;
+		fovl = null ;
+
+		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+		if ( page != null )
+			fovg = page.getViewGeometry() ;
+
+		if ( getFov() != null )
+			fovl = (Geometry) Registry.retrieve( getFov() ) ;
+
+		if ( fovg != null && fovl != null )
+			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
+		else {
+			if ( fovg != null )
+				Registry.register( FOV.RK_FOV, fovg ) ;
+			if ( fovl != null )
+				Registry.register( FOV.RK_FOV, fovl ) ;
 		}
-		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -89,7 +99,7 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 				record.register() ;
 
 				for ( astrolabe.model.CatalogADC5109Record select : getCatalogADC5109Record() ) {
-					select.setupCompanion( record ) ;
+					select.copyValues( record ) ;
 					if ( Boolean.parseBoolean( record.getSelect() ) ) {
 						catalog.put( record.ID, record ) ;
 
@@ -120,8 +130,6 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		Geometry fov ;
-		double[] xy ;
 		List<CatalogADC5109Record> catalog ;
 		Comparator<CatalogADC5109Record> comparator = new Comparator<CatalogADC5109Record>() {
 			public int compare( CatalogADC5109Record a, CatalogADC5109Record b ) {
@@ -141,9 +149,7 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 		CAA2DCoordinate cpm, ceq ;
 		double epoch, ra, de, pmRA, pmDE ;
 
-		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
-
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = Epoch.retrieve() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -165,20 +171,12 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 			cpm.delete() ;
 			ceq.delete() ;
 
-			xy = projector.project( ra, de ) ;
-			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( xy ) ) ) )
-				continue ;
-
 			record.register() ;
 
 			body = new astrolabe.model.Body() ;
 			body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-			if ( getName() == null )
-				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT ) ;
-			else
-				body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-			ApplicationFactory.modelOf( body.getBodyStellar(), false ) ;
 			body.getBodyStellar().setName( record.HR ) ;
+			body.getBodyStellar().initValues() ;
 
 			body.getBodyStellar().setScript( record.getScript() ) ;
 			body.getBodyStellar().setAnnotation( record.getAnnotation() ) ;
@@ -205,7 +203,7 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Ca
 			}
 
 			bodyStellar = new BodyStellar( projector ) ;
-			body.getBodyStellar().setupCompanion( bodyStellar ) ;
+			body.getBodyStellar().copyValues( bodyStellar ) ;
 			bodyStellar.register() ;
 
 			ps.operator.gsave() ;

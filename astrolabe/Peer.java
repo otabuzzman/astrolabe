@@ -19,7 +19,11 @@ import org.exolab.castor.xml.XMLFieldDescriptor;
 
 public class Peer {
 
-	public void setupPeer( Preferences node ) {
+	// configuration node (CN_)
+	private final static String CN_DEFAULT	= "default" ;
+
+	public void initValues() {
+		Preferences node ;
 		String keyDis[], keyVal ;
 		Constructor<?> keyCon ;
 		Method keyMth ;
@@ -27,9 +31,9 @@ public class Peer {
 		Class<?> keyCls ;
 		HashMap<Class<?>, Class<?>> jPring ; // Java primitive types and java.lang.String
 
-		if ( ! node.name().equals( getClass().getSimpleName() ) ) {
-			setupPeer( node.parent() ) ;
-		}
+		node = Configuration.getNode( this, CN_DEFAULT ) ;
+		if ( node == null )
+			return ;
 
 		try {
 			jPring = new HashMap<Class<?>, Class<?>>() ;
@@ -72,18 +76,14 @@ public class Peer {
 		}
 	}
 
-	public void setupCompanion( Object companion ) {
+	public void copyValues( Object companion ) {
 		ParserAttribute parser ;
 		Method method[] , gm, sm ;
 		String gn, sn, vs ;
 		Class<?>[] pt ;
 		Object vp ;
 
-		parser = (ParserAttribute) Registry.retrieve( ApplicationConstant.GC_PARSER ) ;
-		if ( parser == null ) {
-			parser = new ParserAttribute() ;
-			Registry.register( ApplicationConstant.GC_PARSER, parser ) ;
-		}
+		parser = ParserAttribute.retrieve() ;
 
 		method = getClass().getMethods() ;
 		for ( int m=0 ; m<method.length ; m++ ) {

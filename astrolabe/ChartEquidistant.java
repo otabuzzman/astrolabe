@@ -29,8 +29,7 @@ public class ChartEquidistant extends ChartAzimuthalType implements PostscriptEm
 
 		if ( getAtlas() != null ) {
 			page = new ChartPage() ;
-			getChartPage().setupCompanion( page ) ;
-			page.register() ;
+			getChartPage().copyValues( page ) ;
 
 			view = page.view() ;
 

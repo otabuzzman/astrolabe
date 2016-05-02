@@ -42,16 +42,18 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 	}
 
 	public void register() {
-		Geometry fov, fovu, fove ;
+		ChartPage page ;
+		Geometry fov = null ;
 
-		if ( getFov() == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-		} else {
-			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) Registry.retrieve( getFov() ) ;
-			fov = fovu.intersection( fove ) ;
+		if ( getFov() != null )
+			fov = (Geometry) Registry.retrieve( getFov() ) ;
+		else {
+			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			if ( page != null )
+				fov = page.getViewGeometry() ;
 		}
-		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
+		if ( fov != null )
+			Registry.register( FOV.RK_FOV, fov ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -98,7 +100,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 					contour.contour.add( entry ) ;
 
 					for ( astrolabe.model.CatalogDS9Record select : getCatalogDS9Record() ) {
-						select.setupCompanion( element ) ;
+						select.copyValues( element ) ;
 						if ( Boolean.parseBoolean( element.getSelect() ) ) {
 							entry.add( element ) ;
 
@@ -154,12 +156,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 				for ( CatalogDS9Record element : entry ) {
 					body = new astrolabe.model.Body() ;
 					body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-					if ( getName() == null )
-						body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
-					else
-						body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-					ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
-					body.getBodyAreal().setName( null ) ;
+					body.getBodyAreal().initValues() ;
 
 					body.getBodyAreal().setNature( element.getNature() ) ;
 
@@ -193,7 +190,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 					}
 
 					bodyDS9 = new BodyDS9( projector ) ;
-					body.getBodyAreal().setupCompanion( bodyDS9 ) ;
+					body.getBodyAreal().copyValues( bodyDS9 ) ;
 					bodyDS9.register() ;
 
 					ps.operator.gsave() ;

@@ -18,11 +18,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 @SuppressWarnings("serial")
 public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Catalog {
@@ -46,16 +46,27 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 	}
 
 	public void register() {
-		Geometry fov, fovu, fove ;
+		ChartPage page ;
+		Geometry fovg, fovl ;
 
-		if ( getFov() == null ) {
-			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-		} else {
-			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) Registry.retrieve( getFov() ) ;
-			fov = fovu.intersection( fove ) ;
+		fovg = null ;
+		fovl = null ;
+
+		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+		if ( page != null )
+			fovg = page.getViewGeometry() ;
+
+		if ( getFov() != null )
+			fovl = (Geometry) Registry.retrieve( getFov() ) ;
+
+		if ( fovg != null && fovl != null )
+			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
+		else {
+			if ( fovg != null )
+				Registry.register( FOV.RK_FOV, fovg ) ;
+			if ( fovl != null )
+				Registry.register( FOV.RK_FOV, fovl ) ;
 		}
-		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -91,7 +102,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 				record.register() ;
 
 				for ( astrolabe.model.CatalogADC6049Record select : getCatalogADC6049Record() ) {
-					select.setupCompanion( record ) ;
+					select.copyValues( record ) ;
 					if ( Boolean.parseBoolean( record.getSelect() ) ) {
 						catalog.put( record.con, record ) ;
 
@@ -129,19 +140,15 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		List<double[]> list ;
 		double epoch, eq[] ;
 
-		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = Epoch.retrieve() ;
 
 		for ( CatalogADC6049Record record : catalog.values() ) {
 			record.register() ;
 
 			body = new astrolabe.model.Body() ;
 			body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-			if ( getName() == null )
-				body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
-			else
-				body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-			ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
 			body.getBodyAreal().setName( record.con ) ;
+			body.getBodyAreal().initValues() ;
 
 			body.getBodyAreal().setNature( record.getNature() ) ;
 
@@ -177,7 +184,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 			}
 
 			bodyAreal = new BodyAreal( projector ) ;
-			body.getBodyAreal().setupCompanion( bodyAreal ) ;
+			body.getBodyAreal().copyValues( bodyAreal ) ;
 			bodyAreal.register() ;
 
 			ps.operator.gsave() ;
