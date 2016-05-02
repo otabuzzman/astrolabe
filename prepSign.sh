@@ -27,7 +27,7 @@ while true ; do
 	set $line
 	nam=$1 ; shift
 	num=$1 ; shift
-	printf "<Sign name=\"%s\">" $nam
+	printf "<Sign name=\"%s\" nature=\"constellation\">" $nam
 	ahip=$1 ; shift
 	bhip=$1 ; shift
 	save=$*

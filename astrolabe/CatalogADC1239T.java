@@ -110,6 +110,7 @@ public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements 
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		PostscriptEmitter emitter ;
 		List<CatalogADC1239TRecord> catalog ;
 		Comparator<CatalogADC1239TRecord> comparator = new Comparator<CatalogADC1239TRecord>() {
 			public int compare( CatalogADC1239TRecord a, CatalogADC1239TRecord b ) {
@@ -129,6 +130,34 @@ public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements 
 		CAA2DCoordinate cpm, ceq ;
 		double epoch, ra, de, pmRA, pmDE ;
 		Double Epoch ;
+
+		// Artwork.verbose() ;
+
+		for ( int a=0 ; a<getArtworkCount() ; a++ ) {
+			emitter = new Artwork( projector ) ;
+			getArtwork( a ).copyValues( emitter ) ;
+
+			ps.operator.gsave() ;
+
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		for ( int s=0 ; s<getSignCount() ; s++ ) {
+			emitter = new Sign( projector ) ;
+			getSign( s ).copyValues( emitter ) ;
+
+			ps.operator.gsave() ;
+
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
 
 		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )

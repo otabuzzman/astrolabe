@@ -55,80 +55,9 @@
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
 						<CatalogADC1239H name="artwork1239" url="artwork1239.dat">
-							<!--
-							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="false" tonemap="pale">
-								<Popper>
-									<Position name="3881">
-										<lon>
-											<HMS neg="false" hrs="18" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="0"/>
-								</Popper>
-								<Popper>
-									<Position name="3092">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="90" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="512"/>
-								</Popper>
-								<Popper>
-									<Position name="9640">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="512" y="512"/>
-								</Popper>
-							</Artwork>
 							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="3881">
-										<lon>
-											<HMS neg="false" hrs="18" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="0"/>
-								</Popper>
-								<Popper>
-									<Position name="3092">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="90" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="512"/>
-								</Popper>
-								<Popper>
-									<Position name="9640">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0.0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0.0"/>
-										</lat>
-									</Position>
-									<Cartesian x="512" y="512"/>
-								</Popper>
-							</Artwork>-->
-							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="true" tonemap="pale">
-								<Popper>
-									<Position name="3881">
+									<Position name="226">
 										<lon>
 											<HMS neg="false" hrs="0" min="49" sec="48.83"/>
 										</lon>
@@ -139,7 +68,7 @@
 									<Cartesian x="198" y="215"/>
 								</Popper>
 								<Popper>
-									<Position name="3092">
+									<Position name="165">
 										<lon>
 											<HMS neg="false" hrs="0" min="39" sec="19.60"/>
 										</lon>
@@ -150,7 +79,7 @@
 									<Cartesian x="337" y="136"/>
 								</Popper>
 								<Popper>
-									<Position name="9640">
+									<Position name="603">
 										<lon>
 											<HMS neg="false" hrs="2" min="3" sec="53.92"/>
 										</lon>
@@ -163,7 +92,7 @@
 							</Artwork>
 							<Artwork name="Ant" url="../stellarium/0.12/skycultures/western/antlia.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="51172">
+									<Position name="4104">
 										<lon>
 											<HMS neg="false" hrs="10" min="27" sec="9.16"/>
 										</lon>
@@ -174,7 +103,7 @@
 									<Cartesian x="4" y="84"/>
 								</Popper>
 								<Popper>
-									<Position name="47758">
+									<Position name="3871">
 										<lon>
 											<HMS neg="false" hrs="9" min="44" sec="12.13"/>
 										</lon>
@@ -185,7 +114,7 @@
 									<Cartesian x="72" y="69"/>
 								</Popper>
 								<Popper>
-									<Position name="48926">
+									<Position name="3947">
 										<lon>
 											<HMS neg="false" hrs="9" min="58" sec="52.34"/>
 										</lon>
@@ -198,7 +127,7 @@
 							</Artwork>
 							<Artwork name="Aps" url="../stellarium/0.12/skycultures/western/apus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="81852">
+									<Position name="6163">
 										<lon>
 											<HMS neg="false" hrs="16" min="43" sec="5.42"/>
 										</lon>
@@ -209,7 +138,7 @@
 									<Cartesian x="66" y="60"/>
 								</Popper>
 								<Popper>
-									<Position name="81065">
+									<Position name="6102">
 										<lon>
 											<HMS neg="false" hrs="16" min="33" sec="27.46"/>
 										</lon>
@@ -220,7 +149,7 @@
 									<Cartesian x="76" y="87"/>
 								</Popper>
 								<Popper>
-									<Position name="72370">
+									<Position name="5470">
 										<lon>
 											<HMS neg="false" hrs="14" min="47" sec="51.73"/>
 										</lon>
@@ -233,7 +162,7 @@
 							</Artwork>
 							<Artwork name="Aql" url="../stellarium/0.12/skycultures/western/aquila.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="97649">
+									<Position name="7557">
 										<lon>
 											<HMS neg="false" hrs="19" min="50" sec="46.68"/>
 										</lon>
@@ -244,7 +173,7 @@
 									<Cartesian x="163" y="232"/>
 								</Popper>
 								<Popper>
-									<Position name="93244">
+									<Position name="7176">
 										<lon>
 											<HMS neg="false" hrs="18" min="59" sec="37.39"/>
 										</lon>
@@ -255,7 +184,7 @@
 									<Cartesian x="385" y="131"/>
 								</Popper>
 								<Popper>
-									<Position name="93805">
+									<Position name="7236">
 										<lon>
 											<HMS neg="false" hrs="19" min="6" sec="14.95"/>
 										</lon>
@@ -268,7 +197,7 @@
 							</Artwork>
 							<Artwork name="Aqr" url="../stellarium/0.12/skycultures/western/aquarius.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="115438">
+									<Position name="8892">
 										<lon>
 											<HMS neg="false" hrs="23" min="22" sec="58.30"/>
 										</lon>
@@ -279,7 +208,7 @@
 									<Cartesian x="144" y="464"/>
 								</Popper>
 								<Popper>
-									<Position name="109074">
+									<Position name="8414">
 										<lon>
 											<HMS neg="false" hrs="22" min="5" sec="47.03"/>
 										</lon>
@@ -290,7 +219,7 @@
 									<Cartesian x="179" y="98"/>
 								</Popper>
 								<Popper>
-									<Position name="102618">
+									<Position name="7950">
 										<lon>
 											<HMS neg="false" hrs="20" min="47" sec="40.53"/>
 										</lon>
@@ -303,7 +232,7 @@
 							</Artwork>
 							<Artwork name="Ara" url="../stellarium/0.12/skycultures/western/ara.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="83081">
+									<Position name="6285">
 										<lon>
 											<HMS neg="false" hrs="16" min="58" sec="37.23"/>
 										</lon>
@@ -314,7 +243,7 @@
 									<Cartesian x="98" y="70"/>
 								</Popper>
 								<Popper>
-									<Position name="85727">
+									<Position name="6500">
 										<lon>
 											<HMS neg="false" hrs="17" min="31" sec="5.98"/>
 										</lon>
@@ -325,7 +254,7 @@
 									<Cartesian x="191" y="93"/>
 								</Popper>
 								<Popper>
-									<Position name="88714">
+									<Position name="6743">
 										<lon>
 											<HMS neg="false" hrs="18" min="6" sec="37.88"/>
 										</lon>
@@ -338,7 +267,7 @@
 							</Artwork>
 							<Artwork name="Ari" url="../stellarium/0.12/skycultures/western/aries.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="13209">
+									<Position name="838">
 										<lon>
 											<HMS neg="false" hrs="2" min="49" sec="58.99"/>
 										</lon>
@@ -349,7 +278,7 @@
 									<Cartesian x="12" y="130"/>
 								</Popper>
 								<Popper>
-									<Position name="13914">
+									<Position name="887">
 										<lon>
 											<HMS neg="false" hrs="2" min="59" sec="12.73"/>
 										</lon>
@@ -360,7 +289,7 @@
 									<Cartesian x="58" y="206"/>
 								</Popper>
 								<Popper>
-									<Position name="8832">
+									<Position name="545">
 										<lon>
 											<HMS neg="false" hrs="1" min="53" sec="31.77"/>
 										</lon>
@@ -373,7 +302,7 @@
 							</Artwork>
 							<Artwork name="Aur" url="../stellarium/0.12/skycultures/western/auriga.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="28380">
+									<Position name="2095">
 										<lon>
 											<HMS neg="false" hrs="5" min="59" sec="43.24"/>
 										</lon>
@@ -384,7 +313,7 @@
 									<Cartesian x="196" y="189"/>
 								</Popper>
 								<Popper>
-									<Position name="24608">
+									<Position name="1708">
 										<lon>
 											<HMS neg="false" hrs="5" min="16" sec="41.30"/>
 										</lon>
@@ -395,7 +324,7 @@
 									<Cartesian x="419" y="208"/>
 								</Popper>
 								<Popper>
-									<Position name="23015">
+									<Position name="1577">
 										<lon>
 											<HMS neg="false" hrs="4" min="56" sec="59.62"/>
 										</lon>
@@ -408,7 +337,7 @@
 							</Artwork>
 							<Artwork name="Boo" url="../stellarium/0.12/skycultures/western/bootes.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="72105">
+									<Position name="5505">
 										<lon>
 											<HMS neg="false" hrs="14" min="44" sec="59.25"/>
 										</lon>
@@ -419,7 +348,7 @@
 									<Cartesian x="225" y="222"/>
 								</Popper>
 								<Popper>
-									<Position name="71075">
+									<Position name="5435">
 										<lon>
 											<HMS neg="false" hrs="14" min="32" sec="4.76"/>
 										</lon>
@@ -430,7 +359,7 @@
 									<Cartesian x="365" y="184"/>
 								</Popper>
 								<Popper>
-									<Position name="67927">
+									<Position name="5235">
 										<lon>
 											<HMS neg="false" hrs="13" min="54" sec="41.12"/>
 										</lon>
@@ -443,7 +372,7 @@
 							</Artwork>
 							<Artwork name="Cae" url="../stellarium/0.12/skycultures/western/caelum.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="21060">
+									<Position name="1443">
 										<lon>
 											<HMS neg="false" hrs="4" min="30" sec="50.10"/>
 										</lon>
@@ -454,7 +383,7 @@
 									<Cartesian x="16" y="231"/>
 								</Popper>
 								<Popper>
-									<Position name="21770">
+									<Position name="1502">
 										<lon>
 											<HMS neg="false" hrs="4" min="40" sec="33.82"/>
 										</lon>
@@ -465,7 +394,7 @@
 									<Cartesian x="76" y="145"/>
 								</Popper>
 								<Popper>
-									<Position name="21861">
+									<Position name="1503">
 										<lon>
 											<HMS neg="false" hrs="4" min="42" sec="3.45"/>
 										</lon>
@@ -478,7 +407,7 @@
 							</Artwork>
 							<Artwork name="Cam" url="../stellarium/0.12/skycultures/western/camelopardalis.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="25110">
+									<Position name="1686">
 										<lon>
 											<HMS neg="false" hrs="5" min="22" sec="33.78"/>
 										</lon>
@@ -489,7 +418,7 @@
 									<Cartesian x="77" y="46"/>
 								</Popper>
 								<Popper>
-									<Position name="22783">
+									<Position name="1542">
 										<lon>
 											<HMS neg="false" hrs="4" min="54" sec="3.01"/>
 										</lon>
@@ -500,7 +429,7 @@
 									<Cartesian x="128" y="135"/>
 								</Popper>
 								<Popper>
-									<Position name="16228">
+									<Position name="1035">
 										<lon>
 											<HMS neg="false" hrs="3" min="29" sec="4.13"/>
 										</lon>
@@ -513,7 +442,7 @@
 							</Artwork>
 							<Artwork name="Cnc" url="../stellarium/0.12/skycultures/western/cancer.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="44066">
+									<Position name="3572">
 										<lon>
 											<HMS neg="false" hrs="8" min="58" sec="29.20"/>
 										</lon>
@@ -524,7 +453,7 @@
 									<Cartesian x="29" y="166"/>
 								</Popper>
 								<Popper>
-									<Position name="40526">
+									<Position name="3249">
 										<lon>
 											<HMS neg="false" hrs="8" min="16" sec="30.95"/>
 										</lon>
@@ -535,7 +464,7 @@
 									<Cartesian x="101" y="255"/>
 								</Popper>
 								<Popper>
-									<Position name="40843">
+									<Position name="3262">
 										<lon>
 											<HMS neg="false" hrs="8" min="20" sec="3.87"/>
 										</lon>
@@ -548,7 +477,7 @@
 							</Artwork>
 							<Artwork name="Cap" url="../stellarium/0.12/skycultures/western/capricornus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="107556">
+									<Position name="8322">
 										<lon>
 											<HMS neg="false" hrs="21" min="47" sec="2.29"/>
 										</lon>
@@ -559,7 +488,7 @@
 									<Cartesian x="15" y="436"/>
 								</Popper>
 								<Popper>
-									<Position name="100064">
+									<Position name="7754">
 										<lon>
 											<HMS neg="false" hrs="20" min="18" sec="3.22"/>
 										</lon>
@@ -570,7 +499,7 @@
 									<Cartesian x="403" y="7"/>
 								</Popper>
 								<Popper>
-									<Position name="102978">
+									<Position name="7980">
 										<lon>
 											<HMS neg="false" hrs="20" min="51" sec="49.30"/>
 										</lon>
@@ -583,7 +512,7 @@
 							</Artwork>
 							<Artwork name="Car" url="../stellarium/0.12/skycultures/western/argonavis.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="45238">
+									<Position name="3685">
 										<lon>
 											<HMS neg="false" hrs="9" min="13" sec="12.24"/>
 										</lon>
@@ -594,7 +523,7 @@
 									<Cartesian x="202" y="455"/>
 								</Popper>
 								<Popper>
-									<Position name="50191">
+									<Position name="4023">
 										<lon>
 											<HMS neg="false" hrs="10" min="14" sec="44.27"/>
 										</lon>
@@ -605,7 +534,7 @@
 									<Cartesian x="62" y="216"/>
 								</Popper>
 								<Popper>
-									<Position name="39757">
+									<Position name="3185">
 										<lon>
 											<HMS neg="false" hrs="8" min="7" sec="32.70"/>
 										</lon>
@@ -618,7 +547,7 @@
 							</Artwork>
 							<Artwork name="Cas" url="../stellarium/0.12/skycultures/western/cassiopeia.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="8886">
+									<Position name="542">
 										<lon>
 											<HMS neg="false" hrs="1" min="54" sec="23.68"/>
 										</lon>
@@ -629,7 +558,7 @@
 									<Cartesian x="390" y="336"/>
 								</Popper>
 								<Popper>
-									<Position name="3179">
+									<Position name="168">
 										<lon>
 											<HMS neg="false" hrs="0" min="40" sec="30.39"/>
 										</lon>
@@ -640,7 +569,7 @@
 									<Cartesian x="163" y="156"/>
 								</Popper>
 								<Popper>
-									<Position name="746">
+									<Position name="21">
 										<lon>
 											<HMS neg="false" hrs="0" min="9" sec="10.09"/>
 										</lon>
@@ -653,7 +582,7 @@
 							</Artwork>
 							<Artwork name="Cen" url="../stellarium/0.12/skycultures/western/centaurus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="68933">
+									<Position name="5288">
 										<lon>
 											<HMS neg="false" hrs="14" min="6" sec="41.32"/>
 										</lon>
@@ -664,7 +593,7 @@
 									<Cartesian x="118" y="157"/>
 								</Popper>
 								<Popper>
-									<Position name="71683">
+									<Position name="5459">
 										<lon>
 											<HMS neg="false" hrs="14" min="39" sec="40.90"/>
 										</lon>
@@ -675,7 +604,7 @@
 									<Cartesian x="194" y="444"/>
 								</Popper>
 								<Popper>
-									<Position name="56561">
+									<Position name="4467">
 										<lon>
 											<HMS neg="false" hrs="11" min="35" sec="46.93"/>
 										</lon>
@@ -688,7 +617,7 @@
 							</Artwork>
 							<Artwork name="Cep" url="../stellarium/0.12/skycultures/western/cepheus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="116727">
+									<Position name="8974">
 										<lon>
 											<HMS neg="false" hrs="23" min="39" sec="20.98"/>
 										</lon>
@@ -699,7 +628,7 @@
 									<Cartesian x="60" y="335"/>
 								</Popper>
 								<Popper>
-									<Position name="106032">
+									<Position name="8238">
 										<lon>
 											<HMS neg="false" hrs="21" min="28" sec="39.58"/>
 										</lon>
@@ -710,7 +639,7 @@
 									<Cartesian x="125" y="170"/>
 								</Popper>
 								<Popper>
-									<Position name="109492">
+									<Position name="8465">
 										<lon>
 											<HMS neg="false" hrs="22" min="10" sec="51.26"/>
 										</lon>
@@ -723,7 +652,7 @@
 							</Artwork>
 							<Artwork name="Cet" url="../stellarium/0.12/skycultures/western/cetus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="14143">
+									<Position name="910">
 										<lon>
 											<HMS neg="false" hrs="3" min="2" sec="22.51"/>
 										</lon>
@@ -734,7 +663,7 @@
 									<Cartesian x="87" y="63"/>
 								</Popper>
 								<Popper>
-									<Position name="12770">
+									<Position name="811">
 										<lon>
 											<HMS neg="false" hrs="2" min="44" sec="7.35"/>
 										</lon>
@@ -745,7 +674,7 @@
 									<Cartesian x="28" y="274"/>
 								</Popper>
 								<Popper>
-									<Position name="1562">
+									<Position name="74">
 										<lon>
 											<HMS neg="false" hrs="0" min="19" sec="25.68"/>
 										</lon>
@@ -758,7 +687,7 @@
 							</Artwork>
 							<Artwork name="Cha" url="../stellarium/0.12/skycultures/western/chamaeleon.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="60000">
+									<Position name="4674">
 										<lon>
 											<HMS neg="false" hrs="12" min="18" sec="20.94"/>
 										</lon>
@@ -769,7 +698,7 @@
 									<Cartesian x="29" y="214"/>
 								</Popper>
 								<Popper>
-									<Position name="51839">
+									<Position name="4174">
 										<lon>
 											<HMS neg="false" hrs="10" min="35" sec="28.22"/>
 										</lon>
@@ -780,7 +709,7 @@
 									<Cartesian x="73" y="123"/>
 								</Popper>
 								<Popper>
-									<Position name="40702">
+									<Position name="3318">
 										<lon>
 											<HMS neg="false" hrs="8" min="18" sec="31.27"/>
 										</lon>
@@ -793,7 +722,7 @@
 							</Artwork>
 							<Artwork name="Cir" url="../stellarium/0.12/skycultures/western/circinus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="75323">
+									<Position name="5704">
 										<lon>
 											<HMS neg="false" hrs="15" min="23" sec="22.66"/>
 										</lon>
@@ -804,7 +733,7 @@
 									<Cartesian x="5" y="36"/>
 								</Popper>
 								<Popper>
-									<Position name="74824">
+									<Position name="5670">
 										<lon>
 											<HMS neg="false" hrs="15" min="17" sec="30.96"/>
 										</lon>
@@ -815,7 +744,7 @@
 									<Cartesian x="39" y="11"/>
 								</Popper>
 								<Popper>
-									<Position name="71908">
+									<Position name="5463">
 										<lon>
 											<HMS neg="false" hrs="14" min="42" sec="30.69"/>
 										</lon>
@@ -828,7 +757,7 @@
 							</Artwork>
 							<Artwork name="CMa" url="../stellarium/0.12/skycultures/western/canis-major.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="35904">
+									<Position name="2827">
 										<lon>
 											<HMS neg="false" hrs="7" min="24" sec="5.71"/>
 										</lon>
@@ -839,7 +768,7 @@
 									<Cartesian x="21" y="347"/>
 								</Popper>
 								<Popper>
-									<Position name="33160">
+									<Position name="2574">
 										<lon>
 											<HMS neg="false" hrs="6" min="54" sec="11.48"/>
 										</lon>
@@ -850,7 +779,7 @@
 									<Cartesian x="321" y="24"/>
 								</Popper>
 								<Popper>
-									<Position name="30122">
+									<Position name="2282">
 										<lon>
 											<HMS neg="false" hrs="6" min="20" sec="18.79"/>
 										</lon>
@@ -863,7 +792,7 @@
 							</Artwork>
 							<Artwork name="CMi" url="../stellarium/0.12/skycultures/western/canis-minor.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="37921">
+									<Position name="3008">
 										<lon>
 											<HMS neg="false" hrs="7" min="46" sec="16.22"/>
 										</lon>
@@ -874,7 +803,7 @@
 									<Cartesian x="96" y="43"/>
 								</Popper>
 								<Popper>
-									<Position name="37279">
+									<Position name="2943">
 										<lon>
 											<HMS neg="false" hrs="7" min="39" sec="18.54"/>
 										</lon>
@@ -885,7 +814,7 @@
 									<Cartesian x="101" y="171"/>
 								</Popper>
 								<Popper>
-									<Position name="36188">
+									<Position name="2845">
 										<lon>
 											<HMS neg="false" hrs="7" min="27" sec="9.07"/>
 										</lon>
@@ -898,7 +827,7 @@
 							</Artwork>
 							<Artwork name="Col" url="../stellarium/0.12/skycultures/western/columba.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="30277">
+									<Position name="2296">
 										<lon>
 											<HMS neg="false" hrs="6" min="22" sec="6.85"/>
 										</lon>
@@ -909,7 +838,7 @@
 									<Cartesian x="139" y="29"/>
 								</Popper>
 								<Popper>
-									<Position name="28328">
+									<Position name="2120">
 										<lon>
 											<HMS neg="false" hrs="5" min="59" sec="8.79"/>
 										</lon>
@@ -920,7 +849,7 @@
 									<Cartesian x="40" y="190"/>
 								</Popper>
 								<Popper>
-									<Position name="25859">
+									<Position name="1862">
 										<lon>
 											<HMS neg="false" hrs="5" min="31" sec="12.74"/>
 										</lon>
@@ -933,7 +862,7 @@
 							</Artwork>
 							<Artwork name="Com" url="../stellarium/0.12/skycultures/western/coma-berenices.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="64241">
+									<Position name="4968">
 										<lon>
 											<HMS neg="false" hrs="13" min="9" sec="59.55"/>
 										</lon>
@@ -944,7 +873,7 @@
 									<Cartesian x="27" y="199"/>
 								</Popper>
 								<Popper>
-									<Position name="64394">
+									<Position name="4983">
 										<lon>
 											<HMS neg="false" hrs="13" min="11" sec="52.92"/>
 										</lon>
@@ -955,7 +884,7 @@
 									<Cartesian x="38" y="58"/>
 								</Popper>
 								<Popper>
-									<Position name="60742">
+									<Position name="4737">
 										<lon>
 											<HMS neg="false" hrs="12" min="26" sec="56.33"/>
 										</lon>
@@ -968,7 +897,7 @@
 							</Artwork>
 							<Artwork name="CrA" url="../stellarium/0.12/skycultures/western/corona-australis.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="93825">
+									<Position name="7226">
 										<lon>
 											<HMS neg="false" hrs="19" min="6" sec="25.04"/>
 										</lon>
@@ -979,7 +908,7 @@
 									<Cartesian x="14" y="142"/>
 								</Popper>
 								<Popper>
-									<Position name="90887">
+									<Position name="6942">
 										<lon>
 											<HMS neg="false" hrs="18" min="32" sec="21.31"/>
 										</lon>
@@ -990,7 +919,7 @@
 									<Cartesian x="218" y="34"/>
 								</Popper>
 								<Popper>
-									<Position name="92953">
+									<Position name="7122">
 										<lon>
 											<HMS neg="false" hrs="18" min="56" sec="16.97"/>
 										</lon>
@@ -1003,7 +932,7 @@
 							</Artwork>
 							<Artwork name="CrB" url="../stellarium/0.12/skycultures/western/corona-borealis.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="78493">
+									<Position name="5971">
 										<lon>
 											<HMS neg="false" hrs="16" min="1" sec="26.59"/>
 										</lon>
@@ -1014,7 +943,7 @@
 									<Cartesian x="16" y="186"/>
 								</Popper>
 								<Popper>
-									<Position name="76952">
+									<Position name="5849">
 										<lon>
 											<HMS neg="false" hrs="15" min="42" sec="44.64"/>
 										</lon>
@@ -1025,7 +954,7 @@
 									<Cartesian x="201" y="203"/>
 								</Popper>
 								<Popper>
-									<Position name="76127">
+									<Position name="5778">
 										<lon>
 											<HMS neg="false" hrs="15" min="32" sec="55.80"/>
 										</lon>
@@ -1038,7 +967,7 @@
 							</Artwork>
 							<Artwork name="Crt" url="../stellarium/0.12/skycultures/western/crater.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="58188">
+									<Position name="4567">
 										<lon>
 											<HMS neg="false" hrs="11" min="56" sec="0.98"/>
 										</lon>
@@ -1049,7 +978,7 @@
 									<Cartesian x="45" y="41"/>
 								</Popper>
 								<Popper>
-									<Position name="55282">
+									<Position name="4382">
 										<lon>
 											<HMS neg="false" hrs="11" min="19" sec="20.52"/>
 										</lon>
@@ -1060,7 +989,7 @@
 									<Cartesian x="160" y="149"/>
 								</Popper>
 								<Popper>
-									<Position name="54682">
+									<Position name="4343">
 										<lon>
 											<HMS neg="false" hrs="11" min="11" sec="39.49"/>
 										</lon>
@@ -1073,7 +1002,7 @@
 							</Artwork>
 							<Artwork name="Cru" url="../stellarium/0.12/skycultures/western/crux.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="61084">
+									<Position name="4763">
 										<lon>
 											<HMS neg="false" hrs="12" min="31" sec="9.93"/>
 										</lon>
@@ -1084,7 +1013,7 @@
 									<Cartesian x="112" y="21"/>
 								</Popper>
 								<Popper>
-									<Position name="62434">
+									<Position name="4853">
 										<lon>
 											<HMS neg="false" hrs="12" min="47" sec="43.32"/>
 										</lon>
@@ -1095,7 +1024,7 @@
 									<Cartesian x="42" y="20"/>
 								</Popper>
 								<Popper>
-									<Position name="60718">
+									<Position name="4730">
 										<lon>
 											<HMS neg="false" hrs="12" min="26" sec="35.94"/>
 										</lon>
@@ -1108,7 +1037,7 @@
 							</Artwork>
 							<Artwork name="Crv" url="../stellarium/0.12/skycultures/western/corvus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="60965">
+									<Position name="4757">
 										<lon>
 											<HMS neg="false" hrs="12" min="29" sec="51.98"/>
 										</lon>
@@ -1119,7 +1048,7 @@
 									<Cartesian x="65" y="59"/>
 								</Popper>
 								<Popper>
-									<Position name="61359">
+									<Position name="4786">
 										<lon>
 											<HMS neg="false" hrs="12" min="34" sec="23.23"/>
 										</lon>
@@ -1130,7 +1059,7 @@
 									<Cartesian x="77" y="235"/>
 								</Popper>
 								<Popper>
-									<Position name="59316">
+									<Position name="4630">
 										<lon>
 											<HMS neg="false" hrs="12" min="10" sec="7.53"/>
 										</lon>
@@ -1143,7 +1072,7 @@
 							</Artwork>
 							<Artwork name="Cvn" url="../stellarium/0.12/skycultures/western/canes-venatici.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="63901">
+									<Position name="4943">
 										<lon>
 											<HMS neg="false" hrs="13" min="5" sec="44.46"/>
 										</lon>
@@ -1154,7 +1083,7 @@
 									<Cartesian x="117" y="113"/>
 								</Popper>
 								<Popper>
-									<Position name="61317">
+									<Position name="4785">
 										<lon>
 											<HMS neg="false" hrs="12" min="33" sec="45.09"/>
 										</lon>
@@ -1165,7 +1094,7 @@
 									<Cartesian x="206" y="40"/>
 								</Popper>
 								<Popper>
-									<Position name="61309">
+									<Position name="4783">
 										<lon>
 											<HMS neg="false" hrs="12" min="33" sec="38.90"/>
 										</lon>
@@ -1178,7 +1107,7 @@
 							</Artwork>
 							<Artwork name="Cyg" url="../stellarium/0.12/skycultures/western/cygnus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="107310">
+									<Position name="8309">
 										<lon>
 											<HMS neg="false" hrs="21" min="44" sec="8.40"/>
 										</lon>
@@ -1189,7 +1118,7 @@
 									<Cartesian x="7" y="382"/>
 								</Popper>
 								<Popper>
-									<Position name="94779">
+									<Position name="7328">
 										<lon>
 											<HMS neg="false" hrs="19" min="17" sec="6.11"/>
 										</lon>
@@ -1200,7 +1129,7 @@
 									<Cartesian x="474" y="46"/>
 								</Popper>
 								<Popper>
-									<Position name="95947">
+									<Position name="7417">
 										<lon>
 											<HMS neg="false" hrs="19" min="30" sec="43.29"/>
 										</lon>
@@ -1213,7 +1142,7 @@
 							</Artwork>
 							<Artwork name="Del" url="../stellarium/0.12/skycultures/western/delphinus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="102532">
+									<Position name="7948">
 										<lon>
 											<HMS neg="false" hrs="20" min="46" sec="39.52"/>
 										</lon>
@@ -1224,7 +1153,7 @@
 									<Cartesian x="59" y="31"/>
 								</Popper>
 								<Popper>
-									<Position name="102805">
+									<Position name="7973">
 										<lon>
 											<HMS neg="false" hrs="20" min="49" sec="37.74"/>
 										</lon>
@@ -1235,7 +1164,7 @@
 									<Cartesian x="75" y="148"/>
 								</Popper>
 								<Popper>
-									<Position name="101421">
+									<Position name="7852">
 										<lon>
 											<HMS neg="false" hrs="20" min="33" sec="12.76"/>
 										</lon>
@@ -1248,7 +1177,7 @@
 							</Artwork>
 							<Artwork name="Dor" url="../stellarium/0.12/skycultures/western/dorado.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="27890">
+									<Position name="2102">
 										<lon>
 											<HMS neg="false" hrs="5" min="54" sec="5.90"/>
 										</lon>
@@ -1259,7 +1188,7 @@
 									<Cartesian x="56" y="197"/>
 								</Popper>
 								<Popper>
-									<Position name="27100">
+									<Position name="2015">
 										<lon>
 											<HMS neg="false" hrs="5" min="44" sec="46.42"/>
 										</lon>
@@ -1270,7 +1199,7 @@
 									<Cartesian x="75" y="228"/>
 								</Popper>
 								<Popper>
-									<Position name="19893">
+									<Position name="1338">
 										<lon>
 											<HMS neg="false" hrs="4" min="16" sec="1.49"/>
 										</lon>
@@ -1283,7 +1212,7 @@
 							</Artwork>
 							<Artwork name="Dra" url="../stellarium/0.12/skycultures/western/draco.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="56211">
+									<Position name="4434">
 										<lon>
 											<HMS neg="false" hrs="11" min="31" sec="24.29"/>
 										</lon>
@@ -1294,7 +1223,7 @@
 									<Cartesian x="13" y="411"/>
 								</Popper>
 								<Popper>
-									<Position name="85670">
+									<Position name="6536">
 										<lon>
 											<HMS neg="false" hrs="17" min="30" sec="25.98"/>
 										</lon>
@@ -1305,7 +1234,7 @@
 									<Cartesian x="361" y="154"/>
 								</Popper>
 								<Popper>
-									<Position name="97433">
+									<Position name="7582">
 										<lon>
 											<HMS neg="false" hrs="19" min="48" sec="10.21"/>
 										</lon>
@@ -1318,7 +1247,7 @@
 							</Artwork>
 							<Artwork name="Equ" url="../stellarium/0.12/skycultures/western/equuleus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="104521">
+									<Position name="8097">
 										<lon>
 											<HMS neg="false" hrs="21" min="10" sec="20.47"/>
 										</lon>
@@ -1329,7 +1258,7 @@
 									<Cartesian x="17" y="180"/>
 								</Popper>
 								<Popper>
-									<Position name="104987">
+									<Position name="8131">
 										<lon>
 											<HMS neg="false" hrs="21" min="15" sec="49.40"/>
 										</lon>
@@ -1340,7 +1269,7 @@
 									<Cartesian x="149" y="86"/>
 								</Popper>
 								<Popper>
-									<Position name="105570">
+									<Position name="8178">
 										<lon>
 											<HMS neg="false" hrs="21" min="22" sec="53.58"/>
 										</lon>
@@ -1353,7 +1282,7 @@
 							</Artwork>
 							<Artwork name="Eri" url="../stellarium/0.12/skycultures/western/eridanus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="22109">
+									<Position name="1520">
 										<lon>
 											<HMS neg="false" hrs="4" min="45" sec="30.14"/>
 										</lon>
@@ -1364,7 +1293,7 @@
 									<Cartesian x="41" y="95"/>
 								</Popper>
 								<Popper>
-									<Position name="13701">
+									<Position name="874">
 										<lon>
 											<HMS neg="false" hrs="2" min="56" sec="25.60"/>
 										</lon>
@@ -1375,7 +1304,7 @@
 									<Cartesian x="296" y="44"/>
 								</Popper>
 								<Popper>
-									<Position name="7588">
+									<Position name="472">
 										<lon>
 											<HMS neg="false" hrs="1" min="37" sec="42.75"/>
 										</lon>
@@ -1388,7 +1317,7 @@
 							</Artwork>
 							<Artwork name="For" url="../stellarium/0.12/skycultures/western/fornax.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="14879">
+									<Position name="963">
 										<lon>
 											<HMS neg="false" hrs="3" min="12" sec="4.28"/>
 										</lon>
@@ -1399,7 +1328,7 @@
 									<Cartesian x="42" y="125"/>
 								</Popper>
 								<Popper>
-									<Position name="13202">
+									<Position name="845">
 										<lon>
 											<HMS neg="false" hrs="2" min="49" sec="54.15"/>
 										</lon>
@@ -1410,7 +1339,7 @@
 									<Cartesian x="128" y="37"/>
 								</Popper>
 								<Popper>
-									<Position name="13147">
+									<Position name="841">
 										<lon>
 											<HMS neg="false" hrs="2" min="49" sec="5.36"/>
 										</lon>
@@ -1423,7 +1352,7 @@
 							</Artwork>
 							<Artwork name="Gem" url="../stellarium/0.12/skycultures/western/gemini.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="37740">
+									<Position name="2985">
 										<lon>
 											<HMS neg="false" hrs="7" min="44" sec="26.87"/>
 										</lon>
@@ -1434,7 +1363,7 @@
 									<Cartesian x="14" y="81"/>
 								</Popper>
 								<Popper>
-									<Position name="32362">
+									<Position name="2484">
 										<lon>
 											<HMS neg="false" hrs="6" min="45" sec="17.43"/>
 										</lon>
@@ -1445,7 +1374,7 @@
 									<Cartesian x="117" y="252"/>
 								</Popper>
 								<Popper>
-									<Position name="28734">
+									<Position name="2134">
 										<lon>
 											<HMS neg="false" hrs="6" min="4" sec="7.22"/>
 										</lon>
@@ -1458,7 +1387,7 @@
 							</Artwork>
 							<Artwork name="Gru" url="../stellarium/0.12/skycultures/western/grus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="114131">
+									<Position name="8787">
 										<lon>
 											<HMS neg="false" hrs="23" min="6" sec="52.77"/>
 										</lon>
@@ -1469,7 +1398,7 @@
 									<Cartesian x="49" y="109"/>
 								</Popper>
 								<Popper>
-									<Position name="112623">
+									<Position name="8675">
 										<lon>
 											<HMS neg="false" hrs="22" min="48" sec="33.20"/>
 										</lon>
@@ -1480,7 +1409,7 @@
 									<Cartesian x="85" y="206"/>
 								</Popper>
 								<Popper>
-									<Position name="108085">
+									<Position name="8353">
 										<lon>
 											<HMS neg="false" hrs="21" min="53" sec="55.65"/>
 										</lon>
@@ -1493,7 +1422,7 @@
 							</Artwork>
 							<Artwork name="Her" url="../stellarium/0.12/skycultures/western/hercules.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="80170">
+									<Position name="6095">
 										<lon>
 											<HMS neg="false" hrs="16" min="21" sec="55.24"/>
 										</lon>
@@ -1504,7 +1433,7 @@
 									<Cartesian x="44" y="115"/>
 								</Popper>
 								<Popper>
-									<Position name="79992">
+									<Position name="6092">
 										<lon>
 											<HMS neg="false" hrs="16" min="19" sec="44.45"/>
 										</lon>
@@ -1515,7 +1444,7 @@
 									<Cartesian x="254" y="477"/>
 								</Popper>
 								<Popper>
-									<Position name="88794">
+									<Position name="6779">
 										<lon>
 											<HMS neg="false" hrs="18" min="7" sec="32.55"/>
 										</lon>
@@ -1528,7 +1457,7 @@
 							</Artwork>
 							<Artwork name="Hor" url="../stellarium/0.12/skycultures/western/horlogium.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="19747">
+									<Position name="1326">
 										<lon>
 											<HMS neg="false" hrs="4" min="14" sec="0.08"/>
 										</lon>
@@ -1539,7 +1468,7 @@
 									<Cartesian x="16" y="235"/>
 								</Popper>
 								<Popper>
-									<Position name="12484">
+									<Position name="802">
 										<lon>
 											<HMS neg="false" hrs="2" min="40" sec="39.58"/>
 										</lon>
@@ -1550,7 +1479,7 @@
 									<Cartesian x="184" y="67"/>
 								</Popper>
 								<Popper>
-									<Position name="14240">
+									<Position name="934">
 										<lon>
 											<HMS neg="false" hrs="3" min="3" sec="36.90"/>
 										</lon>
@@ -1563,7 +1492,7 @@
 							</Artwork>
 							<Artwork name="Hya" url="../stellarium/0.12/skycultures/western/hydra.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="64962">
+									<Position name="5020">
 										<lon>
 											<HMS neg="false" hrs="13" min="18" sec="55.25"/>
 										</lon>
@@ -1574,7 +1503,7 @@
 									<Cartesian x="26" y="491"/>
 								</Popper>
 								<Popper>
-									<Position name="55434">
+									<Position name="4386">
 										<lon>
 											<HMS neg="false" hrs="11" min="21" sec="8.25"/>
 										</lon>
@@ -1585,7 +1514,7 @@
 									<Cartesian x="111" y="149"/>
 								</Popper>
 								<Popper>
-									<Position name="43813">
+									<Position name="3547">
 										<lon>
 											<HMS neg="false" hrs="8" min="55" sec="23.68"/>
 										</lon>
@@ -1598,7 +1527,7 @@
 							</Artwork>
 							<Artwork name="Hyi" url="../stellarium/0.12/skycultures/western/hydrus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="9236">
+									<Position name="591">
 										<lon>
 											<HMS neg="false" hrs="1" min="58" sec="45.87"/>
 										</lon>
@@ -1609,7 +1538,7 @@
 									<Cartesian x="14" y="204"/>
 								</Popper>
 								<Popper>
-									<Position name="2021">
+									<Position name="98">
 										<lon>
 											<HMS neg="false" hrs="0" min="25" sec="39.20"/>
 										</lon>
@@ -1620,7 +1549,7 @@
 									<Cartesian x="201" y="43"/>
 								</Popper>
 								<Popper>
-									<Position name="17678">
+									<Position name="1208">
 										<lon>
 											<HMS neg="false" hrs="3" min="47" sec="14.23"/>
 										</lon>
@@ -1633,7 +1562,7 @@
 							</Artwork>
 							<Artwork name="Ind" url="../stellarium/0.12/skycultures/western/indus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="101772">
+									<Position name="7869">
 										<lon>
 											<HMS neg="false" hrs="20" min="37" sec="33.99"/>
 										</lon>
@@ -1644,7 +1573,7 @@
 									<Cartesian x="64" y="143"/>
 								</Popper>
 								<Popper>
-									<Position name="103227">
+									<Position name="7986">
 										<lon>
 											<HMS neg="false" hrs="20" min="54" sec="48.58"/>
 										</lon>
@@ -1655,7 +1584,7 @@
 									<Cartesian x="154" y="20"/>
 								</Popper>
 								<Popper>
-									<Position name="105319">
+									<Position name="8140">
 										<lon>
 											<HMS neg="false" hrs="21" min="19" sec="51.88"/>
 										</lon>
@@ -1668,7 +1597,7 @@
 							</Artwork>
 							<Artwork name="Lac" url="../stellarium/0.12/skycultures/western/lacerta.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="110538">
+									<Position name="8538">
 										<lon>
 											<HMS neg="false" hrs="22" min="23" sec="33.64"/>
 										</lon>
@@ -1679,7 +1608,7 @@
 									<Cartesian x="249" y="42"/>
 								</Popper>
 								<Popper>
-									<Position name="111104">
+									<Position name="8579">
 										<lon>
 											<HMS neg="false" hrs="22" min="30" sec="29.26"/>
 										</lon>
@@ -1690,7 +1619,7 @@
 									<Cartesian x="108" y="123"/>
 								</Popper>
 								<Popper>
-									<Position name="109937">
+									<Position name="8498">
 										<lon>
 											<HMS neg="false" hrs="22" min="15" sec="58.17"/>
 										</lon>
@@ -1703,7 +1632,7 @@
 							</Artwork>
 							<Artwork name="Leo" url="../stellarium/0.12/skycultures/western/leo.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="57632">
+									<Position name="4534">
 										<lon>
 											<HMS neg="false" hrs="11" min="49" sec="3.88"/>
 										</lon>
@@ -1714,7 +1643,7 @@
 									<Cartesian x="69" y="411"/>
 								</Popper>
 								<Popper>
-									<Position name="49669">
+									<Position name="3982">
 										<lon>
 											<HMS neg="false" hrs="10" min="8" sec="22.46"/>
 										</lon>
@@ -1725,7 +1654,7 @@
 									<Cartesian x="383" y="186"/>
 								</Popper>
 								<Popper>
-									<Position name="47908">
+									<Position name="3873">
 										<lon>
 											<HMS neg="false" hrs="9" min="45" sec="51.10"/>
 										</lon>
@@ -1738,7 +1667,7 @@
 							</Artwork>
 							<Artwork name="Lep" url="../stellarium/0.12/skycultures/western/lepus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="28910">
+									<Position name="2155">
 										<lon>
 											<HMS neg="false" hrs="6" min="6" sec="9.33"/>
 										</lon>
@@ -1749,7 +1678,7 @@
 									<Cartesian x="21" y="48"/>
 								</Popper>
 								<Popper>
-									<Position name="24244">
+									<Position name="1696">
 										<lon>
 											<HMS neg="false" hrs="5" min="12" sec="17.89"/>
 										</lon>
@@ -1760,7 +1689,7 @@
 									<Cartesian x="246" y="62"/>
 								</Popper>
 								<Popper>
-									<Position name="23685">
+									<Position name="1654">
 										<lon>
 											<HMS neg="false" hrs="5" min="5" sec="27.65"/>
 										</lon>
@@ -1773,7 +1702,7 @@
 							</Artwork>
 							<Artwork name="Lib" url="../stellarium/0.12/skycultures/western/libra.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="74785">
+									<Position name="5685">
 										<lon>
 											<HMS neg="false" hrs="15" min="17" sec="0.47"/>
 										</lon>
@@ -1784,7 +1713,7 @@
 									<Cartesian x="41" y="27"/>
 								</Popper>
 								<Popper>
-									<Position name="77853">
+									<Position name="5908">
 										<lon>
 											<HMS neg="false" hrs="15" min="53" sec="49.48"/>
 										</lon>
@@ -1795,7 +1724,7 @@
 									<Cartesian x="58" y="170"/>
 								</Popper>
 								<Popper>
-									<Position name="73714">
+									<Position name="5603">
 										<lon>
 											<HMS neg="false" hrs="15" min="4" sec="4.26"/>
 										</lon>
@@ -1808,7 +1737,7 @@
 							</Artwork>
 							<Artwork name="LMi" url="../stellarium/0.12/skycultures/western/leo-minor.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="53229">
+									<Position name="4247">
 										<lon>
 											<HMS neg="false" hrs="10" min="53" sec="18.64"/>
 										</lon>
@@ -1819,7 +1748,7 @@
 									<Cartesian x="8" y="40"/>
 								</Popper>
 								<Popper>
-									<Position name="46952">
+									<Position name="3800">
 										<lon>
 											<HMS neg="false" hrs="9" min="34" sec="13.38"/>
 										</lon>
@@ -1830,7 +1759,7 @@
 									<Cartesian x="214" y="127"/>
 								</Popper>
 								<Popper>
-									<Position name="50303">
+									<Position name="4024">
 										<lon>
 											<HMS neg="false" hrs="10" min="16" sec="14.48"/>
 										</lon>
@@ -1843,7 +1772,7 @@
 							</Artwork>
 							<Artwork name="Lup" url="../stellarium/0.12/skycultures/western/lupus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="74395">
+									<Position name="5649">
 										<lon>
 											<HMS neg="false" hrs="15" min="12" sec="17.20"/>
 										</lon>
@@ -1854,7 +1783,7 @@
 									<Cartesian x="90" y="257"/>
 								</Popper>
 								<Popper>
-									<Position name="70576">
+									<Position name="5396">
 										<lon>
 											<HMS neg="false" hrs="14" min="26" sec="10.80"/>
 										</lon>
@@ -1865,7 +1794,7 @@
 									<Cartesian x="207" y="435"/>
 								</Popper>
 								<Popper>
-									<Position name="75177">
+									<Position name="5705">
 										<lon>
 											<HMS neg="false" hrs="15" min="21" sec="48.44"/>
 										</lon>
@@ -1878,7 +1807,7 @@
 							</Artwork>
 							<Artwork name="Lyn" url="../stellarium/0.12/skycultures/western/lynx.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="44248">
+									<Position name="3579">
 										<lon>
 											<HMS neg="false" hrs="9" min="0" sec="38.75"/>
 										</lon>
@@ -1889,7 +1818,7 @@
 									<Cartesian x="100" y="216"/>
 								</Popper>
 								<Popper>
-									<Position name="36145">
+									<Position name="2818">
 										<lon>
 											<HMS neg="false" hrs="7" min="26" sec="42.86"/>
 										</lon>
@@ -1900,7 +1829,7 @@
 									<Cartesian x="337" y="212"/>
 								</Popper>
 								<Popper>
-									<Position name="30060">
+									<Position name="2238">
 										<lon>
 											<HMS neg="false" hrs="6" min="19" sec="37.39"/>
 										</lon>
@@ -1913,7 +1842,7 @@
 							</Artwork>
 							<Artwork name="Lyr" url="../stellarium/0.12/skycultures/western/lyra.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="92791">
+									<Position name="7139">
 										<lon>
 											<HMS neg="false" hrs="18" min="54" sec="30.29"/>
 										</lon>
@@ -1924,7 +1853,7 @@
 									<Cartesian x="100" y="96"/>
 								</Popper>
 								<Popper>
-									<Position name="91262">
+									<Position name="7001">
 										<lon>
 											<HMS neg="false" hrs="18" min="36" sec="56.19"/>
 										</lon>
@@ -1935,7 +1864,7 @@
 									<Cartesian x="157" y="38"/>
 								</Popper>
 								<Popper>
-									<Position name="92420">
+									<Position name="7106">
 										<lon>
 											<HMS neg="false" hrs="18" min="50" sec="4.79"/>
 										</lon>
@@ -1948,7 +1877,7 @@
 							</Artwork>
 							<Artwork name="Men" url="../stellarium/0.12/skycultures/western/mensa.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="21949">
+									<Position name="1541">
 										<lon>
 											<HMS neg="false" hrs="4" min="43" sec="3.95"/>
 										</lon>
@@ -1959,7 +1888,7 @@
 									<Cartesian x="100" y="67"/>
 								</Popper>
 								<Popper>
-									<Position name="25918">
+									<Position name="1953">
 										<lon>
 											<HMS neg="false" hrs="5" min="31" sec="52.66"/>
 										</lon>
@@ -1970,7 +1899,7 @@
 									<Cartesian x="179" y="136"/>
 								</Popper>
 								<Popper>
-									<Position name="29134">
+									<Position name="2221">
 										<lon>
 											<HMS neg="false" hrs="6" min="8" sec="44.34"/>
 										</lon>
@@ -1983,7 +1912,7 @@
 							</Artwork>
 							<Artwork name="Mic" url="../stellarium/0.12/skycultures/western/microscopium.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="105140">
+									<Position name="8135">
 										<lon>
 											<HMS neg="false" hrs="21" min="17" sec="56.25"/>
 										</lon>
@@ -1994,7 +1923,7 @@
 									<Cartesian x="122" y="226"/>
 								</Popper>
 								<Popper>
-									<Position name="103738">
+									<Position name="8039">
 										<lon>
 											<HMS neg="false" hrs="21" min="1" sec="17.46"/>
 										</lon>
@@ -2005,7 +1934,7 @@
 									<Cartesian x="168" y="148"/>
 								</Popper>
 								<Popper>
-									<Position name="102831">
+									<Position name="7965">
 										<lon>
 											<HMS neg="false" hrs="20" min="49" sec="58.08"/>
 										</lon>
@@ -2018,7 +1947,7 @@
 							</Artwork>
 							<Artwork name="Mon" url="../stellarium/0.12/skycultures/western/monoceros.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="39863">
+									<Position name="3188">
 										<lon>
 											<HMS neg="false" hrs="8" min="8" sec="35.66"/>
 										</lon>
@@ -2029,7 +1958,7 @@
 									<Cartesian x="20" y="306"/>
 								</Popper>
 								<Popper>
-									<Position name="31978">
+									<Position name="2456">
 										<lon>
 											<HMS neg="false" hrs="6" min="40" sec="58.66"/>
 										</lon>
@@ -2040,7 +1969,7 @@
 									<Cartesian x="394" y="80"/>
 								</Popper>
 								<Popper>
-									<Position name="29651">
+									<Position name="2227">
 										<lon>
 											<HMS neg="false" hrs="6" min="14" sec="51.34"/>
 										</lon>
@@ -2053,7 +1982,7 @@
 							</Artwork>
 							<Artwork name="Mus" url="../stellarium/0.12/skycultures/western/musca.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="61199">
+									<Position name="4773">
 										<lon>
 											<HMS neg="false" hrs="12" min="32" sec="28.11"/>
 										</lon>
@@ -2064,7 +1993,7 @@
 									<Cartesian x="57" y="52"/>
 								</Popper>
 								<Popper>
-									<Position name="62322">
+									<Position name="4844">
 										<lon>
 											<HMS neg="false" hrs="12" min="46" sec="16.87"/>
 										</lon>
@@ -2075,7 +2004,7 @@
 									<Cartesian x="177" y="68"/>
 								</Popper>
 								<Popper>
-									<Position name="57363">
+									<Position name="4520">
 										<lon>
 											<HMS neg="false" hrs="11" min="45" sec="36.57"/>
 										</lon>
@@ -2088,7 +2017,7 @@
 							</Artwork>
 							<Artwork name="Nor" url="../stellarium/0.12/skycultures/western/norma.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="78639">
+									<Position name="5962">
 										<lon>
 											<HMS neg="false" hrs="16" min="3" sec="12.86"/>
 										</lon>
@@ -2099,7 +2028,7 @@
 									<Cartesian x="17" y="45"/>
 								</Popper>
 								<Popper>
-									<Position name="79509">
+									<Position name="6024">
 										<lon>
 											<HMS neg="false" hrs="16" min="13" sec="28.73"/>
 										</lon>
@@ -2110,7 +2039,7 @@
 									<Cartesian x="101" y="38"/>
 								</Popper>
 								<Popper>
-									<Position name="80582">
+									<Position name="6115">
 										<lon>
 											<HMS neg="false" hrs="16" min="27" sec="11.05"/>
 										</lon>
@@ -2123,7 +2052,7 @@
 							</Artwork>
 							<Artwork name="Oct" url="../stellarium/0.12/skycultures/western/octans.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="70638">
+									<Position name="5339">
 										<lon>
 											<HMS neg="false" hrs="14" min="26" sec="55.74"/>
 										</lon>
@@ -2134,7 +2063,7 @@
 									<Cartesian x="15" y="16"/>
 								</Popper>
 								<Popper>
-									<Position name="107089">
+									<Position name="8254">
 										<lon>
 											<HMS neg="false" hrs="21" min="41" sec="28.47"/>
 										</lon>
@@ -2145,7 +2074,7 @@
 									<Cartesian x="236" y="239"/>
 								</Popper>
 								<Popper>
-									<Position name="112405">
+									<Position name="8630">
 										<lon>
 											<HMS neg="false" hrs="22" min="46" sec="3.72"/>
 										</lon>
@@ -2158,7 +2087,7 @@
 							</Artwork>
 							<Artwork name="Oph" url="../stellarium/0.12/skycultures/western/ophiuchus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="92946">
+									<Position name="7141">
 										<lon>
 											<HMS neg="false" hrs="18" min="56" sec="13.16"/>
 										</lon>
@@ -2169,7 +2098,7 @@
 									<Cartesian x="5" y="183"/>
 								</Popper>
 								<Popper>
-									<Position name="77233">
+									<Position name="5867">
 										<lon>
 											<HMS neg="false" hrs="15" min="46" sec="11.21"/>
 										</lon>
@@ -2180,7 +2109,7 @@
 									<Cartesian x="452" y="47"/>
 								</Popper>
 								<Popper>
-									<Position name="85755">
+									<Position name="6519">
 										<lon>
 											<HMS neg="false" hrs="17" min="31" sec="24.95"/>
 										</lon>
@@ -2193,7 +2122,7 @@
 							</Artwork>
 							<Artwork name="Ori" url="../stellarium/0.12/skycultures/western/orion.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="27913">
+									<Position name="2047">
 										<lon>
 											<HMS neg="false" hrs="5" min="54" sec="23.08"/>
 										</lon>
@@ -2204,7 +2133,7 @@
 									<Cartesian x="59" y="11"/>
 								</Popper>
 								<Popper>
-									<Position name="27366">
+									<Position name="2004">
 										<lon>
 											<HMS neg="false" hrs="5" min="47" sec="45.39"/>
 										</lon>
@@ -2215,7 +2144,7 @@
 									<Cartesian x="329" y="477"/>
 								</Popper>
 								<Popper>
-									<Position name="22449">
+									<Position name="1543">
 										<lon>
 											<HMS neg="false" hrs="4" min="49" sec="50.14"/>
 										</lon>
@@ -2228,7 +2157,7 @@
 							</Artwork>
 							<Artwork name="Pav" url="../stellarium/0.12/skycultures/western/pavo.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="100751">
+									<Position name="7790">
 										<lon>
 											<HMS neg="false" hrs="20" min="25" sec="38.85"/>
 										</lon>
@@ -2239,7 +2168,7 @@
 									<Cartesian x="55" y="60"/>
 								</Popper>
 								<Popper>
-									<Position name="98495">
+									<Position name="7590">
 										<lon>
 											<HMS neg="false" hrs="20" min="0" sec="35.39"/>
 										</lon>
@@ -2250,7 +2179,7 @@
 									<Cartesian x="110" y="208"/>
 								</Popper>
 								<Popper>
-									<Position name="86929">
+									<Position name="6582">
 										<lon>
 											<HMS neg="false" hrs="17" min="45" sec="44.00"/>
 										</lon>
@@ -2263,7 +2192,7 @@
 							</Artwork>
 							<Artwork name="Peg" url="../stellarium/0.12/skycultures/western/pegasus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="107315">
+									<Position name="8308">
 										<lon>
 											<HMS neg="false" hrs="21" min="44" sec="11.14"/>
 										</lon>
@@ -2274,7 +2203,7 @@
 									<Cartesian x="164" y="41"/>
 								</Popper>
 								<Popper>
-									<Position name="109410">
+									<Position name="8454">
 										<lon>
 											<HMS neg="false" hrs="22" min="9" sec="59.25"/>
 										</lon>
@@ -2285,7 +2214,7 @@
 									<Cartesian x="47" y="283"/>
 								</Popper>
 								<Popper>
-									<Position name="1067">
+									<Position name="39">
 										<lon>
 											<HMS neg="false" hrs="0" min="13" sec="14.15"/>
 										</lon>
@@ -2298,7 +2227,7 @@
 							</Artwork>
 							<Artwork name="Per" url="../stellarium/0.12/skycultures/western/perseus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="18532">
+									<Position name="1220">
 										<lon>
 											<HMS neg="false" hrs="3" min="57" sec="51.22"/>
 										</lon>
@@ -2309,7 +2238,7 @@
 									<Cartesian x="164" y="323"/>
 								</Popper>
 								<Popper>
-									<Position name="15863">
+									<Position name="1017">
 										<lon>
 											<HMS neg="false" hrs="3" min="24" sec="19.35"/>
 										</lon>
@@ -2320,7 +2249,7 @@
 									<Cartesian x="299" y="175"/>
 								</Popper>
 								<Popper>
-									<Position name="13254">
+									<Position name="840">
 										<lon>
 											<HMS neg="false" hrs="2" min="50" sec="34.91"/>
 										</lon>
@@ -2333,7 +2262,7 @@
 							</Artwork>
 							<Artwork name="Phe" url="../stellarium/0.12/skycultures/western/phoenix.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="8837">
+									<Position name="555">
 										<lon>
 											<HMS neg="false" hrs="1" min="53" sec="38.82"/>
 										</lon>
@@ -2344,7 +2273,7 @@
 									<Cartesian x="55" y="243"/>
 								</Popper>
 								<Popper>
-									<Position name="765">
+									<Position name="25">
 										<lon>
 											<HMS neg="false" hrs="0" min="9" sec="24.54"/>
 										</lon>
@@ -2355,7 +2284,7 @@
 									<Cartesian x="209" y="15"/>
 								</Popper>
 								<Popper>
-									<Position name="5348">
+									<Position name="338">
 										<lon>
 											<HMS neg="false" hrs="1" min="8" sec="23.06"/>
 										</lon>
@@ -2368,7 +2297,7 @@
 							</Artwork>
 							<Artwork name="Pic" url="../stellarium/0.12/skycultures/western/pictor.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="32607">
+									<Position name="2550">
 										<lon>
 											<HMS neg="false" hrs="6" min="48" sec="11.54"/>
 										</lon>
@@ -2379,7 +2308,7 @@
 									<Cartesian x="4" y="252"/>
 								</Popper>
 								<Popper>
-									<Position name="27530">
+									<Position name="2042">
 										<lon>
 											<HMS neg="false" hrs="5" min="49" sec="49.58"/>
 										</lon>
@@ -2390,7 +2319,7 @@
 									<Cartesian x="148" y="138"/>
 								</Popper>
 								<Popper>
-									<Position name="27321">
+									<Position name="2020">
 										<lon>
 											<HMS neg="false" hrs="5" min="47" sec="17.08"/>
 										</lon>
@@ -2403,7 +2332,7 @@
 							</Artwork>
 							<Artwork name="PsA" url="../stellarium/0.12/skycultures/western/piscis-austrinus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="113246">
+									<Position name="8720">
 										<lon>
 											<HMS neg="false" hrs="22" min="55" sec="56.89"/>
 										</lon>
@@ -2414,7 +2343,7 @@
 									<Cartesian x="190" y="5"/>
 								</Popper>
 								<Popper>
-									<Position name="107608">
+									<Position name="8326">
 										<lon>
 											<HMS neg="false" hrs="21" min="47" sec="44.17"/>
 										</lon>
@@ -2425,7 +2354,7 @@
 									<Cartesian x="82" y="202"/>
 								</Popper>
 								<Popper>
-									<Position name="111954">
+									<Position name="8628">
 										<lon>
 											<HMS neg="false" hrs="22" min="40" sec="39.33"/>
 										</lon>
@@ -2438,7 +2367,7 @@
 							</Artwork>
 							<Artwork name="Psc" url="../stellarium/0.12/skycultures/western/pisces.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="4889">
+									<Position name="291">
 										<lon>
 											<HMS neg="false" hrs="1" min="2" sec="49.09"/>
 										</lon>
@@ -2449,7 +2378,7 @@
 									<Cartesian x="24" y="104"/>
 								</Popper>
 								<Popper>
-									<Position name="9487">
+									<Position name="595">
 										<lon>
 											<HMS neg="false" hrs="2" min="2" sec="2.80"/>
 										</lon>
@@ -2460,7 +2389,7 @@
 									<Cartesian x="111" y="489"/>
 								</Popper>
 								<Popper>
-									<Position name="114971">
+									<Position name="8852">
 										<lon>
 											<HMS neg="false" hrs="23" min="17" sec="9.49"/>
 										</lon>
@@ -2473,7 +2402,7 @@
 							</Artwork>
 							<Artwork name="Pyx" url="../stellarium/0.12/skycultures/western/pyxis.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="41723">
+									<Position name="3362">
 										<lon>
 											<HMS neg="false" hrs="8" min="30" sec="28.62"/>
 										</lon>
@@ -2484,7 +2413,7 @@
 									<Cartesian x="152" y="220"/>
 								</Popper>
 								<Popper>
-									<Position name="42828">
+									<Position name="3468">
 										<lon>
 											<HMS neg="false" hrs="8" min="43" sec="35.55"/>
 										</lon>
@@ -2495,7 +2424,7 @@
 									<Cartesian x="94" y="159"/>
 								</Popper>
 								<Popper>
-									<Position name="42515">
+									<Position name="3438">
 										<lon>
 											<HMS neg="false" hrs="8" min="40" sec="6.14"/>
 										</lon>
@@ -2508,7 +2437,7 @@
 							</Artwork>
 							<Artwork name="Ret" url="../stellarium/0.12/skycultures/western/reticulum.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="18597">
+									<Position name="1247">
 										<lon>
 											<HMS neg="false" hrs="3" min="58" sec="44.74"/>
 										</lon>
@@ -2519,7 +2448,7 @@
 									<Cartesian x="47" y="56"/>
 								</Popper>
 								<Popper>
-									<Position name="19780">
+									<Position name="1336">
 										<lon>
 											<HMS neg="false" hrs="4" min="14" sec="25.43"/>
 										</lon>
@@ -2530,7 +2459,7 @@
 									<Cartesian x="78" y="88"/>
 								</Popper>
 								<Popper>
-									<Position name="19921">
+									<Position name="1355">
 										<lon>
 											<HMS neg="false" hrs="4" min="16" sec="29.08"/>
 										</lon>
@@ -2543,7 +2472,7 @@
 							</Artwork>
 							<Artwork name="Scl" url="../stellarium/0.12/skycultures/western/sculptor.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="115102">
+									<Position name="8863">
 										<lon>
 											<HMS neg="false" hrs="23" min="18" sec="49.43"/>
 										</lon>
@@ -2554,7 +2483,7 @@
 									<Cartesian x="231" y="39"/>
 								</Popper>
 								<Popper>
-									<Position name="116231">
+									<Position name="8937">
 										<lon>
 											<HMS neg="false" hrs="23" min="32" sec="58.19"/>
 										</lon>
@@ -2565,7 +2494,7 @@
 									<Cartesian x="240" y="106"/>
 								</Popper>
 								<Popper>
-									<Position name="4577">
+									<Position name="280">
 										<lon>
 											<HMS neg="false" hrs="0" min="58" sec="36.35"/>
 										</lon>
@@ -2578,7 +2507,7 @@
 							</Artwork>
 							<Artwork name="Sco" url="../stellarium/0.12/skycultures/western/scorpius.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="78820">
+									<Position name="5984">
 										<lon>
 											<HMS neg="false" hrs="16" min="5" sec="26.23"/>
 										</lon>
@@ -2589,7 +2518,7 @@
 									<Cartesian x="447" y="29"/>
 								</Popper>
 								<Popper>
-									<Position name="85927">
+									<Position name="6527">
 										<lon>
 											<HMS neg="false" hrs="17" min="33" sec="36.53"/>
 										</lon>
@@ -2600,7 +2529,7 @@
 									<Cartesian x="62" y="365"/>
 								</Popper>
 								<Popper>
-									<Position name="82729">
+									<Position name="6271">
 										<lon>
 											<HMS neg="false" hrs="16" min="54" sec="35.11"/>
 										</lon>
@@ -2613,7 +2542,7 @@
 							</Artwork>
 							<Artwork name="Sct" url="../stellarium/0.12/skycultures/western/scutum.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="92175">
+									<Position name="7063">
 										<lon>
 											<HMS neg="false" hrs="18" min="47" sec="10.48"/>
 										</lon>
@@ -2624,7 +2553,7 @@
 									<Cartesian x="52" y="17"/>
 								</Popper>
 								<Popper>
-									<Position name="90595">
+									<Position name="6930">
 										<lon>
 											<HMS neg="false" hrs="18" min="29" sec="11.85"/>
 										</lon>
@@ -2635,7 +2564,7 @@
 									<Cartesian x="224" y="124"/>
 								</Popper>
 								<Popper>
-									<Position name="92814">
+									<Position name="7119">
 										<lon>
 											<HMS neg="false" hrs="18" min="54" sec="43.12"/>
 										</lon>
@@ -2648,7 +2577,7 @@
 							</Artwork>
 							<Artwork name="Sex" url="../stellarium/0.12/skycultures/western/sextans.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="51437">
+									<Position name="4119">
 										<lon>
 											<HMS neg="false" hrs="10" min="30" sec="17.50"/>
 										</lon>
@@ -2659,7 +2588,7 @@
 									<Cartesian x="26" y="54"/>
 								</Popper>
 								<Popper>
-									<Position name="49641">
+									<Position name="3981">
 										<lon>
 											<HMS neg="false" hrs="10" min="7" sec="56.30"/>
 										</lon>
@@ -2670,7 +2599,7 @@
 									<Cartesian x="68" y="36"/>
 								</Popper>
 								<Popper>
-									<Position name="48437">
+									<Position name="3909">
 										<lon>
 											<HMS neg="false" hrs="9" min="52" sec="30.47"/>
 										</lon>
@@ -2683,7 +2612,7 @@
 							</Artwork>
 							<Artwork name="Sge" url="../stellarium/0.12/skycultures/western/sagitta.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="98920">
+									<Position name="7679">
 										<lon>
 											<HMS neg="false" hrs="20" min="5" sec="9.47"/>
 										</lon>
@@ -2694,7 +2623,7 @@
 									<Cartesian x="6" y="12"/>
 								</Popper>
 								<Popper>
-									<Position name="96757">
+									<Position name="7479">
 										<lon>
 											<HMS neg="false" hrs="19" min="40" sec="5.78"/>
 										</lon>
@@ -2705,7 +2634,7 @@
 									<Cartesian x="249" y="213"/>
 								</Popper>
 								<Popper>
-									<Position name="96837">
+									<Position name="7488">
 										<lon>
 											<HMS neg="false" hrs="19" min="41" sec="2.93"/>
 										</lon>
@@ -2718,7 +2647,7 @@
 							</Artwork>
 							<Artwork name="Sgr" url="../stellarium/0.12/skycultures/western/sagittarius.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="95168">
+									<Position name="7340">
 										<lon>
 											<HMS neg="false" hrs="19" min="21" sec="40.38"/>
 										</lon>
@@ -2729,7 +2658,7 @@
 									<Cartesian x="96" y="82"/>
 								</Popper>
 								<Popper>
-									<Position name="95294">
+									<Position name="7343">
 										<lon>
 											<HMS neg="false" hrs="19" min="23" sec="13.06"/>
 										</lon>
@@ -2740,7 +2669,7 @@
 									<Cartesian x="307" y="492"/>
 								</Popper>
 								<Popper>
-									<Position name="87072">
+									<Position name="6616">
 										<lon>
 											<HMS neg="false" hrs="17" min="47" sec="33.63"/>
 										</lon>
@@ -2753,7 +2682,7 @@
 							</Artwork>
 							<Artwork name="Tau" url="../stellarium/0.12/skycultures/western/taurus.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="26451">
+									<Position name="1910">
 										<lon>
 											<HMS neg="false" hrs="5" min="37" sec="38.68"/>
 										</lon>
@@ -2764,7 +2693,7 @@
 									<Cartesian x="13" y="92"/>
 								</Popper>
 								<Popper>
-									<Position name="15900">
+									<Position name="1030">
 										<lon>
 											<HMS neg="false" hrs="3" min="24" sec="48.84"/>
 										</lon>
@@ -2775,7 +2704,7 @@
 									<Cartesian x="399" y="438"/>
 								</Popper>
 								<Popper>
-									<Position name="17999">
+									<Position name="">
 										<lon>
 											<HMS neg="false" hrs="3" min="50" sec="52.42"/>
 										</lon>
@@ -2788,7 +2717,7 @@
 							</Artwork>
 							<Artwork name="Tel" url="../stellarium/0.12/skycultures/western/telescopium.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="91589">
+									<Position name="">
 										<lon>
 											<HMS neg="false" hrs="18" min="40" sec="43.89"/>
 										</lon>
@@ -2799,7 +2728,7 @@
 									<Cartesian x="30" y="66"/>
 								</Popper>
 								<Popper>
-									<Position name="90422">
+									<Position name="6897">
 										<lon>
 											<HMS neg="false" hrs="18" min="26" sec="58.43"/>
 										</lon>
@@ -2810,7 +2739,7 @@
 									<Cartesian x="101" y="40"/>
 								</Popper>
 								<Popper>
-									<Position name="90568">
+									<Position name="6905">
 										<lon>
 											<HMS neg="false" hrs="18" min="28" sec="49.74"/>
 										</lon>
@@ -2823,7 +2752,7 @@
 							</Artwork>
 							<Artwork name="Tra" url="../stellarium/0.12/skycultures/western/triangulum-australe.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="77952">
+									<Position name="5897">
 										<lon>
 											<HMS neg="false" hrs="15" min="55" sec="8.81"/>
 										</lon>
@@ -2834,7 +2763,7 @@
 									<Cartesian x="26" y="12"/>
 								</Popper>
 								<Popper>
-									<Position name="74946">
+									<Position name="5671">
 										<lon>
 											<HMS neg="false" hrs="15" min="18" sec="54.69"/>
 										</lon>
@@ -2845,7 +2774,7 @@
 									<Cartesian x="108" y="15"/>
 								</Popper>
 								<Popper>
-									<Position name="82273">
+									<Position name="6217">
 										<lon>
 											<HMS neg="false" hrs="16" min="48" sec="39.87"/>
 										</lon>
@@ -2858,7 +2787,7 @@
 							</Artwork>
 							<Artwork name="Tri" url="../stellarium/0.12/skycultures/western/triangulum.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="10064">
+									<Position name="622">
 										<lon>
 											<HMS neg="false" hrs="2" min="9" sec="32.52"/>
 										</lon>
@@ -2869,7 +2798,7 @@
 									<Cartesian x="16" y="42"/>
 								</Popper>
 								<Popper>
-									<Position name="10559">
+									<Position name="655">
 										<lon>
 											<HMS neg="false" hrs="2" min="15" sec="56.30"/>
 										</lon>
@@ -2880,7 +2809,7 @@
 									<Cartesian x="13" y="70"/>
 								</Popper>
 								<Popper>
-									<Position name="8796">
+									<Position name="544">
 										<lon>
 											<HMS neg="false" hrs="1" min="53" sec="4.90"/>
 										</lon>
@@ -2893,7 +2822,7 @@
 							</Artwork>
 							<Artwork name="Tuc" url="../stellarium/0.12/skycultures/western/tucana.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="2484">
+									<Position name="126">
 										<lon>
 											<HMS neg="false" hrs="0" min="31" sec="32.56"/>
 										</lon>
@@ -2904,7 +2833,7 @@
 									<Cartesian x="53" y="121"/>
 								</Popper>
 								<Popper>
-									<Position name="114996">
+									<Position name="8848">
 										<lon>
 											<HMS neg="false" hrs="23" min="17" sec="25.81"/>
 										</lon>
@@ -2915,7 +2844,7 @@
 									<Cartesian x="154" y="86"/>
 								</Popper>
 								<Popper>
-									<Position name="110130">
+									<Position name="8502">
 										<lon>
 											<HMS neg="false" hrs="22" min="18" sec="30.18"/>
 										</lon>
@@ -2928,7 +2857,7 @@
 							</Artwork>
 							<Artwork name="UMa" url="../stellarium/0.12/skycultures/western/ursa-major.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="67301">
+									<Position name="5191">
 										<lon>
 											<HMS neg="false" hrs="13" min="47" sec="32.55"/>
 										</lon>
@@ -2939,7 +2868,7 @@
 									<Cartesian x="26" y="75"/>
 								</Popper>
 								<Popper>
-									<Position name="41704">
+									<Position name="3323">
 										<lon>
 											<HMS neg="false" hrs="8" min="30" sec="16.03"/>
 										</lon>
@@ -2950,7 +2879,7 @@
 									<Cartesian x="452" y="272"/>
 								</Popper>
 								<Popper>
-									<Position name="50372">
+									<Position name="4033">
 										<lon>
 											<HMS neg="false" hrs="10" min="17" sec="5.93"/>
 										</lon>
@@ -2963,7 +2892,7 @@
 							</Artwork>
 							<Artwork name="UMi" url="../stellarium/0.12/skycultures/western/ursa-minor.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="11767">
+									<Position name="424">
 										<lon>
 											<HMS neg="false" hrs="2" min="31" sec="47.08"/>
 										</lon>
@@ -2974,7 +2903,7 @@
 									<Cartesian x="15" y="20"/>
 								</Popper>
 								<Popper>
-									<Position name="59504">
+									<Position name="4646">
 										<lon>
 											<HMS neg="false" hrs="12" min="12" sec="11.91"/>
 										</lon>
@@ -2985,7 +2914,7 @@
 									<Cartesian x="193" y="51"/>
 								</Popper>
 								<Popper>
-									<Position name="79822">
+									<Position name="6116">
 										<lon>
 											<HMS neg="false" hrs="16" min="17" sec="30.50"/>
 										</lon>
@@ -2998,7 +2927,7 @@
 							</Artwork>
 							<Artwork name="Vir" url="../stellarium/0.12/skycultures/western/virgo.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="72220">
+									<Position name="5511">
 										<lon>
 											<HMS neg="false" hrs="14" min="46" sec="14.99"/>
 										</lon>
@@ -3009,7 +2938,7 @@
 									<Cartesian x="65" y="389"/>
 								</Popper>
 								<Popper>
-									<Position name="57380">
+									<Position name="4517">
 										<lon>
 											<HMS neg="false" hrs="11" min="45" sec="51.57"/>
 										</lon>
@@ -3020,7 +2949,7 @@
 									<Cartesian x="454" y="57"/>
 								</Popper>
 								<Popper>
-									<Position name="65474">
+									<Position name="5056">
 										<lon>
 											<HMS neg="false" hrs="13" min="25" sec="11.60"/>
 										</lon>
@@ -3033,7 +2962,7 @@
 							</Artwork>
 							<Artwork name="Vol" url="../stellarium/0.12/skycultures/western/volans.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="44382">
+									<Position name="3615">
 										<lon>
 											<HMS neg="false" hrs="9" min="2" sec="26.80"/>
 										</lon>
@@ -3044,7 +2973,7 @@
 									<Cartesian x="55" y="85"/>
 								</Popper>
 								<Popper>
-									<Position name="35228">
+									<Position name="2803">
 										<lon>
 											<HMS neg="false" hrs="7" min="16" sec="49.83"/>
 										</lon>
@@ -3055,7 +2984,7 @@
 									<Cartesian x="210" y="122"/>
 								</Popper>
 								<Popper>
-									<Position name="34481">
+									<Position name="2736">
 										<lon>
 											<HMS neg="false" hrs="7" min="8" sec="44.82"/>
 										</lon>
@@ -3068,7 +2997,7 @@
 							</Artwork>
 							<Artwork name="Vul" url="../stellarium/0.12/skycultures/western/vulpecula.png" heaven="true" tonemap="pale">
 								<Popper>
-									<Position name="98543">
+									<Position name="7653">
 										<lon>
 											<HMS neg="false" hrs="20" min="1" sec="6.01"/>
 										</lon>
@@ -3079,7 +3008,7 @@
 									<Cartesian x="35" y="133"/>
 								</Popper>
 								<Popper>
-									<Position name="95771">
+									<Position name="7405">
 										<lon>
 											<HMS neg="false" hrs="19" min="28" sec="42.41"/>
 										</lon>
@@ -3090,7 +3019,7 @@
 									<Cartesian x="174" y="111"/>
 								</Popper>
 								<Popper>
-									<Position name="94703">
+									<Position name="7306">
 										<lon>
 											<HMS neg="false" hrs="19" min="16" sec="13.04"/>
 										</lon>
@@ -3101,7 +3030,7 @@
 									<Cartesian x="242" y="135"/>
 								</Popper>
 							</Artwork>
-							<Sign name="Aql">
+							<Sign name="Aql" nature="constellation">
 								<Position name="98036">
 									<lon>
 										<HMS neg="false" hrs="19" min="55" sec="18.77"/>
@@ -3245,7 +3174,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="And">
+							<Sign name="And" nature="constellation">
 								<Position name="677">
 									<lon>
 										<HMS neg="false" hrs="0" min="8" sec="23.17"/>
@@ -3335,7 +3264,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Scl">
+							<Sign name="Scl" nature="constellation">
 								<Position name="116231">
 									<lon>
 										<HMS neg="false" hrs="23" min="32" sec="58.19"/>
@@ -3389,7 +3318,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ara">
+							<Sign name="Ara" nature="constellation">
 								<Position name="88714">
 									<lon>
 										<HMS neg="false" hrs="18" min="6" sec="37.88"/>
@@ -3515,7 +3444,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lib">
+							<Sign name="Lib" nature="constellation">
 								<Position name="77853">
 									<lon>
 										<HMS neg="false" hrs="15" min="53" sec="49.48"/>
@@ -3605,7 +3534,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cet">
+							<Sign name="Cet" nature="constellation">
 								<Position name="10324">
 									<lon>
 										<HMS neg="false" hrs="2" min="13" sec="0.01"/>
@@ -3965,7 +3894,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ari">
+							<Sign name="Ari" nature="constellation">
 								<Position name="13209">
 									<lon>
 										<HMS neg="false" hrs="2" min="49" sec="58.99"/>
@@ -4019,7 +3948,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Sct">
+							<Sign name="Sct" nature="constellation">
 								<Position name="92175">
 									<lon>
 										<HMS neg="false" hrs="18" min="47" sec="10.48"/>
@@ -4109,7 +4038,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Pyx">
+							<Sign name="Pyx" nature="constellation">
 								<Position name="42515">
 									<lon>
 										<HMS neg="false" hrs="8" min="40" sec="6.14"/>
@@ -4145,7 +4074,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Boo">
+							<Sign name="Boo" nature="constellation">
 								<Position name="71795">
 									<lon>
 										<HMS neg="false" hrs="14" min="41" sec="8.92"/>
@@ -4307,7 +4236,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cae">
+							<Sign name="Cae" nature="constellation">
 								<Position name="21060">
 									<lon>
 										<HMS neg="false" hrs="4" min="30" sec="50.10"/>
@@ -4343,7 +4272,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Cha">
+							<Sign name="Cha" nature="constellation">
 								<Position name="40702">
 									<lon>
 										<HMS neg="false" hrs="8" min="18" sec="31.27"/>
@@ -4379,7 +4308,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Cnc">
+							<Sign name="Cnc" nature="constellation">
 								<Position name="43103">
 									<lon>
 										<HMS neg="false" hrs="8" min="46" sec="41.83"/>
@@ -4469,7 +4398,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cap">
+							<Sign name="Cap" nature="constellation">
 								<Position name="100064">
 									<lon>
 										<HMS neg="false" hrs="20" min="18" sec="3.22"/>
@@ -4631,7 +4560,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Car">
+							<Sign name="Car" nature="constellation">
 								<Position name="45238">
 									<lon>
 										<HMS neg="false" hrs="9" min="13" sec="12.24"/>
@@ -4883,7 +4812,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cas">
+							<Sign name="Cas" nature="constellation">
 								<Position name="8886">
 									<lon>
 										<HMS neg="false" hrs="1" min="54" sec="23.68"/>
@@ -4955,7 +4884,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cen">
+							<Sign name="Cen" nature="constellation">
 								<Position name="71683">
 									<lon>
 										<HMS neg="false" hrs="14" min="39" sec="40.90"/>
@@ -5243,7 +5172,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cep">
+							<Sign name="Cep" nature="constellation">
 								<Position name="109492">
 									<lon>
 										<HMS neg="false" hrs="22" min="10" sec="51.26"/>
@@ -5351,7 +5280,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Com">
+							<Sign name="Com" nature="constellation">
 								<Position name="64241">
 									<lon>
 										<HMS neg="false" hrs="13" min="9" sec="59.55"/>
@@ -5387,7 +5316,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Cvn">
+							<Sign name="Cvn" nature="constellation">
 								<Position name="61317">
 									<lon>
 										<HMS neg="false" hrs="12" min="33" sec="45.09"/>
@@ -5405,7 +5334,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Aur">
+							<Sign name="Aur" nature="constellation">
 								<Position name="28380">
 									<lon>
 										<HMS neg="false" hrs="5" min="59" sec="43.24"/>
@@ -5513,7 +5442,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Col">
+							<Sign name="Col" nature="constellation">
 								<Position name="30277">
 									<lon>
 										<HMS neg="false" hrs="6" min="22" sec="6.85"/>
@@ -5621,7 +5550,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cir">
+							<Sign name="Cir" nature="constellation">
 								<Position name="71908">
 									<lon>
 										<HMS neg="false" hrs="14" min="42" sec="30.69"/>
@@ -5657,7 +5586,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Crt">
+							<Sign name="Crt" nature="constellation">
 								<Position name="53740">
 									<lon>
 										<HMS neg="false" hrs="10" min="59" sec="46.75"/>
@@ -5819,7 +5748,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="CrA">
+							<Sign name="CrA" nature="constellation">
 								<Position name="91875">
 									<lon>
 										<HMS neg="false" hrs="18" min="43" sec="46.94"/>
@@ -5981,7 +5910,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="CrB">
+							<Sign name="CrB" nature="constellation">
 								<Position name="76127">
 									<lon>
 										<HMS neg="false" hrs="15" min="32" sec="55.80"/>
@@ -6089,7 +6018,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Crv">
+							<Sign name="Crv" nature="constellation">
 								<Position name="61174">
 									<lon>
 										<HMS neg="false" hrs="12" min="32" sec="4.48"/>
@@ -6197,7 +6126,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cru">
+							<Sign name="Cru" nature="constellation">
 								<Position name="61084">
 									<lon>
 										<HMS neg="false" hrs="12" min="31" sec="9.93"/>
@@ -6233,7 +6162,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Cyg">
+							<Sign name="Cyg" nature="constellation">
 								<Position name="94779">
 									<lon>
 										<HMS neg="false" hrs="19" min="17" sec="6.11"/>
@@ -6395,7 +6324,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Del">
+							<Sign name="Del" nature="constellation">
 								<Position name="101421">
 									<lon>
 										<HMS neg="false" hrs="20" min="33" sec="12.76"/>
@@ -6485,7 +6414,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Dor">
+							<Sign name="Dor" nature="constellation">
 								<Position name="27100">
 									<lon>
 										<HMS neg="false" hrs="5" min="44" sec="46.42"/>
@@ -6575,7 +6504,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Dra">
+							<Sign name="Dra" nature="constellation">
 								<Position name="87585">
 									<lon>
 										<HMS neg="false" hrs="17" min="53" sec="31.63"/>
@@ -6845,7 +6774,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Nor">
+							<Sign name="Nor" nature="constellation">
 								<Position name="79509">
 									<lon>
 										<HMS neg="false" hrs="16" min="13" sec="28.73"/>
@@ -6935,7 +6864,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Eri">
+							<Sign name="Eri" nature="constellation">
 								<Position name="7588">
 									<lon>
 										<HMS neg="false" hrs="1" min="37" sec="42.75"/>
@@ -7421,7 +7350,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Sge">
+							<Sign name="Sge" nature="constellation">
 								<Position name="96837">
 									<lon>
 										<HMS neg="false" hrs="19" min="41" sec="2.93"/>
@@ -7493,7 +7422,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="For">
+							<Sign name="For" nature="constellation">
 								<Position name="13147">
 									<lon>
 										<HMS neg="false" hrs="2" min="49" sec="5.36"/>
@@ -7511,7 +7440,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Gem">
+							<Sign name="Gem" nature="constellation">
 								<Position name="31681">
 									<lon>
 										<HMS neg="false" hrs="6" min="37" sec="42.70"/>
@@ -7799,7 +7728,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Cam">
+							<Sign name="Cam" nature="constellation">
 								<Position name="16228">
 									<lon>
 										<HMS neg="false" hrs="3" min="29" sec="4.13"/>
@@ -7889,7 +7818,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="CMa">
+							<Sign name="CMa" nature="constellation">
 								<Position name="33160">
 									<lon>
 										<HMS neg="false" hrs="6" min="54" sec="11.48"/>
@@ -8195,7 +8124,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="UMa">
+							<Sign name="UMa" nature="constellation">
 								<Position name="67301">
 									<lon>
 										<HMS neg="false" hrs="13" min="47" sec="32.55"/>
@@ -8537,7 +8466,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Gru">
+							<Sign name="Gru" nature="constellation">
 								<Position name="114131">
 									<lon>
 										<HMS neg="false" hrs="23" min="6" sec="52.77"/>
@@ -8699,7 +8628,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Her">
+							<Sign name="Her" nature="constellation">
 								<Position name="86414">
 									<lon>
 										<HMS neg="false" hrs="17" min="39" sec="27.89"/>
@@ -9023,7 +8952,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Hor">
+							<Sign name="Hor" nature="constellation">
 								<Position name="19747">
 									<lon>
 										<HMS neg="false" hrs="4" min="14" sec="0.08"/>
@@ -9059,7 +8988,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Hya">
+							<Sign name="Hya" nature="constellation">
 								<Position name="42799">
 									<lon>
 										<HMS neg="false" hrs="8" min="43" sec="13.49"/>
@@ -9383,7 +9312,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Hyi">
+							<Sign name="Hyi" nature="constellation">
 								<Position name="2021">
 									<lon>
 										<HMS neg="false" hrs="0" min="25" sec="39.20"/>
@@ -9455,7 +9384,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ind">
+							<Sign name="Ind" nature="constellation">
 								<Position name="105319">
 									<lon>
 										<HMS neg="false" hrs="21" min="19" sec="51.88"/>
@@ -9509,7 +9438,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lac">
+							<Sign name="Lac" nature="constellation">
 								<Position name="109937">
 									<lon>
 										<HMS neg="false" hrs="22" min="15" sec="58.17"/>
@@ -9617,7 +9546,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Mon">
+							<Sign name="Mon" nature="constellation">
 								<Position name="29651">
 									<lon>
 										<HMS neg="false" hrs="6" min="14" sec="51.34"/>
@@ -9725,7 +9654,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lep">
+							<Sign name="Lep" nature="constellation">
 								<Position name="28910">
 									<lon>
 										<HMS neg="false" hrs="6" min="6" sec="9.33"/>
@@ -9977,7 +9906,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Leo">
+							<Sign name="Leo" nature="constellation">
 								<Position name="57632">
 									<lon>
 										<HMS neg="false" hrs="11" min="49" sec="3.88"/>
@@ -10157,7 +10086,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lup">
+							<Sign name="Lup" nature="constellation">
 								<Position name="77634">
 									<lon>
 										<HMS neg="false" hrs="15" min="50" sec="57.54"/>
@@ -10391,7 +10320,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lyn">
+							<Sign name="Lyn" nature="constellation">
 								<Position name="45860">
 									<lon>
 										<HMS neg="false" hrs="9" min="21" sec="3.46"/>
@@ -10517,7 +10446,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Lyr">
+							<Sign name="Lyr" nature="constellation">
 								<Position name="91262">
 									<lon>
 										<HMS neg="false" hrs="18" min="36" sec="56.19"/>
@@ -10607,7 +10536,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ant">
+							<Sign name="Ant" nature="constellation">
 								<Position name="51172">
 									<lon>
 										<HMS neg="false" hrs="10" min="27" sec="9.16"/>
@@ -10625,7 +10554,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Mic">
+							<Sign name="Mic" nature="constellation">
 								<Position name="105140">
 									<lon>
 										<HMS neg="false" hrs="21" min="17" sec="56.25"/>
@@ -10661,7 +10590,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Mus">
+							<Sign name="Mus" nature="constellation">
 								<Position name="62322">
 									<lon>
 										<HMS neg="false" hrs="12" min="46" sec="16.87"/>
@@ -10733,7 +10662,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Oct">
+							<Sign name="Oct" nature="constellation">
 								<Position name="107089">
 									<lon>
 										<HMS neg="false" hrs="21" min="41" sec="28.47"/>
@@ -10787,7 +10716,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Aps">
+							<Sign name="Aps" nature="constellation">
 								<Position name="72370">
 									<lon>
 										<HMS neg="false" hrs="14" min="47" sec="51.73"/>
@@ -10823,7 +10752,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Oph">
+							<Sign name="Oph" nature="constellation">
 								<Position name="86032">
 									<lon>
 										<HMS neg="false" hrs="17" min="34" sec="56.00"/>
@@ -10949,7 +10878,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ori">
+							<Sign name="Ori" nature="constellation">
 								<Position name="26727">
 									<lon>
 										<HMS neg="false" hrs="5" min="40" sec="45.52"/>
@@ -11327,7 +11256,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Pav">
+							<Sign name="Pav" nature="constellation">
 								<Position name="100751">
 									<lon>
 										<HMS neg="false" hrs="20" min="25" sec="38.85"/>
@@ -11561,7 +11490,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Peg">
+							<Sign name="Peg" nature="constellation">
 								<Position name="1067">
 									<lon>
 										<HMS neg="false" hrs="0" min="13" sec="14.15"/>
@@ -11813,7 +11742,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Pic">
+							<Sign name="Pic" nature="constellation">
 								<Position name="32607">
 									<lon>
 										<HMS neg="false" hrs="6" min="48" sec="11.54"/>
@@ -11849,7 +11778,7 @@
 									</Position>
 								</Limb>
 							</Sign>
-							<Sign name="Per">
+							<Sign name="Per" nature="constellation">
 								<Position name="17448">
 									<lon>
 										<HMS neg="false" hrs="3" min="44" sec="19.13"/>
@@ -12029,7 +11958,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Equ">
+							<Sign name="Equ" nature="constellation">
 								<Position name="104521">
 									<lon>
 										<HMS neg="false" hrs="21" min="10" sec="20.47"/>
@@ -12101,7 +12030,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="CMi">
+							<Sign name="CMi" nature="constellation">
 								<Position name="37279">
 									<lon>
 										<HMS neg="false" hrs="7" min="39" sec="18.54"/>
@@ -12119,7 +12048,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="LMi">
+							<Sign name="LMi" nature="constellation">
 								<Position name="53229">
 									<lon>
 										<HMS neg="false" hrs="10" min="53" sec="18.64"/>
@@ -12191,7 +12120,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Vul">
+							<Sign name="Vul" nature="constellation">
 								<Position name="95771">
 									<lon>
 										<HMS neg="false" hrs="19" min="28" sec="42.41"/>
@@ -12209,7 +12138,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="UMi">
+							<Sign name="UMi" nature="constellation">
 								<Position name="11767">
 									<lon>
 										<HMS neg="false" hrs="2" min="31" sec="47.08"/>
@@ -12335,7 +12264,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Phe">
+							<Sign name="Phe" nature="constellation">
 								<Position name="5348">
 									<lon>
 										<HMS neg="false" hrs="1" min="8" sec="23.06"/>
@@ -12533,7 +12462,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Psc">
+							<Sign name="Psc" nature="constellation">
 								<Position name="4889">
 									<lon>
 										<HMS neg="false" hrs="1" min="2" sec="49.09"/>
@@ -12875,7 +12804,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="PsA">
+							<Sign name="PsA" nature="constellation">
 								<Position name="113368">
 									<lon>
 										<HMS neg="false" hrs="22" min="57" sec="38.83"/>
@@ -12983,7 +12912,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Vol">
+							<Sign name="Vol" nature="constellation">
 								<Position name="37504">
 									<lon>
 										<HMS neg="false" hrs="7" min="41" sec="49.20"/>
@@ -13109,7 +13038,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Pup">
+							<Sign name="Pup" nature="constellation">
 								<Position name="39757">
 									<lon>
 										<HMS neg="false" hrs="8" min="7" sec="32.70"/>
@@ -13235,7 +13164,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ret">
+							<Sign name="Ret" nature="constellation">
 								<Position name="19780">
 									<lon>
 										<HMS neg="false" hrs="4" min="14" sec="25.43"/>
@@ -13307,7 +13236,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Sgr">
+							<Sign name="Sgr" nature="constellation">
 								<Position name="89931">
 									<lon>
 										<HMS neg="false" hrs="18" min="20" sec="59.62"/>
@@ -13739,7 +13668,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Sco">
+							<Sign name="Sco" nature="constellation">
 								<Position name="85927">
 									<lon>
 										<HMS neg="false" hrs="17" min="33" sec="36.53"/>
@@ -13955,7 +13884,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Ser">
+							<Sign name="Ser" nature="constellation">
 								<Position name="77516">
 									<lon>
 										<HMS neg="false" hrs="15" min="49" sec="37.27"/>
@@ -14153,7 +14082,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Sex">
+							<Sign name="Sex" nature="constellation">
 								<Position name="51437">
 									<lon>
 										<HMS neg="false" hrs="10" min="30" sec="17.50"/>
@@ -14171,7 +14100,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Men">
+							<Sign name="Men" nature="constellation">
 								<Position name="25918">
 									<lon>
 										<HMS neg="false" hrs="5" min="31" sec="52.66"/>
@@ -14189,7 +14118,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Tau">
+							<Sign name="Tau" nature="constellation">
 								<Position name="25428">
 									<lon>
 										<HMS neg="false" hrs="5" min="26" sec="17.50"/>
@@ -14405,7 +14334,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Tel">
+							<Sign name="Tel" nature="constellation">
 								<Position name="90568">
 									<lon>
 										<HMS neg="false" hrs="18" min="28" sec="49.74"/>
@@ -14423,7 +14352,7 @@
 									</lat>
 								</Position>
 							</Sign>
-							<Sign name="Tuc">
+							<Sign name="Tuc" nature="constellation">
 								<Position name="110130">
 									<lon>
 										<HMS neg="false" hrs="22" min="18" sec="30.18"/>
@@ -14477,7 +14406,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Tri">
+							<Sign name="Tri" nature="constellation">
 								<Position name="10559">
 									<lon>
 										<HMS neg="false" hrs="2" min="15" sec="56.30"/>
@@ -14531,7 +14460,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Tra">
+							<Sign name="Tra" nature="constellation">
 								<Position name="82273">
 									<lon>
 										<HMS neg="false" hrs="16" min="48" sec="39.87"/>
@@ -14585,7 +14514,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Aqr">
+							<Sign name="Aqr" nature="constellation">
 								<Position name="106278">
 									<lon>
 										<HMS neg="false" hrs="21" min="31" sec="33.52"/>
@@ -14837,7 +14766,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Vir">
+							<Sign name="Vir" nature="constellation">
 								<Position name="57380">
 									<lon>
 										<HMS neg="false" hrs="11" min="45" sec="51.57"/>
@@ -15053,7 +14982,7 @@
 									</Limb>
 								</Limb>
 							</Sign>
-							<Sign name="Vel">
+							<Sign name="Vel" nature="constellation">
 								<Position name="39953">
 									<lon>
 										<HMS neg="false" hrs="8" min="9" sec="31.96"/>

@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -32,22 +33,19 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 	private static boolean verbose = false ;
 
 	// configuration key (CK_), node (CN_)
-	private final static String CK_PSUNIT		= "psunit" ;
-	private final static String CK_DPI			= "dpi" ;
-	private final static String CK_INTERVAL		= "interval" ;
-	private final static String CK_ALPHA		= "alpha" ;
-	private final static String CN_DEF			= "def" ;
-	private final static String CK_UDOT			= "udot" ;
-	private final static String CK_UPIX			= "upix" ;
+	private final static String CK_PSUNIT			= "psunit" ;
+	private final static String CK_DPI				= "dpi" ;
+	private final static String CK_INTERVAL			= "interval" ;
+	private final static String CK_ALPHA			= "alpha" ;
+	private final static String CK_MINSECTION		= "minsection" ;
 
 
-	private final static double DEFAULT_PSUNIT	= 2.834646 ;
-	private final static double DEFAULT_DPI		= 72 ;
-	private final static int DEFAULT_INTERVAL	= 1 ;
-	private final static String DEFAULT_ALPHA	= "0:0:0" ;
-	private final static String DEFAULT_UDOT	= "{gsave currentpoint translate 0 0 .5 0 359 .5 0 moveto arc closepath fill grestore}" ;
-	private final static String DEFAULT_UPIX	= "{gsave currentpoint translate -.5 .5 .5 .5 .5 -.5 -.5 -.5 moveto lineto lineto lineto closepath fill grestore}" ;
-	private final static String DEFAULT_TONEMAP	= "0:0:0,255:255:255" ;
+	private final static double DEFAULT_PSUNIT		= 2.834646 ;
+	private final static double DEFAULT_DPI			= 72 ;
+	private final static int DEFAULT_INTERVAL		= 1 ;
+	private final static String DEFAULT_ALPHA		= "0:0:0" ;
+	private final static String DEFAULT_TONEMAP		= "0:0:0,255:255:255" ;
+	private final static double DEFAULT_MINSECTION	= 25 ;
 
 	private Projector projector ;
 
@@ -62,25 +60,14 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		String def ;
-
-		def = Configuration.getValue( this, CN_DEF+"/"+CK_UDOT, DEFAULT_UDOT ) ;
-		ps.push( "/"+CK_UDOT ) ;
-		for ( String token : def.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
-		ps.operator.def() ;
-		def = Configuration.getValue( this, CN_DEF+"/"+CK_UPIX, DEFAULT_UPIX ) ;
-		ps.push( "/"+CK_UPIX ) ;
-		for ( String token : def.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
-		ps.operator.def() ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		InputStream input ;
 		BufferedImage img ;
 		String[] av, tmv, tma, tmo ;
-		int tonemap[], rgb ;
+		int av0, av1, av2, rgb ;
+		int tma0, tma1, tma2, tmo0, tmo1, tmo2 ;
 		Coordinate popC[], popH[], zH, popI[] ;
 		RealMatrix T, H, TH, HT = null ;
 		RealMatrix C, TC, CT = null ;
@@ -88,13 +75,18 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		Geometry p, mbr ;
 		Coordinate[] pc, mbrc ;
 		Geometry fov, fot ;
+		double minsection ;
 		ChartPage page ;
 		double u, d, interval ;
 		double maxs, maxt ;
+		int w, h ;
 		Coordinate c, eq, xyz ;
 		double[] xy, uv ;
 		Plane texture = null ;
-		Vector3D A = null, B, X ;
+		Vector3D O = null, V, X ;
+		Vector2D A, B, R ;
+		double r ;
+		ASCII85StringBuilder a85 ;
 
 		try {
 			input = reader() ;
@@ -119,24 +111,25 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 		av = Configuration.getValue( this, CK_ALPHA, DEFAULT_ALPHA )
 		.split( ":" ) ;
-		alpha = Integer.parseInt( av[0] )%256<<16
-		|Integer.parseInt( av[1] )%256<<8
-		|Integer.parseInt( av[2] )%256 ;
+		av0 = Integer.parseInt( av[0] ) ;
+		av1 = Integer.parseInt( av[1] ) ;
+		av2 = Integer.parseInt( av[2] ) ;
+		alpha = av0%256<<16
+		|av1%256<<8
+		|av2%256 ;
 
 		tmv = Configuration.getValue( this, getTonemap(), DEFAULT_TONEMAP )
 		.split( "," ) ;
 		tma = tmv[0].split( ":" ) ;
+		tma0 = Integer.parseInt( tma[0] ) ;
+		tma1 = Integer.parseInt( tma[1] ) ;
+		tma2 = Integer.parseInt( tma[2] ) ;
 		tmo = tmv[1].split( ":" ) ;
-		tonemap = new int[] {
-				Integer.parseInt( tma[0] )%256<<16
-				|Integer.parseInt( tma[1] )%256<<8
-				|Integer.parseInt( tma[2] )%256,
-				Integer.parseInt( tmo[0] )%256<<16
-				|Integer.parseInt( tmo[1] )%256<<8
-				|Integer.parseInt( tmo[2] )%256
-		} ;
+		tmo0 = Integer.parseInt( tmo[0] ) ;
+		tmo1 = Integer.parseInt( tmo[1] ) ;
+		tmo2 = Integer.parseInt( tmo[2] ) ;
 
-		applyTM( tonemap ) ;
+		minsection = Configuration.getValue( this, CK_MINSECTION, DEFAULT_MINSECTION )/100 ;
 
 		popC = prepPopper4Canvas() ;
 		popI = prepPopperOfImage() ;
@@ -149,7 +142,7 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 					new Vector3D( popH[1].x, popH[1].y, popH[1].z ),
 					new Vector3D( popH[2].x, popH[2].y, popH[2].z )
 			) ;
-			A = new Vector3D( 0, 0, 0 ) ;
+			O = new Vector3D( 0, 0, 0 ) ;
 
 			zH = calcVectorZ( popH ) ;
 			H = MatrixUtils
@@ -197,10 +190,59 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 			pc = calcP4Canvas( TC, dimx, dimy ) ;
 		}
 
-		mbrc = calcMBR( pc ) ;
+		mbrc = new MinimumDiameter( new GeometryFactory().createLinearRing( pc ) )
+		.getMinimumRectangle()
+		.getCoordinates() ;
 		maxs = mbrc[0].distance( mbrc[1] ) ;
 		maxt = mbrc[0].distance( mbrc[3] ) ;
 		mbr = new GeometryFactory().createPolygon( mbrc ) ;
+
+		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
+		if ( fov == null ) {
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
+			if ( page != null )
+				fov = page.getViewGeometry() ;
+		}
+
+		if ( fov != null && ! fov.intersects( mbr ) )
+			return ;
+		if ( fov.contains( mbr ) )
+			fot = mbr ;
+		else {
+			fot = fov.intersection( mbr ) ;
+
+			p = new GeometryFactory().createPolygon( pc ) ;
+			if ( minsection>fot.getArea()/p.getArea() )
+				return ;
+
+			mbrc = new MinimumDiameter( new GeometryFactory().createLinearRing( fot.getCoordinates() ) )
+			.getMinimumRectangle()
+			.getCoordinates() ;
+			maxs = mbrc[0].distance( mbrc[1] ) ;
+			maxt = mbrc[0].distance( mbrc[3] ) ;
+		}
+
+		if ( verbose ) {
+			ps.operator.gsave() ;
+
+			ps.operator.setgray( 0 ) ;
+			linePS( ps, popC ) ;
+			ps.operator.setrgbcolor( 1, 0, 0 ) ;
+			linePS( ps, pc ) ;
+			ps.operator.setrgbcolor( 0, 1, 0 ) ;
+			linePS( ps, mbrc ) ;
+			ps.operator.setrgbcolor( 0, 0, 1 ) ;
+			linePS( ps, fot.getCoordinates() ) ;
+
+			ps.operator.setgray( 0 ) ;
+			linePS( ps, new Coordinate[] { new Coordinate( 0, 0 ), mbrc[0] }  ) ;
+			ps.operator.setgray( .4 ) ;
+			linePS( ps, new Coordinate[] { new Coordinate( 0, 0 ), mbrc[1] }  ) ;
+			ps.operator.setgray( .8 ) ;
+			linePS( ps, new Coordinate[] { new Coordinate( 0, 0 ), mbrc[2] }  ) ;
+
+			ps.operator.grestore() ;
+		}
 
 		P = MatrixUtils
 		.createRealMatrix( new double[][] {
@@ -219,81 +261,101 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 		MP = P.multiply( new LUDecomposition( M ).getSolver().getInverse() ) ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
-			if ( page != null )
-				fov = page.getViewGeometry() ;
-		}
+		A = new Vector2D( mbrc[0].x, mbrc[0].y ) ;
+		B = new Vector2D( mbrc[1].x, mbrc[1].y ) ;
+		R = B.subtract( A ) ;
+		r = Math.atan2( R.getY(), R.getX() ) ;
+		w = (int) ( maxs/interval+1 ) ;
+		h = (int) ( maxt/interval+1 ) ;
 
-		if ( fov != null && ! fov.intersects( mbr ) )
-			return ;
-
-		if ( fov.contains( mbr ) )
-			fot = mbr ;
-		else {
-			fot = fov.intersection( mbr ) ;
-
-			p = new GeometryFactory().createPolygon( pc ) ;
-			if ( .15>fot.getArea()/p.getArea() )
-				return ;
-		}
+		ps.push( mbrc[0].x ) ;
+		ps.push( mbrc[0].y ) ;
+		ps.operator.translate() ;
+		ps.operator.rotate( r ) ;
 
 		if ( verbose ) {
-			linePS( ps, popC ) ;
-			ps.operator.setrgbcolor( 1, 0, 0 ) ;
-			linePS( ps, pc ) ;
-			ps.operator.setrgbcolor( 0, 1, 0 ) ;
-			linePS( ps, mbrc ) ;
+			ps.operator.gsave() ;
+
+			ps.operator.setrgbcolor( 0, 1, 1 ) ;
+			ps.push( 0 ) ;
+			ps.push( 0 ) ;
+			ps.operator.moveto() ;
+			ps.push( maxs ) ;
+			ps.push( maxt ) ;
+			ps.operator.lineto() ;
+			ps.operator.stroke() ;
+
+			ps.operator.grestore() ;
 		}
 
-		for ( double t=interval/2 ; maxt>t ; t+=interval )
-			for ( double s=interval/2 ; maxs>s ; s+=interval ) {
+		ps.push( maxs ) ; // /interval ) ;
+		ps.push( maxt ) ; // /interval ) ;
+		ps.operator.scale() ;
+		// ps.operator.scale( interval ) ;
+
+		ps.push( "/DeviceRGB" ) ;
+		ps.operator.setcolorspace() ;
+
+		ps.push( w ) ;
+		ps.push( h ) ;
+		ps.array( true ) ;
+		ps.push( av0/256. ) ;
+		ps.push( av1/256. ) ;
+		ps.push( av2/256. ) ;
+		ps.array( false ) ;
+		ps.array( true ) ;
+		ps.push( tma0/256. ) ;
+		ps.push( tmo0/256. ) ;
+		ps.push( tma1/256. ) ;
+		ps.push( tmo1/256. ) ;
+		ps.push( tma2/256. ) ;
+		ps.push( tmo2/256. ) ;
+		ps.array( false ) ;
+		ps.array( true ) ;
+		ps.push( w ) ;
+		ps.push( 0 ) ;
+		ps.push( 0 ) ;
+		ps.push( h ) ;
+		ps.push( 0 ) ;
+		ps.push( 0 ) ;
+		ps.array( false ) ;
+		ps.idict() ;
+		ps.operator.image() ;
+
+		a85 = new ASCII85StringBuilder() ;
+
+		for ( double t=0 ; maxt>t ; t+=interval )
+			for ( double s=0 ; maxs>s ; s+=interval ) {
 				xy = MP.operate( new double[] { s, t, 1 } ) ;
 				c = new Coordinate( xy[0], xy[1] ) ;
 
-				if ( ! fot.covers( new GeometryFactory().createPoint( c ) ) )
-					continue ;
+				rgb = alpha ;
 
-				if ( getHeaven() ) {
-					eq = projector.project( c, true ) ;
-					xyz = projector.cartesian( eq, false ) ;
+				if ( fot.covers( new GeometryFactory().createPoint( c ) ) ) {
+					if ( getHeaven() ) {
+						eq = projector.project( c, true ) ;
+						xyz = projector.cartesian( eq, false ) ;
 
-					B = new Vector3D( xyz.x, xyz.y, xyz.z ) ;
-					X = texture.intersection( new Line( A, B ) ) ;
-					uv = HT.operate( new double[] { X.getX(), X.getY(), X.getZ(), 1 } ) ;
-				} else
-					uv = CT.operate( new double[] { xy[0], xy[1], 0, 1 } ) ;
+						V = new Vector3D( xyz.x, xyz.y, xyz.z ) ;
+						X = texture.intersection( new Line( O, V ) ) ;
+						uv = HT.operate( new double[] { X.getX(), X.getY(), X.getZ(), 1 } ) ;
+					} else
+						uv = CT.operate( new double[] { xy[0], xy[1], 0, 1 } ) ;
 
-				if ( 0>uv[0] || 0>uv[1] || uv[0]>=dimx || uv[1]>=dimy )
-					continue ;
+					if ( ! ( 0>uv[0] || 0>uv[1] || uv[0]>=dimx || uv[1]>=dimy ) )
+						rgb = calcRGB( uv ) ;
+				}
 
-				rgb = calcRGB( uv ) ;
-
-				if ( rgb == alpha )
-					continue ;
-
-				ps.operator.setrgbcolor(
-						( rgb>>16&0xff )/256.,
-						( rgb>>8&0xff )/256.,
-						( rgb&0xff )/256. ) ;
-				ps.operator.moveto( xy ) ;
-
-				ps.operator.gsave() ;
-				ps.operator.scale( interval ) ;
-
-				ps.push( CK_UPIX ) ;
-				ps.operator.grestore() ;
+				a85.append( (byte) ( rgb>>16&0xff ) ) ;
+				a85.append( (byte) ( rgb>>8&0xff ) ) ;
+				a85.append( (byte) ( rgb&0xff ) ) ;
 			}
+		a85.finish() ;
+
+		ps.push( a85.toString() ) ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
-		ps.operator.currentdict() ;
-		ps.push( "/"+CK_UDOT ) ;
-		ps.operator.undef() ;
-		ps.operator.currentdict() ;
-		ps.push( "/"+CK_UPIX ) ;
-		ps.operator.undef() ;
 	}
 
 	public static boolean verbose() {
@@ -499,32 +561,6 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		return r ;
 	}
 
-	private Coordinate[] calcMBR( Coordinate[] texture ) {
-		Coordinate[] m, r ;
-		double la, lm ;
-		int li = 0 ;
-
-		m = new MinimumDiameter( new GeometryFactory().createLinearRing( texture ) )
-		.getMinimumRectangle()
-		.getCoordinates() ;
-
-		lm = texture[0].distance( m[0] ) ;
-		for ( int i=1 ; i<m.length-1 ; i++ ) {
-			la = texture[0].distance( m[i] ) ;
-			if ( lm>la ) {
-				lm = la ;
-				li = i ;
-			}
-		}
-
-		r = new Coordinate[ m.length ] ;
-		for ( int i=0 ; i<m.length-1 ; i++ )
-			r[i] = m[( li+i )%( m.length-1 )] ;
-		r[m.length-1] = r[0] ;
-
-		return r ;
-	}
-
 	private int calcRGB( double[] uv ) {
 		return calcRGB( uv[0], uv[1] ) ;
 	}
@@ -583,71 +619,6 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 				+( p4&0xff )/256.*w4 ) ;
 
 		return r<<16|g<<8|b ;
-	}
-
-	private void applyTM( int[] tonemap ) {
-		int iar = 255, iag = 255, iab = 255 ;
-		int ior = 0, iog = 0, iob = 0 ;
-		int ip, ipr, ipg, ipb ;
-		int tar, tag, tab, tor, tog, tob ;
-		int tp, tpr, tpg, tpb ;
-		int s ;
-
-		s = image.length ;
-
-		for ( int p=0 ; s>p ; p++ ) {
-			ip = image[p]&0xffffff ;
-
-			if ( ip == alpha )
-				continue ;
-
-			ipr = ip>>16&0xff ;
-			ipg = ip>>8&0xff ;
-			ipb = ip&0xff ;
-
-			if ( iar>ipr )
-				iar = ipr ;
-			if ( iag>ipg )
-				iag = ipg ;
-			if ( iab>ipb )
-				iab = ipb ;
-
-			if ( ipr>ior )
-				ior = ipr ;
-			if ( ipg>iog )
-				iog = ipg ;
-			if ( ipb>iob )
-				iob = ipb ;
-		}
-
-		tar = tonemap[0]>>16&0xff ;
-		tag = tonemap[0]>>8&0xff ;
-		tab = tonemap[0]&0xff ;
-		tor = tonemap[1]>>16&0xff ;
-		tog = tonemap[1]>>8&0xff ;
-		tob = tonemap[1]&0xff ;
-
-		for ( int p=0 ; s>p ; p++ ) {
-			ip = image[p]&0xffffff ;
-
-			if ( ip == alpha )
-				continue ;
-
-			ipr = ip>>16&0xff ;
-			ipg = ip>>8&0xff ;
-			ipb = ip&0xff ;
-
-			tpr = ( ipr-iar )*( tor-tar )/( ior-iar )+tar ;
-			tpg = ( ipg-iag )*( tog-tag )/( iog-iag )+tag ;
-			tpb = ( ipb-iab )*( tob-tab )/( iob-iab )+tab ;
-
-			tp = ip&0xff000000
-			|tpr<<16
-			|tpg<<8
-			|tpb ;
-
-			image[p] = tp ;
-		}
 	}
 
 	private void linePS( ApplicationPostscriptStream ps, Coordinate[] list ) {

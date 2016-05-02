@@ -1054,7 +1054,21 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="Sign" type="SignType"/>
+	<xs:element name="Sign">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="SignType">
+					<xs:attribute name="nature" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="constellation"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<!---->
 	<xs:complexType name="RationalType">
 		<xs:attribute name="value" use="required">

@@ -219,6 +219,10 @@ public class PostscriptStream extends FilterOutputStream {
 			print( "gsave\n" ) ;
 		}
 
+		public void image() {        
+			print( "image\n" ) ;
+		}
+
 		public void lineto() {
 			print( "lineto\n" ) ;
 		}
@@ -310,10 +314,14 @@ public class PostscriptStream extends FilterOutputStream {
 			def() ;
 		}
 
+		public void scale() {        
+			print( "scale\n" ) ;
+		}
+
 		public void scale( double s ) {        
 			push( s ) ;
 			dup() ;
-			print( "scale\n" ) ;
+			scale() ;
 		}
 
 		public void selectfont() {        
@@ -324,6 +332,10 @@ public class PostscriptStream extends FilterOutputStream {
 			push( key ) ;
 			push( scale ) ;
 			selectfont() ;
+		}
+
+		public void setcolorspace() {        
+			print( "setcolorspace\n" ) ;
 		}
 
 		public void setdash() {        

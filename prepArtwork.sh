@@ -30,7 +30,7 @@ while true ; do
 	nam=$1 ; shift
 	url=$1 ; shift
 	sav=$*
-	printf "<Artwork name=\"%s\" url=\"%s%s\" surface=\"heaven\">" $nam $prf $url
+	printf "<Artwork name=\"%s\" url=\"%s%s\" heaven=\"true\" tonemap=\"pale\">" $nam $prf $url
 	for s in 1 2 3 ; do
 		echo -n "<Popper>"
 		set $sav

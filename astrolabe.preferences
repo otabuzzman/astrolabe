@@ -23,6 +23,8 @@
 						<!--used by ChartPage, Artwork.-->
 						<!--postscript units (1/72 inch) per astrolabe unit-->
 						<entry key="psunit" value="2.834646"/>
+						<!--used by ASCII85Encoder.-->
+						<entry key="cpl" value="72"/>
 					</map>
 				</node>
 			</node>
@@ -625,17 +627,21 @@
 					<entry key="interval" value="16"/>
 					<!--RGB from 0 to 255 each-->
 					<entry key="alpha" value="0:0:0"/>
+					<!--percent-->
+					<entry key="minsection" value="25"/>
 					<!--keys must equal to allowed values of concerning attributes in XSD.-->
-					<!--attribute practicality-->
+					<!--attribute tonemap-->
 					<entry key="original" value="0:0:0,255:255:255"/>
 					<entry key="pale" value="208:208:208,244:244:244"/>
 				</map>
-				<node name="def">
-					<map>
-						<entry key="udot" value="{gsave currentpoint translate 0 0 .5 0 359 .5 0 moveto arc closepath fill grestore}"/>
-						<entry key="upix" value="{gsave currentpoint translate -.5 .5 .5 .5 .5 -.5 -.5 -.5 moveto lineto lineto lineto closepath fill grestore}"/>
-					</map>
-				</node>
+			</node>
+			<node name="Sign">
+				<map>
+					<entry key="shortening" value="2.62"/>
+					<!--keys must equal to allowed values of concerning attributes in XSD.-->
+					<!--attribute nature-->
+					<entry key="constellation" value="1 setlinecap 0.92 setlinewidth"/>
+				</map>
 			</node>
 		</node>
 	</root>

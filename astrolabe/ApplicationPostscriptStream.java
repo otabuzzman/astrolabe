@@ -128,6 +128,10 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 		print( "grev\n" ) ;
 	}
 
+	public void idict() {        
+		print( "idict\n" ) ;
+	}
+
 	public void max() {        
 		print( "max\n" ) ;
 	}
