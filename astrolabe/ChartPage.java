@@ -9,7 +9,10 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 @SuppressWarnings("serial")
 public class ChartPage extends astrolabe.model.ChartPage {
 
-	private final static String DEFAULT_LAYOUT = "100x100" ;
+	// configuration key (CK_)
+	private final static String CK_LAYOUT		= "layout" ;
+
+	private final static String DEFAULT_LAYOUT	= "100x100" ;
 
 	public void register() {
 		double size[], viewx, viewy ;
@@ -21,9 +24,7 @@ public class ChartPage extends astrolabe.model.ChartPage {
 		viewx = size[0]*getView()/100 ;
 		viewy = size[1]*getView()/100 ;
 
-		layout = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CHARTPAGE_LAYOUT, DEFAULT_LAYOUT ) ;
+		layout = Configuration.getValue( this, CK_LAYOUT, DEFAULT_LAYOUT ) ;
 		Registry.register( ApplicationConstant.GC_LAYOUT,
 				new Layout( layout, new double[] {
 						-size[0]/2, -size[1]/2,
@@ -45,9 +46,7 @@ public class ChartPage extends astrolabe.model.ChartPage {
 	public double[] size() {
 		String sv, sd[] ;
 
-		sv = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				getSize(), null ) ;
+		sv = Configuration.getValue( this, getSize(), null ) ;
 		if ( sv == null ) {
 			sd = getSize().split( "x" ) ;
 		} else {

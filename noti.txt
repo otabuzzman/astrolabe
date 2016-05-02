@@ -266,3 +266,32 @@ GC_FOVUNI->size()
 GC_LAYOUT->100:100
 GC_PARSER->Parser()
 
+<class>[.<instance>].substitute[.<path>].<key> : <substitute>
+Ein Wert ist in der Registry mit dem Schlüssel <substitute> gespeichert.
+
+<class>[.<instance>].substitute[.<path>].<key> : <key substitute>
+<class>[.<instance>].substitute[.<path>].<key>.<redirection> : <redirection substitute>
+Der Wert des Property-Eintrags <class>[.<instance>].message[.<path>].{<key substitute>}.<redirection> ist in
+der Registry mit dem Schlüssel <redirection substitute> gespeichert; Werte für <path> sind ggf. identisch.
+
+<class>[.<instance>].substitute[.<path>].<indirection> : <substitute>
+Der Wert des Property-Eintrags <class>[.<instance>].message[.<path>].<indirection>.<value>
+ist in der Registry mit dem Schlüssel <substitute> gespeichert; Werte für <path> sind ggf. identisch.
+
+aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;
+
+u, topmiddle: 		0 > y && x/y < r && x/y >= -r       0&#x003e;Y &#x0026;&#x0026; X/Y &#x003c; 0.707 &#x0026;&#x0026; X/Y &#x003e;= -0.707
+o, bottommiddle: 	y >= 0 && x/y < r && x/y >= -r      Y&#x003e;=0 &#x0026;&#x0026; X/Y &#x003c; 0.707 &#x0026;&#x0026; X/Y &#x003e;= -0.707
+l, middleright:		0 > x && ( x/y < -r || x/y >= r )   0&#x003e;X &#x0026;&#x0026; ( X/Y &#x003c; -0.707 || X/Y &#x003e;= 0.707 )
+r, middleleft:		x >= 0 && ( x/y < -r || x/y >= r )  X&#x003e;=0 &#x0026;&#x0026; ( X/Y &#x003c; -0.707 || X/Y &#x003e;= 0.707 )
+
+0&#x003e;Y &#x0026;&#x0026; X/Y &#x003c; 0.707 &#x0026;&#x0026; X/Y &#x003e;= -0.707 ? &#x0022;topmiddle&#x0022; :
+Y&#x003e;=0 &#x0026;&#x0026; X/Y &#x003c; 0.707 &#x0026;&#x0026; X/Y &#x003e;= -0.707 ? &#x0022;bottommiddle&#x0022; :
+0&#x003e;X &#x0026;&#x0026; ( X/Y &#x003c; -0.707 || X/Y &#x003e;= 0.707 ) ? &#x0022;middleright&#x0022; : &#x0022;middleleft&#x0022;
+
+0&#x003e;Y&#x0026;&#x0026;X/Y&#x003c;0.707&#x0026;&#x0026;X/Y&#x003e;=-0.707?&#x0022;topmiddle&#x0022;:Y&#x003e;=0&#x0026;&#x0026;X/Y&#x003c;0.707&#x0026;&#x0026;X/Y&#x003e;=-0.707?&#x0022;bottommiddle&#x0022;:0&#x003e;X&#x0026;&#x0026;(X/Y&#x003c;-0.707||X/Y&#x003e;=0.707)?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;
+
+# A3, 82%
+X > Xa3*82%/2-2 || Y > Ya3/2*82%/2-2 || X < -Xa3/2*82%/2-2 || Y < -Ya3/2*82%/2-2
+X &#x003e; 119.7 || Y &#x003e; 170.2 || X &#x003c; -119.7 || Y &#x003c; -170.2
+X&#x003e;119.7||Y&#x003e;170.2||X&#x003c;-119.7||Y&#x003c;-170.2?&#x0022;guidance&#x0022;:&#x0022;none&#x0022;

@@ -18,9 +18,31 @@ import com.vividsolutions.jts.geom.LineString;
 @SuppressWarnings("serial")
 public class CircleMeridian extends astrolabe.model.CircleMeridian implements PostscriptEmitter, Baseline {
 
+	// qualifier key (QK_)
+	private final static String QK_AZIMUTH			= "azimuth" ;
+
 	private final static Log log = LogFactory.getLog( CircleMeridian.class ) ;
 
+	// attribute value (AV_)
+	@SuppressWarnings("unused")
+	private final static String AV_CHASING			= "chasing" ;
+	private final static String AV_LEADING			= "leading" ;
+
+	// configuration key (CK_)
+	private final static String CK_INTERVAL			= "interval" ;
+
+	private final static String CK_HALO				= "halo" ;
+	private final static String CK_HALOMIN			= "halomin" ;
+	private final static String CK_HALOMAX			= "halomax" ;
+
 	private final static double DEFAULT_INTERVAL	= 1 ;
+
+	private final static double DEFAULT_HALO		= 4 ;
+	private final static double DEFAULT_HALOMIN		= .08 ;
+	private final static double DEFAULT_HALOMAX		= .4 ;
+
+	// message key (MK_)
+	private final static String MK_EINTSEC			= "eintsec" ;
 
 	private Projector projector ;
 
@@ -39,23 +61,19 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			Object circle ;
 			boolean leading ;
 
-			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = getBegin().getReference().getNode().equals( AV_LEADING ) ;
 			try {
 				circle = Registry.retrieve( getBegin().getReference().getCircle() ) ;
 				r = circle instanceof CircleParallel?
 						intersect( (CircleParallel) circle, leading ):
 							intersect( (CircleMeridian) circle, leading ) ;
 			} catch ( ParameterNotValidException e ) {
-				String msg ;
-
-				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+getBegin().getReference().getCircle()+"\"" } ) ;
-				log.warn( msg ) ;
+				log.warn( e.getMessage() ) ;
 
 				r = -90 ;
 			}
 		} else {
-			r = AstrolabeFactory.valueOf( getBegin().getAngle() ) ;
+			r = ApplicationFactory.valueOf( getBegin().getAngle() ) ;
 		}
 
 		return r ;
@@ -68,46 +86,39 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			Object circle ;
 			boolean leading ;
 
-			leading = getBegin().getReference().getNode().equals( ApplicationConstant.AV_CIRCLE_LEADING ) ;
+			leading = getBegin().getReference().getNode().equals( AV_LEADING ) ;
 			try {
 				circle = Registry.retrieve( getEnd().getReference().getCircle() ) ;
 				end = circle instanceof CircleParallel?
 						intersect( (CircleParallel) circle, leading ):
 							intersect( (CircleMeridian) circle, leading ) ;
 			} catch ( ParameterNotValidException e ) {
-				String msg ;
-
-				msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-				msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+getEnd().getReference().getCircle()+"\"" } ) ;
-				log.warn( msg ) ;
+				log.warn( e.getMessage() ) ;
 
 				end = 90 ;
 			}
 		} else {
-			end = AstrolabeFactory.valueOf( getEnd().getAngle() ) ;
+			end = ApplicationFactory.valueOf( getEnd().getAngle() ) ;
 		}
 
 		return end ;
 	}
 
 	public void register() {
-		String key ;
-		double az ;
 		LineString fov ;
 		List<double[]> list ;
+		Point point ;
+		DMS dms ;
+		double az ;
 
 		if ( getName() != null )
 			Registry.register( getName(), this ) ;
 
-		az = AstrolabeFactory.valueOf( getAngle() ) ;
-
-		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_CIRCLE_AZIMUTH ) ;
-		AstrolabeRegistry.registerDMS( key, az ) ;
-		AstrolabeRegistry.registerHMS( key, az ) ;
+		list = list( null, begin(), end(), 0 ) ;
+		point = new Point( list.get( list.size()-1 ) ) ;
+		point.register() ;
 
 		if ( getFov() != null ) {
-			list = list( null, begin(), end(), 0 ) ;
-
 			fov = new GeometryFactory().createLineString(
 					new JTSCoordinateArraySequence( list ) ) ;
 
@@ -118,18 +129,22 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			} else { // extend
 			}
 		}
+
+		az = ApplicationFactory.valueOf( getAngle() ) ;
+		dms = new DMS( az/15 ) ;
+		dms.register( this, QK_AZIMUTH ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintStroke importance ;
 
-		importance = new GSPaintStroke( getImportance(), getName() ) ;
+		importance = new GSPaintStroke( getImportance() ) ;
 		importance.headPS( ps ) ;
 		importance.emitPS( ps ) ;
 		importance.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		Geometry fov, circle ;
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
@@ -140,7 +155,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		emitPS( ps, !fov.covers( circle ) ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
+	private void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
+		Configuration conf ;
 		ListCutter cutter ;
 		Geometry fov ;
 		astrolabe.model.CircleMeridian peer ;
@@ -162,14 +178,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 						peer.setName( ApplicationConstant.GC_NS_CUT ) ;
 					else
 						peer.setName( ApplicationConstant.GC_NS_CUT+getName() ) ;
-					AstrolabeFactory.modelOf( peer, false ) ;
+					ApplicationFactory.modelOf( peer, false ) ;
 
 					peer.setImportance( getImportance() ) ;
 
 					// astrolabe.model.AngleType
 					peer.setAngle( new astrolabe.model.Angle() ) ;
 					peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getAngle().getRational().setValue( AstrolabeFactory.valueOf( getAngle() ) ) ;
+					peer.getAngle().getRational().setValue( ApplicationFactory.valueOf( getAngle() ) ) ;
 
 					peer.setBegin( new astrolabe.model.Begin() ) ;
 					// astrolabe.model.AngleType
@@ -213,23 +229,20 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
-
-			AstrolabeRegistry.registerJTSCoordinate(
-					MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_CIRCLE_CURRENTPOINT ),
-					new JTSCoordinate( l.get( l.size()-1 ) ) ) ;
+			ps.gdraw() ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			conf = new Configuration( this ) ;
+			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+			ps.max() ;
+			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+			ps.min() ;
 
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
@@ -249,7 +262,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 				ps.operator.gsave() ;
 
-				dial = AstrolabeFactory.companionOf( getDial(), (Baseline) this ) ;
+				dial = ApplicationFactory.companionOf( getDial(), (Baseline) this ) ;
 				dial.headPS( ps ) ;
 				dial.emitPS( ps ) ;
 				dial.tailPS( ps ) ;
@@ -263,7 +276,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
 					ps.operator.gsave() ;
 
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
 					annotation.headPS( ps ) ;
 					annotation.emitPS( ps ) ;
 					annotation.tailPS( ps ) ;
@@ -274,14 +287,14 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double al, double shift ) {
 		double xy[], az ;
 		Vector v, t ;
 
-		az = AstrolabeFactory.valueOf( getAngle() ) ;	
+		az = ApplicationFactory.valueOf( getAngle() ) ;	
 		xy = projector.project( az, al ) ;
 		v = new Vector( xy[0], xy[1] ) ;
 
@@ -297,7 +310,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public double[] convert( double angle ) {
-		return projector.convert( AstrolabeFactory.valueOf( getAngle() ), angle ) ;
+		return projector.convert( ApplicationFactory.valueOf( getAngle() ), angle ) ;
 	}
 
 	public double unconvert( double[] eq ) {
@@ -308,7 +321,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		Vector a, b ;
 		double xy[], az ;
 
-		az = AstrolabeFactory.valueOf( getAngle() ) ;
+		az = ApplicationFactory.valueOf( getAngle() ) ;
 		xy = projector.project( az, al+10./3600 ) ;
 		a = new Vector( xy[0], xy[1] ) ;
 		xy = projector.project( az, al ) ;
@@ -323,9 +336,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		List<double[]> listxy ;
 		double interval ;
 
-		interval = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CIRCLE_INTERVAL, DEFAULT_INTERVAL ) ;
+		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		listxy = new java.util.Vector<double[]>() ;
 
@@ -363,7 +374,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		}
 
 		// convert actual gn into local
-		az = AstrolabeFactory.valueOf( getAngle() ) ;
+		az = ApplicationFactory.valueOf( getAngle() ) ;
 		gneq = projector.convert( az, 0 ) ;
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa/*horizon.getLa()*/ ) ;
@@ -435,7 +446,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		rdLa = rdhoC[1] ;
 
 		// convert actual gn into local
-		az = AstrolabeFactory.valueOf( getAngle() ) ;
+		az = ApplicationFactory.valueOf( getAngle() ) ;
 		gneq = projector.convert( az, 0 ) ;
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa ) ;
@@ -464,6 +475,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		double rdhoC[], rdST, gnhoC[], gnST, gnLa ;
 		double inaz[], gnaz, gnal ;
 		double gnb, gne ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		rdhoC = zenit() ;
 		rdST = rdhoC[0] ;
@@ -471,7 +485,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		gnST = gnhoC[0] ;
 		gnLa = gnhoC[1] ;
 
-		gnal = AstrolabeFactory.valueOf( gn.getAngle() ) ;
+		gnal = ApplicationFactory.valueOf( gn.getAngle() ) ;
 
 		gnB = 90-gnal ;
 		blA = 90-transformParallelLa() ;
@@ -515,8 +529,17 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		gnb = gn.begin() ;
 		gne = gn.end() ;
 
-		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) )
-			throw new ParameterNotValidException( Double.toString( gnaz ) ) ;
+		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) ) {
+			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			fmt = cat.message( MK_EINTSEC, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+getName()+'>' } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
+		}
 
 		return leading?inaz[1]:inaz[0] ;
 	}
@@ -525,6 +548,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		double blA, blB, blGa ;
 		double inaz[], gnal ;
 		double gnb, gne ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		blA = 90-transformParallelLa() ;
 		blB = 90-gn.transformParallelLa() ;
@@ -556,8 +582,17 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		gnb = gn.begin() ;
 		gne = gn.end() ;
 
-		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne )
-			throw new ParameterNotValidException( Double.toString( gnal ) ) ;
+		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne ) {
+			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			fmt = cat.message( MK_EINTSEC, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+getName()+'>' } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
+		}
 
 		return leading?inaz[1]:inaz[0] ;
 	}

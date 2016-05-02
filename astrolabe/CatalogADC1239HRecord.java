@@ -2,6 +2,7 @@
 package astrolabe;
 
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -12,6 +13,84 @@ public class CatalogADC1239HRecord extends astrolabe.model.CatalogADC1239HRecord
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
 	private final static int CR_TOKEN = 78 ;
+
+	private final static String QK_CATALOG		= "Catalog" ;
+	private final static String QK_HIP			= "HIP" ;
+	private final static String QK_PROXY		= "Proxy" ;
+	private final static String QK_RAHMS		= "RAhms" ;
+	private final static String QK_DEDMS		= "DEdms" ;
+	private final static String QK_VMAG			= "Vmag" ;
+	private final static String QK_VARFLAG		= "VarFlag" ;
+	private final static String QK_R_VMAG		= "r_Vmag" ;
+	private final static String QK_RADEG		= "RAdeg" ;
+	private final static String QK_DEDEG		= "DEdeg" ;
+	private final static String QK_ASTROREF		= "AstroRef" ;
+	private final static String QK_PLX			= "Plx" ;
+	private final static String QK_PMRA			= "pmRA" ;
+	private final static String QK_PMDE			= "pmDE" ;
+	private final static String QK_E_RADEG		= "e_RAdeg" ;
+	private final static String QK_E_DEDEG		= "e_DEdeg" ;
+	private final static String QK_E_PLX		= "e_Plx" ;
+	private final static String QK_E_PMRA		= "e_pmRA" ;
+	private final static String QK_E_PMDE		= "e_pmDE" ;
+	private final static String QK_DERA			= "DERA" ;
+	private final static String QK_PLXRA		= "PlxRA" ;
+	private final static String QK_PLXDE		= "PlxDE" ;
+	private final static String QK_PMRARA		= "pmRARA" ;
+	private final static String QK_PMRADE		= "pmRADE" ;
+	private final static String QK_PMRAPLX		= "pmRAPlx" ;
+	private final static String QK_PMDERA		= "pmDERA" ;
+	private final static String QK_PMDEDE		= "pmDEDE" ;
+	private final static String QK_PMDEPLX		= "pmDEPlx" ;
+	private final static String QK_PMDEPMRA		= "pmDEpmRA" ;
+	private final static String QK_F1			= "F1" ;
+	private final static String QK_F2			= "F2" ;
+	private final static String QK_BTMAG		= "BTmag" ;
+	private final static String QK_E_BTMAG		= "e_BTmag" ;
+	private final static String QK_VTMAG		= "VTmag" ;
+	private final static String QK_E_VTMAG		= "e_VTmag" ;
+	private final static String QK_M_BTMAG		= "m_BTmag" ;
+	private final static String QK_BV			= "BV" ;
+	private final static String QK_E_BV			= "e_BV" ;
+	private final static String QK_R_BV			= "r_BV" ;
+	private final static String QK_VI			= "VI" ;
+	private final static String QK_E_VI			= "e_VI" ;
+	private final static String QK_R_VI			= "r_VI" ;
+	private final static String QK_COMBMAG		= "CombMag" ;
+	private final static String QK_HPMAG		= "Hpmag" ;
+	private final static String QK_E_HPMAG		= "e_Hpmag" ;
+	private final static String QK_HPSCAT		= "Hpscat" ;
+	private final static String QK_O_HPMAG		= "o_Hpmag" ;
+	private final static String QK_M_HPMAG		= "m_Hpmag" ;
+	private final static String QK_HPMAX		= "Hpmax" ;
+	private final static String QK_HPMIN		= "HPmin" ;
+	private final static String QK_PERIOD		= "Period" ;
+	private final static String QK_HVARTYPE		= "HvarType" ;
+	private final static String QK_MOREVAR		= "moreVar" ;
+	private final static String QK_MOREPHOTO	= "morePhoto" ;
+	private final static String QK_CCDM			= "CCDM" ;
+	private final static String QK_N_CCDM		= "n_CCDM" ;
+	private final static String QK_NSYS			= "Nsys" ;
+	private final static String QK_NCOMP		= "Ncomp" ;
+	private final static String QK_MULTFLAG		= "MultFlag" ;
+	private final static String QK_SOURCE		= "Source" ;
+	private final static String QK_QUAL			= "Qual" ;
+	private final static String QK_M_HIP		= "m_HIP" ;
+	private final static String QK_THETA		= "theta" ;
+	private final static String QK_RHO			= "rho" ;
+	private final static String QK_E_RHO		= "e_rho" ;
+	private final static String QK_DHP			= "dHp" ;
+	private final static String QK_E_DHP		= "e_dHp" ;
+	private final static String QK_SURVEY		= "Survey" ;
+	private final static String QK_CHART		= "Chart" ;
+	private final static String QK_NOTES		= "Notes" ;
+	private final static String QK_HD			= "HD" ;
+	private final static String QK_BD			= "BD" ;
+	private final static String QK_COD			= "CoD" ;
+	private final static String QK_CPD			= "CPD" ;
+	private final static String QK_VIRED		= "VIred" ;
+	private final static String QK_SPTYPE		= "SpType" ;
+	private final static String QK_R_SPTYPE		= "r_SpType" ;
 
 	public String   Catalog   ; //  [H] Catalogue (H=Hipparcos)
 	public String   HIP       ; //  Identifier (HIP number)
@@ -92,12 +171,27 @@ public class CatalogADC1239HRecord extends astrolabe.model.CatalogADC1239HRecord
 	public String   SpType    ; //  Spectral type
 	public String r_SpType    ; // *[1234GKSX]? Source of spectral type
 
+	// message key (MK_)
+	private final static String MK_ERECLEN = "ereclen" ;
+	private final static String MK_ERECVAL = "erecval" ;
+
 	public CatalogADC1239HRecord( String data ) throws ParameterNotValidException {
 		String[] token ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		token = data.split( "\\|" ) ;
 		if ( token.length != CR_TOKEN ) {
-			throw new ParameterNotValidException( Integer.toString( token.length ) ) ;
+			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			fmt = cat.message( MK_ERECLEN, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { CR_TOKEN } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( token.length, msg.toString() ) ) ;
 		}
 
 		Catalog   = token[0].trim() ;
@@ -181,165 +275,166 @@ public class CatalogADC1239HRecord extends astrolabe.model.CatalogADC1239HRecord
 	}
 
 	public void register() {
-		MessageCatalog m ;
-		String key ;
+		SubstituteCatalog cat ;
+		String sub ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
 
-		key = m.message( ApplicationConstant.LK_ADC1239H_CATALOG ) ;
-		AstrolabeRegistry.registerName( key, Catalog ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HIP ) ;
-		AstrolabeRegistry.registerName( key, HIP ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PROXY ) ;
-		AstrolabeRegistry.registerName( key, Proxy ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_RAHMS ) ;
-		AstrolabeRegistry.registerName( key, RAhms ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_DEDMS ) ;
-		AstrolabeRegistry.registerName( key, DEdms ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_VMAG ) ;
-		AstrolabeRegistry.registerName( key, Vmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_VARFLAG ) ;
-		AstrolabeRegistry.registerName( key, VarFlag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_R_VMAG ) ;
-		AstrolabeRegistry.registerName( key, r_Vmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_RADEG ) ;
-		AstrolabeRegistry.registerName( key, RAdeg ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_DEDEG ) ;
-		AstrolabeRegistry.registerName( key, DEdeg ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_ASTROREF ) ;
-		AstrolabeRegistry.registerName( key, AstroRef ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PLX ) ;
-		AstrolabeRegistry.registerName( key, Plx ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMRA ) ;
-		AstrolabeRegistry.registerName( key, pmRA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMDE ) ;
-		AstrolabeRegistry.registerName( key, pmDE ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_RADEG ) ;
-		AstrolabeRegistry.registerName( key, e_RAdeg ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_DEDEG ) ;
-		AstrolabeRegistry.registerName( key, e_DEdeg ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_PLX ) ;
-		AstrolabeRegistry.registerName( key, e_Plx ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_PMRA ) ;
-		AstrolabeRegistry.registerName( key, e_pmRA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_PMDE ) ;
-		AstrolabeRegistry.registerName( key, e_pmDE ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_DERA ) ;
-		AstrolabeRegistry.registerName( key, DERA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PLXRA ) ;
-		AstrolabeRegistry.registerName( key, PlxRA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PLXDE ) ;
-		AstrolabeRegistry.registerName( key, PlxDE ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMRARA ) ;
-		AstrolabeRegistry.registerName( key, pmRARA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMRADE ) ;
-		AstrolabeRegistry.registerName( key, pmRADE ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMRAPLX ) ;
-		AstrolabeRegistry.registerName( key, pmRAPlx ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMDERA ) ;
-		AstrolabeRegistry.registerName( key, pmDERA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMDEDE ) ;
-		AstrolabeRegistry.registerName( key, pmDEDE ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMDEPLX ) ;
-		AstrolabeRegistry.registerName( key, pmDEPlx ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PMDEPMRA ) ;
-		AstrolabeRegistry.registerName( key, pmDEpmRA ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_F1 ) ;
-		AstrolabeRegistry.registerName( key, F1 ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_F2 ) ;
-		AstrolabeRegistry.registerName( key, F2 ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_BTMAG ) ;
-		AstrolabeRegistry.registerName( key, BTmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_BTMAG ) ;
-		AstrolabeRegistry.registerName( key, e_BTmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_VTMAG ) ;
-		AstrolabeRegistry.registerName( key, VTmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_VTMAG ) ;
-		AstrolabeRegistry.registerName( key, e_VTmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_M_BTMAG ) ;
-		AstrolabeRegistry.registerName( key, m_BTmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_BV ) ;
-		AstrolabeRegistry.registerName( key, BV ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_BV ) ;
-		AstrolabeRegistry.registerName( key, e_BV ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_R_BV ) ;
-		AstrolabeRegistry.registerName( key, r_BV ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_VI ) ;
-		AstrolabeRegistry.registerName( key, VI ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_VI ) ;
-		AstrolabeRegistry.registerName( key, e_VI ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_R_VI ) ;
-		AstrolabeRegistry.registerName( key, r_VI ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_COMBMAG ) ;
-		AstrolabeRegistry.registerName( key, CombMag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HPMAG ) ;
-		AstrolabeRegistry.registerName( key, Hpmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_HPMAG ) ;
-		AstrolabeRegistry.registerName( key, e_Hpmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HPSCAT ) ;
-		AstrolabeRegistry.registerName( key, Hpscat ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_O_HPMAG ) ;
-		AstrolabeRegistry.registerName( key, o_Hpmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_M_HPMAG ) ;
-		AstrolabeRegistry.registerName( key, m_Hpmag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HPMAX ) ;
-		AstrolabeRegistry.registerName( key, Hpmax ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HPMIN ) ;
-		AstrolabeRegistry.registerName( key, HPmin ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_PERIOD ) ;
-		AstrolabeRegistry.registerName( key, Period ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HVARTYPE ) ;
-		AstrolabeRegistry.registerName( key, HvarType ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_MOREVAR ) ;
-		AstrolabeRegistry.registerName( key, moreVar ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_MOREPHOTO ) ;
-		AstrolabeRegistry.registerName( key, morePhoto ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_CCDM ) ;
-		AstrolabeRegistry.registerName( key, CCDM ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_N_CCDM ) ;
-		AstrolabeRegistry.registerName( key, n_CCDM ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_NSYS ) ;
-		AstrolabeRegistry.registerName( key, Nsys ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_NCOMP ) ;
-		AstrolabeRegistry.registerName( key, Ncomp ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_MULTFLAG ) ;
-		AstrolabeRegistry.registerName( key, MultFlag ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_SOURCE ) ;
-		AstrolabeRegistry.registerName( key, Source ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_QUAL ) ;
-		AstrolabeRegistry.registerName( key, Qual ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_M_HIP ) ;
-		AstrolabeRegistry.registerName( key, m_HIP ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_THETA ) ;
-		AstrolabeRegistry.registerName( key, theta ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_RHO ) ;
-		AstrolabeRegistry.registerName( key, rho ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_RHO ) ;
-		AstrolabeRegistry.registerName( key, e_rho ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_DHP ) ;
-		AstrolabeRegistry.registerName( key, dHp ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_E_DHP ) ;
-		AstrolabeRegistry.registerName( key, e_dHp ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_SURVEY ) ;
-		AstrolabeRegistry.registerName( key, Survey ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_CHART ) ;
-		AstrolabeRegistry.registerName( key, Chart ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_NOTES ) ;
-		AstrolabeRegistry.registerName( key, Notes ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_HD ) ;
-		AstrolabeRegistry.registerName( key, HD ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_BD ) ;
-		AstrolabeRegistry.registerName( key, BD ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_COD ) ;
-		AstrolabeRegistry.registerName( key, CoD ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_CPD ) ;
-		AstrolabeRegistry.registerName( key, CPD ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_VIRED ) ;
-		AstrolabeRegistry.registerName( key, VIred ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_SPTYPE ) ;
-		AstrolabeRegistry.registerName( key, SpType ) ;
-		key = m.message( ApplicationConstant.LK_ADC1239H_R_SPTYPE ) ;
-		AstrolabeRegistry.registerName( key, r_SpType ) ;
+		sub = cat.substitute( QK_CATALOG, null ) ;
+		Registry.register( sub, Catalog ) ;
+		sub = cat.substitute( QK_HIP, null ) ;
+		Registry.register( sub, HIP ) ;
+		sub = cat.substitute( QK_PROXY, null ) ;
+		Registry.register( sub, Proxy ) ;
+		sub = cat.substitute( QK_RAHMS, null ) ;
+		Registry.register( sub, RAhms ) ;
+		sub = cat.substitute( QK_DEDMS, null ) ;
+		Registry.register( sub, DEdms ) ;
+		sub = cat.substitute( QK_VMAG, null ) ;
+		Registry.register( sub, Vmag ) ;
+		sub = cat.substitute( QK_VARFLAG, null ) ;
+		Registry.register( sub, VarFlag ) ;
+		sub = cat.substitute( QK_R_VMAG, null ) ;
+		Registry.register( sub, r_Vmag ) ;
+		sub = cat.substitute( QK_RADEG, null ) ;
+		Registry.register( sub, RAdeg ) ;
+		sub = cat.substitute( QK_DEDEG, null ) ;
+		Registry.register( sub, DEdeg ) ;
+		sub = cat.substitute( QK_ASTROREF, null ) ;
+		Registry.register( sub, AstroRef ) ;
+		sub = cat.substitute( QK_PLX, null ) ;
+		Registry.register( sub, Plx ) ;
+		sub = cat.substitute( QK_PMRA, null ) ;
+		Registry.register( sub, pmRA ) ;
+		sub = cat.substitute( QK_PMDE, null ) ;
+		Registry.register( sub, pmDE ) ;
+		sub = cat.substitute( QK_E_RADEG, null ) ;
+		Registry.register( sub, e_RAdeg ) ;
+		sub = cat.substitute( QK_E_DEDEG, null ) ;
+		Registry.register( sub, e_DEdeg ) ;
+		sub = cat.substitute( QK_E_PLX, null ) ;
+		Registry.register( sub, e_Plx ) ;
+		sub = cat.substitute( QK_E_PMRA, null ) ;
+		Registry.register( sub, e_pmRA ) ;
+		sub = cat.substitute( QK_E_PMDE, null ) ;
+		Registry.register( sub, e_pmDE ) ;
+		sub = cat.substitute( QK_DERA, null ) ;
+		Registry.register( sub, DERA ) ;
+		sub = cat.substitute( QK_PLXRA, null ) ;
+		Registry.register( sub, PlxRA ) ;
+		sub = cat.substitute( QK_PLXDE, null ) ;
+		Registry.register( sub, PlxDE ) ;
+		sub = cat.substitute( QK_PMRARA, null ) ;
+		Registry.register( sub, pmRARA ) ;
+		sub = cat.substitute( QK_PMRADE, null ) ;
+		Registry.register( sub, pmRADE ) ;
+		sub = cat.substitute( QK_PMRAPLX, null ) ;
+		Registry.register( sub, pmRAPlx ) ;
+		sub = cat.substitute( QK_PMDERA, null ) ;
+		Registry.register( sub, pmDERA ) ;
+		sub = cat.substitute( QK_PMDEDE, null ) ;
+		Registry.register( sub, pmDEDE ) ;
+		sub = cat.substitute( QK_PMDEPLX, null ) ;
+		Registry.register( sub, pmDEPlx ) ;
+		sub = cat.substitute( QK_PMDEPMRA, null ) ;
+		Registry.register( sub, pmDEpmRA ) ;
+		sub = cat.substitute( QK_F1, null ) ;
+		Registry.register( sub, F1 ) ;
+		sub = cat.substitute( QK_F2, null ) ;
+		Registry.register( sub, F2 ) ;
+
+		sub = cat.substitute( QK_BTMAG, null ) ;
+		Registry.register( sub, BTmag ) ;
+		sub = cat.substitute( QK_E_BTMAG, null ) ;
+		Registry.register( sub, e_BTmag ) ;
+		sub = cat.substitute( QK_VTMAG, null ) ;
+		Registry.register( sub, VTmag ) ;
+		sub = cat.substitute( QK_E_VTMAG, null ) ;
+		Registry.register( sub, e_VTmag ) ;
+		sub = cat.substitute( QK_M_BTMAG, null ) ;
+		Registry.register( sub, m_BTmag ) ;
+		sub = cat.substitute( QK_BV, null ) ;
+		Registry.register( sub, BV ) ;
+		sub = cat.substitute( QK_E_BV, null ) ;
+		Registry.register( sub, e_BV ) ;
+		sub = cat.substitute( QK_R_BV, null ) ;
+		Registry.register( sub, r_BV ) ;
+		sub = cat.substitute( QK_VI, null ) ;
+		Registry.register( sub, VI ) ;
+		sub = cat.substitute( QK_E_VI, null ) ;
+		Registry.register( sub, e_VI ) ;
+		sub = cat.substitute( QK_R_VI, null ) ;
+		Registry.register( sub, r_VI ) ;
+		sub = cat.substitute( QK_COMBMAG, null ) ;
+		Registry.register( sub, CombMag ) ;
+		sub = cat.substitute( QK_HPMAG, null ) ;
+		Registry.register( sub, Hpmag ) ;
+		sub = cat.substitute( QK_E_HPMAG, null ) ;
+		Registry.register( sub, e_Hpmag ) ;
+		sub = cat.substitute( QK_HPSCAT, null ) ;
+		Registry.register( sub, Hpscat ) ;
+		sub = cat.substitute( QK_O_HPMAG, null ) ;
+		Registry.register( sub, o_Hpmag ) ;
+		sub = cat.substitute( QK_M_HPMAG, null ) ;
+		Registry.register( sub, m_Hpmag ) ;
+		sub = cat.substitute( QK_HPMAX, null ) ;
+		Registry.register( sub, Hpmax ) ;
+		sub = cat.substitute( QK_HPMIN, null ) ;
+		Registry.register( sub, HPmin ) ;
+		sub = cat.substitute( QK_PERIOD, null ) ;
+		Registry.register( sub, Period ) ;
+		sub = cat.substitute( QK_HVARTYPE, null ) ;
+		Registry.register( sub, HvarType ) ;
+		sub = cat.substitute( QK_MOREVAR, null ) ;
+		Registry.register( sub, moreVar ) ;
+		sub = cat.substitute( QK_MOREPHOTO, null ) ;
+		Registry.register( sub, morePhoto ) ;
+		sub = cat.substitute( QK_CCDM, null ) ;
+		Registry.register( sub, CCDM ) ;
+		sub = cat.substitute( QK_N_CCDM, null ) ;
+		Registry.register( sub, n_CCDM ) ;
+		sub = cat.substitute( QK_NSYS, null ) ;
+		Registry.register( sub, Nsys ) ;
+		sub = cat.substitute( QK_NCOMP, null ) ;
+		Registry.register( sub, Ncomp ) ;
+		sub = cat.substitute( QK_MULTFLAG, null ) ;
+		Registry.register( sub, MultFlag ) ;
+		sub = cat.substitute( QK_SOURCE, null ) ;
+		Registry.register( sub, Source ) ;
+		sub = cat.substitute( QK_QUAL, null ) ;
+		Registry.register( sub, Qual ) ;
+		sub = cat.substitute( QK_M_HIP, null ) ;
+		Registry.register( sub, m_HIP ) ;
+		sub = cat.substitute( QK_THETA, null ) ;
+		Registry.register( sub, theta ) ;
+		sub = cat.substitute( QK_RHO, null ) ;
+		Registry.register( sub, rho ) ;
+		sub = cat.substitute( QK_E_RHO, null ) ;
+		Registry.register( sub, e_rho ) ;
+		sub = cat.substitute( QK_DHP, null ) ;
+		Registry.register( sub, dHp ) ;
+		sub = cat.substitute( QK_E_DHP, null ) ;
+		Registry.register( sub, e_dHp ) ;
+		sub = cat.substitute( QK_SURVEY, null ) ;
+		Registry.register( sub, Survey ) ;
+		sub = cat.substitute( QK_CHART, null ) ;
+		Registry.register( sub, Chart ) ;
+		sub = cat.substitute( QK_NOTES, null ) ;
+		Registry.register( sub, Notes ) ;
+		sub = cat.substitute( QK_HD, null ) ;
+		Registry.register( sub, HD ) ;
+		sub = cat.substitute( QK_BD, null ) ;
+		Registry.register( sub, BD ) ;
+		sub = cat.substitute( QK_COD, null ) ;
+		Registry.register( sub, CoD ) ;
+		sub = cat.substitute( QK_CPD, null ) ;
+		Registry.register( sub, CPD ) ;
+		sub = cat.substitute( QK_VIRED, null ) ;
+		Registry.register( sub, VIred ) ;
+		sub = cat.substitute( QK_SPTYPE, null ) ;
+		Registry.register( sub, SpType ) ;
+		sub = cat.substitute( QK_R_SPTYPE, null ) ;
+		Registry.register( sub, r_SpType ) ;
 	}
 
 	public boolean isOK() {
@@ -355,17 +450,33 @@ public class CatalogADC1239HRecord extends astrolabe.model.CatalogADC1239HRecord
 	public void inspect() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
-		String value ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
+		String name, value, pattern ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		try {
+			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
+			if ( ! Preferences.systemRoot().nodeExists( name ) )
+				return ;
+			node = Preferences.systemRoot().node( name ) ;
+
 			for ( String key : node.keys() ) {
 				try {
 					token = getClass().getDeclaredField( key ) ;
 					value = (String) token.get( this ) ;
-					if ( ! value.matches( node.get( key, DEFAULT_TOKENPATTERN ) ) )
-						throw new ParameterNotValidException( key ) ;
+					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
+					if ( ! value.matches( pattern ) ) {
+						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						fmt = cat.message( MK_ERECVAL, null ) ;
+						if ( fmt != null ) {
+							msg = new StringBuffer() ;
+							msg.append( MessageFormat.format( fmt, new Object[] { value, pattern } ) ) ;
+						} else
+							msg = null ;
+
+						throw new ParameterNotValidException( ParameterNotValidError.errmsg( key, msg.toString() ) ) ;
+					}
 				} catch ( NoSuchFieldException e ) {
 					continue ;
 				} catch ( IllegalAccessException e ) {

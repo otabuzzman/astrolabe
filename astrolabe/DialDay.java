@@ -1,59 +1,14 @@
 
 package astrolabe;
 
-import caa.CAACoordinateTransformation;
-import caa.CAADate;
 import caa.CAAEquationOfTime;
 
 @SuppressWarnings("serial")
 public class DialDay extends DialDegree {
 
-	private String[] nameofday = {
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SUNDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_MONDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_TUESDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_WEDNESDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_THURSDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_FRIDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SATURDAY 
-	} ;
-	private String[] shortnameofday = {
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_SUNDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_MONDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_TUESDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_WEDNESDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_THURSDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_FRIDAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_WEEKDAY_SHORT_SATURDAY 
-	} ;
-	private String[] nameofmonth = {
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JANUARY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_FEBRUARY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_MARCH,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_APRIL,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_MAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JUNE,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_JULY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_AUGUST,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SEPTEMBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_OCTOBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_NOVEMBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_DECEMBER
-	} ;
-	private String[] shortnameofmonth = {
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JANUARY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_FEBRUARY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_MARCH,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_APRIL,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_MAY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JUNE,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_JULY,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_AUGUST,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_SEPTEMBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_OCTOBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_NOVEMBER,
-			ApplicationConstant.LK_CALENDAR_GREGORIAN_MONTH_SHORT_DECEMBER
-	} ;
+	// qualifier key (QK_)
+	private final static String QK_DAY				= "day" ;
+	private final static String QK_EQUATIONOFTIME	= "equationoftime" ;
 
 	private Baseline baseline ;
 
@@ -64,48 +19,29 @@ public class DialDay extends DialDegree {
 	}
 
 	public void register( int index ) {
-		MessageCatalog m ;
-		CAADate d = new CAADate() ;
-		String dn, dns, mn, mns, key ;
+		SubstituteCatalog cat ;
+		String sub ;
+		CAADate date ;
+		DMS hms ;
 		double jd, eot ;
-
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		jd = baseline.scaleMarkNth( index, getGraduationSpan().getValue() ) ;
 
-		d.Set( jd, true ) ;
+		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		sub = cat.substitute( QK_DAY, null ) ;
+		Registry.register( sub, (long) ( jd*100+.5 )/100 ) ;
 
-		dn = m.message( nameofday[ d.DayOfWeek() ] ) ;
-		dns = m.message( shortnameofday[ d.DayOfWeek() ] ) ;
-
-		mn = m.message( nameofmonth[ -1+(int) d.Month() ] ) ;
-		mns = m.message( shortnameofmonth[ -1+(int) d.Month() ] ) ;
-
-		key = m.message( ApplicationConstant.LK_DIAL_DAY ) ;
-		AstrolabeRegistry.registerYMD( key, d ) ;
-
-		key = m.message( ApplicationConstant.LK_DIAL_JULIANDAY ) ;
-		AstrolabeRegistry.registerNumber( key, jd, 2 ) ;
-
-		key = m.message( ApplicationConstant.LK_DIAL_NAMEOFDAY ) ;
-		AstrolabeRegistry.registerName( key, dn ) ;
-		key = m.message( ApplicationConstant.LK_DIAL_NAMEOFDAYSHORT ) ;
-		AstrolabeRegistry.registerName( key, dns ) ;
-
-		key = m.message( ApplicationConstant.LK_DIAL_NAMEOFMONTH ) ;
-		AstrolabeRegistry.registerName( key, mn ) ;
-		key = m.message( ApplicationConstant.LK_DIAL_NAMEOFMONTHSHORT ) ;
-		AstrolabeRegistry.registerName( key, mns ) ;
+		date = new CAADate() ;
+		date.Set( jd, true ) ;
+		date.register( this, QK_DAY ) ;
+		date.delete() ;
 
 		eot = CAAEquationOfTime.Calculate( jd ) ;
 		// convert to hours if greater than 20 minutes
 		eot = ( eot>20?eot-24*60:eot )/60 ;
-		eot = CAACoordinateTransformation.HoursToDegrees( eot ) ;
 
-		key = m.message( ApplicationConstant.LK_DIAL_EQUATIONOFTIME ) ;
-		AstrolabeRegistry.registerHMS( key, eot ) ;
-
-		d.delete() ;
+		hms = new DMS( eot ) ;
+		hms.register( this, QK_EQUATIONOFTIME ) ;
 	}
 
 	public boolean isMultipleSpan( double mark, double span ) {

@@ -8,6 +8,10 @@ import caa.CAANutation;
 @SuppressWarnings("serial")
 public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical implements PostscriptEmitter, Projector {
 
+	// qualifier key (QK_)
+	private final static String QK_EPSILON	= "epsilon" ;
+	private final static String QK_LATITUDE	= "latitude" ;
+
 	private Projector projector ;
 
 	public HorizonEcliptical( Projector projector ) {
@@ -17,35 +21,29 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	public void register() {
 		CAA2DCoordinate c ;
 		double epoch, e ;
-		double eq[] = new double[2] ;
-		MessageCatalog m ;
-		String key ;
+		DMS dms ;
 
 		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
-		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
-		eq[1] = c.Y() ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		key = m.message( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
-		AstrolabeRegistry.registerDMS( key, e ) ;
-		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, eq[1] ) ;		
+		dms = new DMS( e ) ;
+		dms.register( this, QK_EPSILON ) ;
+		dms.set( c.Y(), -1 ) ;
+		dms.register( this, QK_LATITUDE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintColor practicality ;
 
-		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality = new GSPaintColor( getPracticality() ) ;
 		practicality.headPS( ps ) ;
 		practicality.emitPS( ps ) ;
 		practicality.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			AnnotationStraight annotation ;
 
@@ -65,7 +63,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
 			PostscriptEmitter circle ;
 
-			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
+			circle = ApplicationFactory.companionOf( getCircle( cl ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -79,7 +77,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
 			PostscriptEmitter body ;
 
-			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
+			body = ApplicationFactory.companionOf( getBody( bd ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -91,7 +89,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double[] ho ) {

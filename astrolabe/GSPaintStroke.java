@@ -10,15 +10,9 @@ public class GSPaintStroke implements PostscriptEmitter {
 	private double[] linedash	= new double[] { DEFAULT_LINEDASH } ;;
 
 	public GSPaintStroke( String param ) {
-		this( param, null ) ;
-	}
-
-	public GSPaintStroke( String param, String name ) {
 		String iv, id[] ;
 
-		iv = Configuration.getValue(
-				Configuration.getClassNode( this, name, null ),
-				param, null ) ;
+		iv = Configuration.getValue( this, param, null ) ;
 		if ( iv == null )
 			id = param.split( ":" ) ;
 		else
@@ -38,10 +32,10 @@ public class GSPaintStroke implements PostscriptEmitter {
 		} catch ( NumberFormatException e ) {}
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		ps.operator.setlinewidth( linewidth ) ;
 
 		if ( linedash.length>1 ) {
@@ -56,6 +50,6 @@ public class GSPaintStroke implements PostscriptEmitter {
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 }

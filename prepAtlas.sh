@@ -3,9 +3,9 @@
 
 # Gebrauch:
 # numoff=0
-# PATH=<path to xmlstarlet>:<path to IM convert>:$PATH LANG=de ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
-# numoff=`xml -N ns=http://www.chartacaeli.eu/astrolabe/model -t -v count(ns:Astrolabe/ns:Chart) atlas-stereographic-northern.xml`
-# PATH=<path to xmlstarlet>:<path to IM convert>:$PATH LANG=de ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
+# export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
+# numoff=`xml select -N ns=http://www.chartacaeli.eu/astrolabe/model -t -v count(ns:Astrolabe/ns:Chart) atlas-stereographic-northern.xml`
+# export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
 #
 
 set -o errexit

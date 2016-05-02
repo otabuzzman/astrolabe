@@ -3,9 +3,6 @@ package astrolabe;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.prefs.Preferences;
-
-import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
 public class DialDegree extends astrolabe.model.DialDegree implements PostscriptEmitter {
@@ -13,30 +10,24 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	private class None implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
-		private final static double DEFAULT_THICKNESS	= 0 ;
 
-		private double space ;
-		private double thickness ;
+		private double space = 0 ;
 
-		public None() {
-			Preferences node ;
+		public void headPS(ApplicationPostscriptStream ps) {
+			Configuration conf ;
+			String qual ;
 
-			node = Configuration.getClassNode(
-					getClass().getEnclosingClass(), getName(), ApplicationConstant.PN_DIAL_BASELINE+"/"+getBaseline() ) ;
+			conf = new Configuration( getClass().getEnclosingClass() ) ;
+			qual = CN_BASELINE+"/"+getBaseline() ;
 
-			space = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_SPACE, None.DEFAULT_SPACE ) ;
-			thickness = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_THICKNESS, None.DEFAULT_THICKNESS ) ;
+			space = conf.getValue(
+					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
 		}
 
-		public void headPS(AstrolabePostscriptStream ps) {
+		public void emitPS(ApplicationPostscriptStream ps) {
 		}
 
-		public void emitPS(AstrolabePostscriptStream ps) {
-		}
-
-		public void tailPS(AstrolabePostscriptStream ps) {
+		public void tailPS(ApplicationPostscriptStream ps) {
 		}
 	}
 
@@ -49,21 +40,24 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		private double thickness ;
 
 		public Line() {
-			Preferences node ;
+			Configuration conf ;
+			String qual ;
 
-			node = Configuration.getClassNode(
-					getClass().getEnclosingClass(), getName(), ApplicationConstant.PN_DIAL_BASELINE+"/"+getBaseline() ) ;
-			space = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_SPACE, DEFAULT_SPACE ) ;
-			thickness = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_THICKNESS, DEFAULT_THICKNESS ) ;
+			conf = new Configuration( getClass().getEnclosingClass() ) ;
+			qual = CN_BASELINE+"/"+getBaseline() ;
+
+			space = conf.getValue(
+					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
+			thickness = conf.getValue(
+					qual+"/"+CK_THICKNESS, DEFAULT_THICKNESS ) ;
 		}
 
-		public void headPS(AstrolabePostscriptStream ps) {
+		public void headPS(ApplicationPostscriptStream ps) {
 			ps.operator.setlinewidth( thickness ) ;
 		}
 
-		public void emitPS(AstrolabePostscriptStream ps) {
+		public void emitPS(ApplicationPostscriptStream ps) {
+			Configuration conf ;
 			List<double[]> v ;
 			double ma, mo, o, span ;
 			int m ;
@@ -93,19 +87,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			conf = new Configuration( this ) ;
+			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+			ps.max() ;
+			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+			ps.min() ;
 
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
@@ -121,7 +116,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.operator.grestore() ;
 		}
 
-		public void tailPS(AstrolabePostscriptStream ps) {
+		public void tailPS(ApplicationPostscriptStream ps) {
 		}
 	}
 
@@ -136,25 +131,27 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		private double linewidth ;
 
 		public Rail() {
-			Preferences node ;
+			Configuration conf ;
+			String qual ;
 
-			node = Configuration.getClassNode(
-					getClass().getEnclosingClass(), getName(), ApplicationConstant.PN_DIAL_BASELINE+"/"+getBaseline() ) ;
+			conf = new Configuration( getClass().getEnclosingClass() ) ;
+			qual = CN_BASELINE+"/"+getBaseline() ;
 
-			space = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_SPACE, DEFAULT_SPACE ) ;
-			thickness = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_THICKNESS, DEFAULT_THICKNESS ) ;
-			linewidth = Configuration.getValue( node,
-					ApplicationConstant.PK_DIAL_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
+			space = conf.getValue(
+					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
+			thickness = conf.getValue(
+					qual+"/"+CK_THICKNESS, DEFAULT_THICKNESS ) ;
+			linewidth = conf.getValue(
+					qual+"/"+CK_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
 
 		}
 
-		public void headPS(AstrolabePostscriptStream ps) {
+		public void headPS(ApplicationPostscriptStream ps) {
 			ps.operator.setlinewidth( linewidth ) ;
 		}
 
-		public void emitPS(AstrolabePostscriptStream ps) {
+		public void emitPS(ApplicationPostscriptStream ps) {
+			Configuration conf ;
 			List<double[]> vDFw = null, vDRv = null, rvDRv ;
 			double ma, mo, o, s, span ;
 			int m = 0 ;
@@ -178,19 +175,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ps.array( false ) ;
 
 				ps.operator.newpath() ;
-				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+				ps.gdraw() ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 
 				ps.operator.dup() ;
 				ps.operator.div( 100 ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				conf = new Configuration( this ) ;
+				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 				ps.operator.mul() ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+				ps.max() ;
+				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+				ps.min() ;
 
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
@@ -212,19 +210,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ps.array( false ) ;
 
 				ps.operator.newpath() ;
-				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+				ps.gdraw() ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 
 				ps.operator.dup() ;
 				ps.operator.div( 100 ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				conf = new Configuration( this ) ;
+				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 				ps.operator.mul() ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+				ps.max() ;
+				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+				ps.min() ;
 
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
@@ -250,7 +249,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.array( false ) ;
 
 					ps.operator.newpath() ;
-					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+					ps.gdraw() ;
 					ps.operator.closepath() ;
 					ps.operator.fill() ;
 				} else { // subunit unfilled
@@ -269,7 +268,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.array( false ) ;
 
 					ps.operator.newpath() ;
-					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+					ps.gdraw() ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
@@ -282,7 +281,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.array( false ) ;
 
 					ps.operator.newpath() ;
-					ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+					ps.gdraw() ;
 					ps.operator.gsave() ;
 					ps.operator.stroke() ;
 					ps.operator.grestore() ;
@@ -312,12 +311,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 				ps.operator.dup() ;
 				ps.operator.div( 100 ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				conf = new Configuration( this ) ;
+				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 				ps.operator.mul() ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+				ps.max() ;
+				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+				ps.min() ;
 
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
@@ -334,42 +334,58 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			}
 		}
 
-		public void tailPS(AstrolabePostscriptStream ps) {
+		public void tailPS(ApplicationPostscriptStream ps) {
 		}
 	}
 
-	private final static double DEFAULT_RISE			= 3.2 ;
+	// qualifier key (QK_)
+	private final static String QK_ANGLE = "angle" ;
 
-	private Baseline	baseline ;
-	private double		unit ;
+	// configuration key (CK_), node (CN_)
+	private final static String CK_RISE			= "rise" ;
+	private final static String CN_BASELINE		= "baseline" ;
+	private final static String CK_SPACE		= "space" ;
+	private final static String CK_THICKNESS	= "thickness" ;
+	private final static String CK_LINEWIDTH	= "linewidth" ;
+
+	private final static String CK_HALO			= "halo" ;
+	private final static String CK_HALOMIN		= "halomin" ;
+	private final static String CK_HALOMAX		= "halomax" ;
+
+	private final static double DEFAULT_RISE	= 3.2 ;
+
+	private final static double DEFAULT_HALO	= 4 ;
+	private final static double DEFAULT_HALOMIN	= .08 ;
+	private final static double DEFAULT_HALOMAX	= .4 ;
+
+	private Baseline baseline ;
+	private double unit ;
+
+	// attribute value (AV_)
+	private final static String AV_NONE = "none" ;
+	private final static String AV_LINE = "line" ;
+	private final static String AV_RAIL = "rail" ;
 
 	public DialDegree( Baseline baseline ) {
 		this( baseline, 1 ) ;
 	}
 
 	public DialDegree( Baseline baseline, double unit ) {
-		this.baseline	= baseline ;	
-		this.unit		= unit ;
+		this.baseline = baseline ;	
+		this.unit = unit ;
 	}
 
 	public void register( int index ) {
 		double a ;
-		String key ;
-		MessageCatalog m ;
+		DMS dms ;
 
 		a = baseline.scaleMarkNth( index, getGraduationSpan().getValue()*unit ) ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		key = m.message( ApplicationConstant.LK_DIAL_DEGREE ) ;
-		AstrolabeRegistry.registerDMS( key, a ) ;
-		key = m.message( ApplicationConstant.LK_DIAL_HOUR ) ;
-		AstrolabeRegistry.registerHMS( key, a ) ;
-		key = m.message( ApplicationConstant.LK_DIAL_AZIMUTHTIME ) ;
-		AstrolabeRegistry.registerHMS( key, CAACoordinateTransformation.MapTo0To360Range( a+180/*12h*/ ) ) ;
+		dms = new DMS( a ) ;
+		dms.register( this, QK_ANGLE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		PostscriptEmitter pse ;
 
 		switch ( baseline() ) {
@@ -386,7 +402,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		pse.headPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		List<double[]> v ;
 		double space, thickness ;
 		double xy[], a, o, s, rise ;
@@ -397,7 +413,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		case 0:
 			None none = new None() ;
 			space = none.space ;
-			thickness = none.thickness ;
+			thickness = 0 ;
 
 			none.emitPS( ps ) ;
 			break ;
@@ -438,13 +454,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			g = new GraduationSpan( b, t ) ;
 			getGraduationSpan().setupCompanion( g ) ;
 			if ( getGraduationHalf() != null ) {
-				if ( isMultipleSpan( mo, getGraduationHalf().getValue() ) ) {
+				if ( isMultipleSpan( mo, getGraduationHalf().getValue()*unit ) ) {
 					g = new GraduationHalf( b, t ) ;
 					getGraduationHalf().setupCompanion( g ) ;
 				}
 			}
 			if ( getGraduationFull() != null ) {
-				if ( isMultipleSpan( mo, getGraduationFull().getValue() ) ) {
+				if ( isMultipleSpan( mo, getGraduationFull().getValue()*unit ) ) {
 					g = new GraduationFull( b, t ) ;
 					getGraduationFull().setupCompanion( g ) ;
 				}
@@ -459,9 +475,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				break ;
 		}
 
-		rise = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_DIAL_RISE, DEFAULT_RISE ) ;
+		rise = Configuration.getValue( this, CK_RISE, DEFAULT_RISE ) ;
 
 		s = ( ( space+thickness )+rise ) ;
 		v = baseline.list( null, a, o, getReflect()?-s:s ) ;
@@ -474,7 +488,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		ps.array( false ) ;
 
 		ps.operator.newpath() ;
-		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+		ps.gdraw() ;
 
 		if ( getAnnotation() != null ) {
 			PostscriptEmitter annotation ;
@@ -482,7 +496,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
 				ps.operator.gsave() ;
 
-				annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+				annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
 				annotation.headPS( ps ) ;
 				annotation.emitPS( ps ) ;
 				annotation.tailPS( ps ) ;
@@ -492,7 +506,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 		PostscriptEmitter pse ;
 
 		switch ( baseline() ) {
@@ -510,14 +524,16 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	}
 
 	public boolean isMultipleSpan( double mark, double span ) {
-		return Math.isLim0( mark-(int) ( mark/( span*unit ) )*span*unit ) ;
+		return Math.isLim0( mark-(int) ( mark/span )*span ) ;
 	}
 
 	private int baseline() {
-		if ( getBaseline().equals( ApplicationConstant.AV_DIAL_NONE ) )
+		if ( getBaseline().equals( AV_NONE ) )
 			return 0 ;
-		if ( getBaseline().equals( ApplicationConstant.AV_DIAL_LINE ) )
-			return 0 ;
-		return 2 ; // ApplicationConstant.AV_DIAL_RAIL
+		if ( getBaseline().equals( AV_LINE ) )
+			return 1 ;
+		if ( getBaseline().equals( AV_RAIL ) )
+			return 2 ;
+		return -1 ;
 	}
 }

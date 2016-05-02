@@ -10,16 +10,16 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 		this.projector = projector ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintColor practicality ;
 
-		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality = new GSPaintColor( getPracticality() ) ;
 		practicality.headPS( ps ) ;
 		practicality.emitPS( ps ) ;
 		practicality.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			AnnotationStraight annotation ;
 
@@ -39,7 +39,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
 			PostscriptEmitter circle ;
 
-			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
+			circle = ApplicationFactory.companionOf( getCircle( cl ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -53,7 +53,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
 			PostscriptEmitter body ;
 
-			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
+			body = ApplicationFactory.companionOf( getBody( bd ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -67,7 +67,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 		for ( int ct=0 ; ct<getCatalogCount() ; ct++ ) {
 			Catalog catalog ;
 
-			catalog = AstrolabeFactory.companionOf( getCatalog( ct ), this ) ;
+			catalog = ApplicationFactory.companionOf( getCatalog( ct ), this ) ;
 			catalog.addAllCatalogRecord() ;
 
 			ps.operator.gsave() ;
@@ -80,7 +80,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double[] ho ) {

@@ -13,6 +13,15 @@ import java.util.prefs.Preferences;
 @SuppressWarnings("serial")
 public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record implements CatalogRecord {
 
+	// qualifier key (QK_)
+	private final static String QK_CON				= "con" ;
+
+	// redirection key (RK_)
+	private final static String RK_CONSTELLATION	= "constellation" ;
+	private final static String RK_ABBREVIATION		= "abbreviation" ;
+	private final static String RK_NOMINATIVE		= "nominative" ;
+	private final static String RK_GENITIVE			= "genitive" ;
+
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
 	private final static int CR_LENGTH18 = 25 ;
@@ -25,11 +34,19 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	public String		con		; // Constellation abbreviation
 	public String		type	; // [OI] Type of point (Original or Interpolated)
 
+	// message key (MK_)
+	private final static String MK_ERECLEN = "ereclen" ;
+	private final static String MK_ERECFMT = "erecfmt" ;
+	private final static String MK_ERECVAL = "erecval" ;
+
 	public CatalogADC6049Record( String data ) throws ParameterNotValidException {
 		BufferedReader b ;
 		String l, lv[] = null ;
 		String ra, pra ;
 		String de, pde ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		RAh = new java.util.Vector<String>() ;
 		DEd = new java.util.Vector<String>() ;
@@ -44,12 +61,24 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 			while ( ( l = b.readLine() ) != null ) {
 				if ( l.length() != _le ) {
-					throw new ParameterNotValidException( l ) ;
+					cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+					fmt = cat.message( MK_ERECLEN, null ) ;
+					if ( fmt != null ) {
+						msg = new StringBuffer() ;
+						msg.append( MessageFormat.format( fmt, new Object[] { _le } ) ) ;
+					} else
+						msg = null ;
+
+					throw new ParameterNotValidException( ParameterNotValidError.errmsg( l, msg.toString() ) ) ;
 				}
 
 				lv = l.trim().split( "[ ]+" ) ;
-				if ( lv.length != 4 )
-					throw new ParameterNotValidException( l ) ;
+				if ( lv.length != 4 ) {
+					msg = new StringBuffer() ;
+					msg.append( MessageCatalog.message( ApplicationConstant.GC_APPLICATION, this, MK_ERECFMT, null ) ) ;
+
+					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg.toString() ) ) ;
+				}
 				RAh.add( lv[0] ) ;
 				DEd.add( lv[1] ) ;
 			}
@@ -79,30 +108,31 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	}
 
 	public void register() {
-		MessageCatalog m ;
-		String k, p, v ;
+		SubstituteCatalog scat ;
+		MessageCatalog mcat ;
+		String sub, val ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		scat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+		mcat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
 
-		k = m.message( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
-		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_CONSTELLATION, new Object[] { con } ) ;
-		v = m.message( p ) ;
-		AstrolabeRegistry.registerName( k, v ) ;
+		sub = scat.substitute( QK_CON, null ) ;
+		Registry.register( sub , con ) ;
 
-		k = m.message( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
-		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_ABBREVIATION, new Object[] { con } ) ;
-		v = m.message( p ) ;
-		AstrolabeRegistry.registerName( k, v ) ;
+		sub = scat.substitute( RK_CONSTELLATION, null ) ;
+		val = mcat.message( con+'.'+RK_CONSTELLATION, null ) ;
+		Registry.register( sub , val ) ;
 
-		k = m.message( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
-		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_NOMINATIVE, new Object[] { con } ) ;
-		v = m.message( p ) ;
-		AstrolabeRegistry.registerName( k, v ) ;
+		sub = scat.substitute( RK_ABBREVIATION, null ) ;
+		val = mcat.message( con+'.'+RK_ABBREVIATION, null ) ;
+		Registry.register( sub , val ) ;
 
-		k = m.message( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
-		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_GENITIVE, new Object[] { con } ) ;
-		v = m.message( p ) ;
-		AstrolabeRegistry.registerName( k, v ) ;
+		sub = scat.substitute( RK_NOMINATIVE, null ) ;
+		val = mcat.message( con+'.'+RK_NOMINATIVE, null ) ;
+		Registry.register( sub , val ) ;
+
+		sub = scat.substitute( RK_GENITIVE, null ) ;
+		val = mcat.message( con+'.'+RK_GENITIVE, null ) ;
+		Registry.register( sub , val ) ;
 	}
 
 	public boolean isOK() {
@@ -119,19 +149,34 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		Preferences node ;
 		Field token ;
 		Object value ;
-		String pattern ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
+		String name, pattern ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		try {
+			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
+			if ( ! Preferences.systemRoot().nodeExists( name ) )
+				return ;
+			node = Preferences.systemRoot().node( name ) ;
+
 			for ( String key : node.keys() ) {
 				try {
 					token = getClass().getDeclaredField( key ) ;
 					value = token.get( this ) ;
 					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
 					for ( String v : unsafecast( value ) )
-						if ( ! v.matches( pattern ) )
-							throw new ParameterNotValidException( key ) ;
+						if ( ! v.matches( pattern ) ) {
+							cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+							fmt = cat.message( MK_ERECVAL, null ) ;
+							if ( fmt != null ) {
+								msg = new StringBuffer() ;
+								msg.append( MessageFormat.format( fmt, new Object[] { value, pattern } ) ) ;
+							} else
+								msg = null ;
+
+							throw new ParameterNotValidException( ParameterNotValidError.errmsg( key, msg.toString() ) ) ;
+						}
 				} catch ( NoSuchFieldException e ) {
 					continue ;
 				} catch ( IllegalAccessException e ) {

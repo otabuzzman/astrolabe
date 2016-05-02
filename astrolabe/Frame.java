@@ -18,17 +18,15 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 		extenty = dimension[3]-dimension[1] ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		String[] xyRaw ;
 		double[] xyVal ;
 
-		xyRaw = Configuration.getValue(
-				Configuration.getClassNode( this, null, null ),
-				getAnchor(), DEFAULT_ANCHOR )
-				.split( ":" ) ;
+		xyRaw = Configuration.getValue( this, getAnchor(), DEFAULT_ANCHOR )
+		.split( ":" ) ;
 
 		xyVal = new double[2] ;
 		xyVal[0] = originx+extentx*new Double( xyRaw[0] ).doubleValue() ;
@@ -37,6 +35,6 @@ public class Frame extends astrolabe.model.Frame implements PostscriptEmitter {
 		ps.operator.moveto( xyVal ) ;
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 }

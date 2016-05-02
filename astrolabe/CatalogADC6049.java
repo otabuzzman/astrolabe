@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -84,11 +83,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 				try {
 					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
-					String msg ;
-
-					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), record.con } ) ;
-					log.warn( msg ) ;
+					log.warn( ParameterNotValidError.errmsg( record.con, e.getMessage() ) ) ;
 
 					continue ;
 				}
@@ -123,10 +118,10 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		return catalog.values().toArray( new CatalogRecord[0] ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Body body ;
 		BodyAreal bodyAreal ;
 		astrolabe.model.Position pm ;
@@ -145,7 +140,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 				body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
 			else
 				body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-			AstrolabeFactory.modelOf( body.getBodyAreal(), false ) ;
+			ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
 			body.getBodyAreal().setName( record.con ) ;
 
 			body.getBodyAreal().setNature( record.getNature() ) ;
@@ -195,7 +190,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
@@ -303,11 +298,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		try {
 			r = new CatalogADC6049Record( record ) ;
 		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
-			log.warn( msg ) ;
+			log.warn( ParameterNotValidError.errmsg( '"'+record+'"', e.getMessage() ) ) ;
 		}
 
 		return r ;

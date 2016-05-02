@@ -4,7 +4,6 @@ package astrolabe;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -17,8 +16,20 @@ import caa.CAASun;
 @SuppressWarnings("serial")
 public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitter, Baseline {
 
+	// configuration key (CK_)
+	private final static String CK_INTERVAL			= "interval" ;
+	private final static String CK_STRETCH			= "stretch" ;
+
+	private final static String CK_HALO				= "halo" ;
+	private final static String CK_HALOMIN			= "halomin" ;
+	private final static String CK_HALOMAX			= "halomax" ;
+
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private final static double DEFAULT_STRETCH		= 0 ;
+
+	private final static double DEFAULT_HALO		= 4 ;
+	private final static double DEFAULT_HALOMIN		= .08 ;
+	private final static double DEFAULT_HALOMAX		= .4 ;
 
 	private Projector projector ;
 
@@ -44,7 +55,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		jdOy = epoch.Julian() ;
 
 		if ( getEpoch() != null ) {
-			epochlo = AstrolabeFactory.valueOf( getEpoch() ) ;
+			epochlo = ApplicationFactory.valueOf( getEpoch() ) ;
 			epoch.Set( epochlo, true ) ;
 
 			year = epoch.Year() ;
@@ -55,13 +66,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 			epoch.Set( epochlo, true ) ;
 			if ( getEpoch().getA() != null ) {
-				jdAy = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
+				jdAy = ApplicationFactory.valueOf( getEpoch().getA() ) ;
 				jdOy = epoch.Julian() ;
 			}
 			if ( getEpoch().getO() != null ) {
 				if ( getEpoch().getA() == null )
 					jdAy = epoch.Julian() ;
-				jdOy = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
+				jdOy = ApplicationFactory.valueOf( getEpoch().getO() ) ;
 			}
 		}
 
@@ -70,21 +81,22 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		return new double[] { jdAy, jdOy } ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintStroke nature ;
 
-		nature = new GSPaintStroke( getNature(), getName() ) ;
+		nature = new GSPaintStroke( getNature() ) ;
 
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		emitPS( ps, true ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps, boolean cut ) {
+	public void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
+		Configuration conf ;
 		ListCutter cutter ;
 		Geometry fov ;
 		astrolabe.model.BodySun peer ;
@@ -168,19 +180,20 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				ps.array( false ) ;
 
 				ps.operator.newpath() ;
-				ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+				ps.gdraw() ;
 
 				// halo stroke
 				ps.operator.currentlinewidth() ;
 
 				ps.operator.dup() ;
 				ps.operator.div( 100 ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+				conf = new Configuration( this ) ;
+				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 				ps.operator.mul() ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-				ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-				ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+				ps.max() ;
+				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+				ps.min() ;
 
 				ps.operator.mul( 2 ) ;
 				ps.operator.add() ;
@@ -230,7 +243,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				PostscriptEmitter annotation ;
 
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
 
 					ps.operator.gsave() ;
 
@@ -244,7 +257,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double jd, double shift ) {
@@ -281,21 +294,16 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		double[] r = new double[2] ;
 		double l, b ;
 		double stretch ;
-		Preferences node ;
 		Method eclipticLongitude ;
 		Method eclipticLatitude ;
 
 		l = 0 ;
 		b = 0 ;
 
-		node = Configuration.getClassNode( this, getName(), getType() ) ;
-
-		if ( getStretch() ) {
-			stretch = Configuration.getValue( node,
-					ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
-		} else {
+		if ( getStretch() )
+			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
+		else
 			stretch = 0 ;
-		}
 
 		try {
 			eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
@@ -326,7 +334,6 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		Baseline circle ;
 		double stretch ;
 		double l, b, a ;
-		Preferences node ;
 		Method eclipticLongitude ;
 		Method eclipticLatitude ;
 
@@ -336,14 +343,10 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			l = 0 ;
 			b = 0 ;
 
-			node = Configuration.getClassNode( this, getName(), getType() ) ;
-
-			if ( getStretch() ) {
-				stretch = Configuration.getValue( node,
-						ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
-			} else {
+			if ( getStretch() )
+				stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
+			else
 				stretch = 0 ;
-			}
 
 			try {
 				eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
@@ -387,9 +390,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		double interval ;
 		double d, e, g ;
 
-		interval = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), getType() ),
-				ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
+		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		listxy = new java.util.Vector<double[]>() ;
 

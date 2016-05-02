@@ -12,6 +12,9 @@ import caa.CAANutation;
 public class HorizonLocal extends astrolabe.model.HorizonLocal implements PostscriptEmitter, Projector {
 
 	private Projector projector ;
+	// qualifier key (QK_)
+	private final static String QK_LOCALTIME	= "localtime" ;
+	private final static String QK_SIDEREAL		= "sidereal" ;
 
 	public HorizonLocal( Projector projector ) {
 		this.projector = projector ;
@@ -36,21 +39,22 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 			return jd ;
 		} else
-			return AstrolabeFactory.valueOf( getDate() ) ;
+			return ApplicationFactory.valueOf( getDate() ) ;
 	}
 
 	public double longitude() {
 		if ( getLongitude() == null )
 			return 0 ;
 		else
-			return AstrolabeFactory.valueOf( getLongitude() ) ;
+			return ApplicationFactory.valueOf( getLongitude() ) ;
 	}
 
 	public double getLT( double jd ) {
 		double lo, lt ;
 		CAADate d ;
 
-		d = new CAADate( jd, true ) ;
+		d = new CAADate() ;
+		d.Set( jd, true ) ;
 
 		lt = CAACoordinateTransformation.HoursToDegrees( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
 		lo = longitude() ;
@@ -78,35 +82,27 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public void register() {
-		MessageCatalog m ;
-		String key ;
-		double jd, la ;
-
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		double jd ;
+		DMS dms ;
 
 		jd = date() ;
-		key = m.message( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
-		AstrolabeRegistry.registerHMS( key, getLT( jd ) ) ;
-		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-		AstrolabeRegistry.registerHMS( key, getST( jd ) ) ;
 
-		la = AstrolabeFactory.valueOf( getLatitude() ) ;
-		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, la ) ;
-		key = m.message( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, longitude() ) ;
+		dms = new DMS( getLT( jd )/15 ) ;
+		dms.register( this, QK_LOCALTIME ) ;
+		dms.set( getST( jd )/15, -1 ) ;
+		dms.register( this, QK_SIDEREAL ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintColor practicality ;
 
-		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality = new GSPaintColor( getPracticality() ) ;
 		practicality.headPS( ps ) ;
 		practicality.emitPS( ps ) ;
 		practicality.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			AnnotationStraight annotation ;
 
@@ -126,7 +122,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
 			PostscriptEmitter circle ;
 
-			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
+			circle = ApplicationFactory.companionOf( getCircle( cl ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -140,7 +136,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
 			PostscriptEmitter body ;
 
-			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
+			body = ApplicationFactory.companionOf( getBody( bd ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -152,7 +148,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double[] ho ) {
@@ -180,7 +176,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		CAA2DCoordinate c ;
 		double la ;
 
-		la = AstrolabeFactory.valueOf( getLatitude() ) ;
+		la = ApplicationFactory.valueOf( getLatitude() ) ;
 
 		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, la ) ;
 		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
@@ -201,7 +197,7 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 		CAA2DCoordinate c ;
 		double la ;
 
-		la = AstrolabeFactory.valueOf( getLatitude() ) ;
+		la = ApplicationFactory.valueOf( getLatitude() ) ;
 
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.DegreesToHours( getST( date() )-RA ), d, la ) ;

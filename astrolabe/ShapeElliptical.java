@@ -6,7 +6,19 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements PostscriptEmitter {
 
-	private final static double DEFAULT_INTERVAL = 10 ;
+	// configuration key (CK_)
+	private final static String CK_INTERVAL			= "interval" ;
+
+	private final static String CK_HALO				= "halo" ;
+	private final static String CK_HALOMIN			= "halomin" ;
+	private final static String CK_HALOMAX			= "halomax" ;
+
+
+	private final static double DEFAULT_INTERVAL	= 10 ;
+
+	private final static double DEFAULT_HALO		= 4 ;
+	private final static double DEFAULT_HALOMIN		= .08 ;
+	private final static double DEFAULT_HALOMAX		= .4 ;
 
 	private Projector projector ;
 
@@ -14,10 +26,12 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		this.projector = projector ;
 	}
 
-	public void headPS(AstrolabePostscriptStream ps) {
+	public void headPS(ApplicationPostscriptStream ps) {
 	}
 
-	public void emitPS(AstrolabePostscriptStream ps) {
+	public void emitPS(ApplicationPostscriptStream ps) {
+		Configuration conf ;
+
 		ps.array( true ) ;
 		for ( double[] xy : list() ) {
 			ps.push( xy[0] ) ;
@@ -26,7 +40,7 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		ps.array( false ) ;
 
 		ps.operator.newpath() ;
-		ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+		ps.gdraw() ;
 
 		ps.operator.closepath() ;
 
@@ -35,12 +49,13 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 		ps.operator.dup() ;
 		ps.operator.div( 100 ) ;
-		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+		conf = new Configuration( this ) ;
+		ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 		ps.operator.mul() ;
-		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-		ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-		ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+		ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+		ps.max() ;
+		ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+		ps.min() ;
 
 		ps.operator.mul( 2 ) ;
 		ps.operator.add() ;
@@ -57,7 +72,7 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		ps.operator.grestore() ;
 	}
 
-	public void tailPS(AstrolabePostscriptStream ps) {
+	public void tailPS(ApplicationPostscriptStream ps) {
 	}
 
 	public List<double[]> list() {
@@ -67,14 +82,12 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		double pa, pas, pac, mrot[] ;
 		double interval ;
 
-		interval = Configuration.getValue(
-				Configuration.getClassNode( this, null, null ),
-				ApplicationConstant.PK_SHAPE_INTERVAL, DEFAULT_INTERVAL ) ;
+		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		list = new java.util.Vector<double[]>() ;
 
-		d = AstrolabeFactory.valueOf( this ) ;
-		p = AstrolabeFactory.valueOf( getPosition() ) ;
+		d = ApplicationFactory.valueOf( this ) ;
+		p = ApplicationFactory.valueOf( getPosition() ) ;
 
 		vp = new Vector( projector.project( p[1], p[2] ) ) ;
 		vd = new Vector( projector.project( p[1]-d, p[2] ) ) ;

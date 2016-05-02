@@ -11,17 +11,23 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 
 	public List<String[]> element = new java.util.Vector<String[]>() ;
 
+	// message key (MK_)
+	private final static String MK_ERECFMT = "erecfmt" ;
+
 	public CatalogDS9Record( String data ) throws ParameterNotValidException {
 		BufferedReader b ;
 		String cl, eq[] ;
+		String msg ;
 
 		try {
 			b = new BufferedReader( new StringReader( data ) ) ;
 			while ( ( cl = b.readLine() ) != null ) {
 				eq = cl.trim().split( "\\p{Space}+" ) ;
-				if ( eq.length != 2 )
-					throw new ParameterNotValidException( cl ) ;
+				if ( eq.length != 2 ) {
+					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, this, MK_ERECFMT, null ) ;
 
+					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg ) ) ;
+				}
 				element.add( eq ) ;
 			}
 		} catch ( IOException e ) {

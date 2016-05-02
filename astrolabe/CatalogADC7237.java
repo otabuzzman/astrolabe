@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +29,10 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 @SuppressWarnings("serial")
 public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Catalog {
 
-	private final static double DEFAULT_THRESHOLDSCALE = 5.2 ;
+	// configuration key (CK_)
+	private final static String CK_THRESHOLDSCALE		= "thresholdscale" ;
+
+	private final static double DEFAULT_THRESHOLDSCALE	= 5.2 ;
 
 	private final static int C_CHUNK = 520+1/*0x0a*/ ;
 
@@ -82,11 +84,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				try {
 					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
-					String msg ;
-
-					msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-					msg = MessageFormat.format( msg, new Object[] { e.getMessage(), record.PGC } ) ;
-					log.warn( msg ) ;
+					log.warn( ParameterNotValidError.errmsg( record.PGC, e.getMessage() ) ) ;
 
 					continue ;
 				}
@@ -121,10 +119,10 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		return catalog.values().toArray( new CatalogRecord[0] ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		Geometry fov ;
 		double threshold, d, s ;
 		double d25, r25, pa ;
@@ -151,9 +149,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
-		threshold = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CATALOG_THRESHOLDSCALE, DEFAULT_THRESHOLDSCALE ) ;
+		threshold = Configuration.getValue( this, CK_THRESHOLDSCALE, DEFAULT_THRESHOLDSCALE ) ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -200,7 +196,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 					body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
 				else
 					body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-				AstrolabeFactory.modelOf( body.getBodyAreal(), false ) ;
+				ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
 				body.getBodyAreal().setName( record.PGC ) ;
 
 				body.getBodyAreal().setNature( record.getNature() ) ;
@@ -224,7 +220,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 					body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT ) ;
 				else
 					body.getBodyStellar().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-				AstrolabeFactory.modelOf( body.getBodyStellar(), false ) ;
+				ApplicationFactory.modelOf( body.getBodyStellar(), false ) ;
 				body.getBodyStellar().setName( record.PGC ) ;
 
 				body.getBodyStellar().setScript( record.getScript() ) ;
@@ -239,7 +235,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			pe = AstrolabeFactory.companionOf( body , projector ) ;
+			pe = ApplicationFactory.companionOf( body , projector ) ;
 
 			ps.operator.gsave() ;
 
@@ -251,7 +247,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
@@ -322,11 +318,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		try {
 			r = new CatalogADC7237Record( record ) ;
 		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
-			log.warn( msg ) ;
+			log.warn( ParameterNotValidError.errmsg( '"'+record+'"', e.getMessage() ) ) ;
 		}
 
 		return r ;

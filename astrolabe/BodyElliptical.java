@@ -9,15 +9,15 @@ public class BodyElliptical extends astrolabe.model.BodyElliptical implements Po
 	public BodyElliptical( Projector projector ) {
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		// TODO Auto-generated method stub
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		// TODO Auto-generated method stub
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 		// TODO Auto-generated method stub
 	}
 

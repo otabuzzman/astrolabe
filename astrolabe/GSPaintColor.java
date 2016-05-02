@@ -8,15 +8,9 @@ public class GSPaintColor implements PostscriptEmitter {
 	private double colorGray	= DEFAULT_PAINTCOLOR ;
 
 	public GSPaintColor( String param ) {
-		this( param, null ) ;
-	}
-
-	public GSPaintColor( String param, String name ) {
 		String pv, pd[] ;
 
-		pv = Configuration.getValue(
-				Configuration.getClassNode( this, name, null ),
-				param, null ) ;
+		pv = Configuration.getValue( this, param, null ) ;
 		if ( pv == null )
 			pd = param.split( ":" ) ;
 		else
@@ -33,16 +27,16 @@ public class GSPaintColor implements PostscriptEmitter {
 		} catch ( NumberFormatException e ) {}
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		if ( colorRGB == null )
 			ps.operator.setgray( colorGray ) ;
 		else
 			ps.operator.setrgbcolor( colorRGB[0], colorRGB[1], colorRGB[2] ) ;
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 }

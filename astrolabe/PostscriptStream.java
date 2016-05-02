@@ -8,7 +8,10 @@ import java.text.NumberFormat;
 
 public class PostscriptStream extends FilterOutputStream {
 
-	private final static int DEFAULT_PRECISION = 6 ;
+	// configuration key (CK_)
+	private final static String CK_PRECISION 	= "precision" ;
+
+	private final static int DEFAULT_PRECISION	= 6 ;
 
 	private final static NumberFormat numberFormat = NumberFormat.getInstance( java.util.Locale.UK ) ;
 
@@ -25,9 +28,7 @@ public class PostscriptStream extends FilterOutputStream {
 		while ( ! clazz.getSimpleName().equals( "PostscriptStream" ) )
 			clazz = clazz.getSuperclass() ;
 
-		precision = Configuration.getValue(
-				Configuration.getClassNode( clazz, null, null ),
-				ApplicationConstant.PK_POSTSCRIPT_PRECISION, DEFAULT_PRECISION ) ;
+		precision = Configuration.getValue( clazz, CK_PRECISION, DEFAULT_PRECISION ) ;
 
 		numberFormat.setMaximumFractionDigits( precision ) ;
 		numberFormat.setGroupingUsed( false ) ;
@@ -63,7 +64,7 @@ public class PostscriptStream extends FilterOutputStream {
 
 	public void push( String string ) throws ParameterNotValidException {
 		if ( ! string.matches( "[\\p{Print}\\n\\r\\t ]+" ) )
-			throw new ParameterNotValidException( string ) ;
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( string , null ) ) ;
 
 		print( string+"\n" ) ;
 	} 

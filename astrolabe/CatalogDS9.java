@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -128,10 +127,10 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 		return catalog.toArray( new CatalogRecord[0] ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		List<ContourLevel> catalog ;
 		Comparator<ContourLevel> comparator = new Comparator<ContourLevel>() {
 			public int compare( ContourLevel a, ContourLevel b ) {
@@ -159,7 +158,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 						body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT ) ;
 					else
 						body.getBodyAreal().setName( ApplicationConstant.GC_NS_CAT+getName() ) ;
-					AstrolabeFactory.modelOf( body.getBodyAreal(), false ) ;
+					ApplicationFactory.modelOf( body.getBodyAreal(), false ) ;
 					body.getBodyAreal().setName( null ) ;
 
 					body.getBodyAreal().setNature( element.getNature() ) ;
@@ -209,7 +208,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public Reader reader( String uri ) throws URISyntaxException, MalformedURLException {
@@ -271,11 +270,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 		try {
 			r = new CatalogDS9Record( record ) ;
 		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.getMessage(), "\""+record+"\"" } ) ;
-			log.warn( msg ) ;
+			log.warn( ParameterNotValidError.errmsg( '"'+record+'"', e.getMessage() ) ) ;
 		}
 
 		return r ;

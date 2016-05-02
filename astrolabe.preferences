@@ -3,6 +3,51 @@
 <preferences>
 	<root type="system">
 		<map/>
+		<node name="java">
+			<map/>
+			<node name="lang">
+				<map/>
+				<node name="Object">
+					<map>
+						<!--used by DMS, ProstscriptStream, Rational.-->
+						<entry key="precision" value="2"/>
+						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical.-->
+						<entry key="interval" value="1"/>
+						<!--used by CatalogADC5050Record.-->
+						<entry key="Alp" value="&#x03b1;"/>
+						<entry key="Bet" value="&#x03b2;"/>
+						<entry key="Chi" value="&#x03c7;"/>
+						<entry key="Del" value="&#x03b4;"/>
+						<entry key="Eps" value="&#x03b5;"/>
+						<entry key="Eta" value="&#x03b7;"/>
+						<entry key="Gam" value="&#x03b3;"/>
+						<entry key="Iot" value="&#x03b9;"/>
+						<entry key="Kap" value="&#x03ba;"/>
+						<entry key="Lam" value="&#x03bb;"/>
+						<entry key="Mu" value="&#x03bc;"/>
+						<entry key="Nu" value="&#x03bd;"/>
+						<entry key="Ome" value="&#x03c9;"/>
+						<entry key="Omi" value="&#x03bf;"/>
+						<entry key="Phi" value="&#x03c6;"/>
+						<entry key="Pi" value="&#x03c0;"/>
+						<entry key="Psi" value="&#x03c8;"/>
+						<entry key="Rho" value="&#x03c1;"/>
+						<entry key="Sig" value="&#x03c3;"/>
+						<entry key="Tau" value="&#x03c4;"/>
+						<entry key="The" value="&#x03b8;"/>
+						<entry key="Ups" value="&#x03c5;"/>
+						<entry key="Xi" value="&#x03be;"/>
+						<entry key="Zet" value="&#x03b6;"/>
+						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, GraduationSpan, ListCutter, ShapeElliptical.-->
+						<!--percent of linewidth-->
+						<entry key="halo" value="4"/>
+						<!--astrolabe units-->
+						<entry key="halomin" value=".08"/>
+						<entry key="halomax" value=".4"/>
+					</map>
+				</node>
+			</node>
+		</node>
 		<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
 		<node name="astrolabe">
 			<map/>
@@ -168,7 +213,7 @@
 					</map>
 				</node>
 			</node>
-			<node name="AstrolabePostscriptStream">
+			<node name="ApplicationPostscriptStream">
 				<!--octal representations instead of blank characters in strings-->
 				<map>
 					<entry key="prolog" value="(lib/prolog.ps) run"/>
@@ -236,11 +281,6 @@
 				<map>
 					<!--postscript units per astrolabe unit-->
 					<entry key="unit" value="2.834646"/>
-					<!--percent of linewidth-->
-					<entry key="halo" value="4"/>
-					<!--astrolabe units-->
-					<entry key="halomin" value=".08"/>
-					<entry key="halomax" value=".4"/>
 				</map>
 			</node>
 			<node name="ChartPage">
@@ -268,16 +308,6 @@
 			<node name="AtlasAzimuthalType">
 				<map>
 					<entry key="map" value="Atlas.map"/>
-				</map>
-			</node>
-			<node name="CircleParallel">
-				<map>
-					<entry key="interval" value="1"/>
-				</map>
-			</node>
-			<node name="CircleMeridian">
-				<map>
-					<entry key="interval" value="1"/>
 				</map>
 			</node>
 			<node name="DialDegree">
@@ -484,16 +514,6 @@
 					<entry key="interval" value="10"/>
 				</map>
 			</node>
-			<node name="DMS">
-				<map>
-					<entry key="precision" value="2"/>
-				</map>
-			</node>
-			<node name="Rational">
-				<map>
-					<entry key="precision" value="6"/>
-				</map>
-			</node>
 			<node name="CatalogADC1239HRecord">
 				<map>
 					<entry key="RAhms" value=".+"/>
@@ -519,34 +539,6 @@
 					<entry key="DEs" value=".+"/>
 					<entry key="Vmag" value=".+"/>
 				</map>
-				<node name="registry">
-					<map>
-						<entry key="Alp" value="&#x03b1;"/>
-						<entry key="Bet" value="&#x03b2;"/>
-						<entry key="Chi" value="&#x03c7;"/>
-						<entry key="Del" value="&#x03b4;"/>
-						<entry key="Eps" value="&#x03b5;"/>
-						<entry key="Eta" value="&#x03b7;"/>
-						<entry key="Gam" value="&#x03b3;"/>
-						<entry key="Iot" value="&#x03b9;"/>
-						<entry key="Kap" value="&#x03ba;"/>
-						<entry key="Lam" value="&#x03bb;"/>
-						<entry key="Mu" value="&#x03bc;"/>
-						<entry key="Nu" value="&#x03bd;"/>
-						<entry key="Ome" value="&#x03c9;"/>
-						<entry key="Omi" value="&#x03bf;"/>
-						<entry key="Phi" value="&#x03c6;"/>
-						<entry key="Pi" value="&#x03c0;"/>
-						<entry key="Psi" value="&#x03c8;"/>
-						<entry key="Rho" value="&#x03c1;"/>
-						<entry key="Sig" value="&#x03c3;"/>
-						<entry key="Tau" value="&#x03c4;"/>
-						<entry key="The" value="&#x03b8;"/>
-						<entry key="Ups" value="&#x03c5;"/>
-						<entry key="Xi" value="&#x03be;"/>
-						<entry key="Zet" value="&#x03b6;"/>
-					</map>
-				</node>
 			</node>
 			<node name="CatalogADC5109Record">
 				<map>

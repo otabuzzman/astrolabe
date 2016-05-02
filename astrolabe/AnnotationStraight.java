@@ -1,12 +1,30 @@
 
 package astrolabe;
 
-import java.util.prefs.Preferences;
-
 import astrolabe.UnicodePostscriptStream.UnicodeControlBlock;
 
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
+
+	// attribute value (AV_)
+	private final static String AV_TOPLEFT					= "topleft" ;
+	private final static String AV_TOPMIDDLE				= "topmiddle" ;
+	private final static String AV_TOPRIGHT					= "topright" ;
+	private final static String AV_MIDDLELEFT				= "middleleft" ;
+	private final static String AV_MIDDLE					= "middle" ;
+	private final static String AV_MIDDLERIGHT				= "middleright" ;
+	private final static String AV_BOTTOMLEFT				= "bottomleft" ;
+	private final static String AV_BOTTOMMIDDLE				= "bottommiddle" ;
+	private final static String AV_BOTTOMRIGHT				= "bottomright" ;
+
+	// configuration key (CK_)
+	private final static String CK_SUBSCRIPTSHIFT			= "subscriptshift" ;
+	private final static String CK_SUPERSCRIPTSHIFT			= "superscriptshift" ;
+	private final static String CK_SUBSCRIPTSHRINK			= "subscriptshrink" ;
+	private final static String CK_SUPERSCRIPTSHRINK		= "superscriptshrink" ;
+
+	private final static String CK_MARGIN					= "margin" ;
+	private final static String CK_RISE						= "rise" ;
 
 	private final static double DEFAULT_SUBSCRIPTSHRINK		= .8 ;
 	private final static double DEFAULT_SUBSCRIPTSHIFT		= -.3 ;
@@ -25,29 +43,23 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private double rise ;
 
 	public void register() {
-		Preferences node ;
+		Configuration conf ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
+		conf = new Configuration( this ) ;
 
-		subscriptshrink = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = conf.getValue( CK_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = conf.getValue( CK_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = conf.getValue( CK_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		margin = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
+		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Script script ;
 		Layout layout ;
 		Frame frame ;
@@ -73,8 +85,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			script = new astrolabe.model.Script() ;
 			getScript( ns ).setupCompanion( script ) ;
 
-			p = Configuration.getValue(
-					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;
+			p = Configuration.getValue( script, script.getPurpose(), -1. ) ;
 			if ( p<0 )
 				p = Double.valueOf( script.getPurpose() ) ;
 
@@ -107,50 +118,50 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 			ps.operator.rotate( 180 ) ;
 		}
 
-		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
+		if ( getAnchor().equals( AV_BOTTOMLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
+		} else if ( getAnchor().equals( AV_BOTTOMMIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
+		} else if ( getAnchor().equals( AV_BOTTOMRIGHT ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( rise ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
+		} else if ( getAnchor().equals( AV_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -height/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
+		} else if ( getAnchor().equals( AV_MIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -height/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
+		} else if ( getAnchor().equals( AV_MIDDLERIGHT ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
 			ps.push( -height/2 ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
+		} else if ( getAnchor().equals( AV_TOPLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -( height+rise ) ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
+		} else if ( getAnchor().equals( AV_TOPMIDDLE ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( -2 ) ;
 			ps.push( -( height+rise ) ) ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
+		} else if ( getAnchor().equals( AV_TOPRIGHT ) ) {
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
 			ps.operator.mul( -1 ) ;
@@ -158,16 +169,16 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		}
 
 		ps.operator.moveto() ;
-		ps.push( ApplicationConstant.PS_PROLOG_TSHOW ) ;
+		ps.tshow() ;
 
 		ps.operator.grestore() ;
 
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public static void emitPS( AstrolabePostscriptStream ps, astrolabe.model.TextType text, double height, double shift,
+	public static void emitPS( ApplicationPostscriptStream ps, astrolabe.model.TextType text, double height, double shift,
 			double subscriptshrink, double subscriptshift, double superscriptshrink, double superscriptshift ) {
 		if ( text.getValue().length()>0 )
 			for ( UnicodeControlBlock unicodeControlBlock : ps.getUnicodeControlBlockArray( text.getValue() ) ) {

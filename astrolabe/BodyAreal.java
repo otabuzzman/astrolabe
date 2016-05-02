@@ -12,6 +12,19 @@ import com.vividsolutions.jts.geom.Geometry;
 @SuppressWarnings("serial")
 public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEmitter {
 
+	// qualifier key (QK_)
+	private final static String QK_STERADIAN	= "steradian" ;
+	private final static String QK_SQUARDEGREE	= "squaredegree" ;
+
+	// configuration key (CK_)
+	private final static String CK_HALO			= "halo" ;
+	private final static String CK_HALOMIN		= "halomin" ;
+	private final static String CK_HALOMAX		= "halomax" ;
+
+	private final static double DEFAULT_HALO	= 4 ;
+	private final static double DEFAULT_HALOMIN	= .08 ;
+	private final static double DEFAULT_HALOMAX	= .4 ;
+
 	private Projector projector ;
 
 	public BodyAreal( Projector projector ) {
@@ -21,8 +34,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	public void register() {
 		PolygonSphere polygon ;
 		double sr, sd ;
-		MessageCatalog m ;
-		String key ;
+		DMS dms ;
 
 		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
 			polygon = new PolygonSphere( list() ) ;
@@ -35,25 +47,24 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			sd = 0 ;
 		}
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		key = m.message( ApplicationConstant.LK_BODY_STERADIAN ) ;
-		AstrolabeRegistry.registerDMS( key, sr ) ;
-		key = m.message( ApplicationConstant.LK_BODY_SQUAREDEGREE ) ;
-		AstrolabeRegistry.registerDMS( key, sd ) ;		
+		dms = new DMS( sr ) ;
+		dms.register( this, QK_STERADIAN ) ;
+		dms.set( sd, -1 ) ;
+		dms.register( this, QK_SQUARDEGREE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintStroke nature ;
 
-		nature = new GSPaintStroke( getNature(), getName() ) ;
+		nature = new GSPaintStroke( getNature() ) ;
 
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
+		Configuration conf ;
 		ListCutter cutter ;
 		List<List<double[]>> segment ;
 		Comparator<List<double[]>> comparator = new Comparator<List<double[]>>() {
@@ -95,19 +106,20 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			conf = new Configuration( this ) ;
+			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+			ps.max() ;
+			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+			ps.min() ;
 
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
@@ -140,7 +152,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
 					ps.operator.gsave() ;
 
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
 					annotation.headPS( ps ) ;
 					annotation.emitPS( ps ) ;
 					annotation.tailPS( ps ) ;
@@ -153,7 +165,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public List<double[]> list() {
@@ -164,7 +176,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		outline = new java.util.Vector<double[]>() ;
 
 		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
-			for ( double[] position : AstrolabeFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
+			for ( double[] position : ApplicationFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
 				lo = CAACoordinateTransformation.MapTo0To360Range( position[1] ) ;
 				if ( lo>180 )
 					lo = lo-360 ;

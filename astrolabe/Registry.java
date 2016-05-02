@@ -74,4 +74,20 @@ public class Registry {
 			local.remove( registry ) ;
 		}
 	}
+
+	public static void register( String key, String value ) {
+		register( key, (Object) new String( value ) ) ;
+	}
+
+	public static void register( String key, double value ) {
+		register( key, new Double( value ) ) ;
+	}
+
+	public static void register( String key, long value ) {
+		register( key, new Long( value ) ) ;
+	}
+
+	public static void register( String key, boolean value ) {
+		register( key, new String( Boolean.toString( value ) ) ) ;
+	}
 }

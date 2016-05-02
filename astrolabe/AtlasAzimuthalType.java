@@ -21,7 +21,10 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
-	private final static String DEFAULT_MAP = "Atlas.map" ;
+	// configuration key (CK_)
+	private final static String CK_MAP		= "map" ;
+
+	private final static String DEFAULT_MAP	= "Atlas.map" ;
 
 	private double originRA ;
 	private double originde ;
@@ -51,10 +54,10 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	public AtlasAzimuthalType( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
 		astrolabe.model.AngleType angle ;
 
-		originRA = AstrolabeFactory.valueOf( atlas.getOrigin() )[1] ;
-		originde = AstrolabeFactory.valueOf( atlas.getOrigin() )[2] ;
-		extentRA = AstrolabeFactory.valueOf( atlas.getExtent() )[1] ;
-		extentde = AstrolabeFactory.valueOf( atlas.getExtent() )[2] ;
+		originRA = ApplicationFactory.valueOf( atlas.getOrigin() )[1] ;
+		originde = ApplicationFactory.valueOf( atlas.getOrigin() )[2] ;
+		extentRA = ApplicationFactory.valueOf( atlas.getExtent() )[1] ;
+		extentde = ApplicationFactory.valueOf( atlas.getExtent() )[2] ;
 
 		pickerURI = atlas.getPicker() ;
 
@@ -68,19 +71,19 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		angle = atlas.getAtlasTypeChoice().getSpanDeclination() ;
 		if ( angle == null ) {
 			angle = atlas.getAtlasTypeChoice().getSpanRA() ;
-			spanRA = AstrolabeFactory.valueOf( angle ) ;
+			spanRA = ApplicationFactory.valueOf( angle ) ;
 		} else
-			spande = AstrolabeFactory.valueOf( angle ) ;
+			spande = ApplicationFactory.valueOf( angle ) ;
 
 		angle = atlas.getSpanMeridian() ;
 		if ( angle != null ) {
 			if ( atlas.getSpanMeridian().hasLimit() )
 				spanlim = atlas.getSpanMeridian().getLimit() ;
-			spanme = AstrolabeFactory.valueOf( angle ) ;
+			spanme = ApplicationFactory.valueOf( angle ) ;
 		}
 		angle = atlas.getSpanParallel() ;
 		if ( angle != null )
-			spanpa = AstrolabeFactory.valueOf( angle ) ;
+			spanpa = ApplicationFactory.valueOf( angle ) ;
 	}
 
 	public void addAllAtlasPage() throws ValidationException {
@@ -524,10 +527,10 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	public void tailAUX() {
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		AtlasPage atlasPage ;
 
 		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
@@ -543,7 +546,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	private void marshal( OutputStream xmls, String charset ) {
@@ -560,9 +563,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		// 6. rename AtlasStereographic to Atlas
 		// 7. rename AtlasStereographic.map to Atlas.map
 		try {
-			map = Configuration.getValue(
-					Configuration.getClassNode( this, getName(), null ),
-					ApplicationConstant.PK_ATLAS_MAP, DEFAULT_MAP ) ;
+			map = Configuration.getValue( this, CK_MAP, DEFAULT_MAP ) ;
 
 			mapping = new Mapping() ;
 			mapping.loadMapping( map ) ;

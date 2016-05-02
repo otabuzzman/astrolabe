@@ -2,6 +2,7 @@
 package astrolabe;
 
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -12,6 +13,21 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
 	private final static int CR_LENGTH = 96 ;
+
+	private final static String QK_NAME		= "Name" ;
+	private final static String QK_TYPE		= "Type" ;
+	private final static String QK_RAH		= "RAh" ;
+	private final static String QK_RAM		= "RAm" ;
+	private final static String QK_DE		= "DE" ;
+	private final static String QK_DED		= "DEd" ;
+	private final static String QK_DEM		= "DEm" ;
+	private final static String QK_SOURCE	= "Source" ;
+	private final static String QK_CONST	= "Const" ;
+	private final static String QK_L_SIZE	= "l_size" ;
+	private final static String QK_SIZE		= "size" ;
+	private final static String QK_MAG		= "mag" ;
+	private final static String QK_N_MAG	= "n_mag" ;
+	private final static String QK_DESC		= "Desc" ;
 
 	public String Name    ; //  NGC or IC designation (preceded by I)
 	public String Type    ; // *Object classification
@@ -28,9 +44,25 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 	public String n_mag   ; //  [p] 'p' if mag is photographic (blue)
 	public String Desc    ; // *Description of the object
 
+	// message key (MK_)
+	private final static String MK_ERECLEN = "ereclen" ;
+	private final static String MK_ERECVAL = "erecval" ;
+
 	public CatalogADC7118Record( String data ) throws ParameterNotValidException {
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
+
 		if ( data.length() != CR_LENGTH ) {
-			throw new ParameterNotValidException(  Integer.toString( data.length() ) ) ;
+			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			fmt = cat.message( MK_ERECLEN, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { CR_LENGTH } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg.toString() ) ) ;
 		}
 
 		Name    = data.substring(0, 5 ).trim() ;
@@ -50,39 +82,39 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 	}
 
 	public void register() {
-		MessageCatalog m ;
-		String key ;
+		SubstituteCatalog cat ;
+		String sub ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
 
-		key = m.message( ApplicationConstant.LK_ADC7118_NAME ) ;
-		AstrolabeRegistry.registerName( key, Name ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_TYPE ) ;
-		AstrolabeRegistry.registerName( key, Type  ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_RAH ) ;
-		AstrolabeRegistry.registerName( key, RAh ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_RAM ) ;
-		AstrolabeRegistry.registerName( key, RAm ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_DE ) ;
-		AstrolabeRegistry.registerName( key, DE ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_DED ) ;
-		AstrolabeRegistry.registerName( key, DEd  ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_DEM ) ;
-		AstrolabeRegistry.registerName( key, DEm ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_SOURCE ) ;
-		AstrolabeRegistry.registerName( key, Source ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_CONST ) ;
-		AstrolabeRegistry.registerName( key, Const ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_L_SIZE ) ;
-		AstrolabeRegistry.registerName( key, l_size ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_SIZE ) ;
-		AstrolabeRegistry.registerName( key, size ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_MAG ) ;
-		AstrolabeRegistry.registerName( key, mag ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_N_MAG ) ;
-		AstrolabeRegistry.registerName( key, n_mag ) ;
-		key = m.message( ApplicationConstant.LK_ADC7118_DESC ) ;
-		AstrolabeRegistry.registerName( key, Desc ) ;
+		sub = cat.substitute( QK_NAME, null ) ;
+		Registry.register( sub, Name ) ;
+		sub = cat.substitute( QK_TYPE, null ) ;
+		Registry.register( sub, Type  ) ;
+		sub = cat.substitute( QK_RAH, null ) ;
+		Registry.register( sub, RAh ) ;
+		sub = cat.substitute( QK_RAM, null ) ;
+		Registry.register( sub, RAm ) ;
+		sub = cat.substitute( QK_DE, null ) ;
+		Registry.register( sub, DE ) ;
+		sub = cat.substitute( QK_DED, null ) ;
+		Registry.register( sub, DEd  ) ;
+		sub = cat.substitute( QK_DEM, null ) ;
+		Registry.register( sub, DEm ) ;
+		sub = cat.substitute( QK_SOURCE, null ) ;
+		Registry.register( sub, Source ) ;
+		sub = cat.substitute( QK_CONST, null ) ;
+		Registry.register( sub, Const ) ;
+		sub = cat.substitute( QK_L_SIZE, null ) ;
+		Registry.register( sub, l_size ) ;
+		sub = cat.substitute( QK_SIZE, null ) ;
+		Registry.register( sub, size ) ;
+		sub = cat.substitute( QK_MAG, null ) ;
+		Registry.register( sub, mag ) ;
+		sub = cat.substitute( QK_N_MAG, null ) ;
+		Registry.register( sub, n_mag ) ;
+		sub = cat.substitute( QK_DESC, null ) ;
+		Registry.register( sub, Desc ) ;
 	}
 
 	public boolean isOK() {
@@ -98,17 +130,33 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 	public void inspect() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
-		String value ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
+		String name, value, pattern ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		try {
+			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
+			if ( ! Preferences.systemRoot().nodeExists( name ) )
+				return ;
+			node = Preferences.systemRoot().node( name ) ;
+
 			for ( String key : node.keys() ) {
 				try {
 					token = getClass().getDeclaredField( key ) ;
 					value = (String) token.get( this ) ;
-					if ( ! value.matches( node.get( key, DEFAULT_TOKENPATTERN ) ) )
-						throw new ParameterNotValidException( key ) ;
+					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
+					if ( ! value.matches( pattern ) ) {
+						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						fmt = cat.message( MK_ERECVAL, null ) ;
+						if ( fmt != null ) {
+							msg = new StringBuffer() ;
+							msg.append( MessageFormat.format( fmt, new Object[] { value, pattern } ) ) ;
+						} else
+							msg = null ;
+
+						throw new ParameterNotValidException( ParameterNotValidError.errmsg( key, msg.toString() ) ) ;
+					}
 				} catch ( NoSuchFieldException e ) {
 					continue ;
 				} catch ( IllegalAccessException e ) {

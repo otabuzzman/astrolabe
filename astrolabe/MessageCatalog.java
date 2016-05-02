@@ -1,41 +1,35 @@
 
 package astrolabe;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+public class MessageCatalog extends ApplicationResource {
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+	private final static String MK_QUALIFIER = "message." ;
 
-public class MessageCatalog {
-
-	final static Log log = LogFactory.getLog( MessageCatalog.class ) ;
-
-	private ResourceBundle catalog ;
-
-	public MessageCatalog( String name ) {
-		catalog = ResourceBundle.getBundle( name ) ;
+	public MessageCatalog( String catalog, Object clazz ) {
+		super( catalog, clazz ) ;
 	}
 
-	public String message( String key ) {
-		return message( catalog, key ) ;
+	public MessageCatalog( String catalog, Class<?> clazz ) {
+		super( catalog, clazz ) ;
 	}
 
-	public static String message( String catalog, String key ) {
-		return message( ResourceBundle.getBundle( catalog ), key ) ;
+	public MessageCatalog( String catalog ) {
+		super( catalog ) ;
 	}
 
-	private static String message( ResourceBundle bundle, String key ) {
-		String r ;
+	public String message( String key, String def  ) {
+		return super.getString( MK_QUALIFIER+key, def ) ;
+	}
 
-		try {
-			r = bundle.getString( key ) ;
-		} catch ( MissingResourceException e ) {
-			r = "\"\"" ;
+	public static String message( String catalog, Object clazz, String key, String def  ) {
+		return new MessageCatalog( catalog, clazz ).message( key, def ) ;
+	}
 
-			log.warn( key+": "+r ) ;
-		}
+	public static String message( String catalog, Class<?> clazz, String key, String def  ) {
+		return new MessageCatalog( catalog, clazz ).message( key, def ) ;
+	}
 
-		return r ;
+	public static String message( String catalog, String key, String def  ) {
+		return new MessageCatalog( catalog ).message( key, def ) ;
 	}
 }

@@ -305,7 +305,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -398,13 +398,8 @@
 					<Body>
 						<BodyStellar turn="0.0" spin="-3.0">
 							<Annotation>
-								<AnnotationStraight anchor="bottomleft" radiant="false" reverse="false">
-									<Script purpose="bodylettering7" value="{azimutgrd}&#x00b0;{azimutgrdmin}', {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}' (l,b)"/>
-								</AnnotationStraight>
-							</Annotation>
-							<Annotation>
 								<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-									<Script purpose="bodylettering7" value="{rektaszensiongrd}&#x00b0;{rektaszensiongrdmin}', {deklinationbeide}{deklinationgrd}&#x00b0;{deklinationgrdmin}' (RA,d)"/>
+									<Script purpose="bodylettering7" value="{rektaszensiongrd}&#x00b0;{rektaszensiongrdmin}', {deklinationgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{deklinationgrd}&#x00b0;{deklinationgrdmin}' (RA,d)"/>
 								</AnnotationStraight>
 							</Annotation>
 							<Annotation>
@@ -534,9 +529,9 @@
 							<Annotation>
 								<AnnotationCurved anchor="topmiddle" reverse="true" distance="71.5">
 									<Script purpose="circlelettering" value="Ekliptik">
-										<Subscript value="J{epochej}"/>
+										<Subscript value="J2000"/>
 									</Script>
-									<Script purpose="circlelettering" value=" {ekliptikneigungmathe}{ekliptikneigunggrd}&#x00b0;{ekliptikneigunggrdmin}'{ekliptikneigunggrdsek}''.{ekliptikneigunggrdfrk} (&#x03b5;)"/>
+									<Script purpose="circlelettering" value=" {ekliptikneigunggrdneg~&#x0022;true&#x0022;?ekliptikneigunggrd*-1:ekliptikneigunggrd}&#x00b0;{ekliptikneigunggrdmin}'{ekliptikneigunggrdsek}''.{ekliptikneigunggrdfrk} (&#x03b5;)"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
@@ -686,7 +681,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -1091,7 +1086,7 @@
 										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
 										</Script>
 										<Script purpose="guidance" value="{zeitgleichungstdsek}">
@@ -1107,7 +1102,7 @@
 										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
 										</Script>
 										<Script purpose="guidance" value="{zeitgleichungstdsek}">
@@ -1123,7 +1118,7 @@
 										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-										<Script purpose="guidance" value="{zeitgleichungbeide}{zeitgleichungstdmin}">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
 											<Superscript value="m"/>
 										</Script>
 										<Script purpose="guidance" value="{zeitgleichungstdsek}">
@@ -1158,7 +1153,7 @@
 								</GraduationHalf>
 								<Annotation>
 									<AnnotationCurved anchor="topmiddle" reverse="false" distance="99.06">
-										<Script purpose="diallettering" value="Mittlere Sonne {epochej} (&#x0394;T 6">
+										<Script purpose="diallettering" value="Mittlere Sonne 2000 (&#x0394;T 6">
 											<Superscript value="h"/>
 										</Script>
 										<Script purpose="diallettering" value=")"/>
@@ -1268,7 +1263,7 @@
 							</End>
 							<Annotation>
 								<AnnotationCurved anchor="bottomleft" reverse="false" distance="10">
-									<Script purpose="circlelettering" value="Horizont {breitebeide}{breitegrd}&#x00b0;{breitegrdmin}'{breitegrdsek}.{breitegrdfrk}'' geografische Breite (&#x03c6;)"/>
+									<Script purpose="circlelettering" value="Horizont {breitegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{breitegrd}&#x00b0;{breitegrdmin}'{breitegrdsek}.{breitegrdfrk}'' geografische Breite (&#x03c6;)"/>
 									<Script purpose="circlelettering" value=", Sternzeit {sternzeitstd}">
 										<Superscript value="h"/>
 									</Script>
@@ -1507,7 +1502,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -1761,7 +1756,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -1938,7 +1933,7 @@
 									</GraduationSpan>
 									<GraduationHalf value="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialcardinal" value="{azimutzeitstd}">
+											<Script purpose="dialcardinal" value="{wertstd>12?wertstd-12:wertstd+12}">
 												<Superscript value="h"/>
 											</Script>
 										</AnnotationStraight>
@@ -2018,17 +2013,17 @@
 							</Dial>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="50">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;"/>
+									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
 								</AnnotationCurved>
 							</Annotation>
 							<Angle>
@@ -2352,7 +2347,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -2502,7 +2497,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -2652,7 +2647,7 @@
 								<DialDegree baseline="none" reflect="false">
 									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
+											<Script purpose="guidance" value="{wertgrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
 									</GraduationSpan>
 									<Annotation>
@@ -2761,11 +2756,6 @@
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
 						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
 							<CatalogADC5050Record select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
-								<Annotation>
-									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
-										<Script purpose="{Vmag&#x003c;3?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{Name}"/>
-									</AnnotationStraight>
-								</Annotation>
 								<Annotation>
 									<AnnotationStraight anchor="topleft" reverse="false" radiant="false">
 										<Script purpose="{Vmag&#x003c;4?&#x0022;bodylettering0&#x0022;:&#x0022;none&#x0022;}" value="{HR}"/>

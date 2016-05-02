@@ -6,7 +6,7 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class ChartEquidistant extends ChartAzimuthalType implements PostscriptEmitter, Projector {
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		ChartPage page ;
 		double[] view ;
 		AtlasEquidistant atlas ;
@@ -16,7 +16,7 @@ public class ChartEquidistant extends ChartAzimuthalType implements PostscriptEm
 		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
 			PostscriptEmitter horizon ;
 
-			horizon = AstrolabeFactory.companionOf( getHorizon( ho ), this ) ;
+			horizon = ApplicationFactory.companionOf( getHorizon( ho ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -30,6 +30,7 @@ public class ChartEquidistant extends ChartAzimuthalType implements PostscriptEm
 		if ( getAtlas() != null ) {
 			page = new ChartPage() ;
 			getChartPage().setupCompanion( page ) ;
+			page.register() ;
 
 			view = page.view() ;
 

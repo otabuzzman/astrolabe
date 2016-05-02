@@ -1,10 +1,28 @@
 
 package astrolabe;
 
-import java.util.prefs.Preferences;
-
 @SuppressWarnings("serial")
 public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements PostscriptEmitter {
+
+	// attribute value (AV_)
+	private final static String AV_TOPLEFT					= "topleft" ;
+	private final static String AV_TOPMIDDLE				= "topmiddle" ;
+	private final static String AV_TOPRIGHT					= "topright" ;
+	private final static String AV_MIDDLELEFT				= "middleleft" ;
+	private final static String AV_MIDDLE					= "middle" ;
+	private final static String AV_MIDDLERIGHT				= "middleright" ;
+	private final static String AV_BOTTOMLEFT				= "bottomleft" ;
+	private final static String AV_BOTTOMMIDDLE				= "bottommiddle" ;
+	private final static String AV_BOTTOMRIGHT				= "bottomright" ;
+
+	// configuration key (CK_)
+	private final static String CK_SUBSCRIPTSHIFT			= "subscriptshift" ;
+	private final static String CK_SUPERSCRIPTSHIFT			= "superscriptshift" ;
+	private final static String CK_SUBSCRIPTSHRINK			= "subscriptshrink" ;
+	private final static String CK_SUPERSCRIPTSHRINK		= "superscriptshrink" ;
+
+	private final static String CK_MARGIN					= "margin" ;
+	private final static String CK_RISE						= "rise" ;
 
 	private final static double DEFAULT_SUBSCRIPTSHRINK		= .8 ;
 	private final static double DEFAULT_SUBSCRIPTSHIFT		= -.3 ;
@@ -23,29 +41,23 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private double rise ;
 
 	public void register() {
-		Preferences node ;
+		Configuration conf ;
 
-		node = Configuration.getClassNode( this, getName(), null ) ;
+		conf = new Configuration( this ) ;
 
-		subscriptshrink = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = conf.getValue( CK_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = conf.getValue( CK_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = conf.getValue( CK_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		margin = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = Configuration.getValue( node,
-				ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
+		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Script script ;
 		int ns, n0 ;
 		double p, height ;
@@ -57,8 +69,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			script = new astrolabe.model.Script() ;
 			getScript( ns ).setupCompanion( script ) ;
 
-			p = Configuration.getValue(
-					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;
+			p = Configuration.getValue( script, script.getPurpose(), -1. ) ;
 			if ( p<0 )
 				p = Double.valueOf( script.getPurpose() ) ;
 
@@ -84,160 +95,160 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 		ps.operator.translate() ;
 
 		if ( new Boolean( getReverse() ).booleanValue() ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GREV ) ;
+			ps.gpath() ;
+			ps.grev() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 		}
 
-		if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMLEFT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		if ( getAnchor().equals( AV_BOTTOMLEFT ) ) {
+			ps.gpath() ;
 			ps.push( rise ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.dup() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gdraw() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_BOTTOMMIDDLE ) ) {
+			ps.gpath() ;
 			ps.push( rise ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( 2 ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_BOTTOMRIGHT ) ) {
+			ps.gpath() ;
 			ps.push( rise ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_MIDDLELEFT ) ) {
+			ps.gpath() ;
 			ps.push( height/2 ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.dup() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gdraw() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_MIDDLE ) ) {
+			ps.gpath() ;
 			ps.push( height/2 ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( 2 ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_MIDDLERIGHT ) ) {
+			ps.gpath() ;
 			ps.push( height/2 ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_TOPLEFT ) ) {
+			ps.gpath() ;
 			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.dup() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gdraw() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_TOPMIDDLE ) ) {
+			ps.gpath() ;
 			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.div( 2 ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
-		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
+		} else if ( getAnchor().equals( AV_TOPRIGHT ) ) {
+			ps.gpath() ;
 			ps.push( -( height+rise ) ) ;
 			ps.operator.neg() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GMOVE ) ;
+			ps.gmove() ;
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 			ps.operator.dup() ;
-			ps.push( ApplicationConstant.PS_PROLOG_TWIDTH ) ;
+			ps.twidth() ;
 			ps.operator.pop() ;
 			ps.operator.add( margin ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
-			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
+			ps.gpath() ;
+			ps.glen() ;
 			ps.operator.div( 100 ) ;
 			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		}
 
-		ps.push( ApplicationConstant.PS_PROLOG_TPATH ) ;
+		ps.tpath() ;
 
 		ps.operator.grestore() ;
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 }

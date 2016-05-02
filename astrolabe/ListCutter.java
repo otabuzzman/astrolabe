@@ -10,6 +10,15 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 @SuppressWarnings("serial")
 public class ListCutter extends java.util.Vector<double[]> implements PostscriptEmitter {
 
+	// configuration key (CK_)
+	private final static String CK_HALO			= "halo" ;
+	private final static String CK_HALOMIN		= "halomin" ;
+	private final static String CK_HALOMAX		= "halomax" ;
+
+	private final static double DEFAULT_HALO	= 4 ;
+	private final static double DEFAULT_HALOMIN	= .08 ;
+	private final static double DEFAULT_HALOMAX	= .4 ;
+
 	private Geometry fov ;
 
 	public ListCutter( Geometry fov ) {
@@ -24,10 +33,11 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		this.fov = new GeometryFactory().createGeometry( fov ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
+		Configuration conf ;
 		double[] xy ;
 
 		for ( List<double[]> l : segmentsInterior() ) {
@@ -40,19 +50,20 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 
 			// halo stroke
 			ps.operator.currentlinewidth() ;
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			conf = new Configuration( this ) ;
+			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
-			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
+			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+			ps.max() ;
+			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+			ps.min() ;
 
 			ps.operator.mul( 2 ) ;
 			ps.operator.add() ;
@@ -69,7 +80,7 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public List<List<double[]>> segmentsIntersecting( boolean interior ) {

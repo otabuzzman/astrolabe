@@ -2,6 +2,7 @@
 package astrolabe;
 
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -12,6 +13,25 @@ public class CatalogADC7237Record extends astrolabe.model.CatalogADC7237Record i
 	private final static String DEFAULT_TOKENPATTERN = ".+" ;
 
 	private final static int CR_LENGTH = 521 ;
+
+	private final static String QK_PGC		= "PGC" ;
+	private final static String QK_RAH		= "RAh" ;
+	private final static String QK_RAM		= "RAm" ;
+	private final static String QK_RAS		= "RAs" ;
+	private final static String QK_DE		= "DE" ;
+	private final static String QK_DED		= "DEd" ;
+	private final static String QK_DEM		= "DEm" ;
+	private final static String QK_DES		= "DEs" ;
+	private final static String QK_OTYPE	= "OType" ;
+	private final static String QK_MTYPE	= "MType" ;
+	private final static String QK_LOGD25	= "logD25" ;
+	private final static String QK_E_LOGD25	= "e_logD25" ;
+	private final static String QK_LOGR25	= "logR25" ;
+	private final static String QK_E_LOGR25	= "e_logR25" ;
+	private final static String QK_PA		= "PA" ;
+	private final static String QK_E_PA		= "e_PA" ;
+	private final static String QK_O_ANAMES	= "o_ANames" ;
+	private final static String QK_ANAMES	= "ANames" ;
 
 	public String PGC	; // [1/3099300] PGC number
 	public String RAh	; // Right ascension (J2000)
@@ -34,10 +54,25 @@ public class CatalogADC7237Record extends astrolabe.model.CatalogADC7237Record i
 	public String o_ANames	; // Number of alternate names.
 	public String ANames	; // Alternate names (4)
 
+	// message key (MK_)
+	private final static String MK_ERECLEN = "ereclen" ;
+	private final static String MK_ERECVAL = "erecval" ;
+
 	public CatalogADC7237Record( String data ) throws ParameterNotValidException {
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		if ( data.length() != CR_LENGTH ) {
-			throw new ParameterNotValidException(  Integer.toString( data.length() ) ) ;
+			cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+			fmt = cat.message( MK_ERECLEN, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { CR_LENGTH } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg.toString() ) ) ;
 		}
 
 		PGC			= data.substring( 3, 10 ).trim() ;
@@ -61,47 +96,47 @@ public class CatalogADC7237Record extends astrolabe.model.CatalogADC7237Record i
 	}
 
 	public void register() {
-		MessageCatalog m ;
-		String key ;
+		SubstituteCatalog cat ;
+		String sub ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
+		cat = new SubstituteCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
 
-		key = m.message( ApplicationConstant.LK_ADC7237_PGC ) ;
-		AstrolabeRegistry.registerName( key, PGC ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_RAH ) ;
-		AstrolabeRegistry.registerName( key, RAh ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_RAM ) ;
-		AstrolabeRegistry.registerName( key, RAm ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_RAS ) ;
-		AstrolabeRegistry.registerName( key, RAs ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_DE ) ;
-		AstrolabeRegistry.registerName( key, DE ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_DED ) ;
-		AstrolabeRegistry.registerName( key, DEd ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_DEM ) ;
-		AstrolabeRegistry.registerName( key, DEm ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_DES ) ;
-		AstrolabeRegistry.registerName( key, DEs ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_OTYPE ) ;
-		AstrolabeRegistry.registerName( key, OType ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_MTYPE ) ;
-		AstrolabeRegistry.registerName( key, MType ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_LOGD25 ) ;
-		AstrolabeRegistry.registerName( key, logD25 ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_E_LOGD25 ) ;
-		AstrolabeRegistry.registerName( key, e_logD25 ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_LOGR25 ) ;
-		AstrolabeRegistry.registerName( key, logR25 ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_E_LOGR25 ) ;
-		AstrolabeRegistry.registerName( key, e_logR25 ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_PA ) ;
-		AstrolabeRegistry.registerName( key, PA ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_E_PA ) ;
-		AstrolabeRegistry.registerName( key, e_PA ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_O_ANAMES ) ;
-		AstrolabeRegistry.registerName( key, o_ANames ) ;
-		key = m.message( ApplicationConstant.LK_ADC7237_ANAMES ) ;
-		AstrolabeRegistry.registerName( key, ANames ) ;
+		sub = cat.substitute( QK_PGC, null ) ;
+		Registry.register( sub, PGC ) ;
+		sub = cat.substitute( QK_RAH, null ) ;
+		Registry.register( sub, RAh ) ;
+		sub = cat.substitute( QK_RAM, null ) ;
+		Registry.register( sub, RAm ) ;
+		sub = cat.substitute( QK_RAS, null ) ;
+		Registry.register( sub, RAs ) ;
+		sub = cat.substitute( QK_DE, null ) ;
+		Registry.register( sub, DE ) ;
+		sub = cat.substitute( QK_DED, null ) ;
+		Registry.register( sub, DEd ) ;
+		sub = cat.substitute( QK_DEM, null ) ;
+		Registry.register( sub, DEm ) ;
+		sub = cat.substitute( QK_DES, null ) ;
+		Registry.register( sub, DEs ) ;
+		sub = cat.substitute( QK_OTYPE, null ) ;
+		Registry.register( sub, OType ) ;
+		sub = cat.substitute( QK_MTYPE, null ) ;
+		Registry.register( sub, MType ) ;
+		sub = cat.substitute( QK_LOGD25, null ) ;
+		Registry.register( sub, logD25 ) ;
+		sub = cat.substitute( QK_E_LOGD25, null ) ;
+		Registry.register( sub, e_logD25 ) ;
+		sub = cat.substitute( QK_LOGR25, null ) ;
+		Registry.register( sub, logR25 ) ;
+		sub = cat.substitute( QK_E_LOGR25, null ) ;
+		Registry.register( sub, e_logR25 ) ;
+		sub = cat.substitute( QK_PA, null ) ;
+		Registry.register( sub, PA ) ;
+		sub = cat.substitute( QK_E_PA, null ) ;
+		Registry.register( sub, e_PA ) ;
+		sub = cat.substitute( QK_O_ANAMES, null ) ;
+		Registry.register( sub, o_ANames ) ;
+		sub = cat.substitute( QK_ANAMES, null ) ;
+		Registry.register( sub, ANames ) ;
 	}
 
 	public boolean isOK() {
@@ -117,17 +152,33 @@ public class CatalogADC7237Record extends astrolabe.model.CatalogADC7237Record i
 	public void inspect() throws ParameterNotValidException {
 		Preferences node ;
 		Field token ;
-		String value ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
+		String name, value, pattern ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
 
 		try {
+			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
+			if ( ! Preferences.systemRoot().nodeExists( name ) )
+				return ;
+			node = Preferences.systemRoot().node( name ) ;
+
 			for ( String key : node.keys() ) {
 				try {
 					token = getClass().getDeclaredField( key ) ;
 					value = (String) token.get( this ) ;
-					if ( ! value.matches( node.get( key, DEFAULT_TOKENPATTERN ) ) )
-						throw new ParameterNotValidException( key ) ;
+					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
+					if ( ! value.matches( pattern ) ) {
+						cat = new MessageCatalog( ApplicationConstant.GC_APPLICATION, this ) ;
+						fmt = cat.message( MK_ERECVAL, null ) ;
+						if ( fmt != null ) {
+							msg = new StringBuffer() ;
+							msg.append( MessageFormat.format( fmt, new Object[] { value, pattern } ) ) ;
+						} else
+							msg = null ;
+
+						throw new ParameterNotValidException( ParameterNotValidError.errmsg( key, msg.toString() ) ) ;
+					}
 				} catch ( NoSuchFieldException e ) {
 					continue ;
 				} catch ( IllegalAccessException e ) {

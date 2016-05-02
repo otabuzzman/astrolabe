@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +17,12 @@ import org.apache.commons.logging.LogFactory;
 public class UnicodePostscriptStream extends PostscriptStream {
 
 	private final static Log log = LogFactory.getLog( UnicodePostscriptStream.class ) ;
+
+	// configuration key (CK_)
+	private final static String CK_CHARTSIZE		= "chartsize" ;
+	private final static String CK_FONTNAME			= "fontname" ;
+	private final static String CK_CHARPROC			= "charproc" ;
+	private final static String CK_ENCODING			= "encoding" ;
 
 	private final static int DEFAULT_CHARTSIZE		= 256 ;
 
@@ -51,38 +56,34 @@ public class UnicodePostscriptStream extends PostscriptStream {
 	public UnicodePostscriptStream( OutputStream out ) {
 		super( out ) ;
 
-		Class<?> clazz ;
-		Preferences nodeClass, nodeBlock ;
-		String fontname, encoding ;
-
-		clazz = this.getClass() ;
-		while ( ! clazz.getSimpleName().equals( "UnicodePostscriptStream" ) )
-			clazz = clazz.getSuperclass() ;
-
-		nodeClass = Configuration.getClassNode( clazz, null , null ) ;
-
-		if ( nodeClass == null )
-			return ;
-
-		this.chartsize = Configuration.getValue( nodeClass,
-				ApplicationConstant.PK_POSTSCRIPT_CHARTSIZE, DEFAULT_CHARTSIZE ) ;
-		this.fontname = Configuration.getValue( nodeClass,
-				ApplicationConstant.PK_POSTSCRIPT_FONTNAME, DEFAULT_FONTNAME ) ;
-		this.charproc = Configuration.getValue( nodeClass,
-				ApplicationConstant.PK_POSTSCRIPT_CHARPROC, DEFAULT_CHARPROC ) ;
+		Preferences node ;
+		String name, fontname, encoding ;
 
 		try {
-			for ( String name : nodeClass.childrenNames() )
-				if ( name.matches( "[0-9A-Fa-f]{4,6}\\.\\.[0-9A-Fa-f]{4,6}-[0-9]+" ) ) {
-					nodeBlock = nodeClass.node( name ) ;
-					fontname = nodeBlock.get( ApplicationConstant.PK_POSTSCRIPT_FONTNAME, null ) ;
-					encoding = nodeBlock.get( ApplicationConstant.PK_POSTSCRIPT_ENCODING, null ) ;
+			name = UnicodePostscriptStream.class.getName().replaceAll( "\\.", "/" ) ;
+			if ( ! Preferences.systemRoot().nodeExists( name ) )
+				return ;
+			node = Preferences.systemRoot().node( name ) ;
+			if ( node == null )
+				return ;
+
+			this.chartsize = Configuration.getValue( UnicodePostscriptStream.class,
+					CK_CHARTSIZE, DEFAULT_CHARTSIZE ) ;
+			this.fontname = Configuration.getValue( UnicodePostscriptStream.class,
+					CK_FONTNAME, DEFAULT_FONTNAME ) ;
+			this.charproc = Configuration.getValue( UnicodePostscriptStream.class,
+					CK_CHARPROC, DEFAULT_CHARPROC ) ;
+
+			for ( String child : node.childrenNames() )
+				if ( child.matches( "[0-9A-Fa-f]{4,6}\\.\\.[0-9A-Fa-f]{4,6}-[0-9]+" ) ) {
+					fontname = node.node( child ).get( CK_FONTNAME, null ) ;
+					encoding = node.node( child ).get( CK_ENCODING, null ) ;
 					if ( fontname == null || encoding == null )
 						continue ;
-					addUnicodeControlBlock( name, fontname, encoding ) ;
+					addUnicodeControlBlock( child, fontname, encoding ) ;
 				}
 		} catch ( BackingStoreException e ) {
-			throw new RuntimeException ( e.toString() ) ;
+			return ;
 		}
 	}
 
@@ -173,13 +174,14 @@ public class UnicodePostscriptStream extends PostscriptStream {
 			currentCharacterUnicodeBlock = Character.UnicodeBlock.of( currentCodePoint ) ;
 			if ( currentCharacterUnicodeBlock == null )
 				throw new ParameterNotValidException(
-						currentCodePoint>0xffff?
-								String.format( "0x%x", currentCodePoint ):
-									String.format( "0x%04x", currentCodePoint )) ;
+						ParameterNotValidError.errmsg(
+								currentCodePoint>0xffff?
+										String.format( "0x%x", currentCodePoint ):
+											String.format( "0x%04x", currentCodePoint ), null ) ) ;
 
 			currentUnicodeBlock = UnicodeBlock.forName( currentCharacterUnicodeBlock.toString() ) ;
 			if ( currentUnicodeBlock == null )
-				throw new ParameterNotValidException( currentCharacterUnicodeBlock.toString() ) ;
+				throw new ParameterNotValidException( ParameterNotValidError.errmsg( currentCharacterUnicodeBlock.toString(), null ) ) ;
 			currentChart = ( currentCodePoint-currentUnicodeBlock.start )/chartsize ;
 
 			for ( ; ndx<string.length() ; ndx++ ) {
@@ -187,13 +189,14 @@ public class UnicodePostscriptStream extends PostscriptStream {
 				nextCharacterUnicodeBlock = Character.UnicodeBlock.of( nextCodePoint ) ;
 				if ( nextCharacterUnicodeBlock == null )
 					throw new ParameterNotValidException(
-							currentCodePoint>0xffff?
-									String.format( "0x%x", nextCodePoint ):
-										String.format( "0x%04x", nextCodePoint )) ;
+							ParameterNotValidError.errmsg(
+									currentCodePoint>0xffff?
+											String.format( "0x%x", nextCodePoint ):
+												String.format( "0x%04x", nextCodePoint ), null ) ) ;
 
 				nextUnicodeBlock = UnicodeBlock.forName( nextCharacterUnicodeBlock.toString() ) ;
 				if ( nextUnicodeBlock == null )
-					throw new ParameterNotValidException( nextCharacterUnicodeBlock.toString() ) ;
+					throw new ParameterNotValidException( ParameterNotValidError.errmsg( nextCharacterUnicodeBlock.toString(), null ) ) ;
 				nextChart = ( nextCodePoint-nextUnicodeBlock.start )/chartsize ;
 				if ( currentUnicodeBlock.start == nextUnicodeBlock.start &&
 						currentChart == nextChart )
@@ -216,11 +219,7 @@ public class UnicodePostscriptStream extends PostscriptStream {
 
 			r.add( unicodeControlBlock ) ;
 		} catch ( ParameterNotValidException e ) {
-			String msg ;
-
-			msg = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_MESSAGE_PARAMETERNOTAVLID ) ;
-			msg = MessageFormat.format( msg, new Object[] { e.toString(), "\""+string+"\"" } ) ;
-			log.warn( msg ) ;
+			log.warn( ParameterNotValidError.errmsg( string, e.getMessage() ) ) ;
 
 			return null ;
 		}
@@ -238,9 +237,8 @@ public class UnicodePostscriptStream extends PostscriptStream {
 		UnicodeBlock unicodeBlock ;
 
 		block = new HashMap<String, String[]>() ;
-		chartsize = Configuration.getValue(
-				Configuration.getClassNode( UnicodePostscriptStream.class, null , null ),
-				ApplicationConstant.PK_POSTSCRIPT_CHARTSIZE, DEFAULT_CHARTSIZE ) ;
+		chartsize = Configuration.getValue( UnicodePostscriptStream.class,
+				CK_CHARTSIZE, DEFAULT_CHARTSIZE ) ;
 
 		try {
 			stdin = new BufferedReader( new InputStreamReader( System.in ) ) ;

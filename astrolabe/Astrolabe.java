@@ -10,10 +10,11 @@ import java.util.Locale;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
-import caa.CAADate ;
-
 @SuppressWarnings("serial")
 public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEmitter {
+
+	// configuration key (CK_)
+	private final static String CK_VIEWER = "viewer" ;
 
 	public Astrolabe() {
 		String pn ;
@@ -44,31 +45,22 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void register() {
-		double epoch ;
-		CAADate date ;
-		String key ;
+		double jd ;
 
-		epoch = AstrolabeFactory.valueOf( getEpoch() ) ;
-		date = new CAADate( epoch, true ) ;
-
-		AstrolabeRegistry.registerNumber( ApplicationConstant.GC_EPOCH, date.Julian() ) ;
-
-		key = MessageCatalog.message( ApplicationConstant.GC_APPLICATION, ApplicationConstant.LK_ASTROLABE_EPOCH ) ;
-		AstrolabeRegistry.registerYMD( key, date ) ;
-
-		date.delete() ;
+		jd = ApplicationFactory.valueOf( getEpoch() ) ;
+		Registry.register( ApplicationConstant.GC_EPOCH, jd ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		ps.emitDSCHeader() ;
 		ps.emitDSCProlog() ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			PostscriptEmitter chart ;
 
-			chart = AstrolabeFactory.companionOf( getChart( ch ) ) ;
+			chart = ApplicationFactory.companionOf( getChart( ch ) ) ;
 
 			ps.operator.gsave() ;
 
@@ -80,7 +72,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 		ps.emitDSCTrailer() ;
 	}
 
@@ -92,7 +84,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		String viewerDecl ;
 		Process viewerProc ;
 		TeeOutputStream out ;
-		AstrolabePostscriptStream ps ;
+		ApplicationPostscriptStream ps ;
 
 		try {
 			f = new File( argv[0] ) ;
@@ -102,9 +94,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 			out =  new TeeOutputStream( System.out ) ;
 
+			// Configuration.verbose() ;
+			// ApplicationResource.verbose() ;
+
 			viewerDecl = Configuration.getValue(
-					Configuration.getClassNode( Astrolabe.class, astrolabe.getName(), null ),
-					ApplicationConstant.PK_ASTROLABE_VIEWER, null ) ;
+					Astrolabe.class, CK_VIEWER, null ) ;
 			if ( viewerDecl == null ) {
 				viewerProc = null ;
 			} else {
@@ -121,7 +115,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				}
 			}
 
-			ps = new AstrolabePostscriptStream( out ) ;
+			ps = new ApplicationPostscriptStream( out ) ;
 
 			astrolabe.headPS( ps ) ;
 			astrolabe.emitPS( ps ) ;

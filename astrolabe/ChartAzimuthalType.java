@@ -2,53 +2,21 @@
 package astrolabe;
 
 import java.util.Date;
-import java.util.prefs.Preferences;
 
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
 
-	private final static double DEFAULT_UNIT	= 2.834646 ;
+	// configuration key (CK_)
+	private final static String CK_UNIT			= "unit" ;
 
-	private final static double DEFAULT_HALO	= 4 ;
-	private final static double DEFAULT_HALOMIN	= .08 ;
-	private final static double DEFAULT_HALOMAX	= .4 ;
+	private final static double DEFAULT_UNIT	= 2.834646 ;
 
 	private double unit ;
 
-	private double halo ;
-	private double halomin ;
-	private double halomax ;
-
 	public ChartAzimuthalType() {
-		Preferences node ;
-
-		node = Configuration.getClassNode( this, getName(), null ) ;
-
-		unit = Configuration.getValue( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
-
-		halo = Configuration.getValue( node,
-				ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
-		halomin = Configuration.getValue( node,
-				ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
-		halomax = Configuration.getValue( node,
-				ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
-	}
-
-	public void register() {
-		ChartPage page ;
-
-		page = new ChartPage() ;
-		getChartPage().setupCompanion( page ) ;
-		page.register() ;
-
-		Registry.register( ApplicationConstant.PK_CHART_HALO,
-				new Double( halo ) ) ;
-		Registry.register( ApplicationConstant.PK_CHART_HALOMIN,
-				new Double( halomin ) ) ;
-		Registry.register( ApplicationConstant.PK_CHART_HALOMAX,
-				new Double( halomax ) ) ;		
+		unit = Configuration.getValue( this, CK_UNIT, DEFAULT_UNIT ) ;
 	}
 
 	public double scale() {
@@ -57,6 +25,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		page = new ChartPage() ;
 		getChartPage().setupCompanion( page ) ;
+		page.register() ;
 
 		view = page.view() ;
 
@@ -76,7 +45,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
 
-		center = AstrolabeFactory.valueOf( getCenter() ) ;
+		center = ApplicationFactory.valueOf( getCenter() ) ;
 		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
@@ -104,7 +73,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		vp = new Vector( xy ) ;
 		vp.mul( 1/scale() ) ;
 
-		center = AstrolabeFactory.valueOf( getCenter() ) ;
+		center = ApplicationFactory.valueOf( getCenter() ) ;
 		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
@@ -134,7 +103,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		return new double[] { RA, d } ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		ChartPage page ;
 		double[] size ;
 		long seed ;
@@ -142,6 +111,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		page = new ChartPage() ;
 		getChartPage().setupCompanion( page ) ;
+		page.register() ;
 
 		size = page.size() ;
 
@@ -169,12 +139,13 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dsc.page( getName(), 1 ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		ChartPage page ;
 		double[] size, view ;
 
 		page = new ChartPage() ;
 		getChartPage().setupCompanion( page ) ;
+		page.register() ;
 
 		size = page.size() ;
 		view = page.view() ;
@@ -192,14 +163,14 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;
-			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
+			ps.gdraw() ;
 
 			ps.operator.closepath() ;
 			ps.operator.stroke() ;
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 		ps.operator.showpage() ;
 		ps.dsc.pageTrailer() ;
 	}

@@ -7,6 +7,10 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements PostscriptEmitter, Projector {
 
+	// qualifier key (QK_)
+	private final static String QK_SIDEREAL	= "sidereal" ;
+	private final static String QK_LATITUDE	= "latitude" ;
+
 	private Projector projector ;
 
 	public HorizonGalactic( Projector projector ) {
@@ -15,32 +19,26 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 
 	public void register() {
 		CAA2DCoordinate c ;
-		double[] eq = new double[2] ;
-		MessageCatalog m ;
-		String key ;
+		DMS dms ;
 
 		c = CAACoordinateTransformation.Galactic2Equatorial( 0, 90 ) ;
-		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
-		eq[1] = c.Y() ;
 
-		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
-
-		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-		AstrolabeRegistry.registerHMS( key, eq[0] ) ;
-		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, eq[1] ) ;		
+		dms = new DMS( c.X() ) ;
+		dms.register( this, QK_SIDEREAL ) ;
+		dms.set( c.Y(), -1 ) ;
+		dms.register( this, QK_LATITUDE ) ;
 	}
 
-	public void headPS( AstrolabePostscriptStream ps ) {
+	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintColor practicality ;
 
-		practicality = new GSPaintColor( getPracticality(), getName() ) ;
+		practicality = new GSPaintColor( getPracticality() ) ;
 		practicality.headPS( ps ) ;
 		practicality.emitPS( ps ) ;
 		practicality.tailPS( ps ) ;
 	}
 
-	public void emitPS( AstrolabePostscriptStream ps ) {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
 			AnnotationStraight annotation ;
 
@@ -60,7 +58,7 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
 			PostscriptEmitter circle ;
 
-			circle = AstrolabeFactory.companionOf( getCircle( cl ), this ) ;
+			circle = ApplicationFactory.companionOf( getCircle( cl ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -74,7 +72,7 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
 			PostscriptEmitter body ;
 
-			body = AstrolabeFactory.companionOf( getBody( bd ), this ) ;
+			body = ApplicationFactory.companionOf( getBody( bd ), this ) ;
 
 			ps.operator.gsave() ;
 
@@ -86,7 +84,7 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		}
 	}
 
-	public void tailPS( AstrolabePostscriptStream ps ) {
+	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public double[] project( double[] ho ) {
