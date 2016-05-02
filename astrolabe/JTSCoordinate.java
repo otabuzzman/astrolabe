@@ -15,13 +15,6 @@ public class JTSCoordinate extends Coordinate {
 		super( xy ) ;
 	}
 
-	public int quadrant() {
-		return
-		( x >= 0 && y >= 0 ) ? 1 :
-			( x < 0 && y >= 0 ) ? 2 :
-				( x < 0 && y < 0 ) ? 3 : 4 ;
-	}
-
 	public int boundary( Envelope box ) {
 		double minx, miny, maxx, maxy, curx, cury ;
 

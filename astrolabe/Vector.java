@@ -17,6 +17,10 @@ public class Vector {
 		set( v.x, v.y, v.z ) ;
 	}
 
+	public Vector( double[] xyz ) {
+		set( xyz ) ;
+	}
+
 	public Vector( double x, double y ) {
 		set( x, y, 0 ) ;
 	}
@@ -25,12 +29,15 @@ public class Vector {
 		set ( x, y, z )	;
 	}
 
-	public Vector( double[] xyz ) {
-		set ( xyz )	;
-	}
-
 	public void set( Vector v ) {
 		set( v.x, v.y, v.z ) ;
+	}
+
+	public void set( double[] xyz ) {
+		if ( xyz.length>2 )
+			set( xyz[0], xyz[1], xyz[2] ) ;
+		else
+			set( xyz[0], xyz[1], 0 ) ;
 	}
 
 	public void set( double x, double y ) {
@@ -43,20 +50,12 @@ public class Vector {
 		this.z = z ;
 	}
 
-	public void set( double[] xyz ) {
-		this.x = xyz[0] ;
-		this.y = xyz[1] ;
-		if ( xyz.length>2 ) {
-			this.z = xyz[2] ;
-		} else {
-			this.z = 0 ;
-		}
-	}
-
-	public void neg() {
+	public Vector neg() {
 		x = -x ;
 		y = -y ;
 		z = -z ;
+
+		return this ;
 	}
 
 	public double abs() {
@@ -131,6 +130,10 @@ public class Vector {
 
 	public double[] toArray() {
 		return new double[] { x, y, z } ;
+	}
+
+	public String toString() {
+		return "["+x+","+y+","+z+"]" ;
 	}
 
 	public static List<double[]> con( List<double[]> list ) {

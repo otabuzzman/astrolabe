@@ -119,18 +119,18 @@
 				<xs:element ref="SpanParallel"/>
 				<xs:element ref="SpanMeridian"/>
 			</xs:choice>
-			<xs:element name="CheckerParallel" minOccurs="0">
+			<xs:element name="CheckerParallel">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element ref="AnnotationStraight"/>
+						<xs:element ref="Annotation"/>
 					</xs:sequence>
 					<xs:attribute name="value" type="xs:positiveInteger" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="CheckerMeridian" minOccurs="0">
+			<xs:element name="CheckerMeridian">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element ref="AnnotationStraight"/>
+						<xs:element ref="Annotation"/>
 					</xs:sequence>
 					<xs:attribute name="value" type="xs:positiveInteger" use="required"/>
 				</xs:complexType>
@@ -241,8 +241,6 @@
 		<xs:attribute name="bottomx" type="xs:double" use="required"/>
 		<xs:attribute name="bottomy" type="xs:double" use="required"/>
 		<xs:attribute name="num" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="col" type="xs:int" use="optional"/>
-		<xs:attribute name="row" type="xs:int" use="optional"/>
 		<xs:attribute name="tcp" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="bcp" type="xs:positiveInteger" use="required"/>
 		<xs:attribute name="pcp" type="xs:positiveInteger" use="required"/>

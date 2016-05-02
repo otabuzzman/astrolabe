@@ -53,6 +53,11 @@ public class ParserSubstitute extends ReflectSemantic {
 		{ "verbatim", "verbatim", "`char`" },
 		{ "FACTOR", "'-'", "FACTOR" },
 		{ "FACTOR", "'('", "DEFINITION", "')'" },
+		{ "FACTOR", "'|'", "DEFINITION", "'|'" },
+		{ "FACTOR", "'\u230a'", "DEFINITION", "'\u230b'" },	// floor Unicode
+		{ "FACTOR", "'|>'", "DEFINITION", "'<|'" },			// floor ASCII alternative
+		{ "FACTOR", "'\u2308'", "DEFINITION", "'\u2309'" },	// ceiling Unicode
+		{ "FACTOR", "'|<'", "DEFINITION", "'>|'" },			// ceiling ASCII alternative
 		{ Token.IGNORED, "`whitespaces`" }
 	} ;
 
@@ -292,6 +297,21 @@ public class ParserSubstitute extends ReflectSemantic {
 	}
 
 	public Object FACTOR( Object leftParenthesis, Object DEFINITION, Object rightParenthesis ) {
+		if ( leftParenthesis.equals( "|" ) )
+			if ( types( DEFINITION, DEFINITION )==11 )
+				return java.lang.Math.abs( (Double) number( DEFINITION ) ) ;
+			else
+				return java.lang.Math.abs( (Long) number( DEFINITION ) ) ;
+		if ( leftParenthesis.equals( "|>" ) || leftParenthesis.equals( "\u230a" ) )
+			if ( types( DEFINITION, DEFINITION )==11 )
+				return ( (Double) java.lang.Math.floor( (Double) number( DEFINITION ) ) ).longValue() ;
+			else
+				return ( (Double) java.lang.Math.floor( (Long) number( DEFINITION ) ) ).longValue() ;
+		if ( leftParenthesis.equals( "|<" ) || leftParenthesis.equals( "\u2308" ) )
+			if ( types( DEFINITION, DEFINITION )==11 )
+				return ( (Double) java.lang.Math.ceil( (Double) number( DEFINITION ) ) ).longValue() ;
+			else
+				return ( (Double) java.lang.Math.ceil( (Long) number( DEFINITION ) ) ).longValue() ;
 		return DEFINITION ;
 	}
 

@@ -3,7 +3,7 @@ MODEL     = $(APPL).xsd
 
 JDK     = /cygdrive/c/programme/java/jre1.5.0_17
 JDO		= -Xcheck:jni -Dhttp \
-			-Xmx1024m \
+			-Xmx1536m \
 			-Dftp.proxyHost=proxy.materna.de \
 			-Dftp.proxyPort=8080
 

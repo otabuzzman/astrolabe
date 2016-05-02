@@ -215,12 +215,6 @@
 		<field cst:name="num" cst:type="int" cst:required="true">
 			<bind-xml name="num" node="attribute"/>
 		</field>
-		<field cst:name="col" cst:type="int">
-			<bind-xml name="col" node="attribute"/>
-		</field>
-		<field cst:name="row" cst:type="int">
-			<bind-xml name="row" node="attribute"/>
-		</field>
 		<field cst:name="tcp" cst:type="int" cst:required="true">
 			<bind-xml name="tcp" node="attribute"/>
 		</field>

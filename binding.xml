@@ -14,12 +14,6 @@
 	<complexTypeBinding name="/AtlasPageType/@num">
 		<member java-type="int"/>
 	</complexTypeBinding>
-	<complexTypeBinding name="/AtlasPageType/@col">
-		<member java-type="int"/>
-	</complexTypeBinding>
-	<complexTypeBinding name="/AtlasPageType/@row">
-		<member java-type="int"/>
-	</complexTypeBinding>
 	<complexTypeBinding name="/AtlasPageType/@tcp">
 		<member java-type="int"/>
 	</complexTypeBinding>

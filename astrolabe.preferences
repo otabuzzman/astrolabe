@@ -265,8 +265,6 @@
 			<node name="AtlasStereographic">
 				<map>
 					<entry key="urlModelMap" value="AtlasStereographic.map"/>
-					<!--percent-->
-					<entry key="overlap" value="10"/>
 					<!--degrees-->
 					<entry key="limitDe" value="0"/>
 					<!--6h,3h,2h,1h,30',20',10',5',2',1',30",20",10",5",2",1" in seconds, descending order (must), remainder of 24h divided by value equals 0 (must)-->

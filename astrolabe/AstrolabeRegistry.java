@@ -99,7 +99,10 @@ public class AstrolabeRegistry extends Registry {
 		fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_JTSCOORDINATE_QUADRANT ) ;
-		registerNumber( key+ind, jtscoordinate.quadrant() ) ;
+		registerNumber( key+ind,
+				( jtscoordinate.x >= 0 && jtscoordinate.y >= 0 ) ? 1 :
+					( jtscoordinate.x < 0 && jtscoordinate.y >= 0 ) ? 2 :
+						( jtscoordinate.x < 0 && jtscoordinate.y < 0 ) ? 3 : 4 ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_JTSCOORDINATE_BOUNDARY ) ;
 		registerNumber( key+ind, jtscoordinate.boundary( fov.getEnvelopeInternal() ) ) ;
 	}

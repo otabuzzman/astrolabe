@@ -21,26 +21,30 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Rational value="360"/>
 				</phi>
 				<theta>
-					<Rational value="-25.2"/>
+					<Rational value="119.2"/>
 				</theta>
 			</Extent>
 			<SpanParallel>
 				<Rational value="33"/>
 			</SpanParallel>
 			<CheckerParallel value="5">
-				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
-				</AnnotationStraight>
+				<Annotation>
+					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
+						<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
+					</AnnotationStraight>
+				</Annotation>
 			</CheckerParallel>
 			<CheckerMeridian value="5">
-				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-						<Superscript value="h"/>
-					</Script>
-					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-						<Superscript value="m"/>
-					</Script>
-				</AnnotationStraight>
+				<Annotation>
+					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
+						<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+							<Superscript value="h"/>
+						</Script>
+						<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+							<Superscript value="m"/>
+						</Script>
+					</AnnotationStraight>
+				</Annotation>
 			</CheckerMeridian>
 			<ChartStereographic scale="100" northern="true">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
@@ -174,26 +178,30 @@ astrolabe.xsd" name="atlas-stereographic">
 					<Rational value="360"/>
 				</phi>
 				<theta>
-					<Rational value="25.2"/>
+					<Rational value="-119.2"/>
 				</theta>
 			</Extent>
 			<SpanParallel>
 				<Rational value="-33"/>
 			</SpanParallel>
 			<CheckerParallel value="5">
-				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
-				</AnnotationStraight>
+				<Annotation>
+					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
+						<Script value="{h&#x00f6;hebeide}{h&#x00f6;hegrd}&#x00b0;{h&#x00f6;hegrdmin}'" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}"/>
+					</AnnotationStraight>
+				</Annotation>
 			</CheckerParallel>
 			<CheckerMeridian value="5">
-				<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
-					<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-						<Superscript value="h"/>
-					</Script>
-					<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
-						<Superscript value="m"/>
-					</Script>
-				</AnnotationStraight>
+				<Annotation>
+					<AnnotationStraight anchor="{aktuellerpunktrand==1?&#x0022;bottommiddle&#x0022;:aktuellerpunktrand==2?&#x0022;middleleft&#x0022;:aktuellerpunktrand==3?&#x0022;topmiddle&#x0022;:&#x0022;middleright&#x0022;}" reverse="false" radiant="0">
+						<Script value="{azimutmathe}{azimutstd}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+							<Superscript value="h"/>
+						</Script>
+						<Script value="{azimutstdmin}" purpose="{aktuellerpunktrand==0?&#x0022;none&#x0022;:&#x0022;guidance&#x0022;}">
+							<Superscript value="m"/>
+						</Script>
+					</AnnotationStraight>
+				</Annotation>
 			</CheckerMeridian>
 			<ChartStereographic scale="100" northern="false">
 				<ChartPage size="a4" real="82" layout="atlaspage"/>
@@ -240,16 +248,16 @@ astrolabe.xsd" name="atlas-stereographic">
 						</AnnotationStraight>
 						<!--$legendtopcon-->
 						<AnnotationStraight reverse="false" radiant="false" anchor="topmiddle">
-							<Script purpose="{anschlussoben>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussoben+68}"/>
+							<Script purpose="{anschlussoben>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussoben+63}"/>
 							<Frame number="2" anchor="topmiddle"/>
 						</AnnotationStraight>
 						<!--$legendbotcon-->
 						<AnnotationStraight reverse="false" radiant="false" anchor="bottommiddle">
-							<Script purpose="{anschlussunten>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussunten+68}"/>
+							<Script purpose="{anschlussunten>0?&#x0022;diallettering&#x0022;:&#x0022;none&#x0022;}" value="Anschlussseite {anschlussunten+63}"/>
 							<Frame number="20" anchor="topmiddle"/>
 						</AnnotationStraight>
 						<!--$origin-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+68)%2>0?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}">
+						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}">
 							<Script purpose="textlettering" value="{mitterastd}">
 								<Superscript value="h"/>
 							</Script>
@@ -257,44 +265,44 @@ astrolabe.xsd" name="atlas-stereographic">
 								<Superscript value="m"/>
 							</Script>
 							<Script purpose="textlettering" value=" (&#x03b1;)"/>
-							<Frame number="{(seite+68)%2>0?6:4}" anchor="topmiddle"/>
+							<Frame number="{(seite+63)%2>0?6:4}" anchor="topmiddle"/>
 						</AnnotationStraight>
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+68)%2>0?&#x0022;topright&#x0022;:&#x0022;topleft&#x0022;}">
+						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;topright&#x0022;:&#x0022;topleft&#x0022;}">
 							<Script purpose="textlettering" value="{mittedebeide}{mittedegrd}"/>
 							<Script purpose="textlettering" value="&#x00b0;"/>
 							<Script purpose="textlettering" value="{mittedegrdmin}"/>
 							<Script purpose="textlettering" value="'"/>
 							<Script purpose="textlettering" value=" (&#x03b4;)"/>
-							<Frame number="{(seite+68)%2>0?6:4}" anchor="topmiddle"/>
+							<Frame number="{(seite+63)%2>0?6:4}" anchor="topmiddle"/>
 						</AnnotationStraight>
 						<!--$atlasequinox-->
-						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+68)%2>0?&#x0022;middleleft&#x0022;:&#x0022;middleright&#x0022;}">
+						<AnnotationStraight reverse="false" radiant="false" anchor="{(seite+63)%2>0?&#x0022;middleleft&#x0022;:&#x0022;middleright&#x0022;}">
 							<Script purpose="textlettering" value="J2000.0"/>
-							<Frame number="{(seite+68)%2>0?4:6}" anchor="topmiddle"/>
+							<Frame number="{(seite+63)%2>0?4:6}" anchor="topmiddle"/>
 						</AnnotationStraight>
 						<!--AtlasPage.num-->
 						<AnnotationStraight reverse="false" radiant="false" anchor="middle">
-							<Script purpose="titlelettering" value="{seite+68}"/>
-							<Frame number="{(seite+68)%2>0?15:13}" anchor="middle"/>
+							<Script purpose="titlelettering" value="{seite+63}"/>
+							<Frame number="{(seite+63)%2>0?15:13}" anchor="middle"/>
 						</AnnotationStraight>
 						<!--$catdatsource-->
-						<AnnotationStraight reverse="{(seite+68)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomleft">
+						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomleft">
 							<Script purpose="guidance" value="Sternkatalogquelle: ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz"/>
-							<Frame number="{(seite+68)%2>0?7:9}" anchor="{(seite+68)%2>0?&#x0022;bottomright&#x0022;:&#x0022;topleft&#x0022;}"/>
+							<Frame number="{(seite+63)%2>0?7:9}" anchor="{(seite+63)%2>0?&#x0022;bottomright&#x0022;:&#x0022;topleft&#x0022;}"/>
 						</AnnotationStraight>
 						<!--$trademark-->
-						<AnnotationStraight reverse="{(seite+68)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
+						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="bottomright">
 							<Script purpose="guidance" value="2010 CHARTA CAELI"/>
-							<Frame number="{(seite+68)%2>0?7:9}" anchor="{(seite+68)%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
+							<Frame number="{(seite+63)%2>0?7:9}" anchor="{(seite+63)%2>0?&#x0022;topright&#x0022;:&#x0022;bottomleft&#x0022;}"/>
 						</AnnotationStraight>
 						<!--$legendlcon-->
-						<AnnotationStraight reverse="{(seite+68)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+68)%2>0?&#x0022;topmiddle&#x0022;:&#x0022;bottommiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussfolgend+68:anschlussvorig+68}"/>
+						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+63)%2>0?&#x0022;topmiddle&#x0022;:&#x0022;bottommiddle&#x0022;}">
+							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussfolgend+63:anschlussvorig+63}"/>
 							<Frame number="7" anchor="middleleft"/>
 						</AnnotationStraight>
 						<!--$legendrcon-->
-						<AnnotationStraight reverse="{(seite+68)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+68)%2>0?&#x0022;bottommiddle&#x0022;:&#x0022;topmiddle&#x0022;}">
-							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussvorig+68:anschlussfolgend+68}"/>
+						<AnnotationStraight reverse="{(seite+63)%2>0?&#x0022;false&#x0022;:&#x0022;true&#x0022;}" radiant="true" anchor="{(seite+63)%2>0?&#x0022;bottommiddle&#x0022;:&#x0022;topmiddle&#x0022;}">
+							<Script purpose="diallettering" value="Anschlussseite {mittedegrd>p0ragrd?anschlussvorig+63:anschlussfolgend+63}"/>
 							<Frame number="9" anchor="middleright"/>
 						</AnnotationStraight>
 						<!--ADC5050-->

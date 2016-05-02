@@ -537,7 +537,6 @@ public final class ApplicationConstant {
 	public final static String PN_CHARTPAGE_LAYOUT		= "layout" ;
 
 	public final static String PK_ATLAS_URLMODELMAP		= "urlModelMap" ;
-	public final static String PK_ATLAS_OVERLAP			= "overlap" ;
 	public final static String PK_ATLAS_LIMITDE			= "limitDe" ;
 	public final static String PK_ATLAS_INTERVALUNITSH	= "intervalUnitsH" ;
 	public final static String PK_ATLAS_INTERVALUNITSD	= "intervalUnitsD" ;
