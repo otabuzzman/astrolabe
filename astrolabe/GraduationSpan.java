@@ -27,16 +27,16 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	private double linelength ;
 	private double linewidth ;
 
-	private Vector origin ;
-	private Vector tangent ;
+	private Vector position ;
+	private Vector direction ;
 
-	public GraduationSpan( Coordinate origin, Coordinate tangent ) {
+	public GraduationSpan( Coordinate position, Coordinate direction ) {
 		Configuration conf ;
 
-		this.origin = new Vector( origin ) ;
-		this.tangent = new Vector( tangent ) ;
+		this.position = new Vector( position ) ;
+		this.direction = new Vector( direction ) ;
 
-		this.tangent.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
+		this.direction.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 
 		conf = new Configuration( this ) ;
 
@@ -88,7 +88,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 		ps.operator.stroke() ;
 		ps.operator.grestore() ;
 
-		ps.operator.rotate( Math.atan2( tangent.y, tangent.x )-90 ) ;
+		ps.operator.rotate( Math.atan2( direction.y, direction.x )-90 ) ;
 
 		if ( getAnnotationStraight() != null ) {
 			AnnotationStraight annotation ;
@@ -114,12 +114,12 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	private Coordinate[] list() {
 		Vector a, b ;
 
-		a = new Vector( tangent ) ;
-		b = new Vector( tangent ) ;
+		a = new Vector( direction ) ;
+		b = new Vector( direction ) ;
 
 		return new Coordinate[] {
-				a.scale( space ).add( origin ),
-				b.scale( space+linelength ).add( origin )
+				a.scale( space ).add( position ),
+				b.scale( space+linelength ).add( position )
 		} ;
 	}
 }

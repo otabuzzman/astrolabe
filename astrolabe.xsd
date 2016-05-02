@@ -671,7 +671,9 @@
 	<xs:element name="Position">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="SphericalType"/>
+				<xs:extension base="SphericalType">
+					<xs:attribute name="name" type="xs:string" use="optional"/>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -812,6 +814,10 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="CatalogType">
+		<xs:sequence>
+			<xs:element ref="Artwork" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Sign" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="url" type="xs:anyURI" use="required"/>
 	</xs:complexType>
@@ -1016,25 +1022,37 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="ArtefactType">
+	<xs:complexType name="ArtworkType">
 		<xs:sequence>
-			<xs:element ref="Sign" maxOccurs="unbounded"/>
+			<xs:element name="Popper" minOccurs="3" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Position"/>
+						<xs:element ref="Cartesian"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-	</xs:complexType>
-	<xs:element name="Artefact" type="ArtefactType"/>
-	<xs:complexType name="SignType">
-		<xs:sequence>
-			<xs:element ref="Annotation" minOccurs="0"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="value" use="required">
+		<xs:attribute name="url" type="xs:anyURI" use="required"/>
+		<xs:attribute name="heaven" type="xs:boolean" use="required"/>
+		<xs:attribute name="tonemap" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:pattern value="[^:,]+:[^:,]+(:[^:,]+)*(,[^:,]+:[^:,]+(:[^:,]+)*)*"/>
+					<xs:pattern value="original"/>
+					<xs:pattern value="pale"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="Artwork" type="ArtworkType"/>
+	<xs:complexType name="SignType">
+		<xs:sequence>
+			<xs:element ref="Annotation" minOccurs="0"/>
+			<xs:element ref="Position" minOccurs="2" maxOccurs="unbounded"/>
+			<xs:element name="Limb" type="SignType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:element name="Sign" type="SignType"/>
 	<!---->

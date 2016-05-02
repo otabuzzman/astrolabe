@@ -22,9 +22,11 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public ShapeElliptical( Projector projector ) {
+	public ShapeElliptical( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -91,10 +93,10 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		d = valueOf( this ) ;
 		p = valueOf( getPosition() ) ;
 
-		vp = new Vector( projector.project( p, false ) ) ;
+		vp = new Vector( projector.project( converter.convert( p, false ), false ) ) ;
 
 		p.x = p.x-d ;
-		vd = new Vector( projector.project( p, false ) ) ;
+		vd = new Vector( projector.project( converter.convert( p, false ), false ) ) ;
 
 		pa = getPA() ;
 		pas = Math.sin( pa ) ;

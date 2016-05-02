@@ -17,7 +17,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class CircleParallel extends astrolabe.model.CircleParallel implements PostscriptEmitter, Baseline {
+public class CircleParallel extends astrolabe.model.CircleParallel implements PostscriptEmitter, Baseline, Converter {
 
 	// qualifier key (QK_)
 	private final static String QK_ALTITUDE			= "altitude" ;
@@ -46,9 +46,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	// message key (MK_)
 	private final static String MK_EINTSEC			= "eintsec" ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public CircleParallel( Projector projector ) {
+	public CircleParallel( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -108,7 +110,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		double al ;
 		DMS dms ;
 
-		currentpoint = new astrolabe.Coordinate( project( end(), 0 ) ) ;
+		currentpoint = new astrolabe.Coordinate( positionOfScaleMarkValue( end(), 0 ) ) ;
 		currentpoint.register( this, QK_TERMINUS ) ;
 
 		al = valueOf( getAngle() ) ;
@@ -154,7 +156,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		PostscriptEmitter emitter ;
 
 		if ( cut ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 
 			if ( page == null ) {
 				emitPS( ps, false ) ;
@@ -164,7 +166,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 			a = begin() ;
 			o = end() ;
-			
+
 			list = list( null, a, o, 0 ) ;
 			fov = page.getViewGeometry() ;
 			cutter = new ListCutter( list, fov ) ;
@@ -176,8 +178,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 					lob = new Coordinate( a, d ) ;
 					loe = new Coordinate( o, d ) ;
 				} else {
-					lob = projector.project( new Coordinate( s[0] ), true ) ;
-					loe = projector.project( new Coordinate( s[s.length-1] ), true ) ;
+					lob = converter.convert( projector.project( s[0], true ), true ) ;
+					loe = converter.convert( projector.project( s[s.length-1], true ), true ) ;
 				}
 
 				try {
@@ -210,7 +212,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 					throw new RuntimeException( e.toString() ) ;
 				}
 
-				circle = new CircleParallel( projector ) ;
+				circle = new CircleParallel( converter, projector ) ;
 				peer.copyValues( circle ) ;
 
 				circle.register() ;
@@ -304,17 +306,17 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public Coordinate project( double az, double shift ) {
+	public Coordinate positionOfScaleMarkValue( double az, double shift ) {
 		Coordinate xy ;
 		double al ;
 		Vector v, t ;
 
 		al = valueOf( getAngle() ) ;	
-		xy = projector.project( new Coordinate( az, al ), false ) ;
+		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
 		v = new Vector( xy ) ;
 
 		if ( shift != 0 ) {
-			xy = tangent( az ) ;
+			xy = directionOfScaleMarkValue( az ) ;
 			t = new Vector( xy ) ;
 			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
 			t.scale( shift ) ;
@@ -324,15 +326,15 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public Coordinate tangent( double az ) {
+	public Coordinate directionOfScaleMarkValue( double az ) {
 		Vector a, b ;
 		double al ;
 		Coordinate xy ;
 
 		al = valueOf( getAngle() ) ;
-		xy = projector.project( new Coordinate( az+10./3600, al ), false ) ;
+		xy = projector.project( converter.convert( new Coordinate( az+10./3600, al ), false ), false ) ;
 		a = new Vector( xy ) ;
-		xy = projector.project( new Coordinate( az, al ), false ) ;
+		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
 		b = new Vector( xy ) ;
 
 		a.sub( b ) ;
@@ -340,7 +342,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return new Coordinate( a.x, a.y ) ;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
+	public double valueOfScaleMarkN( int mark, double span ) {
 		return new Wheel360Scale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
@@ -353,24 +355,22 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		listxy = new java.util.Vector<Coordinate>() ;
 
 		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval ) {
-			listxy.add( project( CAACoordinateTransformation.MapTo0To360Range( az ), shift ) ) ;
+			listxy.add( positionOfScaleMarkValue( CAACoordinateTransformation.MapTo0To360Range( az ), shift ) ) ;
 			if ( lista != null )
 				lista.add( az ) ;
 		}
 
-		listxy.add( project( end, shift ) ) ;
+		listxy.add( positionOfScaleMarkValue( end, shift ) ) ;
 		if ( lista != null )
 			lista.add( end ) ;
 
 		return listxy.toArray( new Coordinate[0] ) ;
 	}
 
-	public Coordinate convert( double angle ) {
-		return projector.convert( new Coordinate( angle, valueOf( getAngle() ) ), false ) ;
-	}
-
-	public double reverse( Coordinate eq ) {
-		return projector.convert( eq, true ).x ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		if ( inverse )
+			return converter.convert( local, true ) ;
+		return converter.convert( new Coordinate( local.x, valueOf( getAngle() ) ), false ) ;
 	}
 
 	public LineString getCircleGeometry() {
@@ -577,11 +577,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		// unconvert local rd into actual
 		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa/*horizon.getLa()*/ ) ;
 		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
-		rdhoA = projector.convert( rdeqA, true ) ;
+		rdhoA = converter.convert( rdeqA, true ) ;
 
 		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
 		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
-		rdhoO = projector.convert( rdeqO, true ) ;
+		rdhoO = converter.convert( rdeqO, true ) ;
 
 		// sort associated values
 		if ( rdhoA.x>rdhoO.x ) {
@@ -599,7 +599,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		// unconvert local gn into actual
 		c = CAACoordinateTransformation.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gnal, gnLa ) ;
 		gneq = new Coordinate( gnST-CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
-		gnho = gn.projector.convert( gneq, true ) ;
+		gnho = gn.converter.convert( gneq, true ) ;
 
 		gnb = gn.begin() ;
 		gne = gn.end() ;
@@ -647,11 +647,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		// unconvert local rd into actual
 		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa ) ;
 		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
-		rdhoA = projector.convert( rdeqA, true ) ;
+		rdhoA = converter.convert( rdeqA, true ) ;
 
 		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
 		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
-		rdhoO = projector.convert( rdeqO, true ) ;
+		rdhoO = converter.convert( rdeqO, true ) ;
 
 		// sort associated values
 		if ( rdhoA.x>rdhoO.x ) {
@@ -687,7 +687,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public Coordinate zenit() {
-		return projector.convert( new Coordinate( 0, 90 ), false ) ;
+		return converter.convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

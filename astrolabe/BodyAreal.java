@@ -26,9 +26,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	private final static double DEFAULT_HALOMIN	= .08 ;
 	private final static double DEFAULT_HALOMAX	= .4 ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public BodyAreal( Projector projector ) {
+	public BodyAreal( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -96,9 +98,9 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
+		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
 		if ( fov == null ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
 				fov = page.getViewGeometry() ;
 		}
@@ -155,7 +157,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 			xy = segment.get( s )[ segment.get( s ).length-1 ] ;
 			p = new Vector( xy ) ;
-			xy = projector.project( new Coordinate( 0, 90 ), false ) ;
+			xy = projector.project( converter.convert( new Coordinate( 0, 90 ), false ), false ) ;
 			z = new Vector( xy ) ; // zenit
 
 			z.sub( p ) ;
@@ -211,12 +213,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				if ( la<-90 )
 					la = -180-la ;
 
-				outline.add( projector.project( new Coordinate( lo, la ), false ) ) ;
+				outline.add( projector.project( converter.convert( new Coordinate( lo, la ), false ), false ) ) ;
 			}
 
 			return outline.toArray( new Coordinate[0] ) ;
 		} else {
-			ellipse = new ShapeElliptical( projector ) ;
+			ellipse = new ShapeElliptical( converter, projector ) ;
 			getBodyArealTypeChoice().getShapeElliptical().copyValues( ellipse ) ;
 
 			return ellipse.list() ;

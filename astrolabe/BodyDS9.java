@@ -10,8 +10,8 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 @SuppressWarnings("serial")
 public class BodyDS9 extends BodyAreal {
 
-	public BodyDS9( Projector projector ) {
-		super( projector ) ;
+	public BodyDS9( Converter converter, Projector projector ) {
+		super( converter, projector ) ;
 	}
 
 	public Coordinate[] list() {

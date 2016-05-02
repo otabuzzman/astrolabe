@@ -35,9 +35,11 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 
 	private List<ContourLevel> catalog ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public CatalogDS9( Projector projector ) {
+	public CatalogDS9( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -168,7 +170,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 						throw new RuntimeException( e.toString() ) ;
 					}
 
-					bodyDS9 = new BodyDS9( projector ) ;
+					bodyDS9 = new BodyDS9( converter, projector ) ;
 					body.getBodyAreal().copyValues( bodyDS9 ) ;
 
 					bodyDS9.register() ;
@@ -189,31 +191,31 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 	}
 
 	public Reader reader( String uri ) throws URISyntaxException, MalformedURLException {
-		URI cURI ;
-		URL cURL ;
-		File cFile ;
-		InputStream cCon ;
-		GZIPInputStream cGZ ;
+		URI src ;
+		URL url ;
+		File file ;
+		InputStream in ;
+		GZIPInputStream gz ;
 
-		cURI = new URI( uri ) ;
-		if ( cURI.isAbsolute() ) {
-			cFile = new File( cURI ) ;	
+		src = new URI( uri ) ;
+		if ( src.isAbsolute() ) {
+			file = new File( src ) ;	
 		} else {
-			cFile = new File( cURI.getPath() ) ;
+			file = new File( src.getPath() ) ;
 		}
-		cURL = cFile.toURL() ;
+		url = file.toURL() ;
 
 		try {
-			cCon = cURL.openStream() ;
+			in = url.openStream() ;
 
-			cGZ = new GZIPInputStream( cCon ) ;
-			return new InputStreamReader( cGZ ) ;
+			gz = new GZIPInputStream( in ) ;
+			return new InputStreamReader( gz ) ;
 		} catch ( IOException egz ) {
 			try {
-				cCon = cURL.openStream() ;
+				in = url.openStream() ;
 
-				return new InputStreamReader( cCon ) ;
-			} catch ( IOException eis ) {
+				return new InputStreamReader( in ) ;
+			} catch ( IOException ein ) {
 				throw new RuntimeException ( egz.toString() ) ;
 			}
 		}

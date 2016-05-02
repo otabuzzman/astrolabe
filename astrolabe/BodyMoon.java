@@ -8,8 +8,11 @@ import org.exolab.castor.xml.ValidationException;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
+import caa.CAA2DCoordinate;
+import caa.CAACoordinateTransformation;
 import caa.CAADate;
 import caa.CAAMoon;
+import caa.CAANutation;
 
 @SuppressWarnings("serial")
 public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmitter, Baseline {
@@ -29,10 +32,21 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public BodyMoon( Projector projector ) {
+	private double epoch ;
+
+	public BodyMoon( Converter converter, Projector projector ) {
+		Double Epoch ;
+
+		this.converter = converter ;
 		this.projector = projector ;
+
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
+		if ( Epoch == null )
+			epoch = astrolabe.Epoch.defoult() ;
+		epoch = Epoch.doubleValue() ;
 	}
 
 	public double[] epoch() {
@@ -42,7 +56,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		CAADate epoch ;
 		long year ;
 
-		Epochgc = (Double) Registry.retrieve( Epoch.RK_EPOCH ) ;
+		Epochgc = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epochgc == null )
 			epochgc = Epoch.defoult() ;
 		else
@@ -118,9 +132,9 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		epoch = epoch() ;
 
 		if ( cut ) {
-			fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
+			fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
 			if ( fov == null ) {
-				page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+				page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 				if ( page != null )
 					fov = page.getViewGeometry() ;
 			}
@@ -164,7 +178,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 					throw new RuntimeException( e.toString() ) ;
 				}
 
-				body = new BodyMoon( projector ) ;
+				body = new BodyMoon( converter, projector ) ;
 				peer.copyValues( body ) ;
 
 				ps.operator.gsave();
@@ -253,16 +267,16 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public Coordinate project( double jd, double shift ) {
-		Coordinate ec, xy ;
+	public Coordinate positionOfScaleMarkValue( double jd, double shift ) {
+		Coordinate eq, xy ;
 		Vector v, t ;
 
-		ec = convert( jd ) ;
-		xy = projector.project( ec, false ) ;
+		eq = jdToEcliptical( jd ) ;
+		xy = projector.project( eq, false ) ;
 		v = new Vector( xy ) ;
 
 		if ( shift != 0 ) {
-			xy = tangent( jd ) ;
+			xy = directionOfScaleMarkValue( jd ) ;
 			t = new Vector( xy ) ;
 			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
 			t.scale( shift ) ;
@@ -272,15 +286,15 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public Coordinate tangent( double jd ) {
-		Coordinate ec, xy ;
+	public Coordinate directionOfScaleMarkValue( double jd ) {
+		Coordinate eq, xy ;
 		Vector v, t ;
 
-		ec = convert( jd+1./86400 ) ;
-		xy = projector.project( ec, false ) ;
+		eq = jdToEcliptical( jd+1./86400 ) ;
+		xy = projector.project( eq, false ) ;
 		v = new Vector( xy ) ;
-		ec = convert( jd ) ;
-		xy = projector.project( ec, false ) ;
+		eq = jdToEcliptical( jd ) ;
+		xy = projector.project( eq, false ) ;
 		t = new Vector( xy ) ;
 
 		v.sub( t ) ;
@@ -288,7 +302,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		return new Coordinate( v.x, v.y ) ;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
+	public double valueOfScaleMarkN( int mark, double span ) {
 		return new LinearScale( span, epoch() ).markN( mark ) ;
 	}
 
@@ -301,7 +315,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 		listxy = new java.util.Vector<Coordinate>() ;
 
-		listxy.add( project( jdA, shift ) ) ;
+		listxy.add( positionOfScaleMarkValue( jdA, shift ) ) ;
 		if ( listjd != null )
 			listjd.add( jdA ) ;
 
@@ -310,30 +324,36 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		g = ( Math.isLim0( e )?interval:e )/2 ;
 
 		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
-			listxy.add( project( jd, shift ) ) ;
+			listxy.add( positionOfScaleMarkValue( jd, shift ) ) ;
 			if ( listjd != null )
 				listjd.add( jd ) ;
 		}
 
-		listxy.add( project( jdO, shift ) ) ;
+		listxy.add( positionOfScaleMarkValue( jdO, shift ) ) ;
 		if ( listjd != null )
 			listjd.add( jdO ) ;
 
 		return listxy.toArray( new Coordinate[0] ) ;
 	}
 
-	public Coordinate convert( double jd ) {
+	public Coordinate jdToEcliptical( double jd ) {
+		double l, b, o ;
+		CAA2DCoordinate c ;
 		double stretch ;
-	
+
 		if ( getStretch() )
 			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
 		else
 			stretch = 0 ;
-	
-		return new Coordinate(
-				CAAMoon.EclipticLongitude( jd ),
-				CAAMoon.EclipticLatitude( jd )
-				+( jd-epoch()[0] )*stretch ) ;
+
+		l = CAAMoon.EclipticLongitude( jd ) ;
+		b = CAAMoon.EclipticLatitude( jd )
+		+( jd-epoch()[0] )*stretch ;
+
+		o = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, o ) ;
+
+		return new Coordinate( CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

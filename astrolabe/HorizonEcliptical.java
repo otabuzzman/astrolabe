@@ -2,6 +2,7 @@
 package astrolabe;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -12,7 +13,7 @@ import caa.CAACoordinateTransformation;
 import caa.CAANutation;
 
 @SuppressWarnings("serial")
-public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical implements PostscriptEmitter, Projector {
+public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical implements PostscriptEmitter, Converter {
 
 	// qualifier key (QK_)
 	private final static String QK_EPSILON	= "epsilon" ;
@@ -115,12 +116,6 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public Coordinate project( Coordinate local, boolean inverse ) {
-		return inverse ?
-				convert( projector.project( local, inverse ), inverse ) :
-					projector.project( convert( local, inverse ), inverse ) ;
-	}
-
 	public Coordinate convert( Coordinate local, boolean inverse ) {
 		return inverse ? inverse( local ) : convert( local ) ;
 	}
@@ -148,7 +143,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private double epoch() {
 		Double Epoch ;
 
-		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
 			return astrolabe.Epoch.defoult() ;
 		return Epoch.doubleValue() ;
@@ -157,7 +152,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleMeridian peer ) {
 		CircleMeridian circle ;
 
-		circle = new CircleMeridian( this ) ;
+		circle = new CircleMeridian( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -174,7 +169,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleParallel peer ) {
 		CircleParallel circle ;
 
-		circle = new CircleParallel( this ) ;
+		circle = new CircleParallel( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -191,7 +186,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernPolar peer ) {
 		CircleNorthernPolar circle ;
 
-		circle = new CircleNorthernPolar( this ) ;
+		circle = new CircleNorthernPolar( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -208,7 +203,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernTropic peer ) {
 		CircleNorthernTropic circle ;
 
-		circle = new CircleNorthernTropic( this ) ;
+		circle = new CircleNorthernTropic( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -225,7 +220,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernTropic peer ) {
 		CircleSouthernTropic circle ;
 
-		circle = new CircleSouthernTropic( this ) ;
+		circle = new CircleSouthernTropic( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -242,7 +237,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernPolar peer ) {
 		CircleSouthernPolar circle ;
 
-		circle = new CircleSouthernPolar( this ) ;
+		circle = new CircleSouthernPolar( this, projector ) ;
 		peer.copyValues( circle ) ;
 
 		circle.register() ;
@@ -264,14 +259,14 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 			ring = new GeometryFactory().createLinearRing( line.getCoordinates() ) ;
 			poly = new GeometryFactory().createPolygon( ring, null ) ;
 
-			Registry.register( FOV.RK_FOV, poly ) ;
+			Registry.register( Geometry.class.getName(), poly ) ;
 		}
 	}
 
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyStellar peer ) {
 		BodyStellar body ;
 
-		body = new BodyStellar( this ) ;
+		body = new BodyStellar( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		body.register() ;
@@ -282,7 +277,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyAreal peer ) {
 		BodyAreal body ;
 
-		body = new BodyAreal( this ) ;
+		body = new BodyAreal( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		body.register() ;
@@ -293,7 +288,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodySun peer ) {
 		BodySun body ;
 
-		body = new BodySun( this ) ;
+		body = new BodySun( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		emitPS( ps, body ) ;
@@ -302,7 +297,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyMoon peer ) {
 		BodyMoon body ;
 
-		body = new BodyMoon( this ) ;
+		body = new BodyMoon( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		emitPS( ps, body ) ;
@@ -311,7 +306,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyPlanet peer ) {
 		BodyPlanet body ;
 
-		body = new BodyPlanet( this ) ;
+		body = new BodyPlanet( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		emitPS( ps, body ) ;
@@ -320,7 +315,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyElliptical peer ) {
 		BodyElliptical body ;
 
-		body = new BodyElliptical( this ) ;
+		body = new BodyElliptical( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		emitPS( ps, body ) ;
@@ -329,7 +324,7 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyParabolical peer ) {
 		BodyParabolical body ;
 
-		body = new BodyParabolical( this ) ;
+		body = new BodyParabolical( this, projector ) ;
 		peer.copyValues( body ) ;
 
 		emitPS( ps, body ) ;

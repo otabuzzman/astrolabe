@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 @SuppressWarnings("serial")
 public class BodyElliptical extends astrolabe.model.BodyElliptical implements PostscriptEmitter, Baseline {
 
-	public BodyElliptical( Projector projector ) {
+	public BodyElliptical( Converter converter, Projector projector ) {
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -23,17 +23,17 @@ public class BodyElliptical extends astrolabe.model.BodyElliptical implements Po
 		// TODO Auto-generated method stub
 	}
 
-	public Coordinate project( double angle, double shift ) {
+	public Coordinate positionOfScaleMarkValue( double angle, double shift ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Coordinate tangent( double angle ) {
+	public Coordinate directionOfScaleMarkValue( double angle ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public double scaleMarkNth( int mark, double span ) {
+	public double valueOfScaleMarkN( int mark, double span ) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

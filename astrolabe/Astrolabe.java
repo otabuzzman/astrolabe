@@ -71,6 +71,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		Process viewerProc ;
 		TeeOutputStream out ;
 		ApplicationPostscriptStream ps ;
+		ParserAttribute parser ;
 
 		try {
 			f = new File( argv[0] ) ;
@@ -80,7 +81,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			readModel( r ).copyValues( astrolabe ) ;
 
 			epoch = valueOf( astrolabe.getEpoch() ) ;
-			Registry.register( Epoch.RK_EPOCH, epoch ) ;
+			Registry.register( Epoch.class.getName(), epoch ) ;
 
 			out =  new TeeOutputStream( System.out ) ;
 
@@ -107,6 +108,9 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				}
 			}
 
+			parser = new ParserAttribute() ;
+			Registry.register( ParserAttribute.class.getName(), parser ) ;
+
 			ps = new ApplicationPostscriptStream( out ) ;
 
 			astrolabe.headPS( ps ) ;
@@ -120,7 +124,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			if ( viewerDecl != null )
 				viewerProc.waitFor() ;
 
-			Registry.degister( Epoch.RK_EPOCH ) ;
+			Registry.degister( ParserAttribute.class.getName() ) ;
+			Registry.degister( Epoch.class.getName() ) ;
 			Registry.remove() ;
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
@@ -158,6 +163,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartStereographic peer ) {
 		ChartStereographic chart ;
 		ChartPage page ;
+		String key ;
 
 		chart = new ChartStereographic() ;
 		peer.copyValues( chart ) ;
@@ -165,14 +171,16 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;
 
-		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		key = ChartPage.class.getName() ;
+		Registry.register( key, page ) ;
 		emitPS( ps, chart ) ;
-		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+		Registry.degister( key ) ;
 	}
 
 	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartOrthographic peer ) {
 		ChartOrthographic chart ;
 		ChartPage page ;
+		String key ;
 
 		chart = new ChartOrthographic() ;
 		peer.copyValues( chart ) ;
@@ -180,9 +188,10 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;
 
-		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		key = ChartPage.class.getName() ;
+		Registry.register( key, page ) ;
 		emitPS( ps, chart ) ;
-		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+		Registry.degister( key ) ;
 	}
 
 	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartEquidistant peer ) {
@@ -191,18 +200,21 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 		chart = new ChartEquidistant() ;
 		peer.copyValues( chart ) ;
+		String key ;
 
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;
 
-		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		key = ChartPage.class.getName() ;
+		Registry.register( key, page ) ;
 		emitPS( ps, chart ) ;
-		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+		Registry.degister( key ) ;
 	}
 
 	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartGnomonic peer ) {
 		ChartGnomonic chart ;
 		ChartPage page ;
+		String key ;
 
 		chart = new ChartGnomonic() ;
 		peer.copyValues( chart ) ;
@@ -210,9 +222,10 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;
 
-		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		key = ChartPage.class.getName() ;
+		Registry.register( key, page ) ;
 		emitPS( ps, chart ) ;
-		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+		Registry.degister( key ) ;
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {

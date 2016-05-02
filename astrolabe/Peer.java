@@ -24,6 +24,7 @@ import caa.CAADate;
 
 import astrolabe.model.AngleType;
 import astrolabe.model.CalendarType;
+import astrolabe.model.CartesianType;
 import astrolabe.model.DMSType;
 import astrolabe.model.DateType;
 import astrolabe.model.HMSType;
@@ -98,7 +99,9 @@ public class Peer {
 		Class<?>[] pt ;
 		Object vp ;
 
-		parser = ParserAttribute.retrieve() ;
+		parser = (ParserAttribute) Registry.retrieve( ParserAttribute.class.getName() ) ;
+		if ( parser == null )
+			parser = new ParserAttribute() ;
 
 		method = getClass().getMethods() ;
 		for ( int m=0 ; m<method.length ; m++ ) {
@@ -253,5 +256,18 @@ public class Peer {
 		r = dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
 
 		return dms.getNeg()?-r:r ;
+	}
+
+	public static Coordinate valueOf( CartesianType cartesian ) {
+		double x, y, z ;
+
+		x = cartesian.getX() ;
+		y = cartesian.getY() ;
+		if ( cartesian.hasZ() ) 
+			z = cartesian.getZ() ;
+		else
+			z = 0 ;
+
+		return new Coordinate( x, y, z ) ;
 	}
 }

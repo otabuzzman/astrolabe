@@ -56,87 +56,102 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		ps.dsc.pageTrailer() ;
 	}
 
-	public Coordinate project( Coordinate local, boolean inverse ) {
-		return inverse ? inverse( local ) : project( local ) ;
+	public Coordinate project( Coordinate coordinate, boolean inverse ) {
+		return inverse ? inverse( coordinate ) : project( coordinate ) ;
 	}
 
-	public Coordinate convert( Coordinate local, boolean inverse ) {
-		return project( local, inverse ) ;
+	private Coordinate project( Coordinate celestial ) {
+		Vector vp ;
+
+		vp = new Vector( transformCenter( sphericalToProjection( celestialToSpherical( celestial ) ), false ) ) ;
+		vp.mul( scale() ) ;
+
+		return vp.toCoordinate() ;
 	}
 
-	private Coordinate project( Coordinate azimuthal ) {
-		Coordinate center ;
-		double phi, sin, cos ;
-		Vector vp, v0 ;
+	private Coordinate inverse( Coordinate projection ) {
+		Vector vp ;
 
-		vp = new Vector( polarToCartesianCS( localToPolarCS( azimuthal ) ) ) ;
-
-		if ( getChartPage().getCenter() == null )
-			return vp.mul( scale() ).toCoordinate() ;
-
-		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToCartesianCS( localToPolarCS( center ) ) ) ;
-		vp.sub( v0 ) ;
-		phi = 90+Math.atan2( v0.y, v0.x ) ;
-		sin = Math.sin( phi ) ;
-		cos = Math.cos( phi ) ;
-		vp.apply( new double[] { cos, sin, 0, -sin, cos, 0, 0, 0, 1 } ) ;
-
-		return vp.mul( scale() ).toCoordinate() ;
-	}
-
-	private Coordinate inverse( Coordinate cartesian ) {
-		Coordinate center ;
-		double phi, sin, cos ;
-		Vector vp, v0 ;
-
-		vp = new Vector( cartesian ) ;
+		vp = new Vector( projection ) ;
 		vp.mul( 1/scale() ) ;
 
+		return sphericalToCelestial( projectionToSpherical( transformCenter( vp.toCoordinate(), true ) ) ) ;
+	}
+
+	private Coordinate transformCenter( Coordinate projection, boolean inverse ) {
+		Coordinate center ;
+		Vector v0, vp ;
+		double p, s, c ;
+
 		if ( getChartPage().getCenter() == null )
-			return polarToLocalCS( cartesianToPolarCS( vp.toCoordinate() ) ) ;
-
+			return projection ;
 		center = valueOf( getChartPage().getCenter() ) ;
-		v0 = new Vector( polarToCartesianCS( localToPolarCS( center ) ) ) ;
-		phi = 90+Math.atan2( v0.y, v0.x ) ;
-		sin = Math.sin( phi ) ;
-		cos = Math.cos( phi ) ;
-		vp.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ;
-		vp.add( v0 ) ;
 
-		return polarToLocalCS( cartesianToPolarCS( vp.toCoordinate() ) ) ;
+		v0 = new Vector( sphericalToProjection( celestialToSpherical( center ) ) ) ;
+		vp = new Vector( projection ) ;
+		p = 90+Math.atan2( v0.y, v0.x ) ;
+		s = Math.sin( p ) ;
+		c = Math.cos( p ) ;
+		if ( inverse )
+			vp
+			.apply( new double[] { c, -s, 0, s, c, 0, 0, 0, 1 } )
+			.add( v0 ) ;
+		else
+			vp
+			.sub( v0 )
+			.apply( new double[] { c, s, 0, -s, c, 0, 0, 0, 1 } ) ;
+
+		return vp.toCoordinate() ;
 	}
 
-	private Coordinate localToPolarCS( Coordinate local ) {
-		return getNorthern()?flipNorthern( local ):flipSouthern( local ) ;
+	private Coordinate celestialToSpherical( Coordinate celestial ) {
+		return getNorthern() ?
+				new Coordinate( CAACoordinateTransformation.MapTo0To360Range( -celestial.x ), celestial.y ) :
+					new Coordinate( CAACoordinateTransformation.MapTo0To360Range( 180+celestial.x ), celestial.y ) ;
 	}
 
-	private Coordinate polarToCartesianCS( Coordinate polar ) {
+	private Coordinate sphericalToCelestial( Coordinate spherical ) {
+		return celestialToSpherical( spherical ) ;
+	}
+
+	private Coordinate sphericalToProjection( Coordinate spherical ) {
 		double d ;
 
-		d = distance( polar.y, false ) ;
+		d = distance( spherical.y, false ) ;
 
 		return new Coordinate(
-				d*Math.cos( polar.x ),
-				d*Math.sin( polar.x ) ) ;
+				d*Math.cos( spherical.x ),
+				d*Math.sin( spherical.x ) ) ;
 	}
 
-	private Coordinate polarToLocalCS( Coordinate polar ) {
-		return getNorthern()?flipNorthern( polar ):flipSouthern( polar ) ;
-	}
-
-	private Coordinate cartesianToPolarCS( Coordinate cartesian ) {
+	private Coordinate projectionToSpherical( Coordinate projection ) {
 		return new Coordinate(
-				CAACoordinateTransformation.MapTo0To360Range( Math.atan2( cartesian.y, cartesian.x ) ),
-				distance( java.lang.Math.sqrt( cartesian.x*cartesian.x+cartesian.y*cartesian.y ), true ) ) ;
+				CAACoordinateTransformation.MapTo0To360Range( Math.atan2( projection.y, projection.x ) ),
+				distance( java.lang.Math.sqrt( projection.x*projection.x+projection.y*projection.y ), true ) ) ;
 	}
 
-	private Coordinate flipNorthern( Coordinate value ) {
-		return new Coordinate( CAACoordinateTransformation.MapTo0To360Range( -value.x ), value.y ) ;
+	public Coordinate cartesian( Coordinate coordinate, boolean inverse ) {
+		return inverse ? 
+				sphericalToCelestial( cartesianToSpherical( coordinate ) ) :
+					sphericalToCartesian( celestialToSpherical( coordinate ) ) ;
 	}
 
-	private Coordinate flipSouthern( Coordinate value ) {
-		return new Coordinate( CAACoordinateTransformation.MapTo0To360Range( 180+value.x ), -value.y ) ;
+	private Coordinate sphericalToCartesian( Coordinate spherical ) {
+		return new Coordinate(
+				Math.cos( spherical.y )*Math.cos( spherical.x ),
+				Math.cos( spherical.y )*Math.sin( spherical.x ),
+				Math.sin( spherical.y ) ) ;
+	}
+
+	private Coordinate cartesianToSpherical( Coordinate cartesian ) {
+		double p, r, t ;
+
+		p = Math.atan2( cartesian.y, cartesian.x ) ;
+
+		r = java.lang.Math.sqrt( cartesian.x*cartesian.x+cartesian.y*cartesian.y+cartesian.z*cartesian.z ) ;
+		t = Math.asin( cartesian.z/r ) ;
+
+		return new Coordinate( p, t ) ;
 	}
 
 	abstract public double distance( double value, boolean inverse ) ;

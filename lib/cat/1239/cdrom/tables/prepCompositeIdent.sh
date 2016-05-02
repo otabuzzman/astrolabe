@@ -38,22 +38,27 @@ orderNF() {
 	esac
 }
 
+# HIP/ HD mapping
 [ -f ${outdir}/ident2.dat ] || {
 	rm -f ${outdir}/ident.dat
 	gunzip <ident2.doc.gz | norm | grow | equalNF 4 >${outdir}/ident2.dat
 }
+# HIP/ BSC (V/50) mapping
 [ -f ${outdir}/ident3.dat ] || {
 	rm -f ${outdir}/ident.dat
 	gunzip <ident3.doc.gz | norm | grow | equalNF 4 >${outdir}/ident3.dat
 }
+# HIP/ Bayer and Flamsteed mapping
 [ -f ${outdir}/ident4.dat ] || {
 	rm -f ${outdir}/ident.dat
 	gunzip <ident4.doc.gz | norm | grow | equalNF 4 | orderNF 4 >${outdir}/ident4.dat
 }
+# HIP/ Variable Star Name mapping
 [ -f ${outdir}/ident5.dat ] || {
 	rm -f ${outdir}/ident.dat
 	gunzip <ident5.doc.gz | norm | grow | equalNF 2 >${outdir}/ident5.dat
 }
+# HIP Common Name mapping
 [ -f ${outdir}/ident6.dat ] || {
 	rm -f ${outdir}/ident.dat
 	gunzip <ident6.doc.gz | norm | grow | equalNF 3 >${outdir}/ident6.dat

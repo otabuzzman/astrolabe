@@ -14,9 +14,11 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	private final static String QK_RA			= "RA" ;
 	private final static String QK_DECLINATION	= "declination" ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public BodyStellar( Projector projector ) {
+	public BodyStellar( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -25,7 +27,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		DMS dms ;
 
 		lo = valueOf( getPosition() ) ;
-		eq = projector.convert( lo, false ) ;
+		eq = converter.convert( lo, false ) ;
 
 		dms = new DMS( eq.x ) ;
 		dms.register( this, QK_RA ) ;
@@ -51,15 +53,15 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
+		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
 		if ( fov == null ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
 				fov = page.getViewGeometry() ;
 		}
 
 		lo = valueOf( getPosition() ) ;
-		xy = projector.project( lo, false ) ;
+		xy = projector.project( converter.convert( lo, false ), false ) ;
 
 		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint( xy ) ) )
 			return ;

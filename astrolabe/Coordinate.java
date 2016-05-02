@@ -26,6 +26,10 @@ public class Coordinate extends com.vividsolutions.jts.geom.Coordinate {
 		super( coordinate.X(), coordinate.Y(), coordinate.Z() ) ;
 	}
 
+	public Coordinate( double x, double y, double z ) {
+		super( x, y, z ) ;
+	}
+
 	public void register() {
 		register( this, null ) ;
 	}

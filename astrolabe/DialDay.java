@@ -56,7 +56,7 @@ public class DialDay extends DialDegree {
 		CAADate d ;
 		double jd0 ;
 
-		jd0 = baseline.scaleMarkNth( 0, 1 ) ;
+		jd0 = baseline.valueOfScaleMarkN( 0, 1 ) ;
 
 		d = new CAADate() ;
 

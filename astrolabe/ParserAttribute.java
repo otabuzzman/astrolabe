@@ -3,21 +3,6 @@ package astrolabe;
 
 public class ParserAttribute extends ParserSubstitute {
 
-	// registry key (RK_)
-	public final static String RK_PARSER = ParserAttribute.class.getName() ;
-
-	public static ParserAttribute retrieve() {
-		ParserAttribute parser ;
-
-		parser = (ParserAttribute) Registry.retrieve( RK_PARSER ) ;
-		if ( parser == null ) {
-			parser = new ParserAttribute() ;
-			Registry.register( RK_PARSER, parser ) ;
-		}
-
-		return parser ;
-	}
-
 	public String parse( String string ) {
 		String s, l, t, v ;
 		java.util.regex.Pattern p ;

@@ -7,18 +7,22 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class Vector extends Coordinate {
 
 	public Vector() {
-		super( 0, 0, 0 ) ;
+		this( 0, 0, 0 ) ;
 	}
 
 	public Vector( Vector v ) {
-		super( v.x, v.y, v.z ) ;
+		this( v.x, v.y, v.z ) ;
 	}
 
 	public Vector( Coordinate c ) {
-		super( c.x, c.y, c.z ) ;
+		this( c.x, c.y, c.z ) ;
 
 		if ( Double.doubleToRawLongBits( z ) == Double.doubleToRawLongBits( Double.NaN ) )
 			z = 0 ;
+	}
+
+	public Vector( double x, double y, double z ) {
+		super( x, y, z ) ;
 	}
 
 	public Vector neg() {

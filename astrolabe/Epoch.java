@@ -8,9 +8,6 @@ import caa.CAADate;
 @SuppressWarnings("serial")
 public class Epoch extends astrolabe.model.Epoch {
 
-	// registry key (RK_)
-	public final static String RK_EPOCH = Epoch.class.getName() ;
-
 	public Epoch() {
 		set( defoult() ) ;
 	}

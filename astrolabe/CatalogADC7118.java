@@ -41,9 +41,11 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 
 	private Hashtable<String, CatalogADC7118Record> catalog ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public CatalogADC7118( Projector projector ) {
+	public CatalogADC7118( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -138,7 +140,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 		double epoch, ra, de ;
 		Double Epoch ;
 
-		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		else
@@ -174,9 +176,9 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 			s = 0 ;
 			if ( record.size.length()>0 ) {
 				d = Double.valueOf( record.size )/60. ;
-				p = projector.project( new Coordinate( ra, de ), false ) ;
+				p = projector.project( converter.convert( new Coordinate( ra, de ), false ), false ) ;
 				vp = new Vector( p ) ;
-				a = projector.project( new Coordinate( ra+d, de ), false ) ;
+				a = projector.project( converter.convert( new Coordinate( ra+d, de ), false ), false ) ;
 				va = new Vector( a ) ;
 				s = va.sub( vp ).abs() ;
 			}
@@ -185,7 +187,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 				ps.operator.gsave() ;
 
 				if ( s>threshold ) {
-					area = new BodyAreal( projector ) ;
+					area = new BodyAreal( converter, projector ) ;
 					name = getClass().getSimpleName() ;
 					if ( record.Type.matches( "OC|Gb|C.N" ) )
 						name = name+":OC" ;
@@ -214,7 +216,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 					area.emitPS( ps ) ;
 					area.tailPS( ps ) ;
 				} else {
-					star = new BodyStellar( projector ) ;
+					star = new BodyStellar( converter, projector ) ;
 					star.setName( record.Name ) ;
 					star.initValues() ;
 
@@ -243,31 +245,31 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
-		URI cURI ;
-		URL cURL ;
-		File cFile ;
-		InputStream cCon ;
-		GZIPInputStream cGZ ;
+		URI uri ;
+		URL url ;
+		File file ;
+		InputStream in ;
+		GZIPInputStream gz ;
 
-		cURI = new URI( getUrl() ) ;
-		if ( cURI.isAbsolute() ) {
-			cFile = new File( cURI ) ;	
+		uri = new URI( getUrl() ) ;
+		if ( uri.isAbsolute() ) {
+			file = new File( uri ) ;	
 		} else {
-			cFile = new File( cURI.getPath() ) ;
+			file = new File( uri.getPath() ) ;
 		}
-		cURL = cFile.toURL() ;
+		url = file.toURL() ;
 
 		try {
-			cCon = cURL.openStream() ;
+			in = url.openStream() ;
 
-			cGZ = new GZIPInputStream( cCon ) ;
-			return new InputStreamReader( cGZ ) ;
+			gz = new GZIPInputStream( in ) ;
+			return new InputStreamReader( gz ) ;
 		} catch ( IOException egz ) {
 			try {
-				cCon = cURL.openStream() ;
+				in = url.openStream() ;
 
-				return new InputStreamReader( cCon ) ;
-			} catch ( IOException eis ) {
+				return new InputStreamReader( in ) ;
+			} catch ( IOException ein ) {
 				throw new RuntimeException ( egz.toString() ) ;
 			}
 		}

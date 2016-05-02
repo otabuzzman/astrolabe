@@ -1,7 +1,7 @@
 APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
-JDK     = /cygdrive/c/programme/java/jre1.5.0_17
+JDK     = /cygdrive/c/program\ files\ \(x86\)/java/jre1.5.0_17
 JDO		= -Xcheck:jni -Dhttp \
 			-Xmx1536m \
 			-Dftp.proxyHost=proxy.materna.de \
@@ -19,9 +19,10 @@ CAA = caa-1.17
 
 CLASSPATH = ./lib/castor-1.3.1.jar \
 	./lib/castor-1.3.1-core.jar \
-	./lib/jts-1.8.jar \
-	./lib/jtsio-1.8.jar \
+	./lib/jts-1.13.jar \
+	./lib/jtsio-1.13.jar \
 	./lib/runcc.jar \
+	./lib/commons-math3-3.1.1.jar \
 	./lib/commons-logging-1.1.1.jar
 
 JAVA_UNICODEBLOCK = $(APPL)/UnicodeBlock.java

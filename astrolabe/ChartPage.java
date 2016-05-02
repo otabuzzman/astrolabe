@@ -14,14 +14,11 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 	private double[] layRTopEdge ;
 
 	// configuration key (CK_)
-	private final static String CK_UNIT			= "unit" ;
+	private final static String CK_PSUNIT		= "psunit" ;
 	private final static String CK_LAYOUT		= "layout" ;
 
-	private final static double DEFAULT_UNIT	= 2.834646 ;
+	private final static double DEFAULT_PSUNIT	= 2.834646 ;
 	private final static String DEFAULT_LAYOUT	= "100x100" ;
-
-	// registry key (RK_)
-	public final static String RK_CHARTPAGE		= ChartPage.class.getName() ;
 
 	public double[] size() {
 		String sv, sd[] ;
@@ -53,21 +50,21 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		double[] size, view ;
-		double unit ;
+		double psunit ;
 		long seed ;
 
 		size = size() ;
 		view = view() ;
 
-		unit = Configuration.getValue( this, CK_UNIT, DEFAULT_UNIT ) ;
+		psunit = Configuration.getValue( this, CK_PSUNIT, DEFAULT_PSUNIT ) ;
 
 		ps.dsc.beginSetup() ;
 
 		ps.dict( true ) ;
 		ps.push( "/PageSize" ) ;
 		ps.array( true ) ;
-		ps.push( size[0]*unit ) ;
-		ps.push( size[1]*unit ) ;
+		ps.push( size[0]*psunit ) ;
+		ps.push( size[1]*psunit ) ;
 		ps.array( false ) ;
 		ps.dict( false ) ;
 		ps.operator.setpagedevice() ;
@@ -79,7 +76,7 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 
 		ps.dsc.beginPageSetup() ;
 
-		ps.operator.scale( unit ) ;
+		ps.operator.scale( psunit ) ;
 
 		ps.dsc.endPageSetup() ;
 

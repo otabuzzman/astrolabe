@@ -33,6 +33,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 
 	private Hashtable<String, CatalogADC6049Record> catalog ;
 
+	private Converter converter ;
 	private Projector projector ;
 
 	private String _m = new String() ;
@@ -40,7 +41,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 	private int _ca = 0 ;
 	private int _co = 0 ;
 
-	public CatalogADC6049( Projector projector ) {
+	public CatalogADC6049( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -117,7 +119,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 		double epoch ;
 		Double Epoch ;
 
-		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		else
@@ -159,7 +161,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyAreal = new BodyAreal( projector ) ;
+			bodyAreal = new BodyAreal( converter, projector ) ;
 			body.getBodyAreal().copyValues( bodyAreal ) ;
 
 			bodyAreal.register() ;
@@ -180,31 +182,31 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
-		URI cURI ;
-		URL cURL ;
-		File cFile ;
-		InputStream cCon ;
-		GZIPInputStream cGZ ;
+		URI uri ;
+		URL url ;
+		File file ;
+		InputStream in ;
+		GZIPInputStream gz ;
 
-		cURI = new URI( getUrl() ) ;
-		if ( cURI.isAbsolute() ) {
-			cFile = new File( cURI ) ;	
+		uri = new URI( getUrl() ) ;
+		if ( uri.isAbsolute() ) {
+			file = new File( uri ) ;	
 		} else {
-			cFile = new File( cURI.getPath() ) ;
+			file = new File( uri.getPath() ) ;
 		}
-		cURL = cFile.toURL() ;
+		url = file.toURL() ;
 
 		try {
-			cCon = cURL.openStream() ;
+			in = url.openStream() ;
 
-			cGZ = new GZIPInputStream( cCon ) ;
-			return new InputStreamReader( cGZ ) ;
+			gz = new GZIPInputStream( in ) ;
+			return new InputStreamReader( gz ) ;
 		} catch ( IOException egz ) {
 			try {
-				cCon = cURL.openStream() ;
+				in = url.openStream() ;
 
-				return new InputStreamReader( cCon ) ;
-			} catch ( IOException eis ) {
+				return new InputStreamReader( in ) ;
+			} catch ( IOException ein ) {
 				throw new RuntimeException ( egz.toString() ) ;
 			}
 		}

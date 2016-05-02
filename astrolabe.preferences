@@ -20,6 +20,9 @@
 						<!--astrolabe units-->
 						<entry key="halomin" value=".08"/>
 						<entry key="halomax" value=".4"/>
+						<!--used by ChartPage, Artwork.-->
+						<!--postscript units (1/72 inch) per astrolabe unit-->
+						<entry key="psunit" value="2.834646"/>
 					</map>
 				</node>
 			</node>
@@ -280,8 +283,6 @@
 			</node>
 			<node name="ChartPage">
 				<map>
-					<!--postscript units per astrolabe unit-->
-					<entry key="unit" value="2.834646"/>
 					<!--keys must equal to allowed values of concerning attributes in XSD.-->
 					<entry key="a0" value="840x1188"/>
 					<entry key="a1" value="594x840"/>
@@ -617,6 +618,24 @@
 					<entry key="logR25" value=".+"/>
 					<entry key="logD25" value=".+"/>
 				</map>
+			</node>
+			<node name="Artwork">
+				<map>
+					<entry key="dpi" value="300"/>
+					<entry key="interval" value="16"/>
+					<!--RGB from 0 to 255 each-->
+					<entry key="alpha" value="0:0:0"/>
+					<!--keys must equal to allowed values of concerning attributes in XSD.-->
+					<!--attribute practicality-->
+					<entry key="original" value="0:0:0,255:255:255"/>
+					<entry key="pale" value="208:208:208,244:244:244"/>
+				</map>
+				<node name="def">
+					<map>
+						<entry key="udot" value="{gsave currentpoint translate 0 0 .5 0 359 .5 0 moveto arc closepath fill grestore}"/>
+						<entry key="upix" value="{gsave currentpoint translate -.5 .5 .5 .5 .5 -.5 -.5 -.5 moveto lineto lineto lineto closepath fill grestore}"/>
+					</map>
+				</node>
 			</node>
 		</node>
 	</root>

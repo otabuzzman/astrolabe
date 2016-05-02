@@ -425,6 +425,10 @@ public class PostscriptStream extends FilterOutputStream {
 			push( t[1] ) ;
 			translate() ;
 		} 
+
+		public void undef() {        
+			print( "undef\n" ) ;
+		}
 	}
 
 	public class DSC {

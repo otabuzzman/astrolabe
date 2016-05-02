@@ -34,9 +34,11 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 	private Hashtable<String, CatalogADC1239HRecord> catalog ;
 
+	private Converter converter ;
 	private Projector projector ;
 
-	public CatalogADC1239H( Projector projector ) {
+	public CatalogADC1239H( Converter converter, Projector projector ) {
+		this.converter = converter ;
 		this.projector = projector ;
 	}
 
@@ -106,6 +108,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		PostscriptEmitter emitter ;
 		List<CatalogADC1239HRecord> catalog ;
 		Comparator<CatalogADC1239HRecord> comparator = new Comparator<CatalogADC1239HRecord>() {
 			public int compare( CatalogADC1239HRecord a, CatalogADC1239HRecord b ) {
@@ -126,7 +129,35 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 		double epoch, ra, de, pmRA, pmDE ;
 		Double Epoch ;
 
-		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		// Artwork.verbose() ;
+
+		for ( int a=0 ; a<getArtworkCount() ; a++ ) {
+			emitter = new Artwork( projector ) ;
+			getArtwork( a ).copyValues( emitter ) ;
+
+			ps.operator.gsave() ;
+
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		for ( int s=0 ; s<getSignCount() ; s++ ) {
+			emitter = new Sign( projector ) ;
+			getSign( s ).copyValues( emitter ) ;
+
+			ps.operator.gsave() ;
+
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
+
+			ps.operator.grestore() ;
+		}
+
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		else
@@ -180,7 +211,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyStellar = new BodyStellar( projector ) ;
+			bodyStellar = new BodyStellar( converter, projector ) ;
 			body.getBodyStellar().copyValues( bodyStellar ) ;
 
 			bodyStellar.register() ;
@@ -201,31 +232,31 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 	}
 
 	public Reader reader() throws URISyntaxException, MalformedURLException {
-		URI cURI ;
-		URL cURL ;
-		File cFile ;
-		InputStream cCon ;
-		GZIPInputStream cGZ ;
+		URI uri ;
+		URL url ;
+		File file ;
+		InputStream in ;
+		GZIPInputStream gz ;
 
-		cURI = new URI( getUrl() ) ;
-		if ( cURI.isAbsolute() ) {
-			cFile = new File( cURI ) ;	
+		uri = new URI( getUrl() ) ;
+		if ( uri.isAbsolute() ) {
+			file = new File( uri ) ;	
 		} else {
-			cFile = new File( cURI.getPath() ) ;
+			file = new File( uri.getPath() ) ;
 		}
-		cURL = cFile.toURL() ;
+		url = file.toURL() ;
 
 		try {
-			cCon = cURL.openStream() ;
+			in = url.openStream() ;
 
-			cGZ = new GZIPInputStream( cCon ) ;
-			return new InputStreamReader( cGZ ) ;
+			gz = new GZIPInputStream( in ) ;
+			return new InputStreamReader( gz ) ;
 		} catch ( IOException egz ) {
 			try {
-				cCon = cURL.openStream() ;
+				in = url.openStream() ;
 
-				return new InputStreamReader( cCon ) ;
-			} catch ( IOException eis ) {
+				return new InputStreamReader( in ) ;
+			} catch ( IOException ein ) {
 				throw new RuntimeException ( egz.toString() ) ;
 			}
 		}

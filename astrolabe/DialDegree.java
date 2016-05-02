@@ -67,11 +67,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			v = new java.util.Vector<Coordinate>() ;
 
 			span = getSpan() ;
-			o = baseline.scaleMarkNth( -1, span ) ;
+			o = baseline.valueOfScaleMarkN( -1, span ) ;
 
 			for ( m=0 ; ; m++ ) {
-				ma = baseline.scaleMarkNth( m, span ) ;
-				mo = baseline.scaleMarkNth( m+1, span ) ;
+				ma = baseline.valueOfScaleMarkN( m, span ) ;
+				mo = baseline.valueOfScaleMarkN( m+1, span ) ;
 
 				for ( Coordinate xy : baseline.list( null, ma, mo, getReflect()?-space:space ) )
 					v.add( xy ) ;
@@ -158,11 +158,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			int m = 0 ;
 
 			span = getSpan()/getGraduationSpan().getDivision() ;
-			o = baseline.scaleMarkNth( -1, span ) ;
+			o = baseline.valueOfScaleMarkN( -1, span ) ;
 
 			for ( ; ; m++ ) {
-				ma = baseline.scaleMarkNth( m, span ) ;
-				mo = baseline.scaleMarkNth( m+1, span ) ;
+				ma = baseline.valueOfScaleMarkN( m, span ) ;
+				mo = baseline.valueOfScaleMarkN( m+1, span ) ;
 
 				s = m%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
@@ -437,14 +437,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 
 		span = getSpan() ;
-		a = baseline.scaleMarkNth( 0, span ) ;
-		o = baseline.scaleMarkNth( -1, span ) ;
+		a = baseline.valueOfScaleMarkN( 0, span ) ;
+		o = baseline.valueOfScaleMarkN( -1, span ) ;
 
 		for ( int m=0 ; ; m++ ) {
-			mo = baseline.scaleMarkNth( m, span ) ;
+			mo = baseline.valueOfScaleMarkN( m, span ) ;
 
-			b = baseline.project( mo, getReflect()?-( space+thickness ):space+thickness ) ;
-			t = baseline.tangent( mo ) ;
+			b = baseline.positionOfScaleMarkValue( mo, getReflect()?-( space+thickness ):space+thickness ) ;
+			t = baseline.directionOfScaleMarkValue( mo ) ;
 			if ( getReflect() ) {
 				t.x = -t.x ;
 				t.y = -t.y ;

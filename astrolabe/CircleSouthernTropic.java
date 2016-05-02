@@ -6,8 +6,8 @@ import caa.CAANutation;
 @SuppressWarnings("serial")
 public class CircleSouthernTropic extends CircleParallel {
 
-	public CircleSouthernTropic( Projector projector ) {
-		super( projector ) ;
+	public CircleSouthernTropic( Converter converter, Projector projector ) {
+		super( converter, projector ) ;
 	}
 
 	public astrolabe.model.Angle getAngle() {
@@ -15,7 +15,7 @@ public class CircleSouthernTropic extends CircleParallel {
 		double epoch, o ;
 		Double Epoch ;
 
-		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		else

@@ -64,7 +64,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		ps.operator.gsave() ;
 
 		if ( getFrame() != null ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null ) {
 				num = Integer.parseInt( getFrame().getNumber() ) ;
 				frame = page.getFrameDef( num ) ;

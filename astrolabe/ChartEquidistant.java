@@ -41,9 +41,14 @@ public class ChartEquidistant extends ChartAzimuthalType {
 	}
 
 	public double distance( double value, boolean inverse ) {
-		if ( inverse )
-			return 90-value*90 ;
-		else
-			return ( 90-value )/90 ;
+		double v, a ;
+
+		if ( inverse ) {
+			v = 90-value*90 ;
+			return getNorthern()?v:-v ;
+		} else {
+			a = getNorthern()?value:-value ;
+			return ( 90-a )/90 ;
+		}
 	}
 }

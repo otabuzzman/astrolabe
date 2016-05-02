@@ -101,6 +101,9 @@
 							</Angle>
 						</CircleParallel>
 					</Circle>
+					<Body>
+						<BodyMoon nature="celestial"/>
+					</Body>
 					<!--MCCM-->
 					<Catalog>
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
