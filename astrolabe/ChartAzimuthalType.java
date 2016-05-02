@@ -53,16 +53,15 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public double scale() {
 		ChartPage page ;
-		double[] size ;
+		double[] view ;
 
 		page = new ChartPage() ;
 		getChartPage().setupCompanion( page ) ;
 
-		size = page.size() ;
+		view = page.view() ;
 
-		return java.lang.Math.min( size[0], size[1] )
-		/2/Math.goldensection
-		*getChartPage().getView()/100
+		return java.lang.Math.min( view[0], view[1] )/2
+		/Math.goldensection
 		*getScale()/100 ;
 	}
 

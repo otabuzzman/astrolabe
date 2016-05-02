@@ -425,6 +425,23 @@
 					</Body>
 				</HorizonGalactic>
 			</Horizon>
+			<!--milchstra&#x00df;e-->
+			<Horizon>
+				<HorizonEquatorial practicality="seldom">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<!--MCCM-->
+					<Catalog>
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
+						<CatalogDS9 name="MCCM" fov="chart" url="lib/cat/MCCM/cat_%04d.con">
+							<CatalogDS9Record select="true" nature="0.08:0"/>
+							<Level url="lib/cat/MCCM/catalog.lev"/>
+						</CatalogDS9>
+					</Catalog>
+				</HorizonEquatorial>
+			</Horizon>
 			<!--sonnenskalen-->
 			<Horizon>
 				<HorizonEquatorial practicality="always">

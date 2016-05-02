@@ -2,6 +2,7 @@
 package astrolabe;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -136,41 +137,6 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 		NoteFlag   = data.substring( 196, 197 ).trim() ;
 	}
 
-	public boolean isOK() {
-		try {
-			recognize() ;
-		} catch ( ParameterNotValidException e ) {
-			return false ;
-		}
-
-		return true ;
-	}
-
-	public void recognize() throws ParameterNotValidException {
-		Preferences node ;
-		Field token ;
-		String value ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
-
-		try {
-			for ( String key : node.keys() ) {
-				try {
-					token = getClass().getDeclaredField( key ) ;
-					value = (String) token.get( this ) ;
-					if ( ! value.matches( node.get( key, DEFAULT_TOKENPATTERN ) ) )
-						throw new ParameterNotValidException( key ) ;
-				} catch ( NoSuchFieldException e ) {
-					continue ;
-				} catch ( IllegalAccessException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-			}
-		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
-	}
-
 	public void register() {
 		MessageCatalog m ;
 		String key ;
@@ -295,12 +261,47 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 		AstrolabeRegistry.registerName( key, NoteFlag ) ;
 	}
 
-	public double[] RA() {
-		return new double[] { RAh()+RAm()/60.+RAs()/3600. } ;
+	public boolean isOK() {
+		try {
+			inspect() ;
+		} catch ( ParameterNotValidException e ) {
+			return false ;
+		}
+
+		return true ;
 	}
 
-	public double[] de() {
-		return new double[] { DEd()+DEm()/60.+DEs()/3600. } ;
+	public void inspect() throws ParameterNotValidException {
+		Preferences node ;
+		Field token ;
+		String value ;
+
+		node = Configuration.getClassNode( this, null, null ) ;
+
+		try {
+			for ( String key : node.keys() ) {
+				try {
+					token = getClass().getDeclaredField( key ) ;
+					value = (String) token.get( this ) ;
+					if ( ! value.matches( node.get( key, DEFAULT_TOKENPATTERN ) ) )
+						throw new ParameterNotValidException( key ) ;
+				} catch ( NoSuchFieldException e ) {
+					continue ;
+				} catch ( IllegalAccessException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+			}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+	}
+
+	public double RA() {
+		return RAh()+RAm()/60.+RAs()/3600. ;
+	}
+
+	public double de() {
+		return DEd()+DEm()/60.+DEs()/3600. ;
 	}
 
 	private double RAh() {
@@ -325,5 +326,13 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 
 	private double DEs() {
 		return new Double( DE+DEs ).doubleValue() ;
+	}
+
+	public List<double[]> list() {
+		List<double[]> r = new java.util.Vector<double[]>() ;
+
+		r.add( new double[] { RA(), de() } ) ;
+
+		return r ;
 	}
 }

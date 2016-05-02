@@ -47,7 +47,7 @@
 				</node>
 				<node name="Script">
 					<map>
-						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
+						<!--keys must equal to allowed values of concerning attributes in XSD.-->
 						<entry key="none" value="0"/>
 						<entry key="bodylettering0" value="3.0"/>
 						<entry key="bodylettering7" value="1.4"/>
@@ -208,7 +208,8 @@
 			<node name="GSPaintColor">
 				<map>
 					<!--value="<rd>:<gn>:<bl>" or value="<gr>"-->
-					<!--keys must equal to allowed values for practicality attributes in XSD.-->
+					<!--keys must equal to allowed values of concerning attributes in XSD.-->
+					<!--HorizonType attribute practicality-->
 					<entry key="none" value="1"/>
 					<entry key="seldom" value=".75"/>
 					<entry key="sometimes" value=".5"/>
@@ -219,7 +220,7 @@
 			<node name="GSPaintStroke">
 				<map>
 					<!--value="<linewidth>:<linedash>[:<linedash>]" or value="<linewidth>"-->
-					<!--keys must equal to allowed values for importance and nature attributes in XSD.-->
+					<!--keys must equal to allowed values of concerning attributes in XSD.-->
 					<!--CircleType attribute importance-->
 					<entry key="canonical" value=".1:0"/>
 					<entry key="cardinal" value=".5:0"/>
@@ -244,7 +245,7 @@
 			</node>
 			<node name="ChartPage">
 				<map>
-					<!--keys must equal to allowed values for size atttribue in XSD.-->
+					<!--keys must equal to allowed values of concerning attributes in XSD.-->
 					<entry key="a0" value="840x1188"/>
 					<entry key="a1" value="594x840"/>
 					<entry key="a2" value="420x594"/>

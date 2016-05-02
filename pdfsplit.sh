@@ -1,4 +1,4 @@
-# ./pdfsplit.sh <first page> <last page> <page offset> <autput page file name template> <pdf>
+# ./pdfsplit.sh <first page> <last page> <page offset> <output page file name template> <pdf>
 #
 
 set -o errexit

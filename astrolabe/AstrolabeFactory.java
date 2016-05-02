@@ -255,6 +255,7 @@ public final class AstrolabeFactory {
 		CatalogADC6049 c6049 ;
 		CatalogADC7118 c7118 ;
 		CatalogADC7237 c7237 ;
+		CatalogDS9 cDS9 ;
 
 		if ( catalog.getCatalogADC1239H() != null ) {
 			c1239h = new CatalogADC1239H( projector ) ;
@@ -292,12 +293,18 @@ public final class AstrolabeFactory {
 			c7118.register() ;
 
 			return c7118 ;
-		} else { // catalog.getCatalogADC7237() != null
+		} else if ( catalog.getCatalogADC7237() != null ) {
 			c7237 = new CatalogADC7237( projector ) ;
 			catalog.getCatalogADC7237().setupCompanion( c7237 ) ;
 			c7237.register() ;
 
 			return c7237 ;
+		} else { // catalog.getCatalogDS9() != null
+			cDS9 = new CatalogDS9( projector ) ;
+			catalog.getCatalogDS9().setupCompanion( cDS9 ) ;
+			cDS9.register() ;
+
+			return cDS9 ;
 		}
 	}
 

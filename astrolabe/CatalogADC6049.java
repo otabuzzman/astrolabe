@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.logging.Log;
@@ -81,7 +82,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 
 			while ( ( record = record( reader ) ) != null ) {
 				try {
-					record.recognize() ;
+					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
@@ -118,10 +119,6 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		catalog.clear() ;
 	}
 
-	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalog.get( ident ) ;
-	}
-
 	public CatalogRecord[] getCatalogRecord() {
 		return catalog.values().toArray( new CatalogRecord[0] ) ;
 	}
@@ -134,7 +131,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		BodyAreal bodyAreal ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
-		double epoch, RAh[], DEd[] ;
+		List<double[]> list ;
+		double epoch, eq[] ;
 
 		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
@@ -156,10 +154,10 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 
 			body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
 
-			RAh = record.RA() ;
-			DEd = record.de() ;
-			for ( int p=0 ; p<RAh.length ; p++ ) {
-				ceq = CAAPrecession.PrecessEquatorial( RAh[p], DEd[p], 2451545./*J2000*/, epoch ) ;
+			list = record.list() ;
+			for ( int p=0 ; p<list.size() ; p++ ) {
+				eq = list.get( p ) ;
+				ceq = CAAPrecession.PrecessEquatorial( eq[0], eq[1], 2451545./*J2000*/, epoch ) ;
 				pm = new astrolabe.model.Position() ;
 				// astrolabe.model.SphericalType
 				pm.setR( new astrolabe.model.R() ) ;

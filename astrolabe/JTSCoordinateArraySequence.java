@@ -1,12 +1,14 @@
 
 package astrolabe;
 
+import java.util.List;
+
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 @SuppressWarnings("serial")
 public class JTSCoordinateArraySequence extends CoordinateArraySequence {
 
-	public JTSCoordinateArraySequence( java.util.List<double[]> coordinates ) {
+	public JTSCoordinateArraySequence( List<double[]> coordinates ) {
 		super( coordinates.size() ) ;
 
 		double[] xy ;

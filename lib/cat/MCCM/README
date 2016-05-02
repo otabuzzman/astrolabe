@@ -1,0 +1,34 @@
+MCCM - The Milkyway Contour Catalogue based on Mellinger's Milky Way Panorama
+-----------------------------------------------------------------------------
+
+Catalogue creation:
+===================
+
+1. Get public version of Axel Mellinger's panorama from
+	http://galaxy.phy.cmich.edu/~axel/mwpan2/mwpan2_RGB_3600.fits
+2. Use SExtractor (see sex.sh) to extract milkyway from panorama
+	(see mwpan2_RGB_3600_background_SEx.fits)
+3. Use fitsworks (http://www.fitswork.de/software/) to load/ save
+	result because SExtractor background output crashes ds9
+	(mwpan2_RGB_3600_background_NX3.fits)
+4. Use ds9 (http://hea-www.harvard.edu/RD/ds9/) to create contour
+	maps from fitsworks result.
+	- Choose levels of interest and store them in a .lev file (see catalog.lev)
+	- Make one contour file for each level (see cat_%04d.con to relate with
+	  index of level file entry starting from 0) to draw different levels
+	  in different styles.
+	- Make one contour file for all to draw them for instance as isobars.
+
+-----------------------------------------------------------------------------
+
+Catalogue explanation:
+======================
+
+Contour elements with equal coordinates in their first and last entries are
+considered to be rings in a geometrical sense.
+
+Contour elements with unequal coordinates in their first and last entries are
+considered to be lines in a geometrical sense.
+If b of an element's last coordinate equals b of is's successor first or
+(exclusive) l equals l these elements are considered to be connected (might
+occur if contour is interrupted by edge of map).

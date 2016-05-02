@@ -20,10 +20,10 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 	private int _le = 0 ;
 
-	public List<String>	RAh  ; // Right ascension in decimal hours (J2000)
-	public List<String>	DEd ; // Declination in degrees (J2000)
-	public String		con   ; // Constellation abbreviation
-	public String		type  ; // [OI] Type of point (Original or Interpolated)
+	public List<String>	RAh		; // Right ascension in hours
+	public List<String>	DEd		; // Declination in degrees
+	public String		con		; // Constellation abbreviation
+	public String		type	; // [OI] Type of point (Original or Interpolated)
 
 	public CatalogADC6049Record( String data ) throws ParameterNotValidException {
 		BufferedReader b ;
@@ -44,10 +44,12 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 			while ( ( l = b.readLine() ) != null ) {
 				if ( l.length() != _le ) {
-					throw new ParameterNotValidException(  Integer.toString( l.length() ) ) ;
+					throw new ParameterNotValidException( l ) ;
 				}
 
 				lv = l.trim().split( "[ ]+" ) ;
+				if ( lv.length != 4 )
+					throw new ParameterNotValidException( l ) ;
 				RAh.add( lv[0] ) ;
 				DEd.add( lv[1] ) ;
 			}
@@ -68,44 +70,6 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 			}
 			pra = ra ;
 			pde = de ;
-		}
-	}
-
-	public boolean isOK() {
-		try {
-			recognize() ;
-		} catch ( ParameterNotValidException e ) {
-			return false ;
-		}
-
-		return true ;
-	}
-
-	public void recognize() throws ParameterNotValidException {
-		Preferences node ;
-		Field token ;
-		Object value ;
-		String pattern ;
-
-		node = Configuration.getClassNode( this, null, null ) ;
-
-		try {
-			for ( String key : node.keys() ) {
-				try {
-					token = getClass().getDeclaredField( key ) ;
-					value = token.get( this ) ;
-					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
-					for ( String v : unsafecast( value ) )
-						if ( ! v.matches( pattern ) )
-							throw new ParameterNotValidException( key ) ;
-				} catch ( NoSuchFieldException e ) {
-					continue ;
-				} catch ( IllegalAccessException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-			}
-		} catch ( BackingStoreException e ) {
-			throw new RuntimeException( e.toString() ) ;
 		}
 	}
 
@@ -141,29 +105,65 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		AstrolabeRegistry.registerName( k, v ) ;
 	}
 
-	public double[] RA() {
-		double[] ra = new double[RAh.size()] ;
+	public boolean isOK() {
+		try {
+			inspect() ;
+		} catch ( ParameterNotValidException e ) {
+			return false ;
+		}
 
-		for ( int i=0 ; i<RAh.size() ; i++ )
-			ra[i] = RAh( i ) ;
-
-		return ra ;
+		return true ;
 	}
 
-	public double[] de() {
-		double[] r = new double[DEd.size()] ;
+	public void inspect() throws ParameterNotValidException {
+		Preferences node ;
+		Field token ;
+		Object value ;
+		String pattern ;
 
-		for ( int i=0 ; i<DEd.size() ; i++ )
-			r[i] = DEd( i ) ;
+		node = Configuration.getClassNode( this, null, null ) ;
+
+		try {
+			for ( String key : node.keys() ) {
+				try {
+					token = getClass().getDeclaredField( key ) ;
+					value = token.get( this ) ;
+					pattern = node.get( key, DEFAULT_TOKENPATTERN ) ;
+					for ( String v : unsafecast( value ) )
+						if ( ! v.matches( pattern ) )
+							throw new ParameterNotValidException( key ) ;
+				} catch ( NoSuchFieldException e ) {
+					continue ;
+				} catch ( IllegalAccessException e ) {
+					throw new RuntimeException( e.toString() ) ;
+				}
+			}
+		} catch ( BackingStoreException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		}
+	}
+
+	public double RA() {
+		return new Double( RAh.get( 0 ) ).doubleValue() ;		
+	}
+
+	public double de() {
+		return new Double( DEd.get( 0 ) ).doubleValue() ;
+	}
+
+	public List<double[]> list() {
+		List<double[]> r = new java.util.Vector<double[]>() ;
+		String RA, de ;
+
+		for ( int i=0 ; i<RAh.size() ; i++ ) {
+			RA = RAh.get( i ) ;
+			de = DEd.get( i ) ;
+
+			r.add( new double[] {
+					Double.valueOf( RA ),
+					Double.valueOf( de ) } ) ;
+		}
 
 		return r ;
-	}
-
-	private double RAh( int index ) {
-		return new Double( RAh.get( index ) ).doubleValue() ;		
-	}
-
-	private double DEd( int index ) {
-		return new Double( DEd.get( index ) ).doubleValue() ;
 	}
 }

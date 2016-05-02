@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2000" m="1" d="1"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage size="a0" view="100"/>
+			<Center>
+				<phi>
+					<Rational value="0"/>
+				</phi>
+				<theta>
+					<Rational value="90.0"/>
+				</theta>
+			</Center>
+			<!--fov sternkarte-->
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="MCCM"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<!--eqp-24.5-->
+					<Circle>
+						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<!--äquatorial-->
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="MCCM"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.2"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.4"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<!--MCCM-->
+					<Catalog>
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
+						<CatalogDS9 name="MCCM" fov="chart" url="lib/cat/MCCM/cat_%04d.con">
+							<CatalogDS9Record select="true" nature="0.24:0"/>
+							<Level url="lib/cat/MCCM/catalog.lev"/>
+						</CatalogDS9>
+					</Catalog>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>

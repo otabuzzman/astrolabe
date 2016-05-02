@@ -89,7 +89,7 @@ public class AstrolabeRegistry extends Registry {
 					( jtscoordinate.x < 0 && jtscoordinate.y >= 0 ) ? 2 :
 						( jtscoordinate.x < 0 && jtscoordinate.y < 0 ) ? 3 : 4 ) ;
 		ind = m.message( ApplicationConstant.LK_INDICTAOR_JTSCOORDINATE_BOUNDARY ) ;
-		AstrolabeRegistry.registerNumber( key+ind, jtscoordinate.boundary( fov.getEnvelopeInternal() ) ) ;
+		AstrolabeRegistry.registerNumber( key+ind, jtscoordinate.edge( fov.getEnvelopeInternal() ) ) ;
 	}
 
 	public static void registerNumber( String key, double value, int precision ) {

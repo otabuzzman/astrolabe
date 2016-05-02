@@ -80,7 +80,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 			while ( ( record = record( reader ) ) != null ) {
 				try {
-					record.recognize() ;
+					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
@@ -115,10 +115,6 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 	public void delAllCatalogRecord() {
 		catalog.clear() ;
-	}
-
-	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalog.get( ident ) ;
 	}
 
 	public CatalogRecord[] getCatalogRecord() {
@@ -167,7 +163,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 			if ( record.pmDE.length()>0 )
 				pmDE = new Double( record.pmDE ).doubleValue() ;
 			cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
-					epoch-2451545., record.RA()[0], record.de()[0], pmRA/1000., pmDE/1000. ) ;
+					epoch-2451545., record.RA(), record.de(), pmRA/1000., pmDE/1000. ) ;
 			ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
 			ra = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
 			de = ceq.Y() ;

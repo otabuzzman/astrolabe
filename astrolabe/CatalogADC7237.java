@@ -80,7 +80,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 
 			while ( ( record = record( reader ) ) != null ) {
 				try {
-					record.recognize() ;
+					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
@@ -115,10 +115,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 
 	public void delAllCatalogRecord() {
 		catalog.clear() ;
-	}
-
-	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalog.get( ident ) ;
 	}
 
 	public CatalogRecord[] getCatalogRecord() {
@@ -165,8 +161,8 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 		Collections.sort( catalog, comparator ) ;
 
 		for ( CatalogADC7237Record record : catalog ) {
-			ra = CAACoordinateTransformation.HoursToDegrees( record.RA()[0] ) ;
-			de = record.de()[0] ;
+			ra = CAACoordinateTransformation.HoursToDegrees( record.RA() ) ;
+			de = record.de() ;
 			p = projector.project( ra, de ) ;
 			if ( ! fov.covers( new GeometryFactory().createPoint( new JTSCoordinate( p ) ) ) )
 				continue ;

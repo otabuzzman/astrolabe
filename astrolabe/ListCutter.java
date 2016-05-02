@@ -12,9 +12,14 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 
 	private Geometry fov ;
 
+	public ListCutter( Geometry fov ) {
+		this( null, fov ) ;
+	}
+
 	public ListCutter( List<double[]> list, Geometry fov ) {
-		for ( double[] xy : list )
-			add( xy ) ;
+		if ( list != null )
+			for ( double[] xy : list )
+				add( xy ) ;
 
 		this.fov = new GeometryFactory().createGeometry( fov ) ;
 	}
@@ -102,13 +107,8 @@ public class ListCutter extends java.util.Vector<double[]> implements Postscript
 			s = new java.util.Vector<double[]>() ;
 			s.add( xyA ) ;
 
-			ia = segmentByIndex[0] ;
-			io = segmentByIndex[1] ;
-			if ( ia == 0 )
-				ia++ ;
-			if ( io == size()-1 )
-				io-- ;
-
+			ia = segmentByIndex[0]+1 ;
+			io = segmentByIndex[1]-1 ;
 			if ( io>=ia )
 				for ( double[] xy : subList( ia, io+1 ) ) {
 					s.add( xy ) ;

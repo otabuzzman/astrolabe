@@ -82,7 +82,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Ca
 
 			while ( ( record = record( reader ) ) != null ) {
 				try {
-					record.recognize() ;
+					record.inspect() ;
 				} catch ( ParameterNotValidException e ) {
 					String msg ;
 
@@ -117,10 +117,6 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Ca
 
 	public void delAllCatalogRecord() {
 		catalog.clear() ;
-	}
-
-	public CatalogRecord getCatalogRecord( String ident ) {
-		return catalog.get( ident ) ;
 	}
 
 	public CatalogRecord[] getCatalogRecord() {
@@ -168,7 +164,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Ca
 		Collections.sort( catalog, comparator ) ;
 
 		for ( CatalogADC7118Record record : catalog ) {
-			ceq = CAAPrecession.PrecessEquatorial( record.RA()[0], record.de()[0], 2451545./*J2000*/, epoch ) ;
+			ceq = CAAPrecession.PrecessEquatorial( record.RA(), record.de(), 2451545./*J2000*/, epoch ) ;
 			ra = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
 			de = ceq.Y() ;
 			ceq.delete() ;

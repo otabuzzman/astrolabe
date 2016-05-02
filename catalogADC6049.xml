@@ -54,6 +54,57 @@
 						<CircleParallel importance="canonical">
 							<Begin>
 								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.2"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.4"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
 									<DMS neg="false" deg="5" min="0" sec="0"/>
 								</Angle>
 							</Begin>
