@@ -45,6 +45,22 @@
 						</map>
 					</node>
 				</node>
+				<node name="Script">
+					<map>
+						<!--keys must equal to allowed values for purpose atttribue in XSD.-->
+						<entry key="none" value="0"/>
+						<entry key="bodylettering0" value="3.0"/>
+						<entry key="bodylettering7" value="1.4"/>
+						<entry key="titlelettering" value="5.8"/>
+						<entry key="textlettering" value="4.4"/>
+						<entry key="circlelettering" value="3.8"/>
+						<entry key="diallettering" value="2.4"/>
+						<entry key="dialcardinal" value="3.8"/>
+						<entry key="dialfraction" value="2.6"/>
+						<entry key="guidance" value="1.6"/>
+						<entry key="obscure" value=".2"/>
+					</map>
+				</node>
 			</node>
 			<node name="Astrolabe">
 				<map>
@@ -264,12 +280,9 @@
 				</map>
 			</node>
 			<node name="DialDegree">
-				<map/>
-				<node name="annotation">
-					<map>
-						<entry key="rise" value="3.2"/>
-					</map>
-				</node>
+				<map>
+					<entry key="rise" value="3.2"/>
+				</map>
 				<node name="baseline">
 					<map/>
 					<node name="none">
@@ -293,12 +306,9 @@
 				</node>
 			</node>
 			<node name="DialHour">
-				<map/>
-				<node name="annotation">
-					<map>
-						<entry key="rise" value="3.2"/>
-					</map>
-				</node>
+				<map>
+					<entry key="rise" value="3.2"/>
+				</map>
 				<node name="baseline">
 					<map/>
 					<node name="none">
@@ -322,17 +332,15 @@
 				</node>
 			</node>
 			<node name="DialDay">
-				<map/>
-				<node name="annotation">
-					<map>
-						<entry key="rise" value="3.2"/>
-					</map>
-				</node>
+				<map>
+					<entry key="rise" value="3.2"/>
+				</map>
 				<node name="baseline">
 					<map/>
 					<node name="none">
 						<map>
 							<entry key="space" value="1"/>
+							<entry key="thickness" value="0"/>
 						</map>
 					</node>
 					<node name="line">
@@ -404,22 +412,6 @@
 					<entry key="bottomright" value="1:0"/>
 				</map>
 			</node>
-			<node name="Script">
-				<map>
-					<!--keys must equal to allowed values for purpose atttribue in XSD.-->
-					<entry key="none" value="0"/>
-					<entry key="bodylettering0" value="3.0"/>
-					<entry key="bodylettering7" value="1.4"/>
-					<entry key="titlelettering" value="5.8"/>
-					<entry key="textlettering" value="4.4"/>
-					<entry key="circlelettering" value="3.8"/>
-					<entry key="diallettering" value="2.4"/>
-					<entry key="dialcardinal" value="3.8"/>
-					<entry key="dialfraction" value="2.6"/>
-					<entry key="guidance" value="1.6"/>
-					<entry key="obscure" value=".2"/>
-				</map>
-			</node>
 			<node name="BodyPlanet">
 				<map/>
 				<node name="mercury">
@@ -486,7 +478,7 @@
 					</map>
 				</node>
 			</node>
-			<node name="OutlineElliptical">
+			<node name="ShapeElliptical">
 				<map>
 					<entry key="interval" value="10"/>
 				</map>

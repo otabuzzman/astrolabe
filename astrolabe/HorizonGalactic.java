@@ -9,31 +9,26 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 
 	private Projector projector ;
 
-	private double la ;
-	private double ST ;
+	public HorizonGalactic( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	public HorizonGalactic( Peer peer, Projector projector ) {
-		peer.setupCompanion( this ) ;
-
+	public void register() {
 		CAA2DCoordinate c ;
 		double[] eq = new double[2] ;
 		MessageCatalog m ;
 		String key ;
 
-		this.projector = projector ;
-
 		c = CAACoordinateTransformation.Galactic2Equatorial( 0, 90 ) ;
 		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 		eq[1] = c.Y() ;
-		la = eq[1] ;
-		ST = eq[0] ;
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
-		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, la ) ;		
 		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-		AstrolabeRegistry.registerHMS( key, ST ) ;
+		AstrolabeRegistry.registerHMS( key, eq[0] ) ;
+		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, eq[1] ) ;		
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -47,9 +42,11 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
-			PostscriptEmitter annotation ;
+			AnnotationStraight annotation ;
 
-			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
+			annotation = new AnnotationStraight() ;
+			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			annotation.register() ;
 
 			ps.operator.gsave() ;
 

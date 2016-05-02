@@ -35,9 +35,9 @@ public class PolygonSphere {
 	private static double transform( double[] p, double[] q ) {
 		double t, b ;
 
-		t = Math.sin( q[1]-p[1] )*Math.cos( q[2] ) ;
-		b = Math.sin( q[2] )*Math.cos( p[2] )
-		-Math.cos( q[2] )*Math.sin( p[2] )*Math.cos( q[1]-p[1] ) ;
+		t = Math.sin( q[0]-p[0] )*Math.cos( q[1] ) ;
+		b = Math.sin( q[1] )*Math.cos( p[1] )
+		-Math.cos( q[1] )*Math.sin( p[1] )*Math.cos( q[0]-p[0] ) ;
 
 		return Math.atan2( t, b ) ;
 	}

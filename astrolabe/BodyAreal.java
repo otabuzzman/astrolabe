@@ -14,50 +14,23 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	private Projector projector ;
 
-	private List<double[]> outline = new java.util.Vector<double[]>() ;
+	public BodyAreal( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	public BodyAreal( Peer peer, Projector projector ) {
+	public void register() {
 		PolygonSphere polygon ;
-		List<double[]> position ;
-		double lo, la ;
 		double sr, sd ;
-		OutlineElliptical ellipse ;
 		MessageCatalog m ;
 		String key ;
 
-		peer.setupCompanion( this ) ;
-
-		this.projector = projector ;
-
 		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
-			position = new java.util.Vector<double[]>() ;
-			for ( double[] p : AstrolabeFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
-				lo = CAACoordinateTransformation.MapTo0To360Range( p[1] ) ;
-				if ( lo>180 )
-					lo = lo-360 ;
-
-				la = CAACoordinateTransformation.MapTo0To360Range( p[2] ) ;
-				if ( la>180 )
-					la = la-360 ;
-				if ( la>90 )
-					la = 180-la ;
-				if ( la<-90 )
-					la = -180-la ;
-
-				position.add( new double[] { 1, lo, la } ) ;
-				outline.add( projector.project( lo, la ) ) ;
-			}
-
-			polygon = new PolygonSphere( position ) ;
+			polygon = new PolygonSphere( list() ) ;
 			sr = polygon.area() ;
 			if ( sr>( 2*java.lang.Math.PI ) )
 				sr = 4*java.lang.Math.PI-sr ;
 			sd = sr/java.lang.Math.pow( ( 2*java.lang.Math.PI/360. ), 2 ) ;
 		} else {
-			ellipse = new OutlineElliptical( getBodyArealTypeChoice().getOutlineElliptical(), projector ) ;
-
-			outline.addAll( ellipse.list() ) ;
-
 			sr = 0 ;
 			sd = 0 ;
 		}
@@ -74,6 +47,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		GSPaintStroke nature ;
 
 		nature = new GSPaintStroke( getNature(), getName() ) ;
+
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;
@@ -101,10 +75,10 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 		if ( fov == null ) {
-			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		}
 
-		cutter = new ListCutter( outline, fov ) ;
+		cutter = new ListCutter( list(), fov ) ;
 
 		segment = cutter.segmentsIntersecting( true ) ;
 		if ( segment.size()>1 )
@@ -129,11 +103,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
 
 			ps.operator.mul( 2 ) ;
@@ -184,6 +158,35 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	}
 
 	public List<double[]> list() {
-		return new java.util.Vector<double[]>( outline ) ;
+		List<double[]> outline ;
+		ShapeElliptical ellipse ;
+		double lo, la ;
+
+		outline = new java.util.Vector<double[]>() ;
+
+		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
+			for ( double[] position : AstrolabeFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
+				lo = CAACoordinateTransformation.MapTo0To360Range( position[1] ) ;
+				if ( lo>180 )
+					lo = lo-360 ;
+
+				la = CAACoordinateTransformation.MapTo0To360Range( position[2] ) ;
+				if ( la>180 )
+					la = la-360 ;
+				if ( la>90 )
+					la = 180-la ;
+				if ( la<-90 )
+					la = -180-la ;
+
+				outline.add( projector.project( lo, la ) ) ;
+			}
+		} else {
+			ellipse = new ShapeElliptical( projector ) ;
+			getBodyArealTypeChoice().getShapeElliptical().setupCompanion( ellipse ) ;
+
+			outline.addAll( ellipse.list() ) ;
+		}
+
+		return outline ;
 	}
 }

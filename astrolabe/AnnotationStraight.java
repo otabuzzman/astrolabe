@@ -8,13 +8,13 @@ import astrolabe.UnicodePostscriptStream.UnicodeControlBlock;
 @SuppressWarnings("serial")
 public class AnnotationStraight extends astrolabe.model.AnnotationStraight implements PostscriptEmitter {
 
-	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
-	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
-	private final static double DEFAULT_SUPERSCRIPTSHRINK = .8 ;
-	private final static double DEFAULT_SUPERSCRIPTSHIFT = .5 ;
+	private final static double DEFAULT_SUBSCRIPTSHRINK		= .8 ;
+	private final static double DEFAULT_SUBSCRIPTSHIFT		= -.3 ;
+	private final static double DEFAULT_SUPERSCRIPTSHRINK	= .8 ;
+	private final static double DEFAULT_SUPERSCRIPTSHIFT	= .5 ;
 
-	private final static double DEFAULT_MARGIN = 1.2 ;
-	private final static double DEFAULT_RISE = 1.2 ;
+	private final static double DEFAULT_MARGIN				= 1.2 ;
+	private final static double DEFAULT_RISE				= 1.2 ;
 
 	private double subscriptshrink ;
 	private double subscriptshift ;
@@ -24,37 +24,44 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 	private double margin ;
 	private double rise ;
 
-	public AnnotationStraight( Peer peer ) {
+	public void register() {
 		Preferences node ;
-
-		peer.setupCompanion( this ) ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
-		subscriptshrink = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		subscriptshrink = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		margin = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
+		margin = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		astrolabe.model.Script script ;
 		Layout layout ;
 		Frame frame ;
-		Script script ;
-		int ns, n0 ;
+		int number, ns, n0 ;
 		double p, height ;
 
 		ps.operator.gsave() ;
 
 		if ( getFrame() != null ) {
-			layout = (Layout) AstrolabeRegistry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
-			frame = new Frame( getFrame(), layout ) ;
+			layout = (Layout) Registry.retrieve( ApplicationConstant.GC_LAYOUT ) ;
+			number = Integer.parseInt( getFrame().getNumber() ) ;
+
+			frame = new Frame( layout.frame( number ) ) ;
+			getFrame().setupCompanion( frame ) ;
 
 			frame.headPS( ps ) ;
 			frame.emitPS( ps ) ;
@@ -63,7 +70,8 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 		ps.array( true ) ;
 		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
-			script = new Script( getScript( ns ) ) ;
+			script = new astrolabe.model.Script() ;
+			getScript( ns ).setupCompanion( script ) ;
 
 			p = Configuration.getValue(
 					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;

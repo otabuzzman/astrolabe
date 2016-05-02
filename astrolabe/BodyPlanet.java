@@ -15,95 +15,64 @@ import caa.CAADate;
 @SuppressWarnings("serial")
 public class BodyPlanet extends astrolabe.model.BodyPlanet implements PostscriptEmitter, Baseline {
 
-	private final static double DEFAULT_INTERVAL = 1 ;
-	private final static double DEFAULT_STRETCH = 0 ;
-
-	private double jdAy ;
-	private double jdOy ;
+	private final static double DEFAULT_INTERVAL	= 1 ;
+	private final static double DEFAULT_STRETCH		= 0 ;
 
 	private Projector projector ;
 
-	private double interval ;
-	private double stretch ;
+	public BodyPlanet( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	private Method eclipticLongitude ;
-	private Method eclipticLatitude ;
+	public double[] epoch() {
+		double epochgc, epochlo ;
+		double jdAy, jdOy ;
+		CAADate epoch ;
+		long year ;
 
-	public BodyPlanet( Peer peer, Projector projector ) {
-		Preferences node ; 
-		CAADate date ;
-		double epochG, epochL, epochA, epochO ;
-		long y ;
+		epochgc = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
-		peer.setupCompanion( this ) ;
+		epoch = new CAADate() ;
+		epoch.Set( epochgc, true ) ;
 
-		date = new CAADate() ;
-
-		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
-
-		date.Set( epochG, true ) ;
-		y = date.Year() ;
-		date.Set( y, 1, 1, 0, 0, 0, true ) ;
-		jdAy = date.Julian() ;
-		date.Set( y, 12, 31, 0, 0, 0, true ) ;
-		jdOy = date.Julian() ;
+		year = epoch.Year() ;
+		epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
+		jdAy = epoch.Julian() ;
+		epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
+		jdOy = epoch.Julian() ;
 
 		if ( getEpoch() != null ) {
-			epochL = AstrolabeFactory.valueOf( getEpoch() ) ;
-			date.Set( epochL, true ) ;
-			y = date.Year() ;
-			date.Set( y, 1, 1, 0, 0, 0, true ) ;
-			jdAy = date.Julian() ;
-			date.Set( y, 12, 31, 0, 0, 0, true ) ;
-			jdOy = date.Julian() ;
+			epochlo = AstrolabeFactory.valueOf( getEpoch() ) ;
+			epoch.Set( epochlo, true ) ;
 
-			date.Set( epochL, true ) ;
+			year = epoch.Year() ;
+			epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
+			jdAy = epoch.Julian() ;
+			epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
+			jdOy = epoch.Julian() ;
 
+			epoch.Set( epochlo, true ) ;
 			if ( getEpoch().getA() != null ) {
-				epochA = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
-				jdAy = epochA ;
-				jdOy = date.Julian() ;
+				jdAy = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
+				jdOy = epoch.Julian() ;
 			}
-
 			if ( getEpoch().getO() != null ) {
-				epochO = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
-				jdOy = epochO ;
 				if ( getEpoch().getA() == null )
-					jdAy = date.Julian() ;
+					jdAy = epoch.Julian() ;
+				jdOy = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
 			}
 		}
 
-		date.delete() ;
+		epoch.delete() ;
 
-		this.projector = projector ;
-
-		node = Configuration.getClassNode( this, getName(), getType() ) ;
-
-		interval = Configuration.getValue( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
-		if ( getStretch() ) {
-			stretch = Configuration.getValue( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
-		} else {
-			stretch = 0 ;
-		}
-
-		try {
-			Class<?> c ;
-
-			c = Class.forName( "caa.CAA"+getType().substring( 0, 1 ).toUpperCase()+getType().substring( 1 ) ) ;
-
-			eclipticLongitude = c.getMethod( "EclipticLongitude", new Class[] { double.class } ) ;
-			eclipticLatitude = c.getMethod( "EclipticLatitude", new Class[] { double.class } ) ;
-		} catch ( ClassNotFoundException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( NoSuchMethodException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		}
+		return new double[] { jdAy, jdOy } ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 		GSPaintStroke nature ;
 
 		nature = new GSPaintStroke( getNature(), getName() ) ;
+
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;
@@ -118,26 +87,28 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		Geometry fov ;
 		astrolabe.model.BodyPlanet peer ;
 		BodyPlanet body ;
-		List<int[]> idlist ;
-		List<Double> jdlist ;
+		List<int[]> listid ;
+		List<Double> listjd ;
 		double jdAe, jdOe ;
 		List<double[]> l ;
-		double[] xy ;
+		double[] epoch, xy ;
+
+		epoch = epoch() ;
 
 		if ( cut ) {
 			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 			if ( fov == null ) {
-				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			}
 
-			jdlist = new java.util.Vector<Double>() ;
-			cutter = new ListCutter( list( jdlist ), fov ) ;
+			listjd = new java.util.Vector<Double>() ;
+			cutter = new ListCutter( list( listjd, epoch[0], epoch[1], 0 ), fov ) ;
 
-			idlist = new java.util.Vector<int[]>() ;
-			cutter.segmentsInterior( idlist ) ;
-			for ( int[] jdid : idlist ) {
-				jdAe = jdlist.get( jdid[0] ) ;
-				jdOe = jdlist.get( jdid[1] ) ;
+			listid = new java.util.Vector<int[]>() ;
+			cutter.segmentsInterior( listid ) ;
+			for ( int[] jdid : listid ) {
+				jdAe = listjd.get( jdid[0] ) ;
+				jdOe = listjd.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodyPlanet() ;
 				if ( getName() == null )
@@ -167,7 +138,8 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 					throw new RuntimeException( e.toString() ) ;
 				}
 
-				body = new BodyPlanet( peer, projector ) ;
+				body = new BodyPlanet( projector ) ;
+				peer.setupCompanion( body ) ;
 
 				ps.operator.gsave();
 
@@ -178,7 +150,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				ps.operator.grestore() ;
 			}
 		} else {
-			l = list( jdAy, jdOy, 0 ) ;
+			l = list( null, epoch[0], epoch[1], 0 ) ;
 			ps.array( true ) ;
 			for ( int n=0 ; n<l.size() ; n++ ) {
 				xy = l.get( n ) ;
@@ -195,11 +167,11 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
 
 			ps.operator.mul( 2 ) ;
@@ -218,9 +190,11 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 			if ( getDialDay() != null ) {
 				PostscriptEmitter dial ;
 
+				dial = new DialDay( this ) ;
+				getDialDay().setupCompanion( dial ) ;
+
 				ps.operator.gsave() ;
 
-				dial = new DialDay( getDialDay(), this ) ;
 				dial.headPS( ps ) ;
 				dial.emitPS( ps ) ;
 				dial.tailPS( ps ) ;
@@ -232,9 +206,10 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 				PostscriptEmitter annotation ;
 
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+
 					ps.operator.gsave() ;
 
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
 					annotation.headPS( ps ) ;
 					annotation.emitPS( ps ) ;
 					annotation.tailPS( ps ) ;
@@ -246,10 +221,6 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
-	}
-
-	public double[] project( double jd ) {
-		return project( jd, 0 ) ;
 	}
 
 	public double[] project( double jd, double shift ) {
@@ -274,13 +245,36 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 	public double[] convert( double jd ) {
 		double[] r = new double[2] ;
 		double l, b ;
+		Class<?> c ;
+		double stretch ;
+		Preferences node ;
+		Method eclipticLongitude ;
+		Method eclipticLatitude ;
 
 		l = 0 ;
 		b = 0 ;
 
+		node = Configuration.getClassNode( this, getName(), getType() ) ;
+
+		if ( getStretch() ) {
+			stretch = Configuration.getValue( node,
+					ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
+		} else {
+			stretch = 0 ;
+		}
+
 		try {
+			c = Class.forName( "caa.CAA"+getType().substring( 0, 1 ).toUpperCase()+getType().substring( 1 ) ) ;
+
+			eclipticLongitude = c.getMethod( "EclipticLongitude", new Class[] { double.class } ) ;
+			eclipticLatitude = c.getMethod( "EclipticLatitude", new Class[] { double.class } ) ;
+
 			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } ) ;
+		} catch ( ClassNotFoundException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( NoSuchMethodException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvocationTargetException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( IllegalAccessException e ) {
@@ -288,7 +282,7 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		}
 
 		r[0] = l ;
-		r[1] = b+( jd-jdAy )*90/90*stretch ;
+		r[1] = b+( jd-epoch()[0] )*90/90*stretch ;
 
 		return r ;
 	}
@@ -313,92 +307,39 @@ public class BodyPlanet extends astrolabe.model.BodyPlanet implements Postscript
 		return new double[] { v.x, v.y } ;
 	}
 
-	public List<double[]> list( List<Double> list ) {
-		return list( list, jdAy, jdOy, 0 ) ;
-	}
+	public List<double[]> list( List<Double> listjd, double jdA, double jdO, double shift ) {
+		List<double[]> listxy ;
+		double interval ;
+		double d, e, g ;
 
-	public List<double[]> list( List<Double> list, double shift ) {
-		return list( list, jdAy, jdOy, shift ) ;
-	}
+		interval = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), getType() ),
+				ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
 
-	public List<double[]> list( List<Double> list, double jdA, double jdO, double shift ) {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-		double g ;
+		listxy = new java.util.Vector<double[]>() ;
 
-		r.add( project( jdA, shift ) ) ;
-		if ( list != null ) {
-			list.add( jdA ) ;
-		}
-
-		g = mapIndexToRange( jdA, jdO ) ;
-		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
-			r.add( project( jd, shift ) ) ;
-			if ( list != null ) {
-				list.add( jd ) ;
-			}
-		}
-
-		r.add( project( jdO, shift ) ) ;
-		if ( list != null ) {
-			list.add( jdO ) ;
-		}
-
-		return r ;
-	}
-
-	public List<double[]> list() {
-		return list( null, jdAy, jdOy, 0 ) ;
-	}
-
-	public List<double[]> list( double shift ) {
-		return list( null, jdAy, jdOy, shift ) ;
-	}
-
-	public List<double[]> list( double jdA, double jdO, double shift ) {
-		return list( null, jdA, jdO, shift ) ;
-	}
-
-	public boolean probe( double jd ) {
-		return jd>=jdAy&&jd<=jdOy ;
-	}
-
-	public double mapIndexToScale( int index ) {
-		return mapIndexToScale( index, interval, jdAy, jdOy ) ;
-	}
-
-	public double mapIndexToScale( double span ) {
-		return mapIndexToScale( 0, span, jdAy, jdOy ) ;
-	}
-
-	public double mapIndexToScale( int index, double span ) {
-		return mapIndexToScale( index, span, jdAy, jdOy ) ;
-	}
-
-	private static double mapIndexToScale( int index, double span, double jdA, double jdO ) {
-		return index<0?jdO:jdA+index*span ;
-	}
-
-	public double mapIndexToRange() {
-		return gap( 0, interval, jdAy , jdOy ) ;
-	}
-
-	public double mapIndexToRange( double jdA, double jdO ) {
-		return gap( 0, interval, jdA , jdO ) ;
-	}
-
-	public double mapIndexToRange( int index, double jdA, double jdO ) {
-		return gap( index, interval, jdA , jdO ) ;
-	}
-
-	public static double gap( int index, double interval, double jdA, double jdO ) {
-		double r ;
-		double d, g ;
+		listxy.add( project( jdA, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdA ) ;
 
 		d = jdO-jdA ;
-		g = d-(int) ( d/interval )*interval ;
+		e = d-(int) ( d/interval )*interval ;
+		g = ( Math.isLim0( e )?interval:e )/2 ;
 
-		r = ( ( Math.isLim0( g )?interval:g )/2 )+index*interval ;
+		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
+			listxy.add( project( jd, shift ) ) ;
+			if ( listjd != null )
+				listjd.add( jd ) ;
+		}
 
-		return r ;
+		listxy.add( project( jdO, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdO ) ;
+
+		return listxy ;
+	}
+
+	public double scaleMarkNth( int mark, double span ) {
+		return new LinearScale( span, epoch() ).markN( mark ) ;
 	}
 }

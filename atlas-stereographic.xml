@@ -36,7 +36,7 @@ astrolabe.xsd" name="atlas-stereographic">
 				</Origin>
 				<Extent>
 					<phi>
-						<Rational value="360"/>
+						<Rational value="359.9999"/>
 					</phi>
 					<theta>
 						<Rational value="117.8"/>
@@ -102,7 +102,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -119,7 +119,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -137,7 +137,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -154,7 +154,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -171,7 +171,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -188,7 +188,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -205,7 +205,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -222,7 +222,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -239,7 +239,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -256,7 +256,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -273,7 +273,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -291,7 +291,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleSouthernTropic>
@@ -306,7 +306,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleNorthernTropic>
@@ -321,7 +321,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleNorthernPolar>
@@ -779,7 +779,7 @@ astrolabe.xsd" name="atlas-stereographic">
 				</Origin>
 				<Extent>
 					<phi>
-						<Rational value="360"/>
+						<Rational value="359.9999"/>
 					</phi>
 					<theta>
 						<Rational value="-117.8"/>
@@ -845,7 +845,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -862,7 +862,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -880,7 +880,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -897,7 +897,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -914,7 +914,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -931,7 +931,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -948,7 +948,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -965,7 +965,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -982,7 +982,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -999,7 +999,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1016,7 +1016,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -1034,7 +1034,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleNorthernTropic>
@@ -1049,7 +1049,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleSouthernTropic>
@@ -1064,7 +1064,7 @@ astrolabe.xsd" name="atlas-stereographic">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleSouthernPolar>

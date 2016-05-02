@@ -8,7 +8,7 @@ public class AtlasEquidistant extends AtlasAzimuthalType {
 	public AtlasEquidistant() {
 	}
 
-	public AtlasEquidistant( Projector projector, astrolabe.model.Atlas atlas ) {
-		super( projector, atlas ) ;
+	public AtlasEquidistant( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
+		super( atlas, size, northern, projector ) ;
 	}
 }

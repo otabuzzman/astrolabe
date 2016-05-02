@@ -9,54 +9,61 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
 
-	private final static double DEFAULT_UNIT = 2.834646 ;
+	private final static double DEFAULT_UNIT	= 2.834646 ;
 
-	private final static double DEFAULT_HALO = 4 ;
-	private final static double DEFAULT_HALOMIN = .08 ;
-	private final static double DEFAULT_HALOMAX = .4 ;
-
-	private double sizex ;
-	private double sizey ;
-	protected double viewx ;
-	protected double viewy ;
+	private final static double DEFAULT_HALO	= 4 ;
+	private final static double DEFAULT_HALOMIN	= .08 ;
+	private final static double DEFAULT_HALOMAX	= .4 ;
 
 	private double unit ;
-	private double scale ;
-
-	private double[] origin = new double[2] ;
 
 	private double halo ;
 	private double halomin ;
 	private double halomax ;
 
-	public ChartAzimuthalType( Peer peer ) {
-		ChartPage page ;
-		double[] origin ;
+	public ChartAzimuthalType() {
 		Preferences node ;
-
-		peer.setupCompanion( this ) ;
-
-		page = new ChartPage( getChartPage() ) ;
-		sizex = page.sizex() ;
-		sizey = page.sizey() ;
-		viewx = page.viewx() ;
-		viewy = page.viewy() ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
 		unit = Configuration.getValue( node, ApplicationConstant.PK_CHART_UNIT, DEFAULT_UNIT ) ;
-		scale = java.lang.Math.min( sizex, sizey )/2/Math.goldensection*getChartPage().getView()/100*getScale()/100 ;
 
-		halo = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
-		halomin = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
-		halomax = Configuration.getValue( node, ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
-		Registry.register( ApplicationConstant.PK_CHART_HALO, new Double( halo ) ) ;
-		Registry.register( ApplicationConstant.PK_CHART_HALOMIN, new Double( halomin ) ) ;
-		Registry.register( ApplicationConstant.PK_CHART_HALOMAX, new Double( halomax ) ) ;
+		halo = Configuration.getValue( node,
+				ApplicationConstant.PK_CHART_HALO, DEFAULT_HALO ) ;
+		halomin = Configuration.getValue( node,
+				ApplicationConstant.PK_CHART_HALOMIN, DEFAULT_HALOMIN ) ;
+		halomax = Configuration.getValue( node,
+				ApplicationConstant.PK_CHART_HALOMAX, DEFAULT_HALOMAX ) ;
+	}
 
-		origin = AstrolabeFactory.valueOf( getCenter() ) ;
-		this.origin[0] = origin[1] ;
-		this.origin[1] = origin[2] ;
+	public void register() {
+		ChartPage page ;
+
+		page = new ChartPage() ;
+		getChartPage().setupCompanion( page ) ;
+		page.register() ;
+
+		Registry.register( ApplicationConstant.PK_CHART_HALO,
+				new Double( halo ) ) ;
+		Registry.register( ApplicationConstant.PK_CHART_HALOMIN,
+				new Double( halomin ) ) ;
+		Registry.register( ApplicationConstant.PK_CHART_HALOMAX,
+				new Double( halomax ) ) ;		
+	}
+
+	public double scale() {
+		ChartPage page ;
+		double[] size ;
+
+		page = new ChartPage() ;
+		getChartPage().setupCompanion( page ) ;
+
+		size = page.size() ;
+
+		return java.lang.Math.min( size[0], size[1] )
+		/2/Math.goldensection
+		*getChartPage().getView()/100
+		*getScale()/100 ;
 	}
 
 	public double[] project( double RA, double d ) {
@@ -64,13 +71,14 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public double[] project( double[] eq ) {
-		double[] r ;
+		double[] r, center ;
 		Vector vp, vo, vZ, vY ;
 		CoordinateSystem cs ;
 
 		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
 
-		vo = new Vector( polarToWorld( hemisphereToPolar( origin ) ) ) ;
+		center = AstrolabeFactory.valueOf( getCenter() ) ;
+		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
 			vY = new Vector( vo ).mul( -1 ) ;
@@ -78,7 +86,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			vp.set( cs.local( vp.toArray() ) ) ;
 		}
 
-		vp.mul( scale ) ;
+		vp.mul( scale() ) ;
 
 		r = new double[] { vp.x, vp.y } ;
 
@@ -90,14 +98,15 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public double[] unproject( double[] xy ) {
-		double[] r ;
+		double[] r, center ;
 		Vector vp, vo, vZ, vY ;
 		CoordinateSystem cs ;
 
 		vp = new Vector( xy ) ;
-		vp.mul( 1/scale ) ;
+		vp.mul( 1/scale() ) ;
 
-		vo = new Vector( polarToWorld( hemisphereToPolar( origin ) ) ) ;
+		center = AstrolabeFactory.valueOf( getCenter() ) ;
+		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
 			vY = new Vector( vo ).mul( -1 ) ;
@@ -127,15 +136,23 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
+		ChartPage page ;
+		double[] size ;
 		long seed ;
+
+
+		page = new ChartPage() ;
+		getChartPage().setupCompanion( page ) ;
+
+		size = page.size() ;
 
 		ps.dsc.beginSetup() ;
 
 		ps.dict( true ) ;
 		ps.push( "/PageSize" ) ;
 		ps.array( true ) ;
-		ps.push( sizex*unit ) ;
-		ps.push( sizey*unit ) ;
+		ps.push( size[0]*unit ) ;
+		ps.push( size[1]*unit ) ;
 		ps.array( false ) ;
 		ps.dict( false ) ;
 		ps.operator.setpagedevice() ;
@@ -154,16 +171,25 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		if ( sizex>viewx ) {
+		ChartPage page ;
+		double[] size, view ;
+
+		page = new ChartPage() ;
+		getChartPage().setupCompanion( page ) ;
+
+		size = page.size() ;
+		view = page.view() ;
+
+		if ( size[0]>view[0] ) {
 			ps.array( true ) ;
-			ps.push( -viewx/2 ) ;
-			ps.push( -viewy/2 ) ;
-			ps.push( -viewx/2 ) ;
-			ps.push( viewy/2 ) ;
-			ps.push( viewx/2 ) ;
-			ps.push( viewy/2 ) ;
-			ps.push( viewx/2 ) ;
-			ps.push( -viewy/2 ) ;
+			ps.push( -view[0]/2 ) ;
+			ps.push( -view[1]/2 ) ;
+			ps.push( -view[0]/2 ) ;
+			ps.push( view[1]/2 ) ;
+			ps.push( view[0]/2 ) ;
+			ps.push( view[1]/2 ) ;
+			ps.push( view[0]/2 ) ;
+			ps.push( -view[1]/2 ) ;
 			ps.array( false ) ;
 
 			ps.operator.newpath() ;

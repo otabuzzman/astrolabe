@@ -58,3 +58,210 @@ Vmag&#x003c;-1?:4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vm
 					<!--CatalogADC7237 attribute nature-->
 					<entry key="multiple" value=".28:0.4:0.5"/>
 					<entry key="uncertain" value=".28:0"/>
+
+
+x AnnotationCurved.java
+x AnnotationStraight.java
+x ApplicationConstant.java
+- Artefact.java
+x Astrolabe.java
+x AstrolabeFactory.java
+o AstrolabePostscriptStream.java
+x AstrolabeReader.java
+o AstrolabeRegistry.java
+x AtlasAzimuthalType.java
+x AtlasEquidistant.java
+x AtlasGnomonic.java
+x AtlasOrthographic.java
+x AtlasPage.java
+x AtlasStereographic.java
+o AuxiliaryEmitter.java
+o Baseline.java
+x BodyAreal.java
+x BodyElliptical.java
+x BodyMoon.java
+x BodyParabolical.java
+x BodyPlanet.java
+x BodyStellar.java
+x BodySun.java
+o CastorJREEvaluator.java
+o Catalog.java
+x CatalogADC1239H.java
+o CatalogADC1239HRecord.java
+x CatalogADC1239T.java
+o CatalogADC1239TRecord.java
+x CatalogADC5050.java
+o CatalogADC5050Record.java
+x CatalogADC5109.java
+o CatalogADC5109Record.java
+x CatalogADC6049.java
+o CatalogADC6049Record.java
+x CatalogADC7118.java
+o CatalogADC7118Record.java
+x CatalogADC7237.java
+o CatalogADC7237Record.java
+x CatalogRecord.java
+x ChartAzimuthalType.java
+x ChartEquidistant.java
+x ChartGnomonic.java
+x ChartOrthographic.java
+x ChartPage.java
+x ChartStereographic.java
+x CircleMeridian.java
+x CircleNorthernPolar.java
+x CircleNorthernTropic.java
+x CircleParallel.java
+x CircleSouthernPolar.java
+x CircleSouthernTropic.java
+x Configuration.java
+o CoordinateSystem.java
+o DMS.java
+x DialDay.java
+x DialDegree.java
+x DialHour.java
+x Frame.java
+x GSPaintColor.java
+x GSPaintStroke.java
+x GraduationFull.java
+x GraduationHalf.java
+x GraduationSpan.java
+x HorizonEcliptical.java
+x HorizonEquatorial.java
+x HorizonGalactic.java
+x HorizonLocal.java
+o JTSCoordinate.java
+o JTSCoordinateArraySequence.java
+x Layout.java
+o ListCutter.java
+o Math.java
+o MessageCatalog.java
+o OutlineElliptical.java
+o ParameterNotValidException.java
+o ParserAttribute.java
+o ParserSubstitute.java
+o Peer.java
+o PolygonPlane.java
+x PolygonSphere.java
+o PostscriptEmitter.java
+o PostscriptStream.java
+o Projector.java
+x Rational.java
+o Registry.java
+- Script.java
+- Sign.java
+o TeeOutputStream.java
+o UnicodeBlock.java
+o UnicodePostscriptStream.java
+o Vector.java
+
+o <xs:attribute name="PA" type="xs:double" use="required"/>
+o <xs:attribute name="T" type="xs:double" use="required"/>
+o <xs:attribute name="T" type="xs:double" use="required"/>
+o <xs:attribute name="a" type="xs:double" use="required"/>
+<xs:attribute name="anchor" use="required">
+<xs:attribute name="anchor" use="required">
+o <xs:attribute name="baseline" use="required">
+o <xs:attribute name="bcp" type="xs:positiveInteger" use="required"/>
+o <xs:attribute name="bottomx" type="xs:double" use="required"/>
+o <xs:attribute name="bottomy" type="xs:double" use="required"/>
+o <xs:attribute name="centerx" type="xs:double" use="required"/>
+o <xs:attribute name="centery" type="xs:double" use="required"/>
+<xs:attribute name="circle" use="optional">
+<xs:attribute name="circle" use="required">
+o <xs:attribute name="d" use="required">
+o <xs:attribute name="deg" use="required">
+o <xs:attribute name="distance" use="required">
+o <xs:attribute name="division" use="required">
+o <xs:attribute name="e" type="xs:double" use="required"/>
+<xs:attribute name="equinox" type="xs:double" use="required"/>
+<xs:attribute name="equinox" type="xs:double" use="required"/>
+o <xs:attribute name="fcp" type="xs:positiveInteger" use="required"/>
+<xs:attribute name="fov" use="optional">
+<xs:attribute name="fov" use="optional">
+o <xs:attribute name="hrs" use="required">
+o <xs:attribute name="i" type="xs:double" use="required"/>
+o <xs:attribute name="i" type="xs:double" use="required"/>
+o <xs:attribute name="importance" use="required">
+o <xs:attribute name="locale" use="optional">
+o <xs:attribute name="m" use="required">
+o <xs:attribute name="marshal" type="xs:anyURI" use="required"/>
+<xs:attribute name="min" use="required">
+<xs:attribute name="min" use="required">
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="name" type="xs:string" use="optional"/>
+<xs:attribute name="nature" use="required">
+<xs:attribute name="nature" use="required">
+<xs:attribute name="nature" use="required">
+<xs:attribute name="nature" use="required">
+<xs:attribute name="nature" use="required">
+<xs:attribute name="neg" type="xs:boolean" use="required"/>
+<xs:attribute name="neg" type="xs:boolean" use="required"/>
+o <xs:attribute name="node" use="required">
+o <xs:attribute name="northern" type="xs:boolean" use="required"/>
+o <xs:attribute name="num" type="xs:positiveInteger" use="required"/>
+o <xs:attribute name="number" use="required">
+o <xs:attribute name="o" type="xs:double" use="required"/>
+o <xs:attribute name="o" type="xs:double" use="required"/>
+o <xs:attribute name="p0x" type="xs:double" use="required"/>
+o <xs:attribute name="p0y" type="xs:double" use="required"/>
+o <xs:attribute name="p1x" type="xs:double" use="required"/>
+o <xs:attribute name="p1y" type="xs:double" use="required"/>
+o <xs:attribute name="p2x" type="xs:double" use="required"/>
+o <xs:attribute name="p2y" type="xs:double" use="required"/>
+o <xs:attribute name="p3x" type="xs:double" use="required"/>
+o <xs:attribute name="p3y" type="xs:double" use="required"/>
+o <xs:attribute name="pcp" type="xs:positiveInteger" use="required"/>
+o <xs:attribute name="practicality" use="required">
+o <xs:attribute name="proportion" use="required">
+o <xs:attribute name="purpose" use="required">
+o <xs:attribute name="q" type="xs:double" use="required"/>
+o <xs:attribute name="radiant" type="xs:boolean" use="required"/>
+o <xs:attribute name="reflect" type="xs:boolean" use="required"/>
+o <xs:attribute name="reverse" use="required">
+<xs:attribute name="scale" type="xs:double" use="required"/>
+<xs:attribute name="scale" use="required">
+<xs:attribute name="sec" use="required">
+<xs:attribute name="sec" use="required">
+o <xs:attribute name="select" use="required">
+o <xs:attribute name="size" use="required">
+o <xs:attribute name="spin" use="required">
+o <xs:attribute name="stretch" type="xs:boolean" use="optional" default="false"/>
+o <xs:attribute name="tcp" type="xs:positiveInteger" use="required"/>
+o <xs:attribute name="topx" type="xs:double" use="required"/>
+o <xs:attribute name="topy" type="xs:double" use="required"/>
+o <xs:attribute name="turn" use="required">
+<xs:attribute name="type" use="required">
+<xs:attribute name="type" use="required">
+o <xs:attribute name="url" type="xs:anyURI" use="required"/>
+<xs:attribute name="value" use="required">
+<xs:attribute name="value" use="required">
+<xs:attribute name="value" use="required">
+<xs:attribute name="value" use="required">
+<xs:attribute name="view" use="required">
+o <xs:attribute name="w" type="xs:double" use="required"/>
+o <xs:attribute name="w" type="xs:double" use="required"/>
+o <xs:attribute name="x" type="xs:double" use="required"/>
+o <xs:attribute name="y" type="xs:double" use="required"/>
+o <xs:attribute name="y" type="xs:integer" use="required"/>
+o <xs:attribute name="z" type="xs:double" use="optional"/>
+
+GC_EPOCH->now()
+GC_FOVEFF->GC_FOVUNI
+GC_FOVUNI->size()
+GC_LAYOUT->100:100
+GC_PARSER->Parser()

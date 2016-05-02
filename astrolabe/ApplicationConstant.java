@@ -9,10 +9,8 @@ public final class ApplicationConstant {
 	// general constants (GC_), patterns (GP_)
 	public final static String GC_APPLICATION	= "astrolabe" ;			// application name
 	public final static String GC_NATLIB_CAA	= "cygcaa-1.17" ;		// native library
-	public final static String GC_NS_ATL		= "atl:" ;				// name space, application generated
 	public final static String GC_NS_CAT		= "cat:" ;				// name space, application generated
 	public final static String GC_NS_CUT		= "cut:" ;				// name space, application generated
-	public final static String GC_NS_SGN		= "sgn:" ;				// name space, application generated
 	public final static String GC_NS_REG		= "reg:" ;				// name space, application generated
 	public final static String GC_EPOCH			= GC_NS_REG+"epoch" ;	// class global variable, internal usage
 	public final static String GC_FOVUNI		= GC_NS_REG+"fovuni" ;	// class global variable, internal usage
@@ -495,6 +493,10 @@ public final class ApplicationConstant {
 	public final static String AV_CIRCLE_CHASING = "chasing" ;
 	public final static String AV_CIRCLE_LEADING = "leading" ;
 
+	public final static String AV_DIAL_NONE	= "none" ;
+	public final static String AV_DIAL_LINE = "line" ;
+	public final static String AV_DIAL_RAIL = "rail" ;
+
 	public final static String AV_ANNOTATION_TOPLEFT		= "topleft" ;
 	public final static String AV_ANNOTATION_TOPMIDDLE		= "topmiddle" ;
 	public final static String AV_ANNOTATION_TOPRIGHT		= "topright" ;
@@ -536,16 +538,15 @@ public final class ApplicationConstant {
 
 	public final static String PK_CHARTPAGE_LAYOUT		= "layout" ;
 
-	public final static String PK_ATLAS_MAP			= "map" ;
+	public final static String PK_ATLAS_MAP				= "map" ;
 
-	public final static String PK_CIRCLE_INTERVAL	= PK_GENERAL_INTERVAL ;
+	public final static String PK_CIRCLE_INTERVAL		= PK_GENERAL_INTERVAL ;
 
-	public final static String PN_DIAL_ANNOTATION	= "annotation" ;
-	public final static String PK_DIAL_RISE			= PK_GENERAL_RISE ;
-	public final static String PN_DIAL_BASELINE		= "baseline" ;
-	public final static String PK_DIAL_SPACE		= PK_GENERAL_SPACE ;
-	public final static String PK_DIAL_THICKNESS	= "thickness" ;
-	public final static String PK_DIAL_LINEWIDTH	= PK_GENERAL_LINEWIDTH ;
+	public final static String PK_DIAL_RISE				= PK_GENERAL_RISE ;
+	public final static String PN_DIAL_BASELINE			= "baseline" ;
+	public final static String PK_DIAL_SPACE			= PK_GENERAL_SPACE ;
+	public final static String PK_DIAL_THICKNESS		= "thickness" ;
+	public final static String PK_DIAL_LINEWIDTH		= PK_GENERAL_LINEWIDTH ;
 
 	public final static String PK_GRADUATION_SPACE		= PK_GENERAL_SPACE ;
 	public final static String PK_GRADUATION_LINELENGTH	= "linelength" ;
@@ -560,6 +561,8 @@ public final class ApplicationConstant {
 
 	public final static String PK_BODY_INTERVAL	= PK_GENERAL_INTERVAL ;
 	public final static String PK_BODY_STRETCH	= "stretch" ;
+
+	public final static String PK_OUTLINE_INTERVAL			= PK_GENERAL_INTERVAL ;
 
 	public final static String PK_DMS_PRECISION				= PK_GENERAL_PRECISION ;
 

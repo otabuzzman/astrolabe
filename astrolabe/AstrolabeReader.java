@@ -13,18 +13,20 @@ public class AstrolabeReader {
 	}
 
 	public Astrolabe read( Reader model ) {
-		astrolabe.model.Astrolabe al ;
+		astrolabe.model.Astrolabe m ;
 		Astrolabe a = null ;
 
 		try {
-			al = (astrolabe.model.Astrolabe) astrolabe.model.Astrolabe.unmarshal( model ) ;
+			m = (astrolabe.model.Astrolabe) astrolabe.model.Astrolabe.unmarshal( model ) ;
 		} catch ( MarshalException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( ValidationException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		a = new Astrolabe( al ) ;
+		a = new Astrolabe() ;
+		m.setupCompanion( a ) ;
+		a.register() ;
 
 		return a ;
 	}

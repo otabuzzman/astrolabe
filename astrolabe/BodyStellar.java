@@ -9,28 +9,19 @@ import caa.CAACoordinateTransformation;
 @SuppressWarnings("serial")
 public class BodyStellar extends astrolabe.model.BodyStellar implements PostscriptEmitter {
 
-	private double turn ;
-	private double spin ;
+	private Projector projector ;
 
-	private double x ;
-	private double y ;
+	public BodyStellar( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	public BodyStellar( Peer peer, Projector projector ) {
-		double[] lo, eq, xy ;
+	public void register() {
+		double[] lo, eq ;
 		MessageCatalog m ;
 		String key ;
 
-		peer.setupCompanion( this ) ;
-
-		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
-		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
-
 		lo = AstrolabeFactory.valueOf( getPosition() ) ;
 		eq = projector.convert( lo[1], lo[2] ) ;
-		xy = projector.project( lo[1], lo[2] ) ;
-
-		x = xy[0] ;
-		y = xy[1] ;
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
@@ -48,23 +39,31 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		astrolabe.model.Script script ;
 		Geometry fov ;
-		Script script ;
 		double height ;
+		double[] lo, xy ;
+		double turn, spin ;
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 		if ( fov == null ) {
-			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		}
 
+		lo = AstrolabeFactory.valueOf( getPosition() ) ;
+		xy = projector.project( lo[1], lo[2] ) ;
+
 		if ( ! fov.covers( new GeometryFactory().createPoint(
-				new JTSCoordinate( new double[] { x, y } ) ) ) )
+				new JTSCoordinate( new double[] { xy[0], xy[1] } ) ) ) )
 			return ;
+
+		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
+		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
 
 		ps.operator.mark() ;
 
-		ps.push( x ) ;
-		ps.push( y ) ;
+		ps.push( xy[0] ) ;
+		ps.push( xy[1] ) ;
 		ps.operator.moveto() ;
 
 		ps.operator.currentpoint() ;
@@ -73,7 +72,9 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.newpath() ;
 		ps.operator.moveto() ;
 
-		script = new Script( getScript() ) ;
+		script = new astrolabe.model.Script() ;
+		getScript().setupCompanion( script ) ;
+
 		height = Configuration.getValue(
 				Configuration.getClassNode( script, script.getName(), null ),
 				script.getPurpose(), -1. ) ;
@@ -87,7 +88,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.array( true ) ;
 		AnnotationStraight.emitPS( ps, script, height, 0, 0, 0, 0, 0 ) ;
-		ps.array( false ) ;									// p, p, text
+		ps.array( false ) ;								// p, p, text
 
 		ps.operator.dup() ;
 		ps.operator.get( 0 ) ;
@@ -106,9 +107,9 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 		ps.operator.get( 6 ) ; // glyph
 		ps.push( false ) ;
-		ps.operator.charpath() ;							// p, p, text
-		ps.operator.roll( 3, 1 ) ;							// p, text, p
-		ps.operator.pathbbox() ;							// p, text, p, ll, ur
+		ps.operator.charpath() ;						// p, p, text
+		ps.operator.roll( 3, 1 ) ;						// p, text, p
+		ps.operator.pathbbox() ;						// p, text, p, ll, ur
 
 		ps.operator.copy( 4 ) ;
 		ps.push( ApplicationConstant.PS_PROLOG_VSUB ) ;
@@ -119,15 +120,15 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.copy( 2 ) ;
 		ps.push( ApplicationConstant.PS_PROLOG_VABS ) ;
 		ps.operator.mul( Math.goldensection ) ;
-		ps.operator.roll( 10, 1 ) ;							// p, l, text, p, ll, ur, d/2
+		ps.operator.roll( 10, 1 ) ;						// p, l, text, p, ll, ur, d/2
 
 		ps.push( ApplicationConstant.PS_PROLOG_VADD ) ;	// p, l, text, p, ll, gc
 
 		ps.operator.roll( 4, 2 ) ;
-		ps.operator.pop( 2 ) ;								// p, l, text, p, gc
+		ps.operator.pop( 2 ) ;							// p, l, text, p, gc
 		ps.push( ApplicationConstant.PS_PROLOG_VSUB ) ;	// p, l, text, o
 
-		ps.operator.roll( 6, 4 ) ;							// l, text, o, p
+		ps.operator.roll( 6, 4 ) ;						// l, text, o, p
 		ps.operator.translate() ;
 
 		ps.operator.gsave() ;

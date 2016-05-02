@@ -6,15 +6,15 @@ import caa.CAANutation;
 @SuppressWarnings("serial")
 public class CircleNorthernPolar extends CircleParallel {
 
-	public CircleNorthernPolar( Peer peer, Projector projector ) {
-		super( peer, projector ) ;
+	public CircleNorthernPolar( Projector projector ) {
+		super( projector ) ;
 	}
 
 	public astrolabe.model.Angle getAngle() {
 		astrolabe.model.Angle r ;
 		double e, o ;
 
-		e = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		e = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
 
 		r = new astrolabe.model.Angle() ;

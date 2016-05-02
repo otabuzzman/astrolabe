@@ -6,11 +6,9 @@ import org.exolab.castor.xml.ValidationException;
 @SuppressWarnings("serial")
 public class ChartOrthographic extends ChartAzimuthalType implements PostscriptEmitter, Projector {
 
-	public ChartOrthographic( Peer peer ) {
-		super( peer ) ;
-	}
-
 	public void emitPS( AstrolabePostscriptStream ps ) {
+		ChartPage page ;
+		double[] view ;
 		AtlasOrthographic atlas ;
 
 		super.emitPS( ps ) ;
@@ -30,9 +28,14 @@ public class ChartOrthographic extends ChartAzimuthalType implements PostscriptE
 		}
 
 		if ( getAtlas() != null ) {
+			page = new ChartPage() ;
+			getChartPage().setupCompanion( page ) ;
+
+			view = page.view() ;
+
 			try {
-				atlas = new AtlasOrthographic( this, getAtlas() ) ;
-				atlas.addAllAtlasPage( new double[] { viewx, viewy }, getNorthern() ) ;
+				atlas = new AtlasOrthographic( getAtlas(), new double[] { view[0], view[1] }, getNorthern(), this ) ;
+				atlas.addAllAtlasPage() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}

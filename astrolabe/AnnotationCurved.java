@@ -6,13 +6,13 @@ import java.util.prefs.Preferences;
 @SuppressWarnings("serial")
 public class AnnotationCurved extends astrolabe.model.AnnotationCurved implements PostscriptEmitter {
 
-	private final static double DEFAULT_SUBSCRIPTSHRINK = .8 ;
-	private final static double DEFAULT_SUBSCRIPTSHIFT = -.3 ;
-	private final static double DEFAULT_SUPERSCRIPTSHRINK = .8 ;
-	private final static double DEFAULT_SUPERSCRIPTSHIFT = .5 ;
+	private final static double DEFAULT_SUBSCRIPTSHRINK		= .8 ;
+	private final static double DEFAULT_SUBSCRIPTSHIFT		= -.3 ;
+	private final static double DEFAULT_SUPERSCRIPTSHRINK	= .8 ;
+	private final static double DEFAULT_SUPERSCRIPTSHIFT	= .5 ;
 
-	private final static double DEFAULT_MARGIN = 1.2 ;
-	private final static double DEFAULT_RISE = 1.2 ;
+	private final static double DEFAULT_MARGIN				= 1.2 ;
+	private final static double DEFAULT_RISE				= 1.2 ;
 
 	private double subscriptshrink ;
 	private double subscriptshift ;
@@ -22,31 +22,31 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private double margin ;
 	private double rise ;
 
-	private double distance ;
-
-	public AnnotationCurved( Peer peer ) {
+	public void register() {
 		Preferences node ;
-
-		peer.setupCompanion( this ) ;
 
 		node = Configuration.getClassNode( this, getName(), null ) ;
 
-		subscriptshrink = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+		subscriptshrink = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshift = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
-		margin = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
-		rise = Configuration.getValue( node, ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
-
-		distance = getDistance() ;
+		margin = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_MARGIN, DEFAULT_MARGIN ) ;
+		rise = Configuration.getValue( node,
+				ApplicationConstant.PK_ANNOTATION_RISE, DEFAULT_RISE ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
-		Script script ;
+		astrolabe.model.Script script ;
 		int ns, n0 ;
 		double p, height ;
 
@@ -54,7 +54,8 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 
 		ps.array( true ) ;
 		for ( ns=0, n0=0, height=0 ; ns<getScriptCount() ; ns++ ) {
-			script = new Script( getScript( ns ) ) ;
+			script = new astrolabe.model.Script() ;
+			getScript( ns ).setupCompanion( script ) ;
 
 			p = Configuration.getValue(
 					Configuration.getClassNode( script, script.getName(), null ), script.getPurpose(), -1. ) ;
@@ -99,7 +100,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMMIDDLE ) ) {
@@ -116,7 +117,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_BOTTOMRIGHT ) ) {
@@ -133,7 +134,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLELEFT ) ) {
@@ -146,7 +147,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLE ) ) {
@@ -163,7 +164,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_MIDDLERIGHT ) ) {
@@ -180,7 +181,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPLEFT ) ) {
@@ -193,7 +194,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GDRAW ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.push( margin ) ;
 			ps.operator.add() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPMIDDLE ) ) {
@@ -210,7 +211,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		} else if ( getAnchor().equals( ApplicationConstant.AV_ANNOTATION_TOPRIGHT ) ) {
@@ -227,7 +228,7 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 			ps.push( ApplicationConstant.PS_PROLOG_GPATH ) ;
 			ps.push( ApplicationConstant.PS_PROLOG_GLEN ) ;
 			ps.operator.div( 100 ) ;
-			ps.operator.mul( distance ) ;
+			ps.operator.mul( getDistance() ) ;
 			ps.operator.exch() ;
 			ps.operator.sub() ;
 		}

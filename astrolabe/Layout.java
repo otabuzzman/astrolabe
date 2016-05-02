@@ -3,25 +3,23 @@ package astrolabe;
 
 public class Layout {
 
+	private double originx ;
+	private double originy ;
+	private double extentx ;
+	private double extenty ;
+
 	private double[] frameColLE ; // left edge
 	private double[] frameRowTE ; // top edge
 
-	private double[] origin = new double[2] ; // bottom left x/y
-	private double[] extent = new double[2] ; // pagesize x/y
-
-	public Layout( String layout, double[] userspace ) {
-		origin[0] = userspace[0] ;
-		origin[1] = userspace[1] ;
-		extent[0] = userspace[2]-userspace[0] ;
-		extent[1] = userspace[3]-userspace[1] ;
-
-		setup( layout ) ;
-	}
-
-	public void setup( String layout ) {
+	public Layout( String layout, double[] dimension ) {
 		String[] frameValsRaw, frameColsRaw, frameRowsRaw ;
 		double[] frameColsVal, frameRowsVal ;
 		double colVal, rowVal ;
+
+		originx = dimension[0] ;
+		originy = dimension[1] ;
+		extentx = dimension[2]-dimension[0] ;
+		extenty = dimension[3]-dimension[1] ;
 
 		frameValsRaw = layout.split( "x" ) ;
 
@@ -68,9 +66,9 @@ public class Layout {
 		row = saveIndex/numberOfCols ;
 
 		return new double[] {
-				origin[0]+extent[0]*frameColLE[col],
-				origin[1]+extent[1]*frameRowTE[row+1],
-				origin[0]+extent[0]*frameColLE[col+1],
-				origin[1]+extent[1]*frameRowTE[row] } ;
+				originx+extentx*frameColLE[col],
+				originy+extenty*frameRowTE[row+1],
+				originx+extentx*frameColLE[col+1],
+				originy+extenty*frameRowTE[row] } ;
 	}
 }

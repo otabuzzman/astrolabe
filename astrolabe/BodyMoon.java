@@ -2,7 +2,6 @@
 package astrolabe;
 
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import org.exolab.castor.xml.ValidationException;
 
@@ -14,79 +13,64 @@ import caa.CAAMoon;
 @SuppressWarnings("serial")
 public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmitter, Baseline {
 
-	private final static double DEFAULT_INTERVAL = 1 ;
-	private final static double DEFAULT_STRETCH = 0 ;
-
-	private double jdAy ;
-	private double jdOy ;
+	private final static double DEFAULT_INTERVAL	= 1 ;
+	private final static double DEFAULT_STRETCH		= 0 ;
 
 	private Projector projector ;
 
-	private double interval ;
-	private double stretch ;
+	public BodyMoon( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	public BodyMoon( Peer peer, Projector projector ) {
-		Preferences node ;
-		CAADate date ;
-		double epochG, epochL, epochA, epochO ;
-		long y ;
+	public double[] epoch() {
+		double epochgc, epochlo ;
+		double jdAy, jdOy ;
+		CAADate epoch ;
+		long year ;
 
-		peer.setupCompanion( this ) ;
+		epochgc = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
-		date = new CAADate() ;
+		epoch = new CAADate() ;
+		epoch.Set( epochgc, true ) ;
 
-		epochG = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
-
-		date.Set( epochG, true ) ;
-		y = date.Year() ;
-		date.Set( y, 1, 1, 0, 0, 0, true ) ;
-		jdAy = date.Julian() ;
-		date.Set( y, 12, 31, 0, 0, 0, true ) ;
-		jdOy = date.Julian() ;
+		year = epoch.Year() ;
+		epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
+		jdAy = epoch.Julian() ;
+		epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
+		jdOy = epoch.Julian() ;
 
 		if ( getEpoch() != null ) {
-			epochL = AstrolabeFactory.valueOf( getEpoch() ) ;
-			date.Set( epochL, true ) ;
-			y = date.Year() ;
-			date.Set( y, 1, 1, 0, 0, 0, true ) ;
-			jdAy = date.Julian() ;
-			date.Set( y, 12, 31, 0, 0, 0, true ) ;
-			jdOy = date.Julian() ;
+			epochlo = AstrolabeFactory.valueOf( getEpoch() ) ;
+			epoch.Set( epochlo, true ) ;
 
-			date.Set( epochL, true ) ;
+			year = epoch.Year() ;
+			epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
+			jdAy = epoch.Julian() ;
+			epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
+			jdOy = epoch.Julian() ;
 
+			epoch.Set( epochlo, true ) ;
 			if ( getEpoch().getA() != null ) {
-				epochA = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
-				jdAy = epochA ;
-				jdOy = date.Julian() ;
+				jdAy = AstrolabeFactory.valueOf( getEpoch().getA() ) ;
+				jdOy = epoch.Julian() ;
 			}
-
 			if ( getEpoch().getO() != null ) {
-				epochO = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
-				jdOy = epochO ;
 				if ( getEpoch().getA() == null )
-					jdAy = date.Julian() ;
+					jdAy = epoch.Julian() ;
+				jdOy = AstrolabeFactory.valueOf( getEpoch().getO() ) ;
 			}
 		}
 
-		date.delete() ;
+		epoch.delete() ;
 
-		this.projector = projector ;
-
-		node = Configuration.getClassNode( this, getName(), null ) ;
-
-		interval = Configuration.getValue( node, ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
-		if ( getStretch() ) {
-			stretch = Configuration.getValue( node, ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
-		} else {
-			stretch = 0 ;
-		}
+		return new double[] { jdAy, jdOy } ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
 		GSPaintStroke nature ;
 
 		nature = new GSPaintStroke( getNature(), getName() ) ;
+
 		nature.headPS( ps ) ;
 		nature.emitPS( ps ) ;
 		nature.tailPS( ps ) ;
@@ -101,26 +85,28 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		Geometry fov ;
 		astrolabe.model.BodyMoon peer ;
 		BodyMoon body ;
-		List<int[]> idlist ;
-		List<Double> jdlist ;
+		List<int[]> listid ;
+		List<Double> listjd ;
 		double jdAe, jdOe ;
 		List<double[]> l ;
-		double[] xy ;
+		double[] epoch, xy ;
+
+		epoch = epoch() ;
 
 		if ( cut ) {
 			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 			if ( fov == null ) {
-				fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+				fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 			}
 
-			jdlist = new java.util.Vector<Double>() ;
-			cutter = new ListCutter( list( jdlist ), fov ) ;
+			listjd = new java.util.Vector<Double>() ;
+			cutter = new ListCutter( list( listjd, epoch[0], epoch[1], 0 ), fov ) ;
 
-			idlist = new java.util.Vector<int[]>() ;
-			cutter.segmentsInterior( idlist ) ;
-			for ( int[] jdid : idlist ) {
-				jdAe = jdlist.get( jdid[0] ) ;
-				jdOe = jdlist.get( jdid[1] ) ;
+			listid = new java.util.Vector<int[]>() ;
+			cutter.segmentsInterior( listid ) ;
+			for ( int[] jdid : listid ) {
+				jdAe = listjd.get( jdid[0] ) ;
+				jdOe = listjd.get( jdid[1] ) ;
 
 				peer = new astrolabe.model.BodyMoon() ;
 				if ( getName() == null )
@@ -149,7 +135,8 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 					throw new RuntimeException( e.toString() ) ;
 				}
 
-				body = new BodyMoon( peer, projector ) ;
+				body = new BodyMoon( projector ) ;
+				peer.setupCompanion( body ) ;
 
 				ps.operator.gsave();
 
@@ -160,7 +147,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 				ps.operator.grestore() ;
 			}
 		} else {
-			l = list( jdAy, jdOy, 0 ) ;
+			l = list( null, epoch[0], epoch[1], 0 ) ;
 			ps.array( true ) ;
 			for ( int n=0 ; n<l.size() ; n++ ) {
 				xy = l.get( n ) ;
@@ -177,11 +164,11 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 			ps.operator.dup() ;
 			ps.operator.div( 100 ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
 			ps.operator.mul() ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-			ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+			ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 			ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
 
 			ps.operator.mul( 2 ) ;
@@ -200,9 +187,11 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 			if ( getDialDay() != null ) {
 				PostscriptEmitter dial ;
 
+				dial = new DialDay( this ) ;
+				getDialDay().setupCompanion( dial ) ;
+
 				ps.operator.gsave() ;
 
-				dial = new DialDay( getDialDay(), this ) ;
 				dial.headPS( ps ) ;
 				dial.emitPS( ps ) ;
 				dial.tailPS( ps ) ;
@@ -214,9 +203,10 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 				PostscriptEmitter annotation ;
 
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
+
 					ps.operator.gsave() ;
 
-					annotation = AstrolabeFactory.companionOf( getAnnotation( i ) ) ;
 					annotation.headPS( ps ) ;
 					annotation.emitPS( ps ) ;
 					annotation.tailPS( ps ) ;
@@ -228,10 +218,6 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	}
 
 	public void tailPS( AstrolabePostscriptStream ps ) {
-	}
-
-	public double[] project( double jd ) {
-		return project( jd, 0 ) ;
 	}
 
 	public double[] project( double jd, double shift ) {
@@ -255,10 +241,19 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 	public double[] convert( double jd ) {
 		double[] r = new double[2] ;
+		double stretch ;
+
+		if ( getStretch() ) {
+			stretch = Configuration.getValue(
+					Configuration.getClassNode( this, getName(), null ),
+					ApplicationConstant.PK_BODY_STRETCH, DEFAULT_STRETCH ) ;
+		} else {
+			stretch = 0 ;
+		}
 
 		r[0] = CAAMoon.EclipticLongitude( jd ) ;
 		r[1] = CAAMoon.EclipticLatitude( jd ) ;
-		r[1] = r[1]+( jd-jdAy )*stretch ;
+		r[1] = r[1]+( jd-epoch()[0] )*stretch ;
 
 		return r ;
 	}
@@ -283,80 +278,39 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		return new double[] { v.x, v.y } ;
 	}
 
-	public List<double[]> list( List<Double> list ) {
-		return list( list, jdAy, jdOy, 0 ) ;
-	}
+	public List<double[]> list( List<Double> listjd, double jdA, double jdO, double shift ) {
+		List<double[]> listxy ;
+		double interval ;
+		double d, e, g ;
 
-	public List<double[]> list( List<Double> list, double shift ) {
-		return list( list, jdAy, jdOy, shift ) ;
-	}
+		interval = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_BODY_INTERVAL, DEFAULT_INTERVAL ) ;
 
-	public List<double[]> list( List<Double> list, double jdA, double jdO, double shift ) {
-		List<double[]> r = new java.util.Vector<double[]>() ;
-		double g ;
+		listxy = new java.util.Vector<double[]>() ;
 
-		r.add( project( jdA, shift ) ) ;
-		if ( list != null ) {
-			list.add( jdA ) ;
-		}
+		listxy.add( project( jdA, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdA ) ;
 
-		g = mapIndexToRange( jdA, jdO ) ;
+		d = jdO-jdA ;
+		e = d-(int) ( d/interval )*interval ;
+		g = ( Math.isLim0( e )?interval:e )/2 ;
+
 		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
-			r.add( project( jd, shift ) ) ;
-			if ( list != null ) {
-				list.add( jd ) ;
-			}
+			listxy.add( project( jd, shift ) ) ;
+			if ( listjd != null )
+				listjd.add( jd ) ;
 		}
 
-		r.add( project( jdO, shift ) ) ;
-		if ( list != null ) {
-			list.add( jdO ) ;
-		}
+		listxy.add( project( jdO, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdO ) ;
 
-		return r ;
+		return listxy ;
 	}
 
-	public List<double[]> list() {
-		return list( null, jdAy, jdOy, 0 ) ;
-	}
-
-	public List<double[]> list( double shift ) {
-		return list( null, jdAy, jdOy, shift ) ;
-	}
-
-	public List<double[]> list( double jdA, double jdO, double shift ) {
-		return list( null, jdA, jdO, shift ) ;
-	}
-
-	public boolean probe( double jd ) {
-		return jd>=jdAy&&jd<=jdOy ;
-	}
-
-	public double mapIndexToScale( int index ) {
-		return mapIndexToScale( index, interval, jdAy, jdOy ) ;
-	}
-
-	public double mapIndexToScale( double span ) {
-		return mapIndexToScale( 0, span, jdAy, jdOy ) ;
-	}
-
-	public double mapIndexToScale( int index, double span ) {
-		return mapIndexToScale( index, span, jdAy, jdOy ) ;
-	}
-
-	private static double mapIndexToScale( int index, double span, double jdA, double jdO ) {
-		return index<0?jdO:jdA+index*span ;
-	}
-
-	public double mapIndexToRange() {
-		return BodyPlanet.gap( 0, interval, jdAy , jdOy ) ;
-	}
-
-	public double mapIndexToRange( double jdA, double jdO ) {
-		return BodyPlanet.gap( 0, interval, jdA , jdO ) ;
-	}
-
-	public double mapIndexToRange( int index, double jdA, double jdO ) {
-		return BodyPlanet.gap( index, interval, jdA , jdO ) ;
+	public double scaleMarkNth( int mark, double span ) {
+		return new LinearScale( span, epoch() ).markN( mark ) ;
 	}
 }

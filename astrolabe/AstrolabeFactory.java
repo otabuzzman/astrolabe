@@ -32,148 +32,273 @@ public final class AstrolabeFactory {
 	private AstrolabeFactory() {
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Chart ch ) {
-		astrolabe.model.ChartStereographic chS ;
-		astrolabe.model.ChartOrthographic chO ;
-		astrolabe.model.ChartEquidistant chE ;
-		PostscriptEmitter chart ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Chart chart ) {
+		ChartStereographic cCS ;
+		ChartOrthographic cCO ;
+		ChartEquidistant cCE ;
+		ChartGnomonic cCG ;
+		PostscriptEmitter pse ;
 
-		if ( ( chS = ch.getChartStereographic() ) != null ) {
-			chart = new ChartStereographic( chS ) ;
-		} else if ( ( chO = ch.getChartOrthographic() ) != null ) {
-			chart = new ChartOrthographic( chO ) ;
-		} else if ( ( chE = ch.getChartEquidistant() ) != null ) {
-			chart = new ChartEquidistant( chE ) ;
-		} else { // ch.getChartGnomonic() != null
-			chart = new ChartGnomonic( ch.getChartGnomonic() ) ;
+		if ( chart.getChartStereographic() != null ) {
+			cCS = new ChartStereographic() ;
+			chart.getChartStereographic().setupCompanion( cCS ) ;
+			cCS.register() ;
+
+			pse = cCS ;
+		} else if ( chart.getChartOrthographic() != null ) {
+			cCO = new ChartOrthographic() ;
+			chart.getChartStereographic().setupCompanion( cCO ) ;
+			cCO.register() ;
+
+			pse = cCO ;
+		} else if (  chart.getChartEquidistant() != null ) {
+			cCE = new ChartEquidistant() ;
+			chart.getChartStereographic().setupCompanion( cCE ) ;
+			cCE.register() ;
+
+			pse = cCE ;
+		} else { // chart.getChartGnomonic() != null
+			cCG = new ChartGnomonic() ;
+			chart.getChartStereographic().setupCompanion( cCG ) ;
+			cCG.register() ;
+
+			pse = cCG ;
 		}
-		return chart ;
+
+		return pse ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Horizon ho, Projector p ) {
-		astrolabe.model.HorizonLocal hoLo ;
-		astrolabe.model.HorizonEquatorial hoEq ;
-		astrolabe.model.HorizonEcliptical hoEc ;
-		PostscriptEmitter horizon ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Horizon horizon, Projector projector ) {
+		HorizonLocal hLo ;
+		HorizonEquatorial hEq ;
+		HorizonEcliptical hEc ;
+		HorizonGalactic hGa ;
+		PostscriptEmitter pse ;
 
-		if ( ( hoLo = ho.getHorizonLocal() ) != null  ) {
-			horizon = new HorizonLocal( hoLo, p ) ;
-		} else if ( ( hoEq = ho.getHorizonEquatorial() ) != null  ) {
-			horizon = new HorizonEquatorial( hoEq, p ) ;
-		} else if ( ( hoEc = ho.getHorizonEcliptical() ) != null  ) {
-			horizon = new HorizonEcliptical( hoEc, p ) ;
-		} else { // ho.getHorizonGalactic() != null
-			horizon = new HorizonGalactic( ho.getHorizonGalactic(), p ) ;
+		if ( horizon.getHorizonLocal() != null  ) {
+			hLo = new HorizonLocal( projector ) ;
+			horizon.getHorizonLocal().setupCompanion( hLo ) ;
+			hLo.register() ;
+
+			pse = hLo ;
+		} else if ( horizon.getHorizonEquatorial() != null  ) {
+			hEq = new HorizonEquatorial( projector ) ;
+			horizon.getHorizonEquatorial().setupCompanion( hEq ) ;
+
+			pse = hEq ;
+		} else if ( horizon.getHorizonEcliptical() != null  ) {
+			hEc = new HorizonEcliptical( projector ) ;
+			horizon.getHorizonEcliptical().setupCompanion( hEc ) ;
+			hEc.register() ;
+
+			pse = hEc ;
+		} else { // horizon.getHorizonGalactic() != null
+			hGa = new HorizonGalactic( projector ) ;
+			horizon.getHorizonGalactic().setupCompanion( hGa ) ;
+			hGa.register() ;
+
+			pse = hGa ;
 		}
 
-		return horizon ;
+		return pse ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Circle cl, Projector p ) {
-		astrolabe.model.CircleParallel clP ;
-		astrolabe.model.CircleMeridian clM ;
-		astrolabe.model.CircleSouthernPolar clSP ;
-		astrolabe.model.CircleNorthernPolar clNP ;
-		astrolabe.model.CircleSouthernTropic clST ;
-		PostscriptEmitter circle ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Circle circle, Projector projector ) {
+		CircleParallel cPl ;
+		CircleMeridian cMn ;
+		CircleSouthernPolar cSP ;
+		CircleNorthernPolar cNP ;
+		CircleSouthernTropic cST ;
+		CircleNorthernTropic cNT ;
+		PostscriptEmitter pse ;
 
-		if ( ( clP = cl.getCircleParallel() ) != null ) {
-			circle = new CircleParallel( clP, p ) ;
-		} else if ( ( clM = cl.getCircleMeridian() ) != null ) {
-			circle = new CircleMeridian( clM, p ) ;
-		} else if ( ( clSP = cl.getCircleSouthernPolar() ) != null ) {
-			circle = new CircleSouthernPolar( clSP, p ) ;
-		} else if ( ( clNP = cl.getCircleNorthernPolar() ) != null ) {
-			circle = new CircleNorthernPolar( clNP, p ) ;
-		} else if ( ( clST = cl.getCircleSouthernTropic() ) != null ) {
-			circle = new CircleSouthernTropic( clST, p ) ;
-		} else { // cl.getCircleNorthernTropic() != null
-			circle = new CircleNorthernTropic( cl.getCircleNorthernTropic(), p ) ;
+		if ( circle.getCircleParallel() != null ) {
+			cPl = new CircleParallel( projector ) ;
+			circle.getCircleParallel().setupCompanion( cPl ) ;
+			cPl.register() ;
+
+			pse = cPl ;
+		} else if ( circle.getCircleMeridian() != null ) {
+			cMn = new CircleMeridian( projector ) ;
+			circle.getCircleMeridian().setupCompanion( cMn ) ;
+			cMn.register() ;
+
+			pse = cMn ;
+		} else if ( circle.getCircleSouthernPolar() != null ) {
+			cSP = new CircleSouthernPolar( projector ) ;
+			circle.getCircleSouthernPolar().setupCompanion( cSP ) ;
+			cSP.register() ;
+
+			pse = cSP ;
+		} else if ( circle.getCircleNorthernPolar() != null ) {
+			cNP = new CircleNorthernPolar( projector ) ;
+			circle.getCircleNorthernPolar().setupCompanion( cNP ) ;
+			cNP.register() ;
+
+			pse = cNP ;
+		} else if (  circle.getCircleSouthernTropic() != null ) {
+			cST = new CircleSouthernTropic( projector ) ;
+			circle.getCircleSouthernTropic().setupCompanion( cST ) ;
+			cST.register() ;
+
+			pse = cST ;
+		} else { // circle.getCircleNorthernTropic() != null
+			cNT = new CircleNorthernTropic( projector ) ;
+			circle.getCircleNorthernTropic().setupCompanion( cNT ) ;
+			cNT.register() ;
+
+			pse = cNT ;
 		}
 
-		return circle ;
+		return pse ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Dial dl, Baseline baseline ) {
-		astrolabe.model.DialDegree dlD ;
-		PostscriptEmitter dial ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Dial dial, Baseline baseline ) {
+		DialDegree dD ;
+		DialHour dH ;
+		PostscriptEmitter pse ;
 
-		if ( ( dlD = dl.getDialDegree() ) != null ) {
-			dial = new DialDegree( dlD, baseline ) ;
-		} else { // dl.getDialHour() != null
-			dial = new DialHour( dl.getDialHour(), baseline ) ;
+		if ( dial.getDialDegree() != null ) {
+			dD = new DialDegree( baseline ) ;
+			dial.getDialDegree().setupCompanion( dD ) ;
+
+			pse = dD ;
+		} else { // dial.getDialHour() != null
+			dH = new DialHour( baseline ) ;
+			dial.getDialHour().setupCompanion( dH ) ;
+
+			pse = dH ;
 		}
 
-		return dial ;
+		return pse ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Annotation an ) {
-		astrolabe.model.AnnotationStraight anS ;
-		PostscriptEmitter annotation ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Annotation annotation ) {
+		AnnotationStraight aS ;
+		AnnotationCurved aC ;
+		PostscriptEmitter pse ;
 
-		if ( ( anS = an.getAnnotationStraight() ) != null ) {
-			annotation = new AnnotationStraight( anS ) ;
-		} else { // an.getAnnotationCurved() != null
-			annotation = new AnnotationCurved( an.getAnnotationCurved() ) ;
+		if ( annotation.getAnnotationStraight() != null ) {
+			aS = new AnnotationStraight() ;
+			annotation.getAnnotationStraight().setupCompanion( aS ) ;
+			aS.register() ;
+
+			pse = aS ;
+		} else { // annotation.getAnnotationCurved() != null
+			aC = new AnnotationCurved() ;
+			annotation.getAnnotationCurved().setupCompanion( aC ) ;
+			aC.register() ;
+
+			pse = aC ;
 		}
 
-		return annotation ;
+		return pse ;
 	}
 
-	public static PostscriptEmitter companionOf( astrolabe.model.Body bd, Projector p ) {
-		astrolabe.model.BodyStellar bdS ;
-		astrolabe.model.BodyAreal bdA ;
-		astrolabe.model.BodyPlanet bdP ;
-		astrolabe.model.BodyMoon bdM ;
-		astrolabe.model.BodySun bdH ;
-		astrolabe.model.BodyElliptical bdE ;
-		PostscriptEmitter body ;
+	public static PostscriptEmitter companionOf( astrolabe.model.Body body, Projector projector ) {
+		BodyStellar cBSr ;
+		BodyAreal cBAl ;
+		BodyPlanet cBPt ;
+		BodyMoon cBMn ;
+		BodySun cBSn ;
+		BodyElliptical cBEl ;
+		BodyParabolical cBPl ;
+		PostscriptEmitter pse ;
 
-		if ( ( bdS = bd.getBodyStellar() ) != null ) {
-			body = new BodyStellar( bdS, p ) ;
-		} else if ( ( bdA = bd.getBodyAreal() ) != null ) {
-			body = new BodyAreal( bdA, p ) ;
-		} else if ( ( bdP = bd.getBodyPlanet() ) != null ) {
-			body = new BodyPlanet( bdP, p ) ;
-		} else if ( ( bdM = bd.getBodyMoon() ) != null ) {
-			body = new BodyMoon( bdM, p ) ;
-		} else if ( ( bdH = bd.getBodySun() ) != null ) {
-			body = new BodySun( bdH, p ) ;
-		} else if ( ( bdE = bd.getBodyElliptical() ) != null ) {
-			body = new BodyElliptical( bdE, p ) ;
-		} else { // bd.getBodyParabolical() != null
-			body = new BodyParabolical( bd.getBodyParabolical(), p ) ;
+		if ( body.getBodyStellar() != null ) {
+			cBSr = new BodyStellar( projector ) ;
+			body.getBodyStellar().setupCompanion( cBSr ) ;
+			cBSr.register() ;
+
+			pse = cBSr ;
+		} else if ( body.getBodyAreal() != null ) {
+			cBAl = new BodyAreal( projector ) ;
+			body.getBodyAreal().setupCompanion( cBAl ) ;
+			cBAl.register() ;
+
+			pse = cBAl ;
+		} else if ( body.getBodyPlanet() != null ) {
+			cBPt = new BodyPlanet( projector ) ;
+			body.getBodyPlanet().setupCompanion( cBPt ) ;
+
+			pse = cBPt ;
+		} else if ( body.getBodyMoon() != null ) {
+			cBMn = new BodyMoon( projector ) ;
+			body.getBodyMoon().setupCompanion( cBMn ) ;
+
+			pse = cBMn ;
+		} else if ( body.getBodySun() != null ) {
+			cBSn = new BodySun( projector ) ;
+			body.getBodySun().setupCompanion( cBSn ) ;
+
+			pse = cBSn ;
+		} else if ( body.getBodyElliptical() != null ) {
+			cBEl = new BodyElliptical( projector ) ;
+			body.getBodyElliptical().setupCompanion( cBEl ) ;
+
+			pse = cBEl ;
+		} else { // body.getBodyParabolical() != null
+			cBPl = new BodyParabolical( projector ) ;
+			body.getBodyParabolical().setupCompanion( cBPl ) ;
+
+			pse = cBPl ;
 		}
 
-		return body ;
+		return pse ;
 	}
 
-	public static Catalog companionOf( astrolabe.model.Catalog ct, Projector p ) {
-		astrolabe.model.CatalogADC1239H ct1239h ;
-		astrolabe.model.CatalogADC1239T ct1239t ;
-		astrolabe.model.CatalogADC5050 ct5050 ;
-		astrolabe.model.CatalogADC5109 ct5109 ;
-		astrolabe.model.CatalogADC6049 ct6049 ;
-		astrolabe.model.CatalogADC7118 ct7118 ;
-		Catalog catalog ;
+	public static Catalog companionOf( astrolabe.model.Catalog catalog, Projector projector ) {
+		CatalogADC1239H c1239h ;
+		CatalogADC1239T c1239t ;
+		CatalogADC5050 c5050 ;
+		CatalogADC5109 c5109 ;
+		CatalogADC6049 c6049 ;
+		CatalogADC7118 c7118 ;
+		CatalogADC7237 c7237 ;
 
-		if ( ( ct1239h = ct.getCatalogADC1239H() ) != null ) {
-			catalog = new CatalogADC1239H( ct1239h, p ) ;
-		} else if ( ( ct1239t = ct.getCatalogADC1239T() ) != null ) {
-			catalog = new CatalogADC1239T( ct1239t, p ) ;
-		} else if ( ( ct5050 = ct.getCatalogADC5050() ) != null ) {
-			catalog = new CatalogADC5050( ct5050, p ) ;
-		} else if ( ( ct5109 = ct.getCatalogADC5109() ) != null ) {
-			catalog = new CatalogADC5109( ct5109, p ) ;
-		} else if ( ( ct6049 = ct.getCatalogADC6049() ) != null ) {
-			catalog = new CatalogADC6049( ct6049, p ) ;
-		} else if ( ( ct7118 = ct.getCatalogADC7118() ) != null ) {
-			catalog = new CatalogADC7118( ct7118, p ) ;
-		} else { // // ct.getCatalogADC7237() != null
-			catalog = new CatalogADC7237( ct.getCatalogADC7237(), p ) ;
+		if ( catalog.getCatalogADC1239H() != null ) {
+			c1239h = new CatalogADC1239H( projector ) ;
+			catalog.getCatalogADC1239H().setupCompanion( c1239h ) ;
+			c1239h.register() ;
+
+			return c1239h ;
+		} else if (  catalog.getCatalogADC1239T() != null ) {
+			c1239t = new CatalogADC1239T( projector ) ;
+			catalog.getCatalogADC1239T().setupCompanion( c1239t ) ;
+			c1239t.register() ;
+
+			return c1239t ;
+		} else if ( catalog.getCatalogADC5050() != null ) {
+			c5050 = new CatalogADC5050( projector ) ;
+			catalog.getCatalogADC5050().setupCompanion( c5050 ) ;
+			c5050.register() ;
+
+			return c5050 ;
+		} else if (  catalog.getCatalogADC5109() != null ) {
+			c5109 = new CatalogADC5109( projector ) ;
+			catalog.getCatalogADC5109().setupCompanion( c5109 ) ;
+			c5109.register() ;
+
+			return c5109 ;
+		} else if ( catalog.getCatalogADC6049() != null ) {
+			c6049 = new CatalogADC6049( projector ) ;
+			catalog.getCatalogADC6049().setupCompanion( c6049 ) ;
+			c6049.register() ;
+
+			return c6049 ;
+		} else if ( catalog.getCatalogADC7118() != null ) {
+			c7118 = new CatalogADC7118( projector ) ;
+			catalog.getCatalogADC7118().setupCompanion( c7118 ) ;
+			c7118.register() ;
+
+			return c7118 ;
+		} else { // catalog.getCatalogADC7237() != null
+			c7237 = new CatalogADC7237( projector ) ;
+			catalog.getCatalogADC7237().setupCompanion( c7237 ) ;
+			c7237.register() ;
+
+			return c7237 ;
 		}
-
-		return catalog ;
 	}
 
 	public static void modelOf( HorizonType horizon ) throws ValidationException {

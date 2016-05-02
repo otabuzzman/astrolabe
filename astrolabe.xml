@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
-astrolabe.xsd" name="astrolabe">
+astrolabe.xsd">
 	<Epoch>
 		<Calendar>
 			<YMD y="2000" m="3" d="3"/>
@@ -114,7 +114,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="10" division="1">
+									<GraduationSpan value="10" division="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -153,7 +153,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -170,7 +170,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -187,7 +187,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -304,7 +304,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -442,7 +442,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -459,7 +459,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -512,7 +512,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Annotation>
@@ -537,12 +537,12 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="10" division="1">
+									<GraduationSpan value="10" division="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -568,7 +568,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -585,7 +585,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -602,7 +602,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -668,7 +668,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -994,7 +994,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="true" baseline="none">
-								<GraduationSpan span="10" division="1">
+								<GraduationSpan value="10" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
 										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
@@ -1010,7 +1010,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
-								<GraduationSpan span="90" division="1">
+								<GraduationSpan value="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
@@ -1026,7 +1026,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
-								<GraduationSpan span="90" division="1">
+								<GraduationSpan value="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
@@ -1042,7 +1042,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="false" baseline="none">
-								<GraduationSpan span="90" division="1">
+								<GraduationSpan value="90" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
@@ -1058,7 +1058,7 @@ astrolabe.xsd" name="astrolabe">
 								</AnnotationCurved>
 							</Annotation>
 							<DialDay reflect="true" baseline="none">
-								<GraduationSpan span="180" division="1">
+								<GraduationSpan value="180" division="1">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{wertt}. {monatkurz}"/>
 									</AnnotationStraight>
@@ -1070,7 +1070,7 @@ astrolabe.xsd" name="astrolabe">
 					<Body>
 						<BodySun type="true" circle="suntrue" nature="celestial">
 							<DialDay reflect="false" baseline="rail">
-								<GraduationSpan span="1" division="4">
+								<GraduationSpan value="1" division="4">
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
@@ -1083,7 +1083,7 @@ astrolabe.xsd" name="astrolabe">
 										</Script>
 									</AnnotationStraight>
 								</GraduationSpan>
-								<GraduationHalf span="7">
+								<GraduationHalf value="7">
 									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
 										<Script purpose="guidance" value="{julianischertag}"/>
 									</AnnotationStraight>
@@ -1099,7 +1099,7 @@ astrolabe.xsd" name="astrolabe">
 										</Script>
 									</AnnotationStraight>
 								</GraduationHalf>
-								<GraduationFull span="30">
+								<GraduationFull value="30">
 									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
 										<Script purpose="dialcardinal" value="{monat}"/>
 									</AnnotationStraight>
@@ -1130,12 +1130,12 @@ astrolabe.xsd" name="astrolabe">
 					<Body>
 						<BodySun type="mean" circle="sunmean" nature="celestial">
 							<DialDay reflect="true" baseline="rail">
-								<GraduationSpan span="1" division="4">
+								<GraduationSpan value="1" division="4">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 										<Script purpose="guidance" value="{wertt}."/>
 									</AnnotationStraight>
 								</GraduationSpan>
-								<GraduationHalf span="7">
+								<GraduationHalf value="7">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
@@ -1314,7 +1314,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="rail" reflect="false">
-									<GraduationSpan division="4" span="10">
+									<GraduationSpan division="4" value="10">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialfraction" value="{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -1489,7 +1489,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -1743,7 +1743,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -1908,19 +1908,19 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Dial>
 								<DialHour baseline="rail" reflect="true">
-									<GraduationSpan span=".5" division="4">
+									<GraduationSpan value=".5" division="4">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialfraction" value="30">
 												<Superscript value="m"/>
 											</Script>
 										</AnnotationStraight>
 									</GraduationSpan>
-									<GraduationHalf span="1">
+									<GraduationHalf value="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialcardinal" value="{azimutzeitstd}">
 												<Superscript value="h"/>
@@ -1971,19 +1971,19 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Dial>
 								<DialHour baseline="rail" reflect="false">
-									<GraduationSpan span=".5" division="3">
+									<GraduationSpan value=".5" division="3">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialfraction" value="30">
 												<Superscript value="m"/>
 											</Script>
 										</AnnotationStraight>
 									</GraduationSpan>
-									<GraduationHalf span="1">
+									<GraduationHalf value="1">
 										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 											<Script purpose="dialcardinal" value="{wertstd}">
 												<Superscript value="h"/>
@@ -2029,7 +2029,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2047,7 +2047,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Annotation>
@@ -2069,7 +2069,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2086,7 +2086,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2103,7 +2103,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2120,7 +2120,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2137,7 +2137,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2154,7 +2154,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2171,7 +2171,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2188,7 +2188,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Angle>
@@ -2206,7 +2206,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Annotation>
@@ -2226,7 +2226,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 							<Annotation>
@@ -2246,7 +2246,7 @@ astrolabe.xsd" name="astrolabe">
 							</Begin>
 							<End>
 								<Angle>
-									<Rational value="360"/>
+									<Rational value="359.9999"/>
 								</Angle>
 							</End>
 						</CircleNorthernPolar>
@@ -2334,7 +2334,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -2484,7 +2484,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>
@@ -2634,7 +2634,7 @@ astrolabe.xsd" name="astrolabe">
 							</End>
 							<Dial>
 								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan span="20" division="1">
+									<GraduationSpan value="20" division="1">
 										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 											<Script purpose="guidance" value="{wertbeide}{wertgrd}&#x00b0;"/>
 										</AnnotationStraight>

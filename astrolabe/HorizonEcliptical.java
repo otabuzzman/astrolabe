@@ -10,34 +10,30 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 
 	private Projector projector ;
 
-	private double la ;
+	public HorizonEcliptical( Projector projector ) {
+		this.projector = projector ;
+	}
 
-	private double e ; // mean obliquity of ecliptic
-
-	public HorizonEcliptical( Peer peer, Projector projector ) {
-		peer.setupCompanion( this ) ;
-
+	public void register() {
 		CAA2DCoordinate c ;
-		double epoch, eq[] = new double[2] ;
+		double epoch, e ;
+		double eq[] = new double[2] ;
 		MessageCatalog m ;
 		String key ;
 
-		this.projector = projector ;
-
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
 		eq[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 		eq[1] = c.Y() ;
-		la = eq[1] ;
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		key = m.message( ApplicationConstant.LK_HORIZON_ECLIPTICEPSILON ) ;
 		AstrolabeRegistry.registerDMS( key, e ) ;
 		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
-		AstrolabeRegistry.registerDMS( key, la ) ;		
+		AstrolabeRegistry.registerDMS( key, eq[1] ) ;		
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -51,9 +47,11 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
-			PostscriptEmitter annotation ;
+			AnnotationStraight annotation ;
 
-			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
+			annotation = new AnnotationStraight() ;
+			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			annotation.register() ;
 
 			ps.operator.gsave() ;
 
@@ -119,7 +117,11 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	public double[] convert( double l, double b ) {
 		CAA2DCoordinate c ;
 		double[] r = new double[2] ;
+		double epoch, e ;
 
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, e ) ;
 		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 		r[1] = c.Y() ;
@@ -134,7 +136,11 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	public double[] unconvert( double RA, double d ) {
 		CAA2DCoordinate c ;
 		double[] r = new double[2] ;
+		double epoch, e ;
 
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Equatorial2Ecliptic( CAACoordinateTransformation.DegreesToHours( RA ), d, e ) ;
 		r[0] = c.X() ;
 		r[1] = c.Y() ;

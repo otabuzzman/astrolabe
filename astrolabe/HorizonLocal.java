@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import java.util.Calendar;
+
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation ;
 import caa.CAADate;
@@ -11,63 +13,88 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 	private Projector projector ;
 
-	private double la ;
-	private double ST ;
-	private double lo ;
-
-	public HorizonLocal( Peer peer, Projector projector ) {
-		peer.setupCompanion( this ) ;
-
-		String key ;
-		MessageCatalog m ;
-		double epoch ;
-
+	public HorizonLocal( Projector projector ) {
 		this.projector = projector ;
+	}
+
+	public double date() {
+		Calendar calendar ;
+		CAADate datetime ;
+		double jd ;
+
+		if ( getDate() == null ) {
+			calendar = Calendar.getInstance() ;
+
+			datetime = new CAADate(
+					calendar.get( Calendar.YEAR ),
+					calendar.get( Calendar.MONTH ),
+					calendar.get( Calendar.DAY_OF_MONTH ),
+					calendar.get( Calendar.HOUR_OF_DAY ),
+					calendar.get( Calendar.MINUTE ), 0, true ) ;
+			jd = datetime.Julian() ;
+			datetime.delete() ;
+
+			return jd ;
+		} else
+			return AstrolabeFactory.valueOf( getDate() ) ;
+	}
+
+	public double longitude() {
+		if ( getLongitude() == null )
+			return 0 ;
+		else
+			return AstrolabeFactory.valueOf( getLongitude() ) ;
+	}
+
+	public double getLT( double jd ) {
+		double lo, lt ;
+		CAADate d ;
+
+		d = new CAADate( jd, true ) ;
+
+		lt = CAACoordinateTransformation.HoursToDegrees( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
+		lo = longitude() ;
+
+		d.delete() ;
+
+		return lt+( lo>180?lo-360:lo ) ;
+	}
+
+	public double getST( double jd ) {
+		double la0, lo0, epoch, e, ra0, lt ;
+		CAA2DCoordinate c ;
+
+		la0 = BodySun.meanEclipticLatitude( jd ) ;
+		lo0 = BodySun.meanEclipticLongitude( jd ) ;
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ; 
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+
+		c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
+		ra0 = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
+
+		lt = getLT( jd ) ;
+
+		return CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
+	}
+
+	public void register() {
+		MessageCatalog m ;
+		String key ;
+		double jd, la ;
 
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
-		la = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getLatitude() ) ;
+		jd = date() ;
+		key = m.message( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
+		AstrolabeRegistry.registerHMS( key, getLT( jd ) ) ;
+		key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
+		AstrolabeRegistry.registerHMS( key, getST( jd ) ) ;
+
+		la = AstrolabeFactory.valueOf( getLatitude() ) ;
 		key = m.message( ApplicationConstant.LK_HORIZON_LATITUDE ) ;
 		AstrolabeRegistry.registerDMS( key, la ) ;
-
-		if ( ( (astrolabe.model.HorizonLocal) peer ).getLongitude() == null ) {
-			lo = 0 ;
-		} else {
-			lo = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getLongitude() ) ;
-			key = m.message( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
-			AstrolabeRegistry.registerDMS( key, lo ) ;
-		}
-
-		if ( ( (astrolabe.model.HorizonLocal) peer ).getDate() == null ) {
-			ST = 0 ;
-		} else {
-			CAA2DCoordinate c ;
-			double lt, ra0, lo0, la0, e, jd ;
-			CAADate d ;
-
-			jd = AstrolabeFactory.valueOf( ( (astrolabe.model.HorizonLocal) peer ).getDate() ) ;
-			d = new CAADate( jd, true ) ;
-
-			lt = CAACoordinateTransformation.HoursToDegrees( d.Hour()+d.Minute()/60.+d.Second()/3600 ) ;
-
-			d.delete() ;
-
-			lt = lt+( lo>180?lo-360:lo ) ;
-			key = m.message( ApplicationConstant.LK_HORIZON_TIMELOCAL ) ;
-			AstrolabeRegistry.registerHMS( key, lt ) ;
-
-			lo0 = BodySun.meanEclipticLongitude( jd ) ;
-			la0 = BodySun.meanEclipticLatitude( jd ) ;
-			epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ; 
-			e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
-
-			c = CAACoordinateTransformation.Ecliptic2Equatorial( lo0, la0, e ) ;
-			ra0 = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
-
-			ST = CAACoordinateTransformation.MapTo0To360Range( ra0+lt-180/*12h*/ ) ;
-			key = m.message( ApplicationConstant.LK_HORIZON_TIMESIDEREAL ) ;
-			AstrolabeRegistry.registerHMS( key, ST ) ;
-		}
+		key = m.message( ApplicationConstant.LK_HORIZON_LONGITUDE ) ;
+		AstrolabeRegistry.registerDMS( key, longitude() ) ;
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
@@ -81,9 +108,11 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
-			PostscriptEmitter annotation ;
+			AnnotationStraight annotation ;
 
-			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
+			annotation = new AnnotationStraight() ;
+			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			annotation.register() ;
 
 			ps.operator.gsave() ;
 
@@ -147,15 +176,18 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public double[] convert( double A, double h ) {
-		CAA2DCoordinate c ;
 		double[] r = new double[2] ;
+		CAA2DCoordinate c ;
+		double la ;
+
+		la = AstrolabeFactory.valueOf( getLatitude() ) ;
 
 		c = CAACoordinateTransformation.Horizontal2Equatorial( A, h, la ) ;
 		r[0] = CAACoordinateTransformation.HoursToDegrees( c.X() ) ;
 		r[1] = c.Y() ;
 
 		// r[0] is HA is ST-lo-RA.
-		r[0] = ST-r[0] ;
+		r[0] = getST( date() )-r[0] ;
 
 		return r ;
 	}
@@ -165,11 +197,14 @@ public class HorizonLocal extends astrolabe.model.HorizonLocal implements Postsc
 	}
 
 	public double[] unconvert( double RA, double d ) {
-		CAA2DCoordinate c ;
 		double[] r = new double[2];
+		CAA2DCoordinate c ;
+		double la ;
+
+		la = AstrolabeFactory.valueOf( getLatitude() ) ;
 
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( this.ST-RA ), d, la ) ;
+				CAACoordinateTransformation.DegreesToHours( getST( date() )-RA ), d, la ) ;
 		r[0] = c.X() ;
 		r[1] = c.Y() ;
 

@@ -8,7 +8,7 @@ public class AtlasGnomonic extends AtlasAzimuthalType {
 	public AtlasGnomonic() {
 	}
 
-	public AtlasGnomonic( Projector projector, astrolabe.model.Atlas atlas ) {
-		super( projector, atlas ) ;
+	public AtlasGnomonic( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
+		super( atlas, size, northern, projector ) ;
 	}
 }

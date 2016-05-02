@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-public class Configuration {
+public final class Configuration {
+
+	private Configuration() {        
+	} 
 
 	public static boolean getValue( Preferences node, String key, boolean def ) {
 		boolean r = def ;

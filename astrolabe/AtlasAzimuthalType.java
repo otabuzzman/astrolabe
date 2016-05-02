@@ -23,27 +23,57 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 	private final static String DEFAULT_MAP = "Atlas.map" ;
 
+	private double originRA ;
+	private double originde ;
+	private double extentRA ;
+	private double extentde ;
+
+	private String marshalURI ;
+
+	private double sizex ;
+	private double sizey ;
+
+	private boolean northern ;
+
 	private Projector projector ;
 
-	private astrolabe.model.Atlas atlas ;
+	private double spanRA = Double.NEGATIVE_INFINITY ;
+	private double spande = Double.NEGATIVE_INFINITY ;
 
 	// castor requirement for (un)marshalling
 	public AtlasAzimuthalType() {
 	}
 
-	public AtlasAzimuthalType( Projector projector, astrolabe.model.Atlas atlas ) {
+	public AtlasAzimuthalType( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
+		astrolabe.model.AngleType angle ;
+
+		originRA = AstrolabeFactory.valueOf( atlas.getOrigin() )[1] ;
+		originde = AstrolabeFactory.valueOf( atlas.getOrigin() )[2] ;
+		extentRA = AstrolabeFactory.valueOf( atlas.getExtent() )[1] ;
+		extentde = AstrolabeFactory.valueOf( atlas.getExtent() )[2] ;
+
+		marshalURI = atlas.getMarshal() ;
+
+		sizex = size[0] ;
+		sizey = size[1] ;
+
+		this.northern = northern ;
+
 		this.projector = projector ;
 
-		this.atlas = atlas ;
+		angle = atlas.getAtlasTypeChoice().getSpanDeclination() ;
+		if ( angle == null ) {
+			angle = atlas.getAtlasTypeChoice().getSpanRA() ;
+			spanRA = AstrolabeFactory.valueOf( angle ) ;
+		} else
+			spande = AstrolabeFactory.valueOf( angle ) ;
 	}
 
-	public void addAllAtlasPage( double[] size, boolean northern ) throws ValidationException {
+	public void addAllAtlasPage() throws ValidationException {
 		AtlasPage atlasPage ;
-		astrolabe.model.AngleType angle ;
 		int nra, nde, grid[], tcp, bcp ;
 		Vector p0, p0d, p1, p1d, p2, p3 ;
 		Vector va, vb, vcen, vtop, vbot ;
-		double spanRA, spanDe, originRA, originDe, extentRA, extentDe ;
 		double ra, de, a, b, sina, r, cen, de0, sde, ra0, sra ;
 		double rado, rade, rad, ho, he, h, s, c, p, g ;
 		double[] xy, eq ;
@@ -56,20 +86,12 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				-1, 0, 0,
 				0, 0, 1 } ;
 
-		originRA = AstrolabeFactory.valueOf( atlas.getOrigin() )[1] ;
-		originDe = AstrolabeFactory.valueOf( atlas.getOrigin() )[2] ;
-		extentRA = AstrolabeFactory.valueOf( atlas.getExtent() )[1] ;
-		extentDe = AstrolabeFactory.valueOf( atlas.getExtent() )[2] ;
+		r = sizex/sizey ;
 
-		r = size[0]/size[1] ;
-
-		angle = atlas.getAtlasTypeChoice().getSpanDeclination() ;
-		if ( angle != null ) {
-			spanDe = AstrolabeFactory.valueOf( angle ) ;
-
-			de0 = originDe-spanDe ;
-			nde = (int) ( java.lang.Math.abs( extentDe/spanDe )+1 ) ;
-			sde = ( extentDe-spanDe )/( nde-1 ) ;
+		if ( spande>Double.NEGATIVE_INFINITY ) {
+			de0 = originde-spande ;
+			nde = (int) ( java.lang.Math.abs( extentde/spande )+1 ) ;
+			sde = ( extentde-spande )/( nde-1 ) ;
 
 			grid = new int[ nde ] ;
 
@@ -78,7 +100,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 				xy = projector.project( originRA, de ) ;
 				p0d = new Vector( xy ) ;
-				xy = projector.project( originRA, de+spanDe ) ;
+				xy = projector.project( originRA, de+spande ) ;
 				p1d = new Vector( xy ) ;
 
 				vb = new Vector( p1d )
@@ -139,7 +161,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 					atlasPage.setNum( num++ ) ;
 					atlasPage.setName( getName() ) ;
 
-					atlasPage.setScale( size[0]/a*100 ) ;
+					atlasPage.setScale( sizex/a*100 ) ;
 
 					atlasPage.setTcp( 0 ) ;
 					atlasPage.setBcp( 0 ) ;
@@ -219,16 +241,13 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 				}
 			}
 		} else {
-			angle = atlas.getAtlasTypeChoice().getSpanRA() ;
-			spanRA = AstrolabeFactory.valueOf( angle ) ;
-
 			ra0 = originRA ;
 			nra = (int) ( java.lang.Math.abs( extentRA/spanRA )+1 ) ;
 			sra = ( extentRA-spanRA )/( nra-1 ) ;
 
-			rado = new Vector( projector.project( originRA, originDe ) )
+			rado = new Vector( projector.project( originRA, originde ) )
 			.abs() ;
-			rade = new Vector( projector.project( originRA+extentRA, originDe-extentDe ) )
+			rade = new Vector( projector.project( originRA+extentRA, originde-extentde ) )
 			.abs() ;
 
 			ho = Math.cos( spanRA/2 )*rado ;
@@ -299,7 +318,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 
 					atlasPage.setNum( num++ ) ;
 
-					atlasPage.setScale( size[0]/a*100 ) ;
+					atlasPage.setScale( sizex/a*100 ) ;
 
 					atlasPage.setTcp( 0 ) ;
 					atlasPage.setBcp( 0 ) ;
@@ -416,7 +435,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		File xmlf ;
 
 		try {
-			xmlu = new URI( atlas.getMarshal() ) ;
+			xmlu = new URI( marshalURI ) ;
 			if ( xmlu.isAbsolute() ) {
 				xmlf = new File( xmlu ) ;	
 			} else {
@@ -465,12 +484,13 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		String map ;
 		Writer xmlw ;
 
-		// map file creation:
 		// 1. make AtlasStereographic.map (e.g.)
 		// 2. remove unused class definitions from AtlasStereographic.map
 		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
 		// 4. remove required attribute from field definitions for Phi and Theta
 		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
+		// 6. rename AtlasStereographic to Atlas
+		// 7. rename AtlasStereographic.map to Atlas.map
 		try {
 			map = Configuration.getValue(
 					Configuration.getClassNode( this, getName(), null ),

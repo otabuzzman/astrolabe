@@ -123,22 +123,22 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		k = m.message( ApplicationConstant.LK_ADC6049_CONSTELLATION ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_CONSTELLATION, new Object[] { con } ) ;
 		v = m.message( p ) ;
-		Registry.registerName( k, v ) ;
+		AstrolabeRegistry.registerName( k, v ) ;
 
 		k = m.message( ApplicationConstant.LK_ADC6049_ABBREVIATION ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_ABBREVIATION, new Object[] { con } ) ;
 		v = m.message( p ) ;
-		Registry.registerName( k, v ) ;
+		AstrolabeRegistry.registerName( k, v ) ;
 
 		k = m.message( ApplicationConstant.LK_ADC6049_NOMINATIVE ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_NOMINATIVE, new Object[] { con } ) ;
 		v = m.message( p ) ;
-		Registry.registerName( k, v ) ;
+		AstrolabeRegistry.registerName( k, v ) ;
 
 		k = m.message( ApplicationConstant.LK_ADC6049_GENITIVE ) ;
 		p = MessageFormat.format( ApplicationConstant.LP_ADC6049_GENITIVE, new Object[] { con } ) ;
 		v = m.message( p ) ;
-		Registry.registerName( k, v ) ;
+		AstrolabeRegistry.registerName( k, v ) ;
 	}
 
 	public double[] RA() {

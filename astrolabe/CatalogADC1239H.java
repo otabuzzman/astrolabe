@@ -40,41 +40,39 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 	private Projector projector ;
 
-	public CatalogADC1239H( Peer peer, Projector projector ) {
-		Geometry fov, fovu, fove ;
-		String key ;
-
-		peer.setupCompanion( this ) ;
-
+	public CatalogADC1239H( Projector projector ) {
 		this.projector = projector ;
+	}
+
+	public void register() {
+		Geometry fov, fovu, fove ;
 
 		if ( getFov() == null ) {
-			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		} else {
-			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
+			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) Registry.retrieve( getFov() ) ;
 			fov = fovu.intersection( fove ) ;
 		}
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Hashtable<String, CatalogADC1239HRecord> unsafecast( Object hashtable ) {
+		return (Hashtable<String, CatalogADC1239HRecord>) hashtable ;
+	}
+
+	public void addAllCatalogRecord() {
+		Reader reader ;
+		CatalogADC1239HRecord record ;
+		String key ;
 
 		key = getClass().getSimpleName()+":"+getName() ;
 		catalog = unsafecast( Registry.retrieve( key ) ) ;
 		if ( catalog == null ) {
 			catalog = new Hashtable<String, CatalogADC1239HRecord>() ;
 			Registry.register( key, catalog ) ;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Hashtable<String, CatalogADC1239HRecord> unsafecast( Object value ) {
-		return (Hashtable<String, CatalogADC1239HRecord>) value ;
-	}
-
-	public void addAllCatalogRecord() {
-		Reader reader ;
-		CatalogADC1239HRecord record ;
-
-		if ( catalog.size()>0 )
+		} else
 			return ;
 
 		try {
@@ -154,7 +152,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -215,7 +213,9 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyStellar = new BodyStellar( body.getBodyStellar(), projector ) ;
+			bodyStellar = new BodyStellar( projector ) ;
+			body.getBodyStellar().setupCompanion( bodyStellar ) ;
+			bodyStellar.register() ;
 
 			ps.operator.gsave() ;
 

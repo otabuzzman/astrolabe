@@ -8,10 +8,6 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 	public AtlasPage() {
 	}
 
-	public AtlasPage( Peer peer ) {
-		peer.setupCompanion( this ) ;
-	}
-
 	public void headPS( AstrolabePostscriptStream ps ) {
 	}
 
@@ -44,15 +40,15 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_NUM ) ;
-		Registry.registerNumber( key, getNum() ) ;
+		AstrolabeRegistry.registerNumber( key, getNum() ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_TCP ) ;
-		Registry.registerNumber( key, getTcp() ) ;
+		AstrolabeRegistry.registerNumber( key, getTcp() ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_BCP ) ;
-		Registry.registerNumber( key, getBcp() ) ;
+		AstrolabeRegistry.registerNumber( key, getBcp() ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_PCP ) ;
-		Registry.registerNumber( key, getPcp() ) ;
+		AstrolabeRegistry.registerNumber( key, getPcp() ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_FCP ) ;
-		Registry.registerNumber( key, getFcp() ) ;
+		AstrolabeRegistry.registerNumber( key, getFcp() ) ;
 
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_P0RA ) ;
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getP0().getPhi() ) ) ;
@@ -77,10 +73,10 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_TRA ) ;
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getTop().getPhi() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_TDE ) ;
-		Registry.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
+		AstrolabeRegistry.registerNumber( key, AstrolabeFactory.valueOf( getTop().getTheta() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_BRA ) ;
 		AstrolabeRegistry.registerDMS( key, AstrolabeFactory.valueOf( getBottom().getPhi() ) ) ;
 		key = m.message( ApplicationConstant.LK_ATLASPAGE_BDE ) ;
-		Registry.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
+		AstrolabeRegistry.registerNumber( key, AstrolabeFactory.valueOf( getBottom().getTheta() ) ) ;
 	}
 }

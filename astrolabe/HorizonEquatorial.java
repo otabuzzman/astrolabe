@@ -6,9 +6,7 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 
 	private Projector projector ;
 
-	public HorizonEquatorial( Peer peer, Projector projector ) {
-		peer.setupCompanion( this ) ;
-
+	public HorizonEquatorial( Projector projector ) {
 		this.projector = projector ;
 	}
 
@@ -23,9 +21,11 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 
 	public void emitPS( AstrolabePostscriptStream ps ) {
 		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
-			PostscriptEmitter annotation ;
+			AnnotationStraight annotation ;
 
-			annotation = new AnnotationStraight( getAnnotationStraight( an ) ) ;
+			annotation = new AnnotationStraight() ;
+			getAnnotationStraight( an ).setupCompanion( annotation ) ;
+			annotation.register() ;
 
 			ps.operator.gsave() ;
 

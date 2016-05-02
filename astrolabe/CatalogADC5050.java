@@ -40,41 +40,39 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 
 	private Projector projector ;
 
-	public CatalogADC5050( Peer peer, Projector projector ) {
-		Geometry fov, fovu, fove ;
-		String key ;
-
-		peer.setupCompanion( this ) ;
-
+	public CatalogADC5050( Projector projector ) {
 		this.projector = projector ;
+	}
+
+	public void register() {
+		Geometry fov, fovu, fove ;
 
 		if ( getFov() == null ) {
-			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		} else {
-			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
+			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) Registry.retrieve( getFov() ) ;
 			fov = fovu.intersection( fove ) ;
 		}
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Hashtable<String, CatalogADC5050Record> unsafecast( Object hashtable ) {
+		return (Hashtable<String, CatalogADC5050Record>) hashtable ;
+	}
+
+	public void addAllCatalogRecord() {
+		Reader reader ;
+		CatalogADC5050Record record ;
+		String key ;
 
 		key = getClass().getSimpleName()+":"+getName() ;
 		catalog = unsafecast( Registry.retrieve( key ) ) ;
 		if ( catalog == null ) {
 			catalog = new Hashtable<String, CatalogADC5050Record>() ;
 			Registry.register( key, catalog ) ;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Hashtable<String, CatalogADC5050Record> unsafecast( Object value ) {
-		return (Hashtable<String, CatalogADC5050Record>) value ;
-	}
-
-	public void addAllCatalogRecord() {
-		Reader reader ;
-		CatalogADC5050Record record ;
-
-		if ( catalog.size()>0 )
+		} else
 			return ;
 
 		try {
@@ -154,7 +152,7 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 
 		fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVEFF ) ;
 
-		epoch = ( (Double) AstrolabeRegistry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
+		epoch = ( (Double) Registry.retrieve( ApplicationConstant.GC_EPOCH ) ).doubleValue() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -215,7 +213,9 @@ public class CatalogADC5050 extends astrolabe.model.CatalogADC5050 implements Ca
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			bodyStellar = new BodyStellar( body.getBodyStellar(), projector ) ;
+			bodyStellar = new BodyStellar( projector ) ;
+			body.getBodyStellar().setupCompanion( bodyStellar ) ;
+			bodyStellar.register() ;
 
 			ps.operator.gsave() ;
 

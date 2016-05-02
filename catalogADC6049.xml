@@ -87,7 +87,7 @@ astrolabe.xsd">
 					</Circle>
 					<Body>
 						<BodyAreal nature="authentic">
-							<OutlineElliptical proportion=".5" PA="90">
+							<ShapeElliptical proportion=".5" PA="90">
 								<DMS neg="false" deg="30" min="0" sec="0.0"/>
 								<Position>
 									<phi>
@@ -97,7 +97,7 @@ astrolabe.xsd">
 										<DMS neg="false" deg="20" min="0" sec="0.0"/>
 									</theta>
 								</Position>
-							</OutlineElliptical>
+							</ShapeElliptical>
 						</BodyAreal>
 					</Body>
 					<!--ADC6049-->

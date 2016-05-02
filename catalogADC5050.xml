@@ -84,7 +84,7 @@ astrolabe.xsd">
 				</Origin>
 				<Extent>
 					<phi>
-						<Rational value="360"/>
+						<Rational value="359.9999"/>
 					</phi>
 					<theta>
 						<Rational value="119.2"/>

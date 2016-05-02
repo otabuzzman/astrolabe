@@ -4,15 +4,13 @@ package astrolabe;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class OutlineElliptical extends astrolabe.model.OutlineElliptical implements PostscriptEmitter {
+public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements PostscriptEmitter {
 
 	private final static double DEFAULT_INTERVAL = 10 ;
 
 	private Projector projector ;
 
-	public OutlineElliptical( Peer peer, Projector projector ) {
-		peer.setupCompanion( this ) ;
-
+	public ShapeElliptical( Projector projector ) {
 		this.projector = projector ;
 	}
 
@@ -35,11 +33,11 @@ public class OutlineElliptical extends astrolabe.model.OutlineElliptical impleme
 
 		ps.operator.dup() ;
 		ps.operator.div( 100 ) ;
-		ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
+		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALO ) ) ) ; 
 		ps.operator.mul() ;
-		ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
+		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMIN ) ) ) ; 
 		ps.push( ApplicationConstant.PS_PROLOG_MAX ) ;
-		ps.push( (Double) ( AstrolabeRegistry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
+		ps.push( (Double) ( Registry.retrieve( ApplicationConstant.PK_CHART_HALOMAX ) ) ) ; 
 		ps.push( ApplicationConstant.PS_PROLOG_MIN ) ;
 
 		ps.operator.mul( 2 ) ;
@@ -61,7 +59,7 @@ public class OutlineElliptical extends astrolabe.model.OutlineElliptical impleme
 	}
 
 	public List<double[]> list() {
-		List<double[]> r = new java.util.Vector<double[]>() ;
+		List<double[]> list ;
 		double d, d2, p[] ;
 		Vector vp, va, vd2, vh ;
 		double pa, pas, pac, mrot[] ;
@@ -70,7 +68,7 @@ public class OutlineElliptical extends astrolabe.model.OutlineElliptical impleme
 
 		interval = Configuration.getValue(
 				Configuration.getClassNode( this, null, null ),
-				ApplicationConstant.PK_CIRCLE_INTERVAL, DEFAULT_INTERVAL ) ;
+				ApplicationConstant.PK_OUTLINE_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		d = AstrolabeFactory.valueOf( this ) ;
 		p = AstrolabeFactory.valueOf( getPosition() ) ;
@@ -103,15 +101,17 @@ public class OutlineElliptical extends astrolabe.model.OutlineElliptical impleme
 
 		vh.add( vp ) ;
 
-		r.add( new double[] { vh.x, vh.y } ) ;
+		list = new java.util.Vector<double[]>() ;
+
+		list.add( new double[] { vh.x, vh.y } ) ;
 		for ( double i=interval ; i<360 ; i=i+interval ) {
 			vh.set( d2*Math.cos( i ), d2*Math.sin( i )*getProportion() ) ;
 			vh.apply( mrot ) ;
 			vh.add( vp ) ;
 
-			r.add( new double[] { vh.x, vh.y } ) ;
+			list.add( new double[] { vh.x, vh.y } ) ;
 		}
 
-		return r ;
+		return list ;
 	}
 }

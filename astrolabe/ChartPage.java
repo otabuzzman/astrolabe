@@ -11,17 +11,39 @@ public class ChartPage extends astrolabe.model.ChartPage {
 
 	private final static String DEFAULT_LAYOUT = "100x100" ;
 
-	private double sizex ;
-	private double sizey ;
-	private double viewx ;
-	private double viewy ;
-
-	public ChartPage( Peer peer ) {
-		String sv, sd[], l ;
-		Coordinate[] c ;
+	public void register() {
+		double size[], viewx, viewy ;
+		String layout ;
+		Coordinate[] coordinate ;
 		Geometry fov ;
 
-		peer.setupCompanion( this ) ;
+		size = size() ;
+		viewx = size[0]*getView()/100 ;
+		viewy = size[1]*getView()/100 ;
+
+		layout = Configuration.getValue(
+				Configuration.getClassNode( this, getName(), null ),
+				ApplicationConstant.PK_CHARTPAGE_LAYOUT, DEFAULT_LAYOUT ) ;
+		Registry.register( ApplicationConstant.GC_LAYOUT,
+				new Layout( layout, new double[] {
+						-size[0]/2, -size[1]/2,
+						size[0]/2, size[1]/2 } ) ) ;
+
+		coordinate = new Coordinate[] {
+				new Coordinate( -viewx/2, -viewy/2 ),
+				new Coordinate( -viewx/2, viewy/2 ),
+				new Coordinate( viewx/2, viewy/2 ),
+				new Coordinate( viewx/2, -viewy/2 ),
+				new Coordinate( -viewx/2, -viewy/2 ),
+		} ;
+		fov = new GeometryFactory().createPolygon(
+				new GeometryFactory().createLinearRing(
+						new CoordinateArraySequence( coordinate ) ), null ) ;
+		Registry.register( ApplicationConstant.GC_FOVUNI, fov ) ;
+	}
+
+	public double[] size() {
+		String sv, sd[] ;
 
 		sv = Configuration.getValue(
 				Configuration.getClassNode( this, getName(), null ),
@@ -31,45 +53,19 @@ public class ChartPage extends astrolabe.model.ChartPage {
 		} else {
 			sd = sv.split( "x" ) ;
 		}
-		sizex = new Double( sd[0] ).doubleValue() ;
-		sizey = new Double( sd[1] ).doubleValue() ;
-		viewx = sizex*getView()/100 ;
-		viewy = sizey*getView()/100 ;
 
-		l = Configuration.getValue(
-				Configuration.getClassNode( this, getName(), null ),
-				ApplicationConstant.PK_CHARTPAGE_LAYOUT, DEFAULT_LAYOUT ) ;
-		Registry.register( ApplicationConstant.GC_LAYOUT,
-				new Layout( l, new double[] {
-						-sizex/2, -sizey/2,
-						sizex/2, sizey/2 } ) ) ;
-
-		c = new Coordinate[] {
-				new Coordinate( -viewx/2, -viewy/2 ),
-				new Coordinate( -viewx/2, viewy/2 ),
-				new Coordinate( viewx/2, viewy/2 ),
-				new Coordinate( viewx/2, -viewy/2 ),
-				new Coordinate( -viewx/2, -viewy/2 ),
-		} ;
-		fov = new GeometryFactory().createPolygon(
-				new GeometryFactory().createLinearRing(
-						new CoordinateArraySequence( c ) ), null ) ;
-		Registry.register( ApplicationConstant.GC_FOVUNI, fov ) ;
+		return new double[] {
+				new Double( sd[0] ).doubleValue(),
+				new Double( sd[1] ).doubleValue() } ;
 	}
 
-	public double sizex() {
-		return sizex ;
-	}
+	public double[] view() {
+		double[] size ;
 
-	public double sizey() {
-		return sizey ;
-	}
+		size = size() ;
 
-	public double viewx() {
-		return viewx ;
-	}
-
-	public double viewy() {
-		return viewy ;
+		return new double[] {
+				size[0]*getView()/100,
+				size[1]*getView()/100 } ;
 	}
 }

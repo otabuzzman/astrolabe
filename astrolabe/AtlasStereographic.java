@@ -8,7 +8,7 @@ public class AtlasStereographic extends AtlasAzimuthalType {
 	public AtlasStereographic() {
 	}
 
-	public AtlasStereographic( Projector projector, astrolabe.model.Atlas atlas ) {
-		super( projector, atlas ) ;
+	public AtlasStereographic( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
+		super( atlas, size, northern, projector ) ;
 	}
 }

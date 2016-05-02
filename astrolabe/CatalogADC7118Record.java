@@ -90,33 +90,33 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 		m = new MessageCatalog( ApplicationConstant.GC_APPLICATION ) ;
 
 		key = m.message( ApplicationConstant.LK_ADC7118_NAME ) ;
-		Registry.registerName( key, Name ) ;
+		AstrolabeRegistry.registerName( key, Name ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_TYPE ) ;
-		Registry.registerName( key, Type  ) ;
+		AstrolabeRegistry.registerName( key, Type  ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_RAH ) ;
-		Registry.registerName( key, RAh ) ;
+		AstrolabeRegistry.registerName( key, RAh ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_RAM ) ;
-		Registry.registerName( key, RAm ) ;
+		AstrolabeRegistry.registerName( key, RAm ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_DE ) ;
-		Registry.registerName( key, DE ) ;
+		AstrolabeRegistry.registerName( key, DE ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_DED ) ;
-		Registry.registerName( key, DEd  ) ;
+		AstrolabeRegistry.registerName( key, DEd  ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_DEM ) ;
-		Registry.registerName( key, DEm ) ;
+		AstrolabeRegistry.registerName( key, DEm ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_SOURCE ) ;
-		Registry.registerName( key, Source ) ;
+		AstrolabeRegistry.registerName( key, Source ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_CONST ) ;
-		Registry.registerName( key, Const ) ;
+		AstrolabeRegistry.registerName( key, Const ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_L_SIZE ) ;
-		Registry.registerName( key, l_size ) ;
+		AstrolabeRegistry.registerName( key, l_size ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_SIZE ) ;
-		Registry.registerName( key, size ) ;
+		AstrolabeRegistry.registerName( key, size ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_MAG ) ;
-		Registry.registerName( key, mag ) ;
+		AstrolabeRegistry.registerName( key, mag ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_N_MAG ) ;
-		Registry.registerName( key, n_mag ) ;
+		AstrolabeRegistry.registerName( key, n_mag ) ;
 		key = m.message( ApplicationConstant.LK_ADC7118_DESC ) ;
-		Registry.registerName( key, Desc ) ;
+		AstrolabeRegistry.registerName( key, Desc ) ;
 	}
 
 	public double[] RA() {

@@ -7,13 +7,7 @@
 			<xs:element ref="Atlas" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Chart" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value=""/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="locale" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -45,13 +39,7 @@
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
 			<xs:element ref="Atlas" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="name" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value=""/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="scale" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
@@ -137,11 +125,7 @@
 		<xs:sequence>
 			<xs:element ref="AtlasPage" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string"/>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:element name="AtlasStereographic">
 		<xs:complexType>
@@ -426,7 +410,7 @@
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="span" use="required">
+		<xs:attribute name="value" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:double">
 					<xs:minExclusive value="0"/>
@@ -649,7 +633,7 @@
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:choice>
 				<xs:element ref="Position" minOccurs="3" maxOccurs="unbounded"/>
-				<xs:element ref="OutlineElliptical"/>
+				<xs:element ref="ShapeElliptical"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -670,7 +654,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="OutlineElliptical">
+	<xs:element name="ShapeElliptical">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AngleType">

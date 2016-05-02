@@ -15,14 +15,12 @@ public class DMS extends astrolabe.model.DMS {
 	}
 
 	public DMS( double value, int precision ) {
-		setup( value, precision ) ;
-	}
-
-	public void setup( double value, int precision ) {
 		double d, m, s, p ;
 		double sec, frc ;
 		int deg, min ;
 		int e ;
+
+		setNeg( 0>value ) ;
 
 		if ( precision>-1 )
 			e = precision ;
@@ -42,8 +40,6 @@ public class DMS extends astrolabe.model.DMS {
 		sec = (int) s ;
 		frc = (int) ( ( s-sec )*p ) ;
 		setSec( sec+frc/p ) ;
-
-		setNeg( 0>value ) ;
 	}
 
 	public int precision() {

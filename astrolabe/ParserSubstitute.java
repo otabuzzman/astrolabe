@@ -367,12 +367,12 @@ public class ParserSubstitute extends ReflectSemantic {
 
 		for ( int a=0 ; a<argv.length-1 ; a=a+2 ) {
 			try {
-				Registry.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
+				AstrolabeRegistry.registerNumber( argv[a], new Long( argv[a+1] ) ) ;
 			} catch ( NumberFormatException el ) {
 				try {
-					Registry.registerNumber( argv[a], new Double( argv[a+1] ) ) ;
+					AstrolabeRegistry.registerNumber( argv[a], new Double( argv[a+1] ) ) ;
 				} catch ( NumberFormatException ed ) {
-					Registry.registerName( argv[a], new String( argv[a+1] ) ) ;
+					AstrolabeRegistry.registerName( argv[a], new String( argv[a+1] ) ) ;
 				}
 			}
 		}

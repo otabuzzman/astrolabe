@@ -10,15 +10,10 @@ public class Registry {
 	private final static Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
 
 	public static Object retrieve( String key ) {
-		Object r ;
-
-		if ( global.containsKey( key ) ) {
-			r = retrieveGlobal( key ) ;
-		} else {
-			r = retrieveLocal( key ) ;
-		}
-
-		return r ;
+		if ( global.containsKey( key ) )
+			return retrieveGlobal( key ) ;
+		else
+			return retrieveLocal( key ) ;
 	} 
 
 	public static Object retrieveGlobal( String key ) {
@@ -26,28 +21,20 @@ public class Registry {
 	}
 
 	public static Object retrieveLocal( String key ) {
-		Object r = null ;
 		ThreadGroup registry ;
 
 		registry = Thread.currentThread().getThreadGroup() ;
 
-		if ( ! local.containsKey( registry ) ) {
+		if ( ! local.containsKey( registry ) )
 			local.put( registry, new Hashtable<String, Object>() ) ;
-		}
 
-		r = retrieve( local.get( registry ), key ) ;
-
-		return r ;
+		return retrieve( local.get( registry ), key ) ;
 	}
 
 	private static Object retrieve( Hashtable<String, Object> registry, String key ) {
-		Object r = null ;
-
-		if ( registry.containsKey( key ) ) {
-			r = registry.get( key ) ;
-		}
-
-		return r ;
+		if ( registry.containsKey( key ) )
+			return registry.get( key ) ;
+		return null ;
 	}
 
 	public static void register( String key, Object value ) {
@@ -86,26 +73,5 @@ public class Registry {
 		if ( local.containsKey( registry ) ) {
 			local.remove( registry ) ;
 		}
-	}
-
-	public static void registerNumber( String key, double value, int precision ) {
-		double p, v ;
-
-		p = java.lang.Math.pow( 10, precision ) ;
-		v = (long) ( ( value*p+.5 ) )/p ;
-
-		registerNumber( key, v ) ;
-	}
-
-	public static void registerNumber( String key, double value ) {
-		register( key, (Object) new Double( value ) ) ;
-	}
-
-	public static void registerNumber( String key, long value ) {
-		register( key, (Object) new Long( value ) ) ;
-	}
-
-	public static void registerName( String key, String value ) {
-		register( key, new String( value ) ) ;
 	}
 }

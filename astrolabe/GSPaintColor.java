@@ -4,8 +4,8 @@ public class GSPaintColor implements PostscriptEmitter {
 
 	private final static double DEFAULT_PAINTCOLOR = 0 ;
 
-	private double[] colorRGB = null ;
-	private double colorGray = -1 ;
+	private double[] colorRGB	= null ;
+	private double colorGray	= DEFAULT_PAINTCOLOR ;
 
 	public GSPaintColor( String param ) {
 		this( param, null ) ;
@@ -30,9 +30,7 @@ public class GSPaintColor implements PostscriptEmitter {
 			} else {
 				colorGray = new Double( pd[0] ).doubleValue() ;
 			}
-		} catch ( NumberFormatException e ) {
-			colorGray = DEFAULT_PAINTCOLOR ;
-		}
+		} catch ( NumberFormatException e ) {}
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {

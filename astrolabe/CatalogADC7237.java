@@ -40,41 +40,39 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 
 	private Projector projector ;
 
-	public CatalogADC7237( Peer peer, Projector projector ) {
-		Geometry fov, fovu, fove ;
-		String key ;
-
-		peer.setupCompanion( this ) ;
-
+	public CatalogADC7237( Projector projector ) {
 		this.projector = projector ;
+	}
+
+	public void register() {
+		Geometry fov, fovu, fove ;
 
 		if ( getFov() == null ) {
-			fov = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fov = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
 		} else {
-			fovu = (Geometry) AstrolabeRegistry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
-			fove = (Geometry) AstrolabeRegistry.retrieve( getFov() ) ;
+			fovu = (Geometry) Registry.retrieve( ApplicationConstant.GC_FOVUNI ) ;
+			fove = (Geometry) Registry.retrieve( getFov() ) ;
 			fov = fovu.intersection( fove ) ;
 		}
 		Registry.register( ApplicationConstant.GC_FOVEFF, fov ) ;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Hashtable<String, CatalogADC7237Record> unsafecast( Object hashtable ) {
+		return (Hashtable<String, CatalogADC7237Record>) hashtable ;
+	}
+
+	public void addAllCatalogRecord() {
+		Reader reader ;
+		CatalogADC7237Record record ;
+		String key ;
 
 		key = getClass().getSimpleName()+":"+getName() ;
 		catalog = unsafecast( Registry.retrieve( key ) ) ;
 		if ( catalog == null ) {
 			catalog = new Hashtable<String, CatalogADC7237Record>() ;
 			Registry.register( key, catalog ) ;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Hashtable<String, CatalogADC7237Record> unsafecast( Object value ) {
-		return (Hashtable<String, CatalogADC7237Record>) value ;
-	}
-
-	public void addAllCatalogRecord() {
-		Reader reader ;
-		CatalogADC7237Record record ;
-
-		if ( catalog.size()>0 )
+		} else
 			return ;
 
 		try {
@@ -150,7 +148,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 			}
 		} ;
 		astrolabe.model.Body body ;
-		astrolabe.model.OutlineElliptical outlineElliptical ;
+		astrolabe.model.ShapeElliptical shapeElliptical ;
 		PostscriptEmitter pe ;
 		astrolabe.model.Position pm ;
 		double ra, de ;
@@ -214,16 +212,16 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				body.getBodyAreal().setAnnotation( record.getAnnotation() ) ;
 
 				body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
-				outlineElliptical = new astrolabe.model.OutlineElliptical() ;
-				body.getBodyAreal().getBodyArealTypeChoice().setOutlineElliptical( outlineElliptical ) ;
+				shapeElliptical = new astrolabe.model.ShapeElliptical() ;
+				body.getBodyAreal().getBodyArealTypeChoice().setShapeElliptical( shapeElliptical ) ;
 
 				r25 = Double.valueOf( record.logR25 ) ;
-				outlineElliptical.setProportion( r25<9.99?1/java.lang.Math.pow( 10, r25 ):1 ) ;
+				shapeElliptical.setProportion( r25<9.99?1/java.lang.Math.pow( 10, r25 ):1 ) ;
 				pa = Double.valueOf( record.PA ) ;
-				outlineElliptical.setPA( pa<999?pa:0 ) ;
-				outlineElliptical.setRational( new astrolabe.model.Rational() ) ;
-				outlineElliptical.getRational().setValue( d ) ;
-				outlineElliptical.setPosition( pm ) ;
+				shapeElliptical.setPA( pa<999?pa:0 ) ;
+				shapeElliptical.setRational( new astrolabe.model.Rational() ) ;
+				shapeElliptical.getRational().setValue( d ) ;
+				shapeElliptical.setPosition( pm ) ;
 			} else {
 				body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
 				if ( getName() == null )

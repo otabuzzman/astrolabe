@@ -3,11 +3,11 @@ package astrolabe;
 
 public class GSPaintStroke implements PostscriptEmitter {
 
-	private final static double DEFAULT_LINEWIDTH = .1 ;
-	private final static double DEFAULT_LINEDASH = 0 ;
+	private final static double DEFAULT_LINEWIDTH	= .1 ;
+	private final static double DEFAULT_LINEDASH	= 0 ;
 
-	private double linewidth ;
-	private double[] linedash ;
+	private double linewidth	= DEFAULT_LINEWIDTH ;
+	private double[] linedash	= new double[] { DEFAULT_LINEDASH } ;;
 
 	public GSPaintStroke( String param ) {
 		this( param, null ) ;
@@ -35,10 +35,7 @@ public class GSPaintStroke implements PostscriptEmitter {
 				linedash = new double[] {
 						new Double( id[1] ).doubleValue() } ;
 			}
-		} catch ( NumberFormatException e ) {
-			linewidth = DEFAULT_LINEWIDTH ;
-			linedash = new double[] { DEFAULT_LINEDASH } ;
-		}
+		} catch ( NumberFormatException e ) {}
 	}
 
 	public void headPS( AstrolabePostscriptStream ps ) {
