@@ -152,16 +152,16 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 						eq = list.get( p ) ;
 						pm = new astrolabe.model.Position() ;
 						// astrolabe.model.SphericalType
-						pm.setR( new astrolabe.model.R() ) ;
-						pm.getR().setValue( 1 ) ;
+						pm.setDistance( new astrolabe.model.Distance() ) ;
+						pm.getDistance().setValue( 1 ) ;
 						// astrolabe.model.AngleType
-						pm.setPhi( new astrolabe.model.Phi() ) ;
-						pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-						pm.getPhi().getRational().setValue( eq[0] ) ;  
+						pm.setDeviation( new astrolabe.model.Deviation() ) ;
+						pm.getDeviation().setRational( new astrolabe.model.Rational() ) ;
+						pm.getDeviation().getRational().setValue( eq[0] ) ;  
 						// astrolabe.model.AngleType
-						pm.setTheta( new astrolabe.model.Theta() ) ;
-						pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-						pm.getTheta().getRational().setValue( eq[1] ) ;  
+						pm.setElevation( new astrolabe.model.Elevation() ) ;
+						pm.getElevation().setRational( new astrolabe.model.Rational() ) ;
+						pm.getElevation().getRational().setValue( eq[1] ) ;  
 
 						body.getBodyAreal().getBodyArealTypeChoice().addPosition( pm ) ;
 					}

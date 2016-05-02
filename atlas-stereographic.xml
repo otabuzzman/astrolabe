@@ -8,14 +8,14 @@
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a3" view="82"/>
-			<Center>
-				<phi>
+			<Oblique>
+				<deviation>
 					<Rational value="0"/>
-				</phi>
-				<theta>
+				</deviation>
+				<elevation>
 					<Rational value="90.0"/>
-				</theta>
-			</Center>
+				</elevation>
+			</Oblique>
 			<Horizon>
 				<HorizonEquatorial practicality="none">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
@@ -26,20 +26,20 @@
 			</Horizon>
 			<Atlas picker="atlas-stereographic-northern.xml">
 				<Origin>
-					<phi>
+					<deviation>
 						<Rational value="0"/>
-					</phi>
-					<theta>
+					</deviation>
+					<elevation>
 						<Rational value="92"/>
-					</theta>
+					</elevation>
 				</Origin>
 				<Extent>
-					<phi>
+					<deviation>
 						<Rational value="359.9999"/>
-					</phi>
-					<theta>
+					</deviation>
+					<elevation>
 						<Rational value="117.8"/>
-					</theta>
+					</elevation>
 				</Extent>
 				<SpanDeclination>
 					<Rational value="28"/>
@@ -56,14 +56,14 @@
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a3" view="82"/>
-			<Center>
-				<phi>
+			<Oblique>
+				<deviation>
 					<Rational value="0"/>
-				</phi>
-				<theta>
+				</deviation>
+				<elevation>
 					<Rational value="90.0"/>
-				</theta>
-			</Center>
+				</elevation>
+			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">
@@ -757,14 +757,14 @@
 	<Chart>
 		<ChartStereographic scale="100" northern="false">
 			<ChartPage size="a3" view="82"/>
-			<Center>
-				<phi>
+			<Oblique>
+				<deviation>
 					<Rational value="0"/>
-				</phi>
-				<theta>
+				</deviation>
+				<elevation>
 					<Rational value="-90.0"/>
-				</theta>
-			</Center>
+				</elevation>
+			</Oblique>
 			<Horizon>
 				<HorizonEquatorial practicality="none">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
@@ -775,20 +775,20 @@
 			</Horizon>
 			<Atlas picker="atlas-stereographic-southern.xml">
 				<Origin>
-					<phi>
+					<deviation>
 						<Rational value="0"/>
-					</phi>
-					<theta>
+					</deviation>
+					<elevation>
 						<Rational value="-92"/>
-					</theta>
+					</elevation>
 				</Origin>
 				<Extent>
-					<phi>
+					<deviation>
 						<Rational value="359.9999"/>
-					</phi>
-					<theta>
+					</deviation>
+					<elevation>
 						<Rational value="-117.8"/>
-					</theta>
+					</elevation>
 				</Extent>
 				<SpanDeclination>
 					<Rational value="-28"/>
@@ -805,14 +805,14 @@
 	<Chart>
 		<ChartStereographic scale="100" northern="false">
 			<ChartPage size="a3" view="82"/>
-			<Center>
-				<phi>
+			<Oblique>
+				<deviation>
 					<Rational value="0"/>
-				</phi>
-				<theta>
+				</deviation>
+				<elevation>
 					<Rational value="-90.0"/>
-				</theta>
-			</Center>
+				</elevation>
+			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">

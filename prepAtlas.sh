@@ -2,10 +2,16 @@
 #
 
 # Gebrauch:
+# export PATH=<path to IM convert>:$PATH
+# export PATH=<path to xmlstarlet>:$PATH
+#
+# export PATH=/cygdrive/c/programme/imagemagick-6.7.5-q16:$PATH
+# export PATH=/usr/local/bin:$PATH
+# export LANG=de
 # numoff=0
-# export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
+# ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
 # numoff=`xml select -t -v 'count(Atlas/AtlasPage)' atlas-stereographic-northern.xml`
-# export PATH=<path to xmlstarlet>:<path to IM convert>:$PATH ; export LANG=de ; ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
+# ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
 #
 
 set -o errexit

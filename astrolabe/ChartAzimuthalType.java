@@ -25,26 +25,23 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public double[] project( double[] eq ) {
-		double[] r, center ;
-		Vector vp, vo, vZ, vY ;
-		CoordinateSystem cs ;
+		double center[], phi, sin, cos ;
+		Vector vp, v0 ;
 
-		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
+		vp = new Vector( polarToWorld( hemisphereToPolar( oblique( eq, false ) ) ) ) ;
 
-		center = valueOf( getCenter() ) ;
-		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
-		if ( vo.abs()>0 ) {
-			vZ = new Vector( 0, 0, 1 ) ;
-			vY = new Vector( vo ).mul( -1 ) ;
-			cs = new CoordinateSystem( vo, vZ, vY ) ;
-			vp.set( cs.local( vp.toArray() ) ) ;
-		}
+		if ( getChartPage().getCenter() == null )
+			return vp.mul( scale() ).toArray() ;
 
-		vp.mul( scale() ) ;
+		center = valueOf( getChartPage().getCenter() ) ;
+		v0 = new Vector( polarToWorld( hemisphereToPolar( oblique( new double[] { center[1], center[2] }, false ) ) ) ) ;
+		vp.sub( v0 ) ;
+		phi = 90+Math.atan2( v0.y, v0.x ) ;
+		sin = Math.sin( phi ) ;
+		cos = Math.cos( phi ) ;
+		vp.apply( new double[] { cos, sin, 0, -sin, cos, 0, 0, 0, 1 } ) ;
 
-		r = new double[] { vp.x, vp.y } ;
-
-		return r ;
+		return vp.mul( scale() ).toArray() ;
 	}
 
 	public double[] unproject( double x, double y ) {
@@ -52,25 +49,24 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public double[] unproject( double[] xy ) {
-		double[] r, center ;
-		Vector vp, vo, vZ, vY ;
-		CoordinateSystem cs ;
+		double center[], phi, sin, cos ;
+		Vector vp, v0 ;
 
 		vp = new Vector( xy ) ;
 		vp.mul( 1/scale() ) ;
 
-		center = valueOf( getCenter() ) ;
-		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
-		if ( vo.abs()>0 ) {
-			vZ = new Vector( 0, 0, 1 ) ;
-			vY = new Vector( vo ).mul( -1 ) ;
-			cs = new CoordinateSystem( vo, vZ, vY ) ;
-			vp.set( cs.world( vp.toArray() ) ) ;
-		}
+		if ( getChartPage().getCenter() == null )
+			return oblique( polarToHemisphere( worldToPolar( vp.toArray() ) ), true ) ;
 
-		r = polarToHemisphere( worldToPolar( new double[] { vp.x, vp.y } ) ) ;
+		center = valueOf( getChartPage().getCenter() ) ;
+		v0 = new Vector( polarToWorld( hemisphereToPolar( oblique( new double[] { center[1], center[2] }, false ) ) ) ) ;
+		phi = 90+Math.atan2( v0.y, v0.x ) ;
+		sin = Math.sin( phi ) ;
+		cos = Math.cos( phi ) ;
+		vp.apply( new double[] { cos, -sin, 0, sin, cos, 0, 0, 0, 1 } ) ;
+		vp.add( v0 ) ;
 
-		return r ;
+		return oblique( polarToHemisphere( worldToPolar( vp.toArray() ) ), true ) ;
 	}
 
 	public double[] convert( double[] eq ) {
@@ -87,6 +83,24 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public double[] unconvert( double RA, double d ) {
 		return new double[] { RA, d } ;
+	}
+
+	private double[] oblique( double[] coordinate, boolean reverse ) {
+		double[] oblique ;
+
+		oblique = valueOf( getOblique() ) ;			
+
+		if ( getNorthern() ) {
+			if ( reverse )
+				return new double[] { coordinate[0]-oblique[1], coordinate[1]-90+oblique[2] } ;
+			else
+				return new double[] { coordinate[0]+oblique[1], coordinate[1]+90-oblique[2] } ;
+		} else {
+			if ( reverse )
+				return new double[] { coordinate[0]-oblique[1], coordinate[1]-90-oblique[2] } ;
+			else
+				return new double[] { coordinate[0]+oblique[1], coordinate[1]+90+oblique[2] } ;
+		}
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {

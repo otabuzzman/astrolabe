@@ -127,9 +127,14 @@ public class Vector {
 		double y = this.y ;
 		double z = this.z ;
 
-		this.x = x*m[0]+y*m[1]+z*m[2] ;
-		this.y = x*m[3]+y*m[4]+z*m[5] ;
-		this.z = x*m[6]+y*m[7]+z*m[8] ;
+		switch ( m.length ) {
+		case 9:
+			this.x = x*m[0]+y*m[1]+z*m[2] ;
+			this.y = x*m[3]+y*m[4]+z*m[5] ;
+			this.z = x*m[6]+y*m[7]+z*m[8] ;
+			break ;
+		default:
+		}
 
 		return this ;
 	}

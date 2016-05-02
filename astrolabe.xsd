@@ -35,7 +35,7 @@
 	<xs:complexType name="ChartAzimuthalType">
 		<xs:sequence>
 			<xs:element ref="ChartPage"/>
-			<xs:element ref="Center"/>
+			<xs:element ref="Oblique"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
 			<xs:element ref="Atlas" minOccurs="0"/>
 		</xs:sequence>
@@ -59,8 +59,12 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="Oblique" type="SphericalType"/>
 	<xs:element name="Center" type="SphericalType"/>
 	<xs:complexType name="ChartPageType">
+		<xs:sequence>
+			<xs:element ref="Center" minOccurs="0"/>
+		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="size" use="required">
 			<xs:simpleType>
@@ -1079,7 +1083,6 @@
 	</xs:complexType>
 	<xs:element name="Rational" type="RationalType"/>
 	<xs:element name="JD" type="RationalType"/>
-	<xs:element name="r" type="RationalType"/>
 	<xs:complexType name="DMSType">
 		<xs:attribute name="neg" type="xs:boolean" use="required"/>
 		<xs:attribute name="deg" use="required">
@@ -1167,8 +1170,9 @@
 	<xs:element name="Latitude" type="AngleType"/>
 	<xs:element name="Longitude" type="AngleType"/>
 	<xs:element name="HA" type="TimeType"/>
-	<xs:element name="phi" type="AngleType"/>
-	<xs:element name="theta" type="AngleType"/>
+	<xs:element name="deviation" type="AngleType"/>
+	<xs:element name="elevation" type="AngleType"/>
+	<xs:element name="distance" type="RationalType"/>
 	<xs:complexType name="TimeType">
 		<xs:choice>
 			<xs:element ref="HMS"/>
@@ -1198,16 +1202,16 @@
 	<xs:element name="Cartesian" type="CartesianType"/>
 	<xs:complexType name="PolarType">
 		<xs:sequence>
-			<xs:element ref="phi"/>
-			<xs:element ref="r" minOccurs="0"/>
+			<xs:element ref="deviation"/>
+			<xs:element ref="distance" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Polar" type="PolarType"/>
 	<xs:complexType name="SphericalType">
 		<xs:sequence>
-			<xs:element ref="phi"/>
-			<xs:element ref="theta"/>
-			<xs:element ref="r" minOccurs="0"/>
+			<xs:element ref="deviation"/>
+			<xs:element ref="elevation"/>
+			<xs:element ref="distance" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="Spherical" type="SphericalType"/>

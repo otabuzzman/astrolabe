@@ -226,10 +226,10 @@ public class Peer {
 	public static double[] valueOf( SphericalType spherical ) {
 		double[] r = { 1, 0, 0 } ;
 
-		if ( spherical.getR() != null )
-			r[0] = valueOf( spherical.getR() ) ;
-		r[1] = valueOf( spherical.getPhi() ) ;
-		r[2] = valueOf( spherical.getTheta() ) ;
+		if ( spherical.getDistance() != null )
+			r[0] = valueOf( spherical.getDistance() ) ;
+		r[1] = valueOf( spherical.getDeviation() ) ;
+		r[2] = valueOf( spherical.getElevation() ) ;
 
 		return r ;
 	}

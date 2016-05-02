@@ -159,16 +159,16 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 
 			position = new astrolabe.model.Position() ;
 			// astrolabe.model.SphericalType
-			position.setR( new astrolabe.model.R() ) ;
-			position.getR().setValue( 1 ) ;
+			position.setDistance( new astrolabe.model.Distance() ) ;
+			position.getDistance().setValue( 1 ) ;
 			// astrolabe.model.AngleType
-			position.setPhi( new astrolabe.model.Phi() ) ;
-			position.getPhi().setRational( new astrolabe.model.Rational() ) ;
-			position.getPhi().getRational().setValue( ra ) ;  
+			position.setDeviation( new astrolabe.model.Deviation() ) ;
+			position.getDeviation().setRational( new astrolabe.model.Rational() ) ;
+			position.getDeviation().getRational().setValue( ra ) ;  
 			// astrolabe.model.AngleType
-			position.setTheta( new astrolabe.model.Theta() ) ;
-			position.getTheta().setRational( new astrolabe.model.Rational() ) ;
-			position.getTheta().getRational().setValue( de ) ;  
+			position.setElevation( new astrolabe.model.Elevation() ) ;
+			position.getElevation().setRational( new astrolabe.model.Rational() ) ;
+			position.getElevation().getRational().setValue( de ) ;  
 
 			d = 0 ;
 			s = 0 ;

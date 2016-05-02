@@ -8,14 +8,14 @@
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
 			<ChartPage size="a0" view="100"/>
-			<Center>
-				<phi>
+			<Oblique>
+				<deviation>
 					<Rational value="0"/>
-				</phi>
-				<theta>
+				</deviation>
+				<elevation>
 					<Rational value="90"/>
-				</theta>
-			</Center>
+				</elevation>
+			</Oblique>
 			<!--fov sternkarte-->
 			<Horizon>
 				<HorizonEquatorial practicality="none">

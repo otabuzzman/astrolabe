@@ -164,16 +164,16 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 			pm = new astrolabe.model.Position() ;
 			// astrolabe.model.SphericalType
-			pm.setR( new astrolabe.model.R() ) ;
-			pm.getR().setValue( 1 ) ;
+			pm.setDistance( new astrolabe.model.Distance() ) ;
+			pm.getDistance().setValue( 1 ) ;
 			// astrolabe.model.AngleType
-			pm.setPhi( new astrolabe.model.Phi() ) ;
-			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-			pm.getPhi().getRational().setValue( ra ) ;  
+			pm.setDeviation( new astrolabe.model.Deviation() ) ;
+			pm.getDeviation().setRational( new astrolabe.model.Rational() ) ;
+			pm.getDeviation().getRational().setValue( ra ) ;  
 			// astrolabe.model.AngleType
-			pm.setTheta( new astrolabe.model.Theta() ) ;
-			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-			pm.getTheta().getRational().setValue( de ) ;  
+			pm.setElevation( new astrolabe.model.Elevation() ) ;
+			pm.getElevation().setRational( new astrolabe.model.Rational() ) ;
+			pm.getElevation().getRational().setValue( de ) ;  
 
 			body.getBodyStellar().setPosition( pm ) ;
 
@@ -185,7 +185,7 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 			bodyStellar = new BodyStellar( projector ) ;
 			body.getBodyStellar().copyValues( bodyStellar ) ;
-			
+
 			bodyStellar.register() ;
 			ps.operator.gsave() ;
 
