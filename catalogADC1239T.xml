@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -72,7 +72,7 @@
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_17.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/tyc_19.dat.gz-->
-						<CatalogADC1239T name="1239T" fov="chart" url="lib/cat/1239/tyc_01.dat.gz">
+						<CatalogADC1239T name="1239T" url="lib/cat/1239/tyc_01.dat.gz">
 							<CatalogADC1239TRecord select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;3}">
 								<Script value="&#xf811;" purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:Vmag&#x003c;6?1.10:Vmag&#x003c;7?0.89:Vmag&#x003c;8?0.72:Vmag&#x003c;9?0.58:Vmag&#x003c;10?0.47:Vmag&#x003c;11?0.38:0.30}"/>
 							</CatalogADC1239TRecord>

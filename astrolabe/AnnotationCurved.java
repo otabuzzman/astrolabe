@@ -32,35 +32,27 @@ public class AnnotationCurved extends astrolabe.model.AnnotationCurved implement
 	private final static double DEFAULT_MARGIN				= 1.2 ;
 	private final static double DEFAULT_RISE				= 1.2 ;
 
-	private double subscriptshrink ;
-	private double subscriptshift ;
-	private double superscriptshrink ;
-	private double superscriptshift ;
+	public void headPS( ApplicationPostscriptStream ps ) {
+	}
 
-	private double margin ;
-	private double rise ;
-
-	public void register() {
+	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
+		double subscriptshrink, subscriptshift ;
+		double superscriptshrink, superscriptshift ;
+		double margin, rise ;
+		astrolabe.model.Script script ;
+		int ns, n0 ;
+		double p, height ;
 
 		conf = new Configuration( this ) ;
 
-		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
+		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK );
 		subscriptshift = conf.getValue( CK_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
 		superscriptshrink = conf.getValue( CK_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
 		superscriptshift = conf.getValue( CK_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
 
 		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
 		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
-	}
-
-	public void headPS( ApplicationPostscriptStream ps ) {
-	}
-
-	public void emitPS( ApplicationPostscriptStream ps ) {
-		astrolabe.model.Script script ;
-		int ns, n0 ;
-		double p, height ;
 
 		ps.operator.gsave() ;
 

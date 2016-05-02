@@ -1,6 +1,11 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
+
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
@@ -29,6 +34,11 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		dms.register( this, QK_LATITUDE ) ;
 	}
 
+	public void degister() {
+		DMS.degister( this, QK_SIDEREAL ) ;
+		DMS.degister( this, QK_LATITUDE ) ;
+	}
+
 	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintColor practicality ;
 
@@ -39,48 +49,59 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
-			AnnotationStraight annotation ;
+		astrolabe.model.Circle circle ;
+		astrolabe.model.Body body ;
+		PostscriptEmitter emitter ;
 
-			annotation = new AnnotationStraight() ;
-			getAnnotationStraight( an ).copyValues( annotation ) ;
-			annotation.register() ;
+		for ( int an=0 ; an<getAnnotationStraightCount() ; an++ ) {
+			emitter = new AnnotationStraight() ;
+			getAnnotationStraight( an ).copyValues( emitter ) ;
 
 			ps.operator.gsave() ;
 
-			annotation.headPS( ps ) ;
-			annotation.emitPS( ps ) ;
-			annotation.tailPS( ps ) ;
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
 		}
 
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
-			PostscriptEmitter circle ;
+			circle = getCircle( cl ) ;
 
-			circle = ApplicationFactory.companionOf( getCircle( cl ), this ) ;
-
-			ps.operator.gsave() ;
-
-			circle.headPS( ps ) ;
-			circle.emitPS( ps ) ;
-			circle.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
+			if ( circle.getCircleParallel() != null ) {
+				circle( ps, circle.getCircleParallel() ) ;
+			} else if ( circle.getCircleMeridian() != null ) {
+				circle( ps, circle.getCircleMeridian() ) ;
+			} else if ( circle.getCircleSouthernPolar() != null ) {
+				circle( ps, circle.getCircleSouthernPolar() ) ;
+			} else if ( circle.getCircleNorthernPolar() != null ) {
+				circle( ps, circle.getCircleNorthernPolar() ) ;
+			} else if (  circle.getCircleSouthernTropic() != null ) {
+				circle( ps, circle.getCircleSouthernTropic() ) ;
+			} else { // circle.getCircleNorthernTropic() != null
+				circle( ps, circle.getCircleNorthernTropic() ) ;
+			}
 		}
 
 		for ( int bd=0 ; bd<getBodyCount() ; bd++ ) {
-			PostscriptEmitter body ;
+			body = getBody( bd ) ;
 
-			body = ApplicationFactory.companionOf( getBody( bd ), this ) ;
-
-			ps.operator.gsave() ;
-
-			body.headPS( ps ) ;
-			body.emitPS( ps ) ;
-			body.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
+			if ( body.getBodyStellar() != null ) {
+				body( ps, body.getBodyStellar() ) ;
+			} else if ( body.getBodyAreal() != null ) {
+				body( ps, body.getBodyAreal() ) ;
+			} else if ( body.getBodyPlanet() != null ) {
+				body( ps, body.getBodyPlanet() ) ;
+			} else if ( body.getBodyMoon() != null ) {
+				body( ps, body.getBodyMoon() ) ;
+			} else if ( body.getBodySun() != null ) {
+				body( ps, body.getBodySun() ) ;
+			} else if ( body.getBodyElliptical() != null ) {
+				body( ps, body.getBodyElliptical() ) ;
+			} else { // body.getBodyParabolical() != null
+				body( ps, body.getBodyParabolical() ) ;
+			}
 		}
 	}
 
@@ -131,5 +152,196 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 		r[1] = c.Y() ;
 
 		return r ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleMeridian peer ) {
+		CircleMeridian circle ;
+
+		circle = new CircleMeridian( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleParallel peer ) {
+		CircleParallel circle ;
+
+		circle = new CircleParallel( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernPolar peer ) {
+		CircleNorthernPolar circle ;
+
+		circle = new CircleNorthernPolar( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernTropic peer ) {
+		CircleNorthernTropic circle ;
+
+		circle = new CircleNorthernTropic( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernTropic peer ) {
+		CircleSouthernTropic circle ;
+
+		circle = new CircleSouthernTropic( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernPolar peer ) {
+		CircleSouthernPolar circle ;
+
+		circle = new CircleSouthernPolar( this ) ;
+		peer.copyValues( circle ) ;
+
+		circle.register() ;
+		emitPS( ps, circle ) ;
+		circle.degister() ;
+
+		if ( circle.getName() != null )
+			Registry.register( circle.getName(), circle ) ;
+
+		if ( circle.getName() != null )
+			circleFOV( circle.getCircleGeometry() ) ;
+	}
+
+	private void circleFOV( LineString line ) {
+		LinearRing ring ;
+		Polygon poly ;
+
+		if ( line.isRing() ) {
+			ring = new GeometryFactory().createLinearRing( line.getCoordinates() ) ;
+			poly = new GeometryFactory().createPolygon( ring, null ) ;
+
+			Registry.register( FOV.RK_FOV, poly ) ;
+		}
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyStellar peer ) {
+		BodyStellar body ;
+
+		body = new BodyStellar( this ) ;
+		peer.copyValues( body ) ;
+
+		body.register() ;
+		emitPS( ps, body ) ;
+		body.degister() ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyAreal peer ) {
+		BodyAreal body ;
+
+		body = new BodyAreal( this ) ;
+		peer.copyValues( body ) ;
+
+		body.register() ;
+		emitPS( ps, body ) ;
+		body.degister() ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodySun peer ) {
+		BodySun body ;
+
+		body = new BodySun( this ) ;
+		peer.copyValues( body ) ;
+
+		emitPS( ps, body ) ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyMoon peer ) {
+		BodyMoon body ;
+
+		body = new BodyMoon( this ) ;
+		peer.copyValues( body ) ;
+
+		emitPS( ps, body ) ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyPlanet peer ) {
+		BodyPlanet body ;
+
+		body = new BodyPlanet( this ) ;
+		peer.copyValues( body ) ;
+
+		emitPS( ps, body ) ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyElliptical peer ) {
+		BodyElliptical body ;
+
+		body = new BodyElliptical( this ) ;
+		peer.copyValues( body ) ;
+
+		emitPS( ps, body ) ;
+	}
+
+	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyParabolical peer ) {
+		BodyParabolical body ;
+
+		body = new BodyParabolical( this ) ;
+		peer.copyValues( body ) ;
+
+		emitPS( ps, body ) ;
+	}
+
+	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
+		ps.operator.gsave() ;
+
+		emitter.headPS( ps ) ;
+		emitter.emitPS( ps ) ;
+		emitter.tailPS( ps ) ;
+
+		ps.operator.grestore() ;
 	}
 }

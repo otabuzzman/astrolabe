@@ -104,7 +104,15 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 	@SuppressWarnings("unchecked")
 	private List<String> unsafecast( Object value ) {
-		return (List<String>) value ;
+		java.util.Vector<String> list ;
+
+		if ( value instanceof List )
+			return (List<String>) value ;
+
+		list = new java.util.Vector<String>() ;
+		list.add( (String) value ) ;
+
+		return list ;
 	}
 
 	public void register() {
@@ -115,24 +123,46 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 		scat = new SubstituteCatalog( this ) ;
 		mcat = new MessageCatalog( this ) ;
 
-		sub = scat.substitute( QK_CON, null ) ;
-		Registry.register( sub , con ) ;
+		sub = scat.substitute( QK_CON, QK_CON ) ;
+		Registry.register( sub, con ) ;
 
-		sub = scat.substitute( RK_CONSTELLATION, null ) ;
+		sub = scat.substitute( RK_CONSTELLATION, RK_CONSTELLATION ) ;
 		val = mcat.message( con+'.'+RK_CONSTELLATION, null ) ;
-		Registry.register( sub , val ) ;
+		Registry.register( sub, val ) ;
 
-		sub = scat.substitute( RK_ABBREVIATION, null ) ;
+		sub = scat.substitute( RK_ABBREVIATION, RK_ABBREVIATION ) ;
 		val = mcat.message( con+'.'+RK_ABBREVIATION, null ) ;
-		Registry.register( sub , val ) ;
+		Registry.register( sub, val ) ;
 
-		sub = scat.substitute( RK_NOMINATIVE, null ) ;
+		sub = scat.substitute( RK_NOMINATIVE, RK_NOMINATIVE ) ;
 		val = mcat.message( con+'.'+RK_NOMINATIVE, null ) ;
-		Registry.register( sub , val ) ;
+		Registry.register( sub, val ) ;
 
-		sub = scat.substitute( RK_GENITIVE, null ) ;
+		sub = scat.substitute( RK_GENITIVE, RK_GENITIVE ) ;
 		val = mcat.message( con+'.'+RK_GENITIVE, null ) ;
-		Registry.register( sub , val ) ;
+		Registry.register( sub, val ) ;
+	}
+
+	public void degister() {
+		SubstituteCatalog scat ;
+		String sub ;
+
+		scat = new SubstituteCatalog( this ) ;
+
+		sub = scat.substitute( QK_CON, QK_CON ) ;
+		Registry.degister( sub ) ;
+
+		sub = scat.substitute( RK_CONSTELLATION, RK_CONSTELLATION ) ;
+		Registry.degister( sub ) ;
+
+		sub = scat.substitute( RK_ABBREVIATION, RK_ABBREVIATION ) ;
+		Registry.degister( sub ) ;
+
+		sub = scat.substitute( RK_NOMINATIVE, RK_NOMINATIVE ) ;
+		Registry.degister( sub ) ;
+
+		sub = scat.substitute( RK_GENITIVE, RK_GENITIVE ) ;
+		Registry.degister( sub ) ;
 	}
 
 	public boolean isOK() {

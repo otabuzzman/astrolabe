@@ -4,7 +4,7 @@ package astrolabe;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType {
+abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalType implements PostscriptEmitter, Projector {
 
 	public double scale() {
 		ChartPage page ;
@@ -20,15 +20,6 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		*getScale()/100 ;
 	}
 
-	public void register() {
-		ChartPage page ;
-
-		page = new ChartPage() ;
-		getChartPage().copyValues( page ) ;
-
-		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
-	}
-
 	public double[] project( double RA, double d ) {
 		return project( new double[] { RA, d } ) ;
 	}
@@ -40,7 +31,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 		vp = new Vector( polarToWorld( hemisphereToPolar( eq ) ) ) ;
 
-		center = ApplicationFactory.valueOf( getCenter() ) ;
+		center = valueOf( getCenter() ) ;
 		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
@@ -68,7 +59,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		vp = new Vector( xy ) ;
 		vp.mul( 1/scale() ) ;
 
-		center = ApplicationFactory.valueOf( getCenter() ) ;
+		center = valueOf( getCenter() ) ;
 		vo = new Vector( polarToWorld( hemisphereToPolar( new double[] { center[1], center[2] } ) ) ) ;
 		if ( vo.abs()>0 ) {
 			vZ = new Vector( 0, 0, 1 ) ;
@@ -110,6 +101,21 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		astrolabe.model.Horizon horizon ;
+
+		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
+			horizon = getHorizon( ho ) ;
+
+			if ( horizon.getHorizonLocal() != null ) {
+				horizon( ps, horizon.getHorizonLocal() ) ;
+			} else if ( horizon.getHorizonEquatorial() != null ) {
+				horizon( ps, horizon.getHorizonEquatorial() ) ;
+			} else if ( horizon.getHorizonEcliptical() != null ) {
+				horizon( ps, horizon.getHorizonEcliptical() ) ;
+			} else { // horizon.getHorizonGalactic() != null
+				horizon( ps, horizon.getHorizonGalactic() ) ;
+			}
+		}
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
@@ -151,4 +157,56 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	abstract public double thetaToDistance( double de ) ;
 	abstract public double distanceToTheta( double d ) ;
+
+	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonLocal peer ) {
+		HorizonLocal horizon ;
+
+		horizon = new HorizonLocal( this ) ;
+		peer.copyValues( horizon ) ;
+
+		horizon.register() ;
+		emitPS( ps, horizon ) ;
+		horizon.degister() ;
+	}
+
+	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonEquatorial peer ) {
+		HorizonEquatorial horizon ;
+
+		horizon = new HorizonEquatorial( this ) ;
+		peer.copyValues( horizon ) ;
+
+		emitPS( ps, horizon ) ;
+	}
+
+	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonEcliptical peer ) {
+		HorizonEcliptical horizon ;
+
+		horizon = new HorizonEcliptical( this ) ;
+		peer.copyValues( horizon ) ;
+
+		horizon.register() ;
+		emitPS( ps, horizon ) ;
+		horizon.degister() ;
+	}
+
+	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonGalactic peer ) {
+		HorizonGalactic horizon ;
+
+		horizon = new HorizonGalactic( this ) ;
+		peer.copyValues( horizon ) ;
+
+		horizon.register() ;
+		emitPS( ps, horizon ) ;
+		horizon.degister() ;
+	}
+
+	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
+		ps.operator.gsave() ;
+
+		emitter.headPS( ps ) ;
+		emitter.emitPS( ps ) ;
+		emitter.tailPS( ps ) ;
+
+		ps.operator.grestore() ;
+	}
 }

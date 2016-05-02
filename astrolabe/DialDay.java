@@ -19,14 +19,12 @@ public class DialDay extends DialDegree {
 	}
 
 	protected void register( double jd ) {
-		SubstituteCatalog cat ;
 		String sub ;
 		CAADate date ;
 		DMS hms ;
 		double eot ;
 
-		cat = new SubstituteCatalog( this ) ;
-		sub = cat.substitute( QK_DAY, null ) ;
+		sub = SubstituteCatalog.substitute( this, QK_DAY, QK_DAY ) ;
 		Registry.register( sub, (long) ( jd*100+.5 )/100 ) ;
 
 		date = new CAADate() ;
@@ -40,6 +38,17 @@ public class DialDay extends DialDegree {
 
 		hms = new DMS( eot ) ;
 		hms.register( this, QK_EQUATIONOFTIME ) ;
+	}
+
+	protected void degister() {
+		String sub ;
+
+		sub = SubstituteCatalog.substitute( this, QK_DAY, QK_DAY ) ;
+		Registry.degister( sub ) ;
+
+		CAADate.degister( this, QK_DAY ) ;
+
+		DMS.degister( this, QK_EQUATIONOFTIME ) ;
 	}
 
 	public boolean isMultipleSpan( double mark, double span ) {

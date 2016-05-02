@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -104,7 +104,7 @@
 					<!--MCCM-->
 					<Catalog>
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
-						<CatalogDS9 name="MCCM" fov="chart" url="lib/cat/MCCM/cat_%04d.con">
+						<CatalogDS9 name="MCCM" url="lib/cat/MCCM/cat_%04d.con">
 							<CatalogDS9Record select="true" nature="0.24:0"/>
 							<Level url="lib/cat/MCCM/catalog.lev"/>
 						</CatalogDS9>

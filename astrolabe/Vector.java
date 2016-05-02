@@ -34,10 +34,16 @@ public class Vector {
 	}
 
 	public void set( double[] xyz ) {
-		if ( xyz.length>2 )
+		switch ( xyz.length ) {
+		case 3:
 			set( xyz[0], xyz[1], xyz[2] ) ;
-		else
+			break ;
+		case 2:
 			set( xyz[0], xyz[1], 0 ) ;
+			break ;
+		default:
+			set( 0, 0, 0 ) ;
+		}
 	}
 
 	public void set( double x, double y ) {

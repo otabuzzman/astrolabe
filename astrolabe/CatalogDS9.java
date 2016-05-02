@@ -21,10 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 @SuppressWarnings("serial")
-public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
+public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements PostscriptEmitter {
 
 	private final static Log log = LogFactory.getLog( CatalogDS9.class ) ;
 
@@ -39,21 +37,6 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 
 	public CatalogDS9( Projector projector ) {
 		this.projector = projector ;
-	}
-
-	public void register() {
-		ChartPage page ;
-		Geometry fov = null ;
-
-		if ( getFov() != null )
-			fov = (Geometry) Registry.retrieve( getFov() ) ;
-		else {
-			page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
-			if ( page != null )
-				fov = page.getViewGeometry() ;
-		}
-		if ( fov != null )
-			Registry.register( FOV.RK_FOV, fov ) ;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -191,8 +174,8 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 
 					bodyDS9 = new BodyDS9( projector ) ;
 					body.getBodyAreal().copyValues( bodyDS9 ) ;
-					bodyDS9.register() ;
 
+					bodyDS9.register() ;
 					ps.operator.gsave() ;
 
 					bodyDS9.headPS( ps ) ;
@@ -200,6 +183,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Catalog {
 					bodyDS9.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
+					bodyDS9.degister() ;
 				}
 			}
 		}

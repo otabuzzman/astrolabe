@@ -36,38 +36,30 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 
 	private final static String DEFAULT_ANCHOR				= "0:0" ; // bottomleft
 
-	private double subscriptshrink ;
-	private double subscriptshift ;
-	private double superscriptshrink ;
-	private double superscriptshift ;
-
-	private double margin ;
-	private double rise ;
-
-	public void register() {
-		Configuration conf ;
-
-		conf = new Configuration( this ) ;
-
-		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK ) ;
-		subscriptshift = conf.getValue( CK_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
-		superscriptshrink = conf.getValue( CK_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
-		superscriptshift = conf.getValue( CK_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
-
-		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
-		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
-	}
-
 	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		Configuration conf ;
+		double subscriptshrink, subscriptshift ;
+		double superscriptshrink, superscriptshift ;
+		double margin, rise ;
 		astrolabe.model.Script script ;
 		ChartPage page ;
 		int num, ns, n0 ;
 		double p, height ;
 		String[] xyRaw ;
 		double[] frame, xyVal ;
+
+		conf = new Configuration( this ) ;
+
+		subscriptshrink = conf.getValue( CK_SUBSCRIPTSHRINK, DEFAULT_SUBSCRIPTSHRINK );
+		subscriptshift = conf.getValue( CK_SUBSCRIPTSHIFT, DEFAULT_SUBSCRIPTSHIFT ) ;
+		superscriptshrink = conf.getValue( CK_SUPERSCRIPTSHRINK, DEFAULT_SUPERSCRIPTSHRINK ) ;
+		superscriptshift = conf.getValue( CK_SUPERSCRIPTSHIFT, DEFAULT_SUPERSCRIPTSHIFT ) ;
+
+		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
+		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
 
 		ps.operator.gsave() ;
 

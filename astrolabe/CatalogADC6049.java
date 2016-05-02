@@ -18,14 +18,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
 @SuppressWarnings("serial")
-public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Catalog {
+public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements PostscriptEmitter {
 
 	private final static int C_CHUNK18 = 25+1/*0x0a*/ ;
 	private final static int C_CHUNK20 = 29+1/*0x0a*/ ;
@@ -43,30 +41,6 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 
 	public CatalogADC6049( Projector projector ) {
 		this.projector = projector ;
-	}
-
-	public void register() {
-		ChartPage page ;
-		Geometry fovg, fovl ;
-
-		fovg = null ;
-		fovl = null ;
-
-		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
-		if ( page != null )
-			fovg = page.getViewGeometry() ;
-
-		if ( getFov() != null )
-			fovl = (Geometry) Registry.retrieve( getFov() ) ;
-
-		if ( fovg != null && fovl != null )
-			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
-		else {
-			if ( fovg != null )
-				Registry.register( FOV.RK_FOV, fovg ) ;
-			if ( fovl != null )
-				Registry.register( FOV.RK_FOV, fovl ) ;
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -109,6 +83,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 						break ;
 					}
 				}
+
+				record.degister() ;
 			}
 
 			reader.close() ;
@@ -139,8 +115,13 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 		CAA2DCoordinate ceq ;
 		List<double[]> list ;
 		double epoch, eq[] ;
+		Double Epoch ;
 
-		epoch = Epoch.retrieve() ;
+		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		if ( Epoch == null )
+			epoch = astrolabe.Epoch.defoult() ;
+		else
+			epoch = Epoch.doubleValue() ;
 
 		for ( CatalogADC6049Record record : catalog.values() ) {
 			record.register() ;
@@ -185,8 +166,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 
 			bodyAreal = new BodyAreal( projector ) ;
 			body.getBodyAreal().copyValues( bodyAreal ) ;
-			bodyAreal.register() ;
 
+			bodyAreal.register() ;
 			ps.operator.gsave() ;
 
 			bodyAreal.headPS( ps ) ;
@@ -194,6 +175,9 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Ca
 			bodyAreal.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
+			bodyAreal.degister() ;
+
+			record.degister() ;
 		}
 	}
 

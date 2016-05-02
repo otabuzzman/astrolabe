@@ -11,8 +11,6 @@ import org.exolab.castor.xml.ValidationException;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -22,6 +20,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 	// qualifier key (QK_)
 	private final static String QK_ALTITUDE			= "altitude" ;
+	private final static String QK_TERMINUS			= "terminius" ;
 
 	private final static Log log = LogFactory.getLog( CircleParallel.class ) ;
 
@@ -71,7 +70,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				r = 0 ;
 			}
 		} else {
-			r = ApplicationFactory.valueOf( getBegin().getAngle() ) ;
+			r = valueOf( getBegin().getAngle() ) ;
 		}
 
 		return CAACoordinateTransformation.MapTo0To360Range( r ) ;
@@ -96,7 +95,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				r = 360 ;
 			}
 		} else {
-			r = ApplicationFactory.valueOf( getEnd().getAngle() ) ;
+			r = valueOf( getEnd().getAngle() ) ;
 		}
 		r = CAACoordinateTransformation.MapTo0To360Range( r ) ;
 
@@ -104,41 +103,22 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void register() {
-		List<double[]> list ;
-		Geometry fov ;
-		LineString fovL ;
-		LinearRing fovR ;
-		Polygon fovP ;
 		Point point ;
 		double al ;
 		DMS dms ;
 
-		if ( getName() != null )
-			Registry.register( getName(), this ) ;
+		point = new Point( convert( end() ) ) ;
+		point.register( this, QK_TERMINUS ) ;
 
-		list = list( null, begin(), end(), 0 ) ;
-		point = new Point( list.get( list.size()-1 ) ) ;
-		point.register() ;
-
-		if ( getFov() != null ) {
-			fovL = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
-
-			if ( fovL.isRing() ) {
-				fovR = new GeometryFactory().createLinearRing( fovL.getCoordinates() ) ;
-				fovP = new GeometryFactory().createPolygon( fovR, null ) ;
-
-				Registry.register( getFov(), fovP ) ;
-			} else {
-				fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
-				if ( fov != null ) {
-					// extend by fovL
-				}
-			}
-		}
-
-		al = ApplicationFactory.valueOf( getAngle() ) ;
+		al = valueOf( getAngle() ) ;
 		dms = new DMS( al ) ;
 		dms.register( this, QK_ALTITUDE ) ;
+	}
+
+	public void degister() {
+		Point.degister( this, QK_TERMINUS ) ;
+
+		DMS.degister( this, QK_ALTITUDE ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -164,6 +144,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		astrolabe.model.CircleParallel peer ;
 		CircleParallel circle ;
 		double[] lob, loe, xy ;
+		astrolabe.model.Annotation annotation ;
+		astrolabe.model.Dial dial ;
+		PostscriptEmitter emitter ;
 
 		if ( cut ) {
 			list = list( null, begin(), end(), 0 ) ;
@@ -193,7 +176,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 					// astrolabe.model.AngleType
 					peer.setAngle( new astrolabe.model.Angle() ) ;
 					peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getAngle().getRational().setValue( ApplicationFactory.valueOf( getAngle() ) ) ;
+					peer.getAngle().getRational().setValue( valueOf( getAngle() ) ) ;
 
 					peer.setBegin( new astrolabe.model.Begin() ) ;
 					// astrolabe.model.AngleType
@@ -218,8 +201,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 				circle = new CircleParallel( projector ) ;
 				peer.copyValues( circle ) ;
-				circle.register() ;
 
+				circle.register() ;
 				ps.operator.gsave() ;
 
 				circle.headPS( ps ) ;
@@ -227,6 +210,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 				circle.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
+				circle.degister() ;
 			}
 		} else {
 			list = list( null, begin(), end(), 0 ) ;
@@ -268,28 +252,38 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			ps.operator.grestore() ;
 
 			if ( getDial() != null ) {
-				PostscriptEmitter dial ;
+				dial = getDial() ;
+
+				if ( dial.getDialDegree() != null ) {
+					emitter = dial( dial.getDialDegree() ) ;
+				} else { // dial.getDialHour() != null
+					emitter = dial( dial.getDialHour() ) ;
+				}
 
 				ps.operator.gsave() ;
 
-				dial = ApplicationFactory.companionOf( getDial(), (Baseline) this ) ;
-				dial.headPS( ps ) ;
-				dial.emitPS( ps ) ;
-				dial.tailPS( ps ) ;
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
 
 			if ( getAnnotation() != null ) {
-				PostscriptEmitter annotation ;
-
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					annotation = getAnnotation( i ) ;
+
+					if ( annotation.getAnnotationStraight() != null ) {
+						emitter = annotation( annotation.getAnnotationStraight() ) ;
+					} else { // annotation.getAnnotationCurved() != null
+						emitter = annotation( annotation.getAnnotationCurved() ) ;
+					}
+
 					ps.operator.gsave() ;
 
-					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
+					emitter.headPS( ps ) ;
+					emitter.emitPS( ps ) ;
+					emitter.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
@@ -304,7 +298,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		double xy[], al ;
 		Vector v, t ;
 
-		al = ApplicationFactory.valueOf( getAngle() ) ;	
+		al = valueOf( getAngle() ) ;	
 		xy = projector.project( az, al ) ;
 		v = new Vector( xy[0], xy[1] ) ;
 
@@ -320,7 +314,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public double[] convert( double angle ) {
-		return projector.convert( angle, ApplicationFactory.valueOf( getAngle() ) ) ;
+		return projector.convert( angle, valueOf( getAngle() ) ) ;
 	}
 
 	public double unconvert( double[] eq ) {
@@ -331,7 +325,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		Vector a, b ;
 		double xy[], al ;
 
-		al = ApplicationFactory.valueOf( getAngle() ) ;
+		al = valueOf( getAngle() ) ;
 		xy = projector.project( az+10./3600, al ) ;
 		a = new Vector( xy[0], xy[1] ) ;
 		xy = projector.project( az, al ) ;
@@ -361,6 +355,16 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 			lista.add( end ) ;
 
 		return listxy ;
+	}
+
+	public LineString getCircleGeometry() {
+		List<double[]> list;
+		LineString line ;
+
+		list = list( null, begin(), end(), 0 ) ;
+		line = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
+
+		return line ;
 	}
 
 	public double scaleMarkNth( int mark, double span ) {
@@ -539,8 +543,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		StringBuffer msg ;
 		String fmt ;
 
-		al = ApplicationFactory.valueOf( getAngle() ) ;
-		gnal = ApplicationFactory.valueOf( gn.getAngle() ) ;
+		al = valueOf( getAngle() ) ;
+		gnal = valueOf( gn.getAngle() ) ;
 
 		rdhoC = zenit() ;
 		rdST = rdhoC[0] ;
@@ -620,7 +624,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		StringBuffer msg ;
 		String fmt ;
 
-		al = ApplicationFactory.valueOf( getAngle() ) ;
+		al = valueOf( getAngle() ) ;
 
 		rdhoC = zenit() ;
 		rdST = rdhoC[0] ;
@@ -681,5 +685,41 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 	public double[] zenit() {
 		return projector.convert( 0, 90 ) ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter dial( astrolabe.model.DialDegree peer ) {
+		DialDegree dial ;
+
+		dial = new DialDegree( this ) ;
+		peer.copyValues( dial ) ;
+
+		return dial ;
+	}
+
+	private PostscriptEmitter dial( astrolabe.model.DialHour peer ) {
+		DialHour dial ;
+
+		dial = new DialHour( this ) ;
+		peer.copyValues( dial ) ;
+
+		return dial ;
 	}
 }

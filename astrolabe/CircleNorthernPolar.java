@@ -12,10 +12,15 @@ public class CircleNorthernPolar extends CircleParallel {
 
 	public astrolabe.model.Angle getAngle() {
 		astrolabe.model.Angle r ;
-		double e, o ;
+		double epoch, o ;
+		Double Epoch ;
 
-		e = Epoch.retrieve() ;
-		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
+		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		if ( Epoch == null )
+			epoch = astrolabe.Epoch.defoult() ;
+		else
+			epoch = Epoch.doubleValue() ;
+		o = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 		r = new astrolabe.model.Angle() ;
 		r.setRational( new astrolabe.model.Rational() ) ;

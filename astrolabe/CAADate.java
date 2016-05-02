@@ -81,57 +81,110 @@ public class CAADate extends caa.CAADate {
 		mcat = new MessageCatalog( this ) ;
 
 		if ( key == null ) {
-			sub = scat.substitute( QK_NUMBEROFYYYY, null ) ;
+			sub = scat.substitute( QK_NUMBEROFYYYY, QK_NUMBEROFYYYY ) ;
 			Registry.register( sub, Year() ) ;
 
-			sub = scat.substitute( QK_NUMBEROFMMM, null ) ;
+			sub = scat.substitute( QK_NUMBEROFMMM, QK_NUMBEROFMMM ) ;
 			Registry.register( sub, Month() ) ;
 
-			sub = scat.substitute( QK_NUMBEROFDD, null ) ;
+			sub = scat.substitute( QK_NUMBEROFDD, QK_NUMBEROFDD ) ;
 			Registry.register( sub, Day() ) ;
 
-			sub = scat.substitute( IK_NAMEOFWEEKDAY, null ) ;
+			sub = scat.substitute( IK_NAMEOFWEEKDAY, IK_NAMEOFWEEKDAY ) ;
 			val = mcat.message( IK_NAMEOFWEEKDAY+nameofweekday[ DayOfWeek() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( IK_NAMEOFWEEKDAYSHORT, null ) ;
+			sub = scat.substitute( IK_NAMEOFWEEKDAYSHORT, IK_NAMEOFWEEKDAYSHORT ) ;
 			val = mcat.message( IK_NAMEOFWEEKDAYSHORT+nameofweekday[ DayOfWeek() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( IK_NAMEOFMONTH, null ) ;
+			sub = scat.substitute( IK_NAMEOFMONTH, IK_NAMEOFMONTH ) ;
 			val = mcat.message( IK_NAMEOFMONTH+nameofmonth[ -1+(int) Month() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( IK_NAMEOFMONTHSHORT, null ) ;
+			sub = scat.substitute( IK_NAMEOFMONTHSHORT, IK_NAMEOFMONTHSHORT ) ;
 			val = mcat.message( IK_NAMEOFMONTHSHORT+nameofmonth[ -1+(int) Month() ], null ) ;
 			Registry.register( sub, val ) ;
 		} else {
 			k = key+'.' ;
 
-			sub = scat.substitute( k+QK_NUMBEROFYYYY, null ) ;
+			sub = scat.substitute( k+QK_NUMBEROFYYYY, k+QK_NUMBEROFYYYY ) ;
 			Registry.register( sub, Year() ) ;
 
-			sub = scat.substitute( k+QK_NUMBEROFMMM, null ) ;
+			sub = scat.substitute( k+QK_NUMBEROFMMM, k+QK_NUMBEROFMMM ) ;
 			Registry.register( sub, Month() ) ;
 
-			sub = scat.substitute( k+QK_NUMBEROFDD, null ) ;
+			sub = scat.substitute( k+QK_NUMBEROFDD, k+QK_NUMBEROFDD ) ;
 			Registry.register( sub, Day() ) ;
 
-			sub = scat.substitute( k+IK_NAMEOFWEEKDAY, null ) ;
+			sub = scat.substitute( k+IK_NAMEOFWEEKDAY, k+IK_NAMEOFWEEKDAY ) ;
 			val = mcat.message( IK_NAMEOFWEEKDAY+nameofweekday[ DayOfWeek() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( k+IK_NAMEOFWEEKDAYSHORT, null ) ;
+			sub = scat.substitute( k+IK_NAMEOFWEEKDAYSHORT, k+IK_NAMEOFWEEKDAYSHORT ) ;
 			val = mcat.message( IK_NAMEOFWEEKDAYSHORT+nameofweekday[ DayOfWeek() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( k+IK_NAMEOFMONTH, null ) ;
+			sub = scat.substitute( k+IK_NAMEOFMONTH, k+IK_NAMEOFMONTH ) ;
 			val = mcat.message( IK_NAMEOFMONTH+nameofmonth[ -1+(int) Month() ], null ) ;
 			Registry.register( sub, val ) ;
 
-			sub = scat.substitute( k+IK_NAMEOFMONTHSHORT, null ) ;
+			sub = scat.substitute( k+IK_NAMEOFMONTHSHORT, k+IK_NAMEOFMONTHSHORT ) ;
 			val = mcat.message( IK_NAMEOFMONTHSHORT+nameofmonth[ -1+(int) Month() ], null ) ;
 			Registry.register( sub, val ) ;
+		}
+	}
+
+	public static void degister( Object clazz, String key ) {
+		SubstituteCatalog scat ;
+		String sub, k ;
+
+		scat = new SubstituteCatalog( clazz ) ;
+
+		if ( key == null ) {
+			sub = scat.substitute( QK_NUMBEROFYYYY, QK_NUMBEROFYYYY ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( QK_NUMBEROFMMM, QK_NUMBEROFMMM ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( QK_NUMBEROFDD, QK_NUMBEROFDD ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( IK_NAMEOFWEEKDAY, IK_NAMEOFWEEKDAY ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( IK_NAMEOFWEEKDAYSHORT, IK_NAMEOFWEEKDAYSHORT ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( IK_NAMEOFMONTH, IK_NAMEOFMONTH ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( IK_NAMEOFMONTHSHORT, IK_NAMEOFMONTHSHORT ) ;
+			Registry.degister( sub ) ;
+		} else {
+			k = key+'.' ;
+
+			sub = scat.substitute( k+QK_NUMBEROFYYYY, k+QK_NUMBEROFYYYY ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+QK_NUMBEROFMMM, k+QK_NUMBEROFMMM ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+QK_NUMBEROFDD, k+QK_NUMBEROFDD ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+IK_NAMEOFWEEKDAY, k+IK_NAMEOFWEEKDAY ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+IK_NAMEOFWEEKDAYSHORT, k+IK_NAMEOFWEEKDAYSHORT ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+IK_NAMEOFMONTH, k+IK_NAMEOFMONTH ) ;
+			Registry.degister( sub ) ;
+
+			sub = scat.substitute( k+IK_NAMEOFMONTHSHORT, k+IK_NAMEOFMONTHSHORT ) ;
+			Registry.degister( sub ) ;
 		}
 	}
 }

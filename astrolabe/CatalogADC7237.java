@@ -23,10 +23,8 @@ import org.exolab.castor.xml.ValidationException;
 
 import caa.CAACoordinateTransformation;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 @SuppressWarnings("serial")
-public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Catalog {
+public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements PostscriptEmitter {
 
 	// configuration key (CK_)
 	private final static String CK_THRESHOLDSCALE		= "thresholdscale" ;
@@ -43,30 +41,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 
 	public CatalogADC7237( Projector projector ) {
 		this.projector = projector ;
-	}
-
-	public void register() {
-		ChartPage page ;
-		Geometry fovg, fovl ;
-
-		fovg = null ;
-		fovl = null ;
-
-		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
-		if ( page != null )
-			fovg = page.getViewGeometry() ;
-
-		if ( getFov() != null )
-			fovl = (Geometry) Registry.retrieve( getFov() ) ;
-
-		if ( fovg != null && fovl != null )
-			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
-		else {
-			if ( fovg != null )
-				Registry.register( FOV.RK_FOV, fovg ) ;
-			if ( fovl != null )
-				Registry.register( FOV.RK_FOV, fovl ) ;
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -109,6 +83,8 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 						break ;
 					}
 				}
+
+				record.degister() ;
 			}
 
 			reader.close() ;
@@ -150,10 +126,10 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 						0 ;
 			}
 		} ;
-		astrolabe.model.Body body ;
+		BodyStellar star ;
+		BodyAreal area ;
 		astrolabe.model.ShapeElliptical shapeElliptical ;
-		PostscriptEmitter pe ;
-		astrolabe.model.Position pm ;
+		astrolabe.model.Position position ;
 		double ra, de ;
 
 		threshold = Configuration.getValue( this, CK_THRESHOLDSCALE, DEFAULT_THRESHOLDSCALE ) ;
@@ -168,20 +144,19 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 			de = record.de() ;
 
 			record.register() ;
-			body = new astrolabe.model.Body() ;
 
-			pm = new astrolabe.model.Position() ;
+			position = new astrolabe.model.Position() ;
 			// astrolabe.model.SphericalType
-			pm.setR( new astrolabe.model.R() ) ;
-			pm.getR().setValue( 1 ) ;
+			position.setR( new astrolabe.model.R() ) ;
+			position.getR().setValue( 1 ) ;
 			// astrolabe.model.AngleType
-			pm.setPhi( new astrolabe.model.Phi() ) ;
-			pm.getPhi().setRational( new astrolabe.model.Rational() ) ;
-			pm.getPhi().getRational().setValue( ra ) ;  
+			position.setPhi( new astrolabe.model.Phi() ) ;
+			position.getPhi().setRational( new astrolabe.model.Rational() ) ;
+			position.getPhi().getRational().setValue( ra ) ;  
 			// astrolabe.model.AngleType
-			pm.setTheta( new astrolabe.model.Theta() ) ;
-			pm.getTheta().setRational( new astrolabe.model.Rational() ) ;
-			pm.getTheta().getRational().setValue( de ) ;  
+			position.setTheta( new astrolabe.model.Theta() ) ;
+			position.getTheta().setRational( new astrolabe.model.Rational() ) ;
+			position.getTheta().getRational().setValue( de ) ;  
 
 			d = 0 ;
 			s = 0 ;
@@ -195,52 +170,58 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Ca
 				s = va.sub( vp ).abs() ;
 			}
 
-			if ( s>threshold ) {
-				body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-				body.getBodyAreal().setName( record.PGC ) ;
-				body.getBodyAreal().initValues() ;
-
-				body.getBodyAreal().setNature( record.getNature() ) ;
-
-				body.getBodyAreal().setAnnotation( record.getAnnotation() ) ;
-
-				body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
-				shapeElliptical = new astrolabe.model.ShapeElliptical() ;
-				body.getBodyAreal().getBodyArealTypeChoice().setShapeElliptical( shapeElliptical ) ;
-
-				r25 = Double.valueOf( record.logR25 ) ;
-				shapeElliptical.setProportion( r25<9.99?1/java.lang.Math.pow( 10, r25 ):1 ) ;
-				pa = Double.valueOf( record.PA ) ;
-				shapeElliptical.setPA( pa<999?pa:0 ) ;
-				shapeElliptical.setRational( new astrolabe.model.Rational() ) ;
-				shapeElliptical.getRational().setValue( d ) ;
-				shapeElliptical.setPosition( pm ) ;
-			} else {
-				body.setBodyStellar( new astrolabe.model.BodyStellar() ) ;
-				body.getBodyStellar().setName( record.PGC ) ;
-				body.getBodyStellar().initValues() ;
-
-				body.getBodyStellar().setScript( record.getScript() ) ;
-				body.getBodyStellar().setAnnotation( record.getAnnotation() ) ;
-
-				body.getBodyStellar().setPosition( pm ) ;
-			}
-
 			try {
-				body.validate() ;
+				ps.operator.gsave() ;
+
+				if ( s>threshold ) {
+					area = new BodyAreal( projector ) ;
+					area.setName( record.PGC ) ;
+					area.initValues() ;
+
+					area.setNature( record.getNature() ) ;
+
+					area.setAnnotation( record.getAnnotation() ) ;
+
+					area.setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
+					shapeElliptical = new astrolabe.model.ShapeElliptical() ;
+					area.getBodyArealTypeChoice().setShapeElliptical( shapeElliptical ) ;
+
+					r25 = Double.valueOf( record.logR25 ) ;
+					shapeElliptical.setProportion( r25<9.99?1/java.lang.Math.pow( 10, r25 ):1 ) ;
+					pa = Double.valueOf( record.PA ) ;
+					shapeElliptical.setPA( pa<999?pa:0 ) ;
+					shapeElliptical.setRational( new astrolabe.model.Rational() ) ;
+					shapeElliptical.getRational().setValue( d ) ;
+					shapeElliptical.setPosition( position ) ;
+
+					area.validate() ;
+
+					area.headPS( ps ) ;
+					area.emitPS( ps ) ;
+					area.tailPS( ps ) ;
+				} else {
+					star = new BodyStellar( projector ) ;
+					star.setName( record.PGC ) ;
+					star.initValues() ;
+
+					star.setScript( record.getScript() ) ;
+					star.setAnnotation( record.getAnnotation() ) ;
+
+					star.setPosition( position ) ;
+
+					star.validate() ;
+
+					star.headPS( ps ) ;
+					star.emitPS( ps ) ;
+					star.tailPS( ps ) ;
+				}
+
+				ps.operator.grestore() ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}
 
-			pe = ApplicationFactory.companionOf( body , projector ) ;
-
-			ps.operator.gsave() ;
-
-			pe.headPS( ps ) ;
-			pe.emitPS( ps ) ;
-			pe.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
+			record.degister() ;
 		}
 	}
 

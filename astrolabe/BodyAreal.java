@@ -53,6 +53,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		dms.register( this, QK_SQUARDEGREE ) ;
 	}
 
+	public void degister() {
+		DMS.degister( this, QK_STERADIAN ) ;
+		DMS.degister( this, QK_SQUARDEGREE ) ;
+	}
+
 	public void headPS( ApplicationPostscriptStream ps ) {
 		GSPaintStroke nature ;
 
@@ -85,6 +90,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		double[] xy ;
 		Vector z, p ;
 		double a ;
+		astrolabe.model.Annotation annotation ;
+		PostscriptEmitter emitter ;
 
 		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
 		if ( fov == null ) {
@@ -157,15 +164,20 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			ps.operator.rotate( a ) ;
 
 			if ( s == 0 && getAnnotation() != null ) {
-				PostscriptEmitter annotation ;
-
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					annotation = getAnnotation( i ) ;
+
+					if ( annotation.getAnnotationStraight() != null ) {
+						emitter = annotation( annotation.getAnnotationStraight() ) ;
+					} else { // annotation.getAnnotationCurved() != null
+						emitter = annotation( annotation.getAnnotationCurved() ) ;
+					}
+
 					ps.operator.gsave() ;
 
-					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
+					emitter.headPS( ps ) ;
+					emitter.emitPS( ps ) ;
+					emitter.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
@@ -186,7 +198,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		outline = new java.util.Vector<double[]>() ;
 
 		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
-			for ( double[] position : ApplicationFactory.valueOf( getBodyArealTypeChoice().getPosition() ) ) {
+			for ( double[] position : valueOf( getBodyArealTypeChoice().getPosition() ) ) {
 				lo = CAACoordinateTransformation.MapTo0To360Range( position[1] ) ;
 				if ( lo>180 )
 					lo = lo-360 ;
@@ -209,5 +221,23 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		}
 
 		return outline ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
 	}
 }

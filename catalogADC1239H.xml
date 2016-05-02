@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -54,7 +54,7 @@
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H name="1239H" fov="chart" url="lib/cat/1239/hip_main.dat.gz">
+						<CatalogADC1239H name="1239H" url="lib/cat/1239/hip_main.dat.gz">
 							<CatalogADC1239HRecord select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;3}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">

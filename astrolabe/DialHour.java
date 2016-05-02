@@ -26,4 +26,8 @@ public class DialHour extends DialDegree {
 	protected void register( double angle ) {
 		new DMS( angle/15 ).register( this, QK_ANGLE ) ;
 	}
+
+	protected void degister() {
+		DMS.degister( this, QK_ANGLE ) ;
+	}
 }

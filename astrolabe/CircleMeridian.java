@@ -14,14 +14,13 @@ import caa.CAACoordinateTransformation;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
 
 @SuppressWarnings("serial")
 public class CircleMeridian extends astrolabe.model.CircleMeridian implements PostscriptEmitter, Baseline {
 
 	// qualifier key (QK_)
 	private final static String QK_AZIMUTH			= "azimuth" ;
+	private final static String QK_TERMINUS			= "terminius" ;
 
 	private final static Log log = LogFactory.getLog( CircleMeridian.class ) ;
 
@@ -75,7 +74,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				r = -90 ;
 			}
 		} else {
-			r = ApplicationFactory.valueOf( getBegin().getAngle() ) ;
+			r = valueOf( getBegin().getAngle() ) ;
 		}
 
 		return r ;
@@ -100,48 +99,29 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				end = 90 ;
 			}
 		} else {
-			end = ApplicationFactory.valueOf( getEnd().getAngle() ) ;
+			end = valueOf( getEnd().getAngle() ) ;
 		}
 
 		return end ;
 	}
 
 	public void register() {
-		List<double[]> list ;
-		Geometry fov ;
-		LineString fovL ;
-		LinearRing fovR ;
-		Polygon fovP ;
 		Point point ;
 		double az ;
 		DMS dms ;
 
-		if ( getName() != null )
-			Registry.register( getName(), this ) ;
+		point = new Point( convert( end() ) ) ;
+		point.register( this, QK_TERMINUS ) ;
 
-		list = list( null, begin(), end(), 0 ) ;
-		point = new Point( list.get( list.size()-1 ) ) ;
-		point.register() ;
-
-		if ( getFov() != null ) {
-			fovL = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
-
-			if ( fovL.isRing() ) {
-				fovR = new GeometryFactory().createLinearRing( fovL.getCoordinates() ) ;
-				fovP = new GeometryFactory().createPolygon( fovR, null ) ;
-
-				Registry.register( getFov(), fovP ) ;
-			} else {
-				fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
-				if ( fov != null ) {
-					// extend by fovL
-				}
-			}
-		}
-
-		az = ApplicationFactory.valueOf( getAngle() ) ;
+		az = valueOf( getAngle() ) ;
 		dms = new DMS( az/15 ) ;
 		dms.register( this, QK_AZIMUTH ) ;
+	}
+
+	public void degister() {
+		Point.degister( this, QK_TERMINUS ) ;
+
+		DMS.degister( this, QK_AZIMUTH ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -167,6 +147,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		astrolabe.model.CircleMeridian peer ;
 		CircleMeridian circle ;
 		double[] lob, loe, xy ;
+		astrolabe.model.Annotation annotation ;
+		astrolabe.model.Dial dial ;
+		PostscriptEmitter emitter ;
 
 		if ( cut ) {
 			list = list( null, begin(), end(), 0 ) ;
@@ -196,7 +179,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 					// astrolabe.model.AngleType
 					peer.setAngle( new astrolabe.model.Angle() ) ;
 					peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getAngle().getRational().setValue( ApplicationFactory.valueOf( getAngle() ) ) ;
+					peer.getAngle().getRational().setValue( valueOf( getAngle() ) ) ;
 
 					peer.setBegin( new astrolabe.model.Begin() ) ;
 					// astrolabe.model.AngleType
@@ -219,8 +202,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 				circle = new CircleMeridian( projector ) ;
 				peer.copyValues( circle ) ;
+				
 				circle.register() ;
-
 				ps.operator.gsave() ;
 
 				circle.headPS( ps ) ;
@@ -228,6 +211,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				circle.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
+				circle.degister() ;
 			}
 		} else {
 			list = list( null, begin(), end(), 0 ) ;
@@ -269,28 +253,38 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			ps.operator.grestore() ;
 
 			if ( getDial() != null ) {
-				PostscriptEmitter dial ;
+				dial = getDial() ;
+
+				if ( dial.getDialDegree() != null ) {
+					emitter = dial( dial.getDialDegree() ) ;
+				} else { // dial.getDialHour() != null
+					emitter = dial( dial.getDialHour() ) ;
+				}
 
 				ps.operator.gsave() ;
 
-				dial = ApplicationFactory.companionOf( getDial(), (Baseline) this ) ;
-				dial.headPS( ps ) ;
-				dial.emitPS( ps ) ;
-				dial.tailPS( ps ) ;
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
 
 			if ( getAnnotation() != null ) {
-				PostscriptEmitter annotation ;
-
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+					annotation = getAnnotation( i ) ;
+
+					if ( annotation.getAnnotationStraight() != null ) {
+						emitter = annotation( annotation.getAnnotationStraight() ) ;
+					} else { // annotation.getAnnotationCurved() != null
+						emitter = annotation( annotation.getAnnotationCurved() ) ;
+					}
+
 					ps.operator.gsave() ;
 
-					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
+					emitter.headPS( ps ) ;
+					emitter.emitPS( ps ) ;
+					emitter.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
@@ -305,7 +299,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		double xy[], az ;
 		Vector v, t ;
 
-		az = ApplicationFactory.valueOf( getAngle() ) ;	
+		az = valueOf( getAngle() ) ;	
 		xy = projector.project( az, al ) ;
 		v = new Vector( xy[0], xy[1] ) ;
 
@@ -321,7 +315,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public double[] convert( double angle ) {
-		return projector.convert( ApplicationFactory.valueOf( getAngle() ), angle ) ;
+		return projector.convert( valueOf( getAngle() ), angle ) ;
 	}
 
 	public double unconvert( double[] eq ) {
@@ -332,7 +326,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		Vector a, b ;
 		double xy[], az ;
 
-		az = ApplicationFactory.valueOf( getAngle() ) ;
+		az = valueOf( getAngle() ) ;
 		xy = projector.project( az, al+10./3600 ) ;
 		a = new Vector( xy[0], xy[1] ) ;
 		xy = projector.project( az, al ) ;
@@ -364,6 +358,16 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return listxy ;
 	}
 
+	public LineString getCircleGeometry() {
+		List<double[]> list;
+		LineString line ;
+
+		list = list( null, begin(), end(), 0 ) ;
+		line = new GeometryFactory().createLineString( new JTSCoordinateArraySequence( list ) ) ;
+
+		return line ;
+	}
+
 	public double scaleMarkNth( int mark, double span ) {
 		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
@@ -385,7 +389,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		}
 
 		// convert actual gn into local
-		az = ApplicationFactory.valueOf( getAngle() ) ;
+		az = valueOf( getAngle() ) ;
 		gneq = projector.convert( az, 0 ) ;
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa/*horizon.getLa()*/ ) ;
@@ -457,7 +461,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		rdLa = rdhoC[1] ;
 
 		// convert actual gn into local
-		az = ApplicationFactory.valueOf( getAngle() ) ;
+		az = valueOf( getAngle() ) ;
 		gneq = projector.convert( az, 0 ) ;
 		c = CAACoordinateTransformation.Equatorial2Horizontal(
 				CAACoordinateTransformation.DegreesToHours( rdST-gneq[0] ), gneq[1], rdLa ) ;
@@ -496,7 +500,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		gnST = gnhoC[0] ;
 		gnLa = gnhoC[1] ;
 
-		gnal = ApplicationFactory.valueOf( gn.getAngle() ) ;
+		gnal = valueOf( gn.getAngle() ) ;
 
 		gnB = 90-gnal ;
 		blA = 90-transformParallelLa() ;
@@ -610,5 +614,41 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 	public double[] zenit() {
 		return projector.convert( 0, 90 ) ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter dial( astrolabe.model.DialDegree peer ) {
+		DialDegree dial ;
+
+		dial = new DialDegree( this ) ;
+		peer.copyValues( dial ) ;
+
+		return dial ;
+	}
+
+	private PostscriptEmitter dial( astrolabe.model.DialHour peer ) {
+		DialHour dial ;
+
+		dial = new DialHour( this ) ;
+		peer.copyValues( dial ) ;
+
+		return dial ;
 	}
 }

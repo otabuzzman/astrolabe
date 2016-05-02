@@ -87,34 +87,70 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 
 		cat = new SubstituteCatalog( this ) ;
 
-		sub = cat.substitute( QK_NAME, null ) ;
+		sub = cat.substitute( QK_NAME, QK_NAME ) ;
 		Registry.register( sub, Name ) ;
-		sub = cat.substitute( QK_TYPE, null ) ;
+		sub = cat.substitute( QK_TYPE, QK_TYPE ) ;
 		Registry.register( sub, Type  ) ;
-		sub = cat.substitute( QK_RAH, null ) ;
+		sub = cat.substitute( QK_RAH, QK_RAH ) ;
 		Registry.register( sub, RAh ) ;
-		sub = cat.substitute( QK_RAM, null ) ;
+		sub = cat.substitute( QK_RAM, QK_RAM ) ;
 		Registry.register( sub, RAm ) ;
-		sub = cat.substitute( QK_DE, null ) ;
+		sub = cat.substitute( QK_DE, QK_DE ) ;
 		Registry.register( sub, DE ) ;
-		sub = cat.substitute( QK_DED, null ) ;
+		sub = cat.substitute( QK_DED, QK_DED ) ;
 		Registry.register( sub, DEd  ) ;
-		sub = cat.substitute( QK_DEM, null ) ;
+		sub = cat.substitute( QK_DEM, QK_DEM ) ;
 		Registry.register( sub, DEm ) ;
-		sub = cat.substitute( QK_SOURCE, null ) ;
+		sub = cat.substitute( QK_SOURCE, QK_SOURCE ) ;
 		Registry.register( sub, Source ) ;
-		sub = cat.substitute( QK_CONST, null ) ;
+		sub = cat.substitute( QK_CONST, QK_CONST ) ;
 		Registry.register( sub, Const ) ;
-		sub = cat.substitute( QK_L_SIZE, null ) ;
+		sub = cat.substitute( QK_L_SIZE, QK_L_SIZE ) ;
 		Registry.register( sub, l_size ) ;
-		sub = cat.substitute( QK_SIZE, null ) ;
+		sub = cat.substitute( QK_SIZE, QK_SIZE ) ;
 		Registry.register( sub, size ) ;
-		sub = cat.substitute( QK_MAG, null ) ;
+		sub = cat.substitute( QK_MAG, QK_MAG ) ;
 		Registry.register( sub, mag ) ;
-		sub = cat.substitute( QK_N_MAG, null ) ;
+		sub = cat.substitute( QK_N_MAG, QK_N_MAG ) ;
 		Registry.register( sub, n_mag ) ;
-		sub = cat.substitute( QK_DESC, null ) ;
+		sub = cat.substitute( QK_DESC, QK_DESC ) ;
 		Registry.register( sub, Desc ) ;
+	}
+
+	public void degister() {
+		SubstituteCatalog cat ;
+		String sub ;
+
+		cat = new SubstituteCatalog( this ) ;
+
+		sub = cat.substitute( QK_NAME, QK_NAME ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_TYPE, QK_TYPE ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_RAH, QK_RAH ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_RAM, QK_RAM ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_DE, QK_DE ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_DED, QK_DED ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_DEM, QK_DEM ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_SOURCE, QK_SOURCE ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_CONST, QK_CONST ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_L_SIZE, QK_L_SIZE ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_SIZE, QK_SIZE ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_MAG, QK_MAG ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_N_MAG, QK_N_MAG ) ;
+		Registry.degister( sub ) ;
+		sub = cat.substitute( QK_DESC, QK_DESC ) ;
+		Registry.degister( sub ) ;
 	}
 
 	public boolean isOK() {

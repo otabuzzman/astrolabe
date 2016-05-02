@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -156,7 +156,7 @@
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VI/49/bound_20.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
-						<CatalogADC6049 name="6049" fov="chart" url="lib/cat/6049/bound_20.dat.gz">
+						<CatalogADC6049 name="6049" url="lib/cat/6049/bound_20.dat.gz">
 							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}" nature=".36:1.8:0.25">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">

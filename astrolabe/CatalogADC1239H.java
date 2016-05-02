@@ -21,14 +21,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.ValidationException;
 
-import com.vividsolutions.jts.geom.Geometry;
-
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 import caa.CAAPrecession;
 
 @SuppressWarnings("serial")
-public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements Catalog {
+public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements PostscriptEmitter {
 
 	private final static int C_CHUNK = 450+1/*0x0a*/ ;
 
@@ -40,30 +38,6 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 	public CatalogADC1239H( Projector projector ) {
 		this.projector = projector ;
-	}
-
-	public void register() {
-		ChartPage page ;
-		Geometry fovg, fovl ;
-
-		fovg = null ;
-		fovl = null ;
-
-		page = (ChartPage) Registry.retrieve( ChartPage.RK_CHARTPAGE ) ;
-		if ( page != null )
-			fovg = page.getViewGeometry() ;
-
-		if ( getFov() != null )
-			fovl = (Geometry) Registry.retrieve( getFov() ) ;
-
-		if ( fovg != null && fovl != null )
-			Registry.register( FOV.RK_FOV, fovg.intersection( fovl ) ) ;
-		else {
-			if ( fovg != null )
-				Registry.register( FOV.RK_FOV, fovg ) ;
-			if ( fovl != null )
-				Registry.register( FOV.RK_FOV, fovl ) ;
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -106,6 +80,8 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 						break ;
 					}
 				}
+
+				record.degister() ;
 			}
 
 			reader.close() ;
@@ -148,8 +124,13 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
 		double epoch, ra, de, pmRA, pmDE ;
+		Double Epoch ;
 
-		epoch = Epoch.retrieve() ;
+		Epoch = (Double) Registry.retrieve( astrolabe.Epoch.RK_EPOCH ) ;
+		if ( Epoch == null )
+			epoch = astrolabe.Epoch.defoult() ;
+		else
+			epoch = Epoch.doubleValue() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -204,8 +185,8 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 
 			bodyStellar = new BodyStellar( projector ) ;
 			body.getBodyStellar().copyValues( bodyStellar ) ;
+			
 			bodyStellar.register() ;
-
 			ps.operator.gsave() ;
 
 			bodyStellar.headPS( ps ) ;
@@ -213,6 +194,9 @@ public class CatalogADC1239H extends astrolabe.model.CatalogADC1239H implements 
 			bodyStellar.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
+			bodyStellar.degister() ;
+
+			record.degister() ;
 		}
 	}
 

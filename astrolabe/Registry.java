@@ -3,17 +3,22 @@ package astrolabe;
 
 import java.lang.ThreadGroup;
 import java.util.Hashtable;
+import java.util.Stack;
 
 public class Registry {
 
-	private final static Hashtable<String, Object> global = new Hashtable<String, Object>() ;
-	private final static Hashtable<ThreadGroup, Hashtable<String, Object>> local = new Hashtable<ThreadGroup, Hashtable<String, Object>>() ;
+	private final static Hashtable<String, Stack<Object>>
+	global = new Hashtable<String, Stack<Object>>() ;
+	private final static Hashtable<ThreadGroup, Hashtable<String, Stack<Object>>>
+	local = new Hashtable<ThreadGroup, Hashtable<String, Stack<Object>>>() ;
 
 	public static Object retrieve( String key ) {
-		if ( global.containsKey( key ) )
+		Object value ;
+
+		value = retrieveLocal( key ) ;
+		if ( value == null )
 			return retrieveGlobal( key ) ;
-		else
-			return retrieveLocal( key ) ;
+		return value ;
 	} 
 
 	public static Object retrieveGlobal( String key ) {
@@ -25,24 +30,24 @@ public class Registry {
 
 		registry = Thread.currentThread().getThreadGroup() ;
 
-		if ( ! local.containsKey( registry ) )
-			local.put( registry, new Hashtable<String, Object>() ) ;
-
-		return retrieve( local.get( registry ), key ) ;
+		if ( local.containsKey( registry ) )
+			return retrieve( local.get( registry ), key ) ;
+		return null ;
 	}
 
-	private static Object retrieve( Hashtable<String, Object> registry, String key ) {
+	private static Object retrieve( Hashtable<String, Stack<Object>> registry, String key ) {
 		if ( registry.containsKey( key ) )
-			return registry.get( key ) ;
+			return registry.get( key ).peek() ;
 		return null ;
 	}
 
 	public static void register( String key, Object value ) {
-		if ( ! global.containsKey( key ) ) {
-			registerLocal( key, value ) ;
-		} else {
+		Object check ;
+
+		check = retrieveLocal( key ) ;
+		if ( check == null )
 			registerGlobal( key, value ) ;
-		}
+		registerLocal( key, value ) ;
 	}
 
 	public static void registerGlobal( String key, Object value ) {
@@ -54,43 +59,73 @@ public class Registry {
 
 		registry = Thread.currentThread().getThreadGroup() ;
 
-		if ( ! local.containsKey( registry ) ) {
-			local.put( registry, new Hashtable<String, Object>() ) ;
-		}
-
+		if ( ! local.containsKey( registry ) )
+			local.put( registry, new Hashtable<String, Stack<Object>>() ) ;
 		register( local.get( registry ), key, value ) ;
 	}
 
-	private static void register( Hashtable<String, Object> registry, String key, Object value ) {
-		registry.put( key, value ) ;
+	private static void register( Hashtable<String, Stack<Object>> registry, String key, Object value ) {
+		Stack<Object> stack ;
+
+		if ( registry.containsKey( key ) )
+			stack = registry.get( key ) ;
+		else
+			stack = new Stack<Object>() ;
+		stack.push( value ) ;
+
+		registry.put( key, stack ) ;
 	}
 
-	public static void remove() {
+	public static Object degister( String key ) {
+		Object check ;
+
+		check = retrieveLocal( key ) ;
+		if ( check == null )
+			return degisterGlobal( key ) ;
+		return degisterLocal( key ) ;
+	}
+
+	public static Object degisterGlobal( String key ) {
+		return degister( global, key ) ;
+	}
+
+	public static Object degisterLocal( String key ) {
 		ThreadGroup registry ;
 
 		registry = Thread.currentThread().getThreadGroup() ;
 
-		if ( local.containsKey( registry ) ) {
+		if ( local.containsKey( registry ) )
+			return degister( local.get( registry ), key ) ;
+		return null ;
+	}
+
+	private static Object degister( Hashtable<String, Stack<Object>> registry, String key ) {
+		Stack<Object> value ;
+		Object object ;
+
+		if ( ! registry.containsKey( key ) )
+			return null ;
+
+		value = registry.get( key ) ;
+		object = value.lastElement() ;
+
+		value.pop() ;		
+		if ( value.size() == 0 )
+			registry.remove( key ) ;
+
+		return object ;
+	}
+
+	public static void remove() {
+		removeLocal() ;
+	}
+
+	public static void removeLocal() {
+		ThreadGroup registry ;
+
+		registry = Thread.currentThread().getThreadGroup() ;
+
+		if ( local.containsKey( registry ) )
 			local.remove( registry ) ;
-		}
-	}
-
-	public static void register( String key, String value ) {
-		register( key, (Object) new String( value ) ) ;
-	}
-
-	public static void register( String key, double value ) {
-		register( key, new Double( value ) ) ;
-	}
-
-	public static void register( String key, long value ) {
-		register( key, new Long( value ) ) ;
-	}
-
-	public static void register( String key, boolean value ) {
-		register( key, new String( Boolean.toString( value ) ) ) ;
-	}
-
-	public static void unregister( String key ) {
 	}
 }

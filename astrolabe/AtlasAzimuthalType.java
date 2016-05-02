@@ -54,10 +54,10 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	public AtlasAzimuthalType( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
 		astrolabe.model.AngleType angle ;
 
-		originRA = ApplicationFactory.valueOf( atlas.getOrigin() )[1] ;
-		originde = ApplicationFactory.valueOf( atlas.getOrigin() )[2] ;
-		extentRA = ApplicationFactory.valueOf( atlas.getExtent() )[1] ;
-		extentde = ApplicationFactory.valueOf( atlas.getExtent() )[2] ;
+		originRA = valueOf( atlas.getOrigin() )[1] ;
+		originde = valueOf( atlas.getOrigin() )[2] ;
+		extentRA = valueOf( atlas.getExtent() )[1] ;
+		extentde = valueOf( atlas.getExtent() )[2] ;
 
 		pickerURI = atlas.getPicker() ;
 
@@ -71,19 +71,19 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		angle = atlas.getAtlasTypeChoice().getSpanDeclination() ;
 		if ( angle == null ) {
 			angle = atlas.getAtlasTypeChoice().getSpanRA() ;
-			spanRA = ApplicationFactory.valueOf( angle ) ;
+			spanRA = valueOf( angle ) ;
 		} else
-			spande = ApplicationFactory.valueOf( angle ) ;
+			spande = valueOf( angle ) ;
 
 		angle = atlas.getSpanMeridian() ;
 		if ( angle != null ) {
 			if ( atlas.getSpanMeridian().hasLimit() )
 				spanlim = atlas.getSpanMeridian().getLimit() ;
-			spanme = ApplicationFactory.valueOf( angle ) ;
+			spanme = valueOf( angle ) ;
 		}
 		angle = atlas.getSpanParallel() ;
 		if ( angle != null )
-			spanpa = ApplicationFactory.valueOf( angle ) ;
+			spanpa = valueOf( angle ) ;
 	}
 
 	public void addAllAtlasPage() throws ValidationException {

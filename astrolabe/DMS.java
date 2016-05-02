@@ -67,39 +67,80 @@ public class DMS extends astrolabe.model.DMS {
 		cat = new SubstituteCatalog( clazz ) ;
 
 		if ( key == null ) {
-			sub = cat.substitute( QK_NEG, null ) ;
+			sub = cat.substitute( QK_NEG, QK_NEG ) ;
 			Registry.register( sub, getNeg() ) ;
 
-			sub = cat.substitute( QK_DEG, null ) ;
+			sub = cat.substitute( QK_DEG, QK_DEG ) ;
 			Registry.register( sub, getDeg() ) ;
 
-			sub = cat.substitute( QK_MIN, null ) ;
+			sub = cat.substitute( QK_MIN, QK_MIN ) ;
 			Registry.register( sub, getMin() ) ;
 
 			sec = Double.toString( getSec() ).split( "\\." ) ;
-			sub = cat.substitute( QK_SEC, null ) ;
+			sub = cat.substitute( QK_SEC, QK_SEC ) ;
 			Registry.register( sub, Long.parseLong( sec[0] ) ) ;
 
-			sub = cat.substitute( QK_FRC, null ) ;
+			sub = cat.substitute( QK_FRC, QK_FRC ) ;
 			Registry.register( sub, Long.parseLong( sec[1] ) ) ;
 		} else {
 			k = key+'.' ;
 
-			sub = cat.substitute( k+QK_NEG, null ) ;
+			sub = cat.substitute( k+QK_NEG, k+QK_NEG ) ;
 			Registry.register( sub, getNeg() ) ;
 
-			sub = cat.substitute( k+QK_DEG, null ) ;
+			sub = cat.substitute( k+QK_DEG, k+QK_DEG ) ;
 			Registry.register( sub, getDeg() ) ;
 
-			sub = cat.substitute( k+QK_MIN, null ) ;
+			sub = cat.substitute( k+QK_MIN, k+QK_MIN ) ;
 			Registry.register( sub, getMin() ) ;
 
 			sec = Double.toString( getSec() ).split( "\\." ) ;
-			sub = cat.substitute( k+QK_SEC, null ) ;
+			sub = cat.substitute( k+QK_SEC, k+QK_SEC ) ;
 			Registry.register( sub, Long.parseLong( sec[0] ) ) ;
 
-			sub = cat.substitute( k+QK_FRC, null ) ;
+			sub = cat.substitute( k+QK_FRC, k+QK_FRC ) ;
 			Registry.register( sub, Long.parseLong( sec[1] ) ) ;
+		}
+	}
+
+	public static void degister( Object clazz, String key ) {
+		SubstituteCatalog cat ;
+		String sub, k ;
+
+		cat = new SubstituteCatalog( clazz ) ;
+
+		if ( key == null ) {
+			sub = cat.substitute( QK_NEG, QK_NEG ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( QK_DEG, QK_DEG ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( QK_MIN, QK_MIN ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( QK_SEC, QK_SEC ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( QK_FRC, QK_FRC ) ;
+			Registry.degister( sub ) ;
+		} else {
+			k = key+'.' ;
+
+			sub = cat.substitute( k+QK_NEG, k+QK_NEG ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( k+QK_DEG, k+QK_DEG ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( k+QK_MIN, k+QK_MIN ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( k+QK_SEC, k+QK_SEC ) ;
+			Registry.degister( sub ) ;
+
+			sub = cat.substitute( k+QK_FRC, k+QK_FRC ) ;
+			Registry.degister( sub ) ;
 		}
 	}
 }

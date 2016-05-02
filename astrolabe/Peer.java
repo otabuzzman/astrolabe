@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -16,6 +17,19 @@ import org.exolab.castor.xml.TypeValidator;
 import org.exolab.castor.xml.ValidationContext;
 import org.exolab.castor.xml.XMLClassDescriptor;
 import org.exolab.castor.xml.XMLFieldDescriptor;
+
+import caa.CAACoordinateTransformation;
+import caa.CAADate;
+
+import astrolabe.model.AngleType;
+import astrolabe.model.CalendarType;
+import astrolabe.model.DMSType;
+import astrolabe.model.DateType;
+import astrolabe.model.HMSType;
+import astrolabe.model.RationalType;
+import astrolabe.model.SphericalType;
+import astrolabe.model.TimeType;
+import astrolabe.model.YMDType;
 
 public class Peer {
 
@@ -149,5 +163,92 @@ public class Peer {
 		} catch ( Exception e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
+	}
+
+	public static double valueOf( DateType date ) {
+		if ( date.getJD() == null )
+			return valueOf( date.getCalendar() ) ;
+		else
+			return valueOf( date.getJD() ) ;
+	}
+
+	public static double valueOf( CalendarType calendar ) {
+		double r, t ;
+		CAADate d ;
+		long[] c ;
+
+		c = valueOf( calendar.getYMD() ) ;
+
+		if ( calendar.getTime() != null )
+			t = valueOf( calendar.getTime() ) ;
+		else
+			t = 0 ;
+
+		d = new CAADate( c[0], c[1], c[2]+t, true ) ;
+		r = d.Julian() ;
+		d.delete() ;
+
+		return r ;
+	}
+
+	public static long[] valueOf( YMDType ymd ) {
+		return new long[] { ymd.getY(), ymd.getM(), ymd.getD() } ;
+	}
+
+	public static double valueOf( TimeType time ) {
+		if ( time.getRational() == null )
+			return valueOf( time.getHMS() ) ;
+		else
+			return valueOf( time.getRational() ) ;
+	}
+
+	public static double valueOf( HMSType hms ) {
+		double r ;
+
+		r = hms.getHrs()+hms.getMin()/60.+hms.getSec()/3600 ;
+
+		return hms.getNeg()?-r:r ;
+	}
+
+	public static double valueOf( RationalType rational ) {
+		return rational.getValue() ;
+	} 
+
+	public static List<double[]> valueOf( SphericalType[] spherical ) {
+		List<double[]> r = new java.util.Vector<double[]>() ;
+
+		for ( int n=0 ; n<spherical.length ; n++ )
+			r.add( valueOf( spherical[n] ) ) ;
+
+		return r ;
+	}
+
+	public static double[] valueOf( SphericalType spherical ) {
+		double[] r = { 1, 0, 0 } ;
+
+		if ( spherical.getR() != null )
+			r[0] = valueOf( spherical.getR() ) ;
+		r[1] = valueOf( spherical.getPhi() ) ;
+		r[2] = valueOf( spherical.getTheta() ) ;
+
+		return r ;
+	}
+
+	public static double valueOf( AngleType angle ) {
+		if ( angle.getRational() == null ) {
+			if ( angle.getDMS() == null )
+				return CAACoordinateTransformation.HoursToDegrees( valueOf( angle.getHMS() ) ) ;
+			else
+				return valueOf( angle.getDMS() ) ;
+		} else
+			return valueOf( angle.getRational() ) ;
+	}
+
+	public static double valueOf( DMSType dms ) {
+		double r ;
+
+		r = dms.getDeg()+dms.getMin()/60.+dms.getSec()/3600 ;
+
+		return dms.getNeg()?-r:r ;
 	}
 }

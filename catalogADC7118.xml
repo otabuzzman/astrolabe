@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -54,7 +54,7 @@
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VII/118/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/7118/ngc2000.dat.gz-->
-						<CatalogADC7118 name="7118" url="lib/cat/7118/ngc2000.dat.gz" fov="chart">
+						<CatalogADC7118 name="7118" url="lib/cat/7118/ngc2000.dat.gz">
 							<CatalogADC7118Record select="true" nature="{Type==&#x0022;Gx&#x0022;?&#x0022;.28:0&#x0022;:Type==&#x0022;OC&#x0022;||Type==&#x0022;Gb&#x0022;||Type==&#x0022;C+N&#x0022;?&#x0022;.28:0.4:0.5&#x0022;:Type==&#x0022;Nb&#x0022;||Type==&#x0022;Pl&#x0022;||Type==&#x0022;Kt&#x0022;?&#x0022;.28:0.2&#x0022;:&#x0022;.28:0&#x0022;}">
 								<Script value="{Type~&#x0022;Gx&#x0022;?&#x0022;&#xf820;&#x0022;:Type~&#x0022;OC&#x0022;?&#x0022;&#xf81e;&#x0022;:Type~&#x0022;Gb&#x0022;?&#x0022;&#xf81f;&#x0022;:Type~&#x0022;Nb&#x0022;?&#x0022;&#xf819;&#x0022;:Type~&#x0022;Pl&#x0022;?&#x0022;&#xf81d;&#x0022;:Type~&#x0022;C+N&#x0022;||Type~&#x0022;Kt&#x0022;?&#x0022;&#xf81a;&#x0022;:Type~&#x0022;Ast&#x0022;||Type~&#x0022;\*\*\*&#x0022;?&#x0022;&#xf813;&#x0022;:Type~&#x0022;D\*&#x0022;?&#x0022;&#xf812;&#x0022;:&#x0022;&#xf812;&#x0022;}" purpose="{mag&#x003c;-1?4.98:mag&#x003c;0?4.02:mag&#x003c;1?3.24:mag&#x003c;2?2.61:mag&#x003c;3?2.11:mag&#x003c;4?1.70:mag&#x003c;5?1.37:mag&#x003c;6?1.10:mag&#x003c;7?0.89:mag&#x003c;8?0.72:mag&#x003c;9?0.58:mag&#x003c;10?0.47:mag&#x003c;11?0.38:0.30}"/>
 							</CatalogADC7118Record>

@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -54,7 +54,7 @@
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
+						<CatalogADC5050 name="5050" url="lib/cat/5050/catalog.dat.gz">
 							<CatalogADC5050Record select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">

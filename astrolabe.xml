@@ -25,7 +25,7 @@
 					</AnnotationStraight>
 					<!--eqp-24.5-->
 					<Circle>
-						<CircleParallel name="eqp-24.5" fov="chart" importance="canonical">
+						<CircleParallel name="eqp-24.5" importance="canonical">
 							<Begin>
 								<Angle>
 									<Rational value="0"/>
@@ -430,7 +430,7 @@
 					<!--MCCM-->
 					<Catalog>
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
-						<CatalogDS9 name="MCCM" fov="chart" url="lib/cat/MCCM/cat_%04d.con">
+						<CatalogDS9 name="MCCM" url="lib/cat/MCCM/cat_%04d.con">
 							<CatalogDS9Record select="true" nature="0.08:0"/>
 							<Level url="lib/cat/MCCM/catalog.lev"/>
 						</CatalogDS9>
@@ -1254,7 +1254,7 @@
 					</Circle>
 					<!--horizon-->
 					<Circle>
-						<CircleParallel name="lop0" fov="horizon" importance="cardinal">
+						<CircleParallel name="lop0" importance="cardinal">
 							<Begin>
 								<Reference circle="eqp-24.5" node="chasing"/>
 							</Begin>
@@ -1855,7 +1855,7 @@
 						<Frame number="1" anchor="topleft"/>
 					</AnnotationStraight>
 					<Circle>
-						<CircleParallel name="eqp-24.4" fov="horizon" importance="canonical">
+						<CircleParallel name="eqp-24.4" importance="canonical">
 							<Begin>
 								<Reference circle="lop0" node="chasing"/>
 							</Begin>
@@ -2719,7 +2719,7 @@
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/VI/49bound_20.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_18.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/6049/bound_20.dat.gz-->
-						<CatalogADC6049 name="6049" fov="chart" url="lib/cat/6049/bound_20.dat.gz">
+						<CatalogADC6049 name="6049" url="lib/cat/6049/bound_20.dat.gz">
 							<CatalogADC6049Record select="{abk&#x00fc;rzung~&#x0022;CMI&#x0022;||abk&#x00fc;rzung~&#x0022;CNC&#x0022;||abk&#x00fc;rzung~&#x0022;ERI&#x0022;||abk&#x00fc;rzung~&#x0022;FOR&#x0022;||abk&#x00fc;rzung~&#x0022;MON&#x0022;}" nature=".36:1.8:0.25">
 								<Annotation>
 									<AnnotationStraight reverse="false" anchor="topleft" radiant="false">
@@ -2754,7 +2754,7 @@
 					<Catalog>
 						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/V/50/catalog.dat.gz-->
 						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/5050/catalog.dat.gz-->
-						<CatalogADC5050 name="5050" fov="chart" url="lib/cat/5050/catalog.dat.gz">
+						<CatalogADC5050 name="5050" url="lib/cat/5050/catalog.dat.gz">
 							<CatalogADC5050Record select="{Vmag>-1&#x0026;&#x0026;Vmag&#x003c;6}">
 								<Annotation>
 									<AnnotationStraight anchor="topleft" reverse="false" radiant="false">

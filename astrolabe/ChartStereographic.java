@@ -4,7 +4,7 @@ package astrolabe;
 import org.exolab.castor.xml.ValidationException;
 
 @SuppressWarnings("serial")
-public class ChartStereographic extends ChartAzimuthalType implements PostscriptEmitter, Projector {
+public class ChartStereographic extends ChartAzimuthalType {
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		ChartPage page ;
@@ -12,20 +12,6 @@ public class ChartStereographic extends ChartAzimuthalType implements Postscript
 		AtlasStereographic atlas ;
 
 		super.emitPS( ps ) ;
-
-		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
-			PostscriptEmitter horizon ;
-
-			horizon = ApplicationFactory.companionOf( getHorizon( ho ), this ) ;
-
-			ps.operator.gsave() ;
-
-			horizon.headPS( ps ) ;
-			horizon.emitPS( ps ) ;
-			horizon.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
-		}
 
 		if ( getAtlas() != null ) {
 			page = new ChartPage() ;

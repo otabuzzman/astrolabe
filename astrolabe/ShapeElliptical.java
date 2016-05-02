@@ -86,8 +86,8 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 		list = new java.util.Vector<double[]>() ;
 
-		d = ApplicationFactory.valueOf( this ) ;
-		p = ApplicationFactory.valueOf( getPosition() ) ;
+		d = valueOf( this ) ;
+		p = valueOf( getPosition() ) ;
 
 		vp = new Vector( projector.project( p[1], p[2] ) ) ;
 		vd = new Vector( projector.project( p[1]-d, p[2] ) ) ;

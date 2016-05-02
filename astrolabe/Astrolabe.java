@@ -34,35 +34,26 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		}
 	}
 
-	public void register() {
-		double jd ;
-
-		jd = ApplicationFactory.valueOf( getEpoch() ) ;
-		Registry.register( Epoch.RK_EPOCH, jd ) ;
-	}
-
-	public void unregister() {
-		Registry.unregister( Epoch.RK_EPOCH ) ;
-	}
-
 	public void headPS( ApplicationPostscriptStream ps ) {
 		ps.emitDSCHeader() ;
 		ps.emitDSCProlog() ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		astrolabe.model.Chart chart ;
+
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
-			PostscriptEmitter chart ;
+			chart = getChart( ch ) ;
 
-			chart = ApplicationFactory.companionOf( getChart( ch ) ) ;
-
-			ps.operator.gsave() ;
-
-			chart.headPS( ps ) ;
-			chart.emitPS( ps ) ;
-			chart.tailPS( ps ) ;
-
-			ps.operator.grestore() ;
+			if ( chart.getChartStereographic() != null ) {
+				chart( ps, chart.getChartStereographic() ) ;
+			} else if ( chart.getChartOrthographic() != null ) {
+				chart( ps, chart.getChartOrthographic() ) ;
+			} else if (  chart.getChartEquidistant() != null ) {
+				chart( ps, chart.getChartEquidistant() ) ;
+			} else { // chart.getChartGnomonic() != null
+				chart( ps, chart.getChartGnomonic() ) ;
+			}
 		}
 	}
 
@@ -75,6 +66,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		FileInputStream s ;
 		InputStreamReader r ;
 		Astrolabe astrolabe ;
+		double epoch ;
 		String viewerDecl ;
 		Process viewerProc ;
 		TeeOutputStream out ;
@@ -87,7 +79,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			astrolabe = new Astrolabe() ;
 			readModel( r ).copyValues( astrolabe ) ;
 
-			astrolabe.register() ;
+			epoch = valueOf( astrolabe.getEpoch() ) ;
+			Registry.register( Epoch.RK_EPOCH, epoch ) ;
 
 			out =  new TeeOutputStream( System.out ) ;
 
@@ -127,7 +120,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			if ( viewerDecl != null )
 				viewerProc.waitFor() ;
 
-			astrolabe.unregister() ;
+			Registry.degister( Epoch.RK_EPOCH ) ;
 			Registry.remove() ;
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
@@ -160,6 +153,76 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		}
 
 		return a ;
+	}
+
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartStereographic peer ) {
+		ChartStereographic chart ;
+		ChartPage page ;
+
+		chart = new ChartStereographic() ;
+		peer.copyValues( chart ) ;
+
+		page = new ChartPage() ;
+		peer.getChartPage().copyValues( page ) ;
+
+		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		emitPS( ps, chart ) ;
+		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+	}
+
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartOrthographic peer ) {
+		ChartOrthographic chart ;
+		ChartPage page ;
+
+		chart = new ChartOrthographic() ;
+		peer.copyValues( chart ) ;
+
+		page = new ChartPage() ;
+		peer.getChartPage().copyValues( page ) ;
+
+		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		emitPS( ps, chart ) ;
+		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+	}
+
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartEquidistant peer ) {
+		ChartEquidistant chart ;
+		ChartPage page ;
+
+		chart = new ChartEquidistant() ;
+		peer.copyValues( chart ) ;
+
+		page = new ChartPage() ;
+		peer.getChartPage().copyValues( page ) ;
+
+		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		emitPS( ps, chart ) ;
+		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+	}
+
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartGnomonic peer ) {
+		ChartGnomonic chart ;
+		ChartPage page ;
+
+		chart = new ChartGnomonic() ;
+		peer.copyValues( chart ) ;
+
+		page = new ChartPage() ;
+		peer.getChartPage().copyValues( page ) ;
+
+		Registry.register( ChartPage.RK_CHARTPAGE, page ) ;
+		emitPS( ps, chart ) ;
+		Registry.degister( ChartPage.RK_CHARTPAGE ) ;
+	}
+
+	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
+		ps.operator.gsave() ;
+
+		emitter.headPS( ps ) ;
+		emitter.emitPS( ps ) ;
+		emitter.tailPS( ps ) ;
+
+		ps.operator.grestore() ;
 	}
 
 	static {

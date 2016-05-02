@@ -23,13 +23,18 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		double[] lo, eq ;
 		DMS dms ;
 
-		lo = ApplicationFactory.valueOf( getPosition() ) ;
+		lo = valueOf( getPosition() ) ;
 		eq = projector.convert( lo[1], lo[2] ) ;
 
 		dms = new DMS( eq[0] ) ;
 		dms.register( this, QK_RA ) ;
 		dms.set( eq[1], -1 ) ;
 		dms.register( this, QK_DECLINATION ) ;
+	}
+
+	public void degister() {
+		DMS.degister( this, QK_RA ) ;
+		DMS.degister( this, QK_DECLINATION ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
@@ -42,6 +47,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		double height ;
 		double[] lo, xy ;
 		double turn, spin ;
+		astrolabe.model.Annotation annotation ;
+		PostscriptEmitter emitter ;
 
 		fov = (Geometry) Registry.retrieve( FOV.RK_FOV ) ;
 		if ( fov == null ) {
@@ -50,7 +57,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 				fov = page.getViewGeometry() ;
 		}
 
-		lo = ApplicationFactory.valueOf( getPosition() ) ;
+		lo = valueOf( getPosition() ) ;
 		xy = projector.project( lo[1], lo[2] ) ;
 
 		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint(
@@ -159,15 +166,20 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		ps.operator.cleartomark() ;
 
 		if ( getAnnotation() != null ) {
-			PostscriptEmitter annotation ;
-
 			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+				annotation = getAnnotation( i ) ;
+
+				if ( annotation.getAnnotationStraight() != null ) {
+					emitter = annotation( annotation.getAnnotationStraight() ) ;
+				} else { // annotation.getAnnotationCurved() != null
+					emitter = annotation( annotation.getAnnotationCurved() ) ;
+				}
+
 				ps.operator.gsave() ;
 
-				annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
-				annotation.headPS( ps ) ;
-				annotation.emitPS( ps ) ;
-				annotation.tailPS( ps ) ;
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
@@ -176,4 +188,22 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}	
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
 }

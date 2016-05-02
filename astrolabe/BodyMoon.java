@@ -35,12 +35,17 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	}
 
 	public double[] epoch() {
+		Double Epochgc ;
 		double epochgc, epochlo ;
 		double jdAy, jdOy ;
 		CAADate epoch ;
 		long year ;
 
-		epochgc = Epoch.retrieve() ;
+		Epochgc = (Double) Registry.retrieve( Epoch.RK_EPOCH ) ;
+		if ( Epochgc == null )
+			epochgc = Epoch.defoult() ;
+		else
+			epochgc = Epochgc.doubleValue() ;
 
 		epoch = new CAADate() ;
 		epoch.Set( epochgc, true ) ;
@@ -52,7 +57,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		jdOy = epoch.Julian() ;
 
 		if ( getEpoch() != null ) {
-			epochlo = ApplicationFactory.valueOf( getEpoch() ) ;
+			epochlo = valueOf( getEpoch() ) ;
 			epoch.Set( epochlo, true ) ;
 
 			year = epoch.Year() ;
@@ -63,13 +68,13 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 			epoch.Set( epochlo, true ) ;
 			if ( getEpoch().getA() != null ) {
-				jdAy = ApplicationFactory.valueOf( getEpoch().getA() ) ;
+				jdAy = valueOf( getEpoch().getA() ) ;
 				jdOy = epoch.Julian() ;
 			}
 			if ( getEpoch().getO() != null ) {
 				if ( getEpoch().getA() == null )
 					jdAy = epoch.Julian() ;
-				jdOy = ApplicationFactory.valueOf( getEpoch().getO() ) ;
+				jdOy = valueOf( getEpoch().getO() ) ;
 			}
 		}
 
@@ -104,6 +109,8 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		double jdAe, jdOe ;
 		List<double[]> list ;
 		double[] epoch, xy ;
+		astrolabe.model.Annotation annotation ;
+		PostscriptEmitter emitter ;
 
 		epoch = epoch() ;
 
@@ -220,16 +227,20 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 			}
 
 			if ( getAnnotation() != null ) {
-				PostscriptEmitter annotation ;
-
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
+					annotation = getAnnotation( i ) ;
+
+					if ( annotation.getAnnotationStraight() != null ) {
+						emitter = annotation( annotation.getAnnotationStraight() ) ;
+					} else { // annotation.getAnnotationCurved() != null
+						emitter = annotation( annotation.getAnnotationCurved() ) ;
+					}
 
 					ps.operator.gsave() ;
 
-					annotation.headPS( ps ) ;
-					annotation.emitPS( ps ) ;
-					annotation.tailPS( ps ) ;
+					emitter.headPS( ps ) ;
+					emitter.emitPS( ps ) ;
+					emitter.tailPS( ps ) ;
 
 					ps.operator.grestore() ;
 				}
@@ -327,5 +338,23 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 	public double scaleMarkNth( int mark, double span ) {
 		return new LinearScale( span, epoch() ).markN( mark ) ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
 	}
 }

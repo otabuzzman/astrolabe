@@ -386,6 +386,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		new DMS( angle ).register( this, QK_ANGLE ) ;
 	}
 
+	protected void degister() {
+		DMS.degister( this, QK_ANGLE ) ;
+	}
+
 	public void headPS( ApplicationPostscriptStream ps ) {
 		PostscriptEmitter pse ;
 
@@ -408,7 +412,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		double space, thickness ;
 		double xy[], a, o, s, rise ;
 		double mo, b[], t[], span, half, full ;
-		PostscriptEmitter g ;
+		astrolabe.model.Annotation annotation ;
+		PostscriptEmitter emitter ;
 
 		switch ( baseline() ) {
 		case 0:
@@ -442,8 +447,6 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		for ( int m=0 ; ; m++ ) {
 			mo = baseline.scaleMarkNth( m, span ) ;
 
-			register( mo ) ;
-
 			b = baseline.project( mo, getReflect()?-( space+thickness ):space+thickness ) ;
 			t = baseline.tangent( mo ) ;
 			if ( getReflect() ) {
@@ -451,25 +454,27 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				t[1] = -t[1] ;
 			}
 
+			register( mo ) ;
 			ps.operator.gsave() ;
 
-			g = new GraduationSpan( b, t ) ;
-			getGraduationSpan().copyValues( g ) ;
+			emitter = new GraduationSpan( b, t ) ;
+			getGraduationSpan().copyValues( emitter ) ;
 			if ( ( half = getHalf() )>0 )
 				if ( isMultipleSpan( mo, half ) ) {
-					g = new GraduationHalf( b, t ) ;
-					getGraduationHalf().copyValues( g ) ;
+					emitter = new GraduationHalf( b, t ) ;
+					getGraduationHalf().copyValues( emitter ) ;
 				}
 			if ( ( full = getFull() )>0 )
 				if ( isMultipleSpan( mo, full ) ) {
-					g = new GraduationFull( b, t ) ;
-					getGraduationFull().copyValues( g ) ;
+					emitter = new GraduationFull( b, t ) ;
+					getGraduationFull().copyValues( emitter ) ;
 				}
-			g.headPS( ps ) ;
-			g.emitPS( ps ) ;
-			g.tailPS( ps ) ;
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
 
 			ps.operator.grestore() ;
+			degister() ;
 
 			if ( mo==o )
 				break ;
@@ -491,15 +496,20 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		ps.gdraw() ;
 
 		if ( getAnnotation() != null ) {
-			PostscriptEmitter annotation ;
-
 			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
+				annotation = getAnnotation( i ) ;
+
+				if ( annotation.getAnnotationStraight() != null ) {
+					emitter = annotation( annotation.getAnnotationStraight() ) ;
+				} else { // annotation.getAnnotationCurved() != null
+					emitter = annotation( annotation.getAnnotationCurved() ) ;
+				}
+
 				ps.operator.gsave() ;
 
-				annotation = ApplicationFactory.companionOf( getAnnotation( i ) ) ;
-				annotation.headPS( ps ) ;
-				annotation.emitPS( ps ) ;
-				annotation.tailPS( ps ) ;
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
 
 				ps.operator.grestore() ;
 			}
@@ -535,5 +545,23 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		if ( getBaseline().equals( AV_RAIL ) )
 			return 2 ;
 		return -1 ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
+		AnnotationStraight annotation ;
+
+		annotation = new AnnotationStraight() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
+	}
+
+	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
+		AnnotationCurved annotation ;
+
+		annotation = new AnnotationCurved() ;
+		peer.copyValues( annotation ) ;
+
+		return annotation ;
 	}
 }
