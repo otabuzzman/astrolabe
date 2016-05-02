@@ -12,8 +12,10 @@
 					<map>
 						<!--used by DMS, ProstscriptStream, Rational.-->
 						<entry key="precision" value="2"/>
-						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical.-->
+						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical, Artwork.-->
 						<entry key="interval" value="1"/>
+						<!--percent of brightness, increase if current less than 50 percent decrease if conrary-->
+						<entry key="fade" value="92"/>
 						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, GraduationSpan, ListCutter, ShapeElliptical.-->
 						<!--percent of linewidth-->
 						<entry key="halo" value="4"/>
@@ -69,41 +71,6 @@
 						<entry key="arbitrary" value=".36 setlinewidth [1.8 dup .25 mul] 0 setdash"/>
 						<entry key="authentic" value=".28 setlinewidth [] 0 setdash"/>
 					</map>
-					<!--Type == Gx, default-->
-					<node name="CatalogADC7118">
-						<map>
-							<entry key="authentic" value=".28 setlinewidth [] 0 setdash"/>
-						</map>
-					</node>
-					<!--Type == OC, Gb, C+N-->
-					<node name="CatalogADC7118:OC">
-						<map>
-							<entry key="authentic" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
-						</map>
-					</node>
-					<!--Type == Nb, Pl, Kt-->
-					<node name="CatalogADC7118:Nb">
-						<map>
-							<entry key="authentic" value=".28 setlinewidth [.2] 0 setdash"/>
-						</map>
-					</node>
-					<!--OType == G, default-->
-					<node name="CatalogADC7237">
-						<map>
-							<entry key="authentic" value=".28 setlinewidth [] 0 setdash"/>
-						</map>
-					</node>
-					<!--OType == M-->
-					<node name="CatalogADC7237:M">
-						<map>
-							<entry key="authentic" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
-						</map>
-					</node>
-					<node name="CatalogDS9">
-						<map>
-							<entry key="authentic" value=".08 setlinewidth [] 0 setdash"/>
-						</map>
-					</node>
 				</node>
 				<node name="BodyAreal">
 					<map/>
@@ -588,6 +555,17 @@
 			<node name="CatalogADC7118">
 				<map>
 					<entry key="thresholdscale" value="5.2"/>
+					<entry key="Gx" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="Ast" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="***" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="D*" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="*" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="OC" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
+					<entry key="Gb" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
+					<entry key="C+N" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
+					<entry key="Nb" value=".28 setlinewidth [.2] 0 setdash"/>
+					<entry key="Pl" value=".28 setlinewidth [.2] 0 setdash"/>
+					<entry key="Kt" value=".28 setlinewidth [.2] 0 setdash"/>
 				</map>
 			</node>
 			<node name="CatalogADC7118Record">
@@ -599,11 +577,15 @@
 					<entry key="DEd" value=".+"/>
 					<entry key="DEm" value=".+"/>
 					<entry key="mag" value=".+"/>
+					<entry key="Type" value="^(Gx|OC|Gb|Nb|Pl|C\+N|Ast|Kt|\*\*\*|D\*|\*)$"/>
 				</map>
 			</node>
 			<node name="CatalogADC7237">
 				<map>
 					<entry key="thresholdscale" value="5.2"/>
+					<entry key="G" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="GM" value=".28 setlinewidth [] 0 setdash"/>
+					<entry key="M" value=".28 setlinewidth [.4 dup .5 mul] 0 setdash"/>
 				</map>
 			</node>
 			<node name="CatalogADC7237Record">
@@ -619,7 +601,27 @@
 					<entry key="DEs" value=".+"/>
 					<entry key="logR25" value=".+"/>
 					<entry key="logD25" value=".+"/>
+					<entry key="OType" value="^(G|M|GM)$"/>
 				</map>
+			</node>
+			<node name="CatalogDS9">
+				<map/>
+				<node name="MCCM">
+					<map>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0000.con" value="0.00392156863 0.27843137255 0.67450980392 setrgbcolor 0.8000 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0001.con" value="0.00645175416 0.31161537073 0.69909273300 setrgbcolor 0.9376 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0002.con" value="0.01061440860 0.34875430303 0.72457160221 setrgbcolor 1.0989 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0003.con" value="0.01746279648 0.39031952627 0.75097906464 setrgbcolor 1.2879 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0004.con" value="0.02872974581 0.43683857451 0.77834896346 setrgbcolor 1.5094 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0005.con" value="0.04726610055 0.48890185434 0.80671637525 setrgbcolor 1.7690 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0006.con" value="0.07776206153 0.54717013818 0.83611765500 setrgbcolor 2.0733 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0007.con" value="0.12793393452 0.61238295060 0.86659048266 setrgbcolor 2.4299 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0008.con" value="0.21047656506 0.68536795417 0.89817391147 setrgbcolor 2.8478 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0009.con" value="0.34627547886 0.76705145390 0.93090841798 setrgbcolor 3.3376 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0010.con" value="0.56969148668 0.85847015366 0.96483595392 setrgbcolor 3.9117 setlinewidth"/>
+						<entry key="lib%2Fcat%2FMCCM%2Fcat_0011.con" value="0.93725490196 0.96078431373 1.00000000000 setrgbcolor 4.5845 setlinewidth"/>
+					</map>
+				</node>
 			</node>
 			<node name="Artwork">
 				<map>

@@ -133,7 +133,6 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 		} ;
 		BodyStellar star ;
 		BodyAreal area ;
-		String name ;
 		astrolabe.model.ShapeElliptical shapeElliptical ;
 		astrolabe.model.Position position ;
 		CAA2DCoordinate ceq ;
@@ -188,15 +187,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 
 				if ( s>threshold ) {
 					area = new BodyAreal( converter, projector ) ;
-					name = getClass().getSimpleName() ;
-					if ( record.Type.matches( "OC|Gb|C.N" ) )
-						name = name+":OC" ;
-					else if ( record.Type.matches( "Nb|Pl|Kt" ) )
-						name = name+":Nb" ;
-					area.setName( name ) ;
-					area.initValues() ;
-
-					area.setNature( "authentic" ) ;
+					area.setName( record.Name ) ;
 
 					area.setAnnotation( record.getAnnotation() ) ;
 
@@ -211,6 +202,8 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 					shapeElliptical.setPosition( position ) ;
 
 					area.validate() ;
+
+					ps.script( Configuration.getValue( this, record.Type, "" ) ) ;
 
 					area.headPS( ps ) ;
 					area.emitPS( ps ) ;

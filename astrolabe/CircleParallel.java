@@ -127,13 +127,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	public void headPS( ApplicationPostscriptStream ps ) {
 		String gstate ;
 
-		gstate = Configuration.getValue( this, getImportance(), null ) ;	
-
-		if ( gstate == null || gstate.length() == 0 )
+		if ( ( gstate = Configuration.getValue( this, getImportance(), null ) ) == null )
 			return ;
-
-		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
+		ps.script( gstate ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

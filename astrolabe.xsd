@@ -686,7 +686,7 @@
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="nature" use="required">
+		<xs:attribute name="nature" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value="arbitrary"/>

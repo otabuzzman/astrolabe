@@ -44,13 +44,9 @@ public class HorizonGalactic extends astrolabe.model.HorizonGalactic implements 
 	public void headPS( ApplicationPostscriptStream ps ) {
 		String gstate ;
 
-		gstate = Configuration.getValue( this, getPracticality(), null ) ;	
-
-		if ( gstate == null || gstate.length() == 0 )
+		if ( ( gstate = Configuration.getValue( this, getPracticality(), null ) ) == null )
 			return ;
-
-		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
+		ps.script( gstate ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

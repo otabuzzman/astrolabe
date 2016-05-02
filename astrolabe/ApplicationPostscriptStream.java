@@ -47,11 +47,16 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 		}
 	} 
 
-	public void push( String[] string ) {        
+	public void push( String[] string ) {
 		array( true ) ;
 		for ( String def : string )
 			push( def ) ;
 		array( false ) ;
+	}
+
+	public void script( String script ) {   
+		for ( String token : script.trim().split( "\\p{Space}+" ) )
+			push( token ) ;
 	}
 
 	public void emitDSCHeader() {
@@ -83,8 +88,7 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 		}
 
 		dsc.beginProlog() ;
-		for ( String token : prolog.trim().split( "\\p{Space}+" ) )
-			print( token+"\n" ) ;
+		script( prolog ) ;
 		dsc.endProlog() ;
 	}
 

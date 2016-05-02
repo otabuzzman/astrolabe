@@ -24,13 +24,9 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 	public void headPS( ApplicationPostscriptStream ps ) {
 		String gstate ;
 
-		gstate = Configuration.getValue( this, getNature(), null ) ;	
-
-		if ( gstate == null || gstate.length() == 0 )
+		if ( ( gstate = Configuration.getValue( this, getNature(), null ) ) == null )
 			return ;
-
-		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
+		ps.script( gstate ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

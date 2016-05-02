@@ -133,8 +133,6 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 			body.getBodyAreal().setName( record.con ) ;
 			body.getBodyAreal().initValues() ;
 
-			body.getBodyAreal().setNature( "arbitrary" ) ;
-
 			body.getBodyAreal().setAnnotation( record.getAnnotation() ) ;
 
 			body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;

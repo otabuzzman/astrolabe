@@ -132,7 +132,6 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 		} ;
 		BodyStellar star ;
 		BodyAreal area ;
-		String name ;
 		astrolabe.model.ShapeElliptical shapeElliptical ;
 		astrolabe.model.Position position ;
 		double ra, de ;
@@ -177,13 +176,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 
 				if ( s>threshold ) {
 					area = new BodyAreal( converter, projector ) ;
-					name = getClass().getSimpleName() ;
-					if ( record.OType.equals( "M" ) )
-						name = name+":M" ;
-					area.setName( name ) ;
-					area.initValues() ;
-
-					area.setNature( "authentic" ) ;
+					area.setName( record.PGC ) ;
 
 					area.setAnnotation( record.getAnnotation() ) ;
 
@@ -200,6 +193,8 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 					shapeElliptical.setPosition( position ) ;
 
 					area.validate() ;
+
+					ps.script( Configuration.getValue( this, record.OType, "" ) ) ;
 
 					area.headPS( ps ) ;
 					area.emitPS( ps ) ;

@@ -63,7 +63,7 @@ public class PostscriptStream extends FilterOutputStream {
 	} 
 
 	public void push( String string ) throws ParameterNotValidException {
-		if ( ! string.matches( "[\\p{Print}\\n\\r\\t ]+" ) )
+		if ( ! string.matches( "[\\p{Print}\\n\\r\\t ]*" ) )
 			throw new ParameterNotValidException( ParameterNotValidError.errmsg( string , null ) ) ;
 
 		print( string+"\n" ) ;

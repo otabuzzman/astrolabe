@@ -11,9 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -29,6 +28,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 	private final static Log log = LogFactory.getLog( CatalogDS9.class ) ;
 
 	private class ContourLevel {
+		public String ident ;
 		public double level ;
 		public List<List<CatalogDS9Record>> contour ;
 	}
@@ -68,6 +68,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 			if ( getLevel() != null ) {
 				reader = reader( getLevel().getUrl() ) ;
 				lev = level( reader ) ;
+				Arrays.sort( lev ) ;
 				uri = new String[lev.length] ;
 				for ( int u=0 ; u<uri.length ; u++ )
 					uri[u] = String.format( getUrl(), u ) ;
@@ -78,6 +79,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 
 			for ( int u=0 ; u<uri.length ; u++ ) {
 				contour = new ContourLevel() ;
+				contour.ident = URLEncoder.encode( uri[u], "UTF-8" ) ;
 				contour.level = lev[u] ;
 				contour.contour = new java.util.Vector<List<CatalogDS9Record>>() ;
 
@@ -120,31 +122,18 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		List<ContourLevel> catalog ;
-		Comparator<ContourLevel> comparator = new Comparator<ContourLevel>() {
-			public int compare( ContourLevel a, ContourLevel b ) {
-				return a.level<b.level?-1:
-					a.level>b.level?1:
-						0 ;
-			}
-		} ;
 		astrolabe.model.Body body ;
 		BodyDS9 bodyDS9 ;
 		astrolabe.model.Position pm ;
 
-		catalog = Arrays.asList( this.catalog
-				.toArray( new ContourLevel[0] ) ) ;
-		Collections.sort( catalog, comparator ) ;
-
 		for ( ContourLevel contour : catalog ) {
+
+			ps.script( Configuration.getValue( this, contour.ident, "" ) ) ;
+
 			for ( List<CatalogDS9Record> entry : contour.contour ) {
 				for ( CatalogDS9Record element : entry ) {
 					body = new astrolabe.model.Body() ;
 					body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
-					body.getBodyAreal().setName( getClass().getSimpleName() ) ;
-					body.getBodyAreal().initValues() ;
-
-					body.getBodyAreal().setNature( "authentic" ) ;
 
 					body.getBodyAreal().setAnnotation( element.getAnnotation() ) ;
 

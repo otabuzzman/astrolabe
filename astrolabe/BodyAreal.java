@@ -62,15 +62,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		String gstate ;
+		String nature ;
 
-		gstate = Configuration.getValue( this, getNature(), null ) ;	
-
-		if ( gstate == null || gstate.length() == 0 )
+		if ( ( nature = getNature() ) == null )
 			return ;
-
-		for ( String token : gstate.trim().split( "\\p{Space}+" ) )
-			ps.push( token ) ;
+		ps.script( Configuration.getValue( this, nature, null ) ) ;	
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {

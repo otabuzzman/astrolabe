@@ -7,7 +7,7 @@
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" view="100"/>
+			<ChartPage size="a4" view="100"/>
 			<Oblique>
 				<lon>
 					<Rational value="0"/>
