@@ -3,11 +3,10 @@ package astrolabe;
 
 import java.util.List;
 
-import caa.CAADate;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
@@ -36,119 +35,120 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 	private Projector projector ;
 
-	private double epoch ;
+	private Epoch epoch ;
 	private double interval ;
 
 	public BodyOrbitalType( Converter converter, Projector projector ) {
-		Double Epoch ;
-
 		this.projector = projector ;
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
-		epoch = Epoch.doubleValue() ;
-
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 	}
 
-	public double[] epoch() {
-		double epochlo ;
-		double jdAy, jdOy ;
-		CAADate epoch ;
-		long year ;
-
-		epoch = new CAADate() ;
-		epoch.Set( this.epoch, true ) ;
-
-		year = epoch.Year() ;
-		epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
-		jdAy = epoch.Julian() ;
-		epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
-		jdOy = epoch.Julian() ;
-
+	protected double getEpochAlpha() {
 		if ( getEpoch() != null ) {
-			epochlo = valueOf( getEpoch() ) ;
-			epoch.Set( epochlo, true ) ;
+			epoch = new Epoch() ;
+			getEpoch().copyValues( epoch ) ;
+		} else if ( epoch == null )
+			epoch = new Epoch() ;
 
-			year = epoch.Year() ;
-			epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
-			jdAy = epoch.Julian() ;
-			epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
-			jdOy = epoch.Julian() ;
-
-			epoch.Set( epochlo, true ) ;
-			if ( getEpoch().getA() != null ) {
-				jdAy = valueOf( getEpoch().getA() ) ;
-				jdOy = epoch.Julian() ;
-			}
-			if ( getEpoch().getO() != null ) {
-				if ( getEpoch().getA() == null )
-					jdAy = epoch.Julian() ;
-				jdOy = valueOf( getEpoch().getO() ) ;
-			}
-		}
-
-		epoch.delete() ;
-
-		return new double[] { jdAy, jdOy } ;
+		return epoch.alpha() ;
 	}
 
-	public Coordinate positionOfScaleMarkValue( double jd, double shift ) {
-		Coordinate eq, xy ;
-		Vector v, t ;
+	protected double getEpochOmega() {
+		if ( getEpoch() != null ) {
+			epoch = new Epoch() ;
+			getEpoch().copyValues( epoch ) ;
+		} else if ( epoch == null )
+			epoch = new Epoch() ;
+
+		return epoch.omega() ;
+	}
+
+	public Vector posVecOfScaleMarkVal( double jd ) {
+		return posVecOfScaleMarkVal( jd, getCircle() ) ;
+	}
+
+	private Vector posVecOfScaleMarkVal( double jd, String circle ) {
+		Coordinate eq, lo ;
+		Object baseline ;
+		double v ;
 
 		eq = jdToEquatorial( jd ) ;
-		xy = projector.project( eq, false ) ;
-		v = new Vector( xy ) ;
 
-		if ( shift != 0 ) {
-			xy = directionOfScaleMarkValue( jd ) ;
-			t = new Vector( xy ) ;
-			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
-			t.scale( shift ) ;
-			v.add( t ) ;
+		if ( circle == null )
+			return new Vector( projector.project( eq, false ) ) ;
+
+		baseline = Registry.retrieve( circle ) ;
+		lo = ( (Converter) baseline ).convert( eq, true ) ;
+		v = baseline instanceof CircleMeridian ? lo.y : lo.x ;
+
+		return  ( (Baseline) baseline ).posVecOfScaleMarkVal( v ) ;
+	}
+
+	public Vector tanVecOfScaleMarkVal( double jd ) {
+		return tanVecOfScaleMarkVal( jd, getCircle() ) ;
+	}
+
+	private Vector tanVecOfScaleMarkVal( double jd, String circle ) {
+		Coordinate eq, xy, lo ;
+		Vector a, b ;
+		Object baseline ;
+		double v ;
+
+		if ( circle == null ) {
+			eq = jdToEquatorial( jd+1./86400 ) ;
+			xy = projector.project( eq, false ) ;
+			a = new Vector( xy ) ;
+			eq = jdToEquatorial( jd ) ;
+			xy = projector.project( eq, false ) ;
+			b = new Vector( xy ) ;
+
+			return a.sub( b ).scale( 1 ) ;
 		}
 
-		return new Coordinate( v.x, v.y ) ;
-	}
-
-	public Coordinate directionOfScaleMarkValue( double jd ) {
-		Coordinate eq, xy ;
-		Vector v, t ;
-
-		eq = jdToEquatorial( jd+1./86400 ) ;
-		xy = projector.project( eq, false ) ;
-		v = new Vector( xy ) ;
+		baseline = Registry.retrieve( circle ) ;
 		eq = jdToEquatorial( jd ) ;
-		xy = projector.project( eq, false ) ;
-		t = new Vector( xy ) ;
+		lo = ( (Converter) baseline ).convert( eq, true ) ;
+		v = baseline instanceof CircleMeridian ? lo.y : lo.x ;
 
-		v.sub( t ) ;
-
-		return new Coordinate( v.x, v.y ) ;
+		return  ( (Baseline) baseline ).tanVecOfScaleMarkVal( v ) ;
 	}
 
-	public double valueOfScaleMarkN( int mark, double span ) {
-		return new LinearScale( span, epoch() ).markN( mark ) ;
+	public double valOfScaleMarkN( int mark, double span ) {
+		return new LinearScale( span, new double[] { getEpochAlpha(), getEpochOmega() } ).markN( mark ) ;
 	}
 
 	public Coordinate[] list( double jdA, double jdO, double shift ) {
-		List<Coordinate> listxy ;
+		return list(jdA, jdO, shift, getCircle() ) ;
+	}
+
+	private Coordinate[] list( double jdA, double jdO, double shift, String circle ) {
+		List<Coordinate> list ;
+		Vector a, b ;
 		double distance ;
 
+		list = new java.util.Vector<Coordinate>() ;
 
-		listxy = new java.util.Vector<Coordinate>() ;
-
-		for ( double jd=jdA ; jd<jdO ; jd=jd+interval )
-			listxy.add( positionOfScaleMarkValue( jd, shift ) ) ;
-		listxy.add( positionOfScaleMarkValue( jdO, shift ) ) ;
+		for ( double jd=jdA ; jd<jdO ; jd=jd+interval ) {
+			a = posVecOfScaleMarkVal( jd, circle ) ;
+			b = tanVecOfScaleMarkVal( jd, circle )
+			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+			.scale( shift )
+			.add( a ) ;
+			list.add( b.toCoordinate() ) ;
+		}
+		a = posVecOfScaleMarkVal( jdO, circle ) ;
+		b = tanVecOfScaleMarkVal( jdO, circle )
+		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+		.scale( shift )
+		.add( a ) ;
+		list.add( b.toCoordinate() ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( distance>0 && listxy.size()>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
-		else
-			return listxy.toArray( new Coordinate[0] ) ;
+		if ( distance>0 && list.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
+		return list.toArray( new Coordinate[0] ) ;
 	}
 
 	abstract public Coordinate jdToEquatorial( double jd ) ;
@@ -163,16 +163,15 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		int segmin ;
-		BodyOrbitalType base ;
+		int segmin, j ;
+		BodyOrbitalType baseline ;
 		astrolabe.model.JD jdA, jdO ;
 		FieldOfView fov ;
 		Geometry gov, cut, tmp ;
 		ChartPage page ;
 		Coordinate[] ccrc, ccut ;
 		Coordinate c ;
-		int j ;
-		double epoch[] ;
+		Point a, o ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -190,31 +189,22 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 				gov = null ;
 		}
 
-		base = (BodyOrbitalType) clone() ;
-		base.setEpoch( new astrolabe.model.Epoch() ) ;
-		if ( getEpoch() == null ) {
-			base.getEpoch().setJD( new astrolabe.model.JD() ) ;
-			base.getEpoch().getJD().setValue( this.epoch ) ;
-		} else {
-			base.getEpoch().setCalendar( getEpoch().getCalendar() ) ;
-			base.getEpoch().setJD( getEpoch().getJD() ) ;
-		}
+		baseline = (BodyOrbitalType) clone() ;
+		baseline.setEpoch( new astrolabe.model.Epoch() ) ;
+		baseline.getEpoch().setJD( new astrolabe.model.JD() ) ;
+		jdA = baseline.getEpoch().getJD() ;
+		baseline.getEpoch().setOmegaDay( new astrolabe.model.OmegaDay() ) ;
+		baseline.getEpoch().getOmegaDay().setJD( new astrolabe.model.JD() ) ;
+		jdO = baseline.getEpoch().getOmegaDay().getJD() ;
 
-		base.getEpoch().setA( new astrolabe.model.A() ) ;
-		base.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
-		base.getEpoch().setO( new astrolabe.model.O() ) ;
-		base.getEpoch().getO().setJD( new astrolabe.model.JD() ) ;
-
-		jdA = base.getEpoch().getA().getJD() ;
-		jdO = base.getEpoch().getO().getJD() ;
-
-		epoch = epoch() ;
-		ccrc = list( epoch[0], epoch[1], 0 ) ;
+		ccrc = list( getEpochAlpha(), getEpochOmega(), 0, null ) ;
 
 		if ( gov == null )
 			cut = new GeometryFactory().createLineString( ccrc ) ;
 		else {
 			tmp = new GeometryFactory().createLineString( ccrc ) ;
+			if ( ! gov.intersects( tmp ) )
+				return ;
 			cut = gov.intersection( tmp ) ;
 		}
 
@@ -224,16 +214,22 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			if ( segmin>ccut.length )
 				continue ;
 
-			c = ccut[1] ;
+			a = new GeometryFactory().createPoint( ccut[0] ) ;
+			o = new GeometryFactory().createPoint( ccut[ccut.length-1] ) ;
+
+			c = ccut[ gov==null || gov.contains( a ) ? 0 : 1 ] ;
+
 			for ( j=0 ; ccrc.length>j ; j++ )
 				if ( ccrc[j].compareTo( c ) == 0 )
 					break ;
-			jdA.setValue( epoch[0]+j*interval ) ;
-			c = ccut[ccut.length-2] ;
+			jdA.setValue( getEpochAlpha()+j*interval ) ;
+
+			c = ccut[ gov==null || gov.contains( o ) ? ccut.length-1 : ccut.length-2 ] ;
+
 			for ( j++ ; ccrc.length>j ; j++ )
 				if ( ccrc[j].compareTo( c ) == 0 )
 					break ;
-			jdO.setValue( epoch[0]+j*interval ) ;
+			jdO.setValue( getEpochAlpha()+j*interval ) ;
 
 			ps.op( "gsave" ) ;
 
@@ -280,16 +276,14 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			ps.op( "grestore" ) ;
 
 			if ( getDialDay() != null ) {
-				PostscriptEmitter dial ;
-
-				dial = new DialDay( base ) ;
-				getDialDay().copyValues( dial ) ;
+				emitter = new DialDay( baseline ) ;
+				getDialDay().copyValues( emitter ) ;
 
 				ps.op( "gsave" ) ;
 
-				dial.headPS( ps ) ;
-				dial.emitPS( ps ) ;
-				dial.tailPS( ps ) ;
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
 
 				ps.op( "grestore" ) ;
 			}
@@ -318,13 +312,6 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		}	
 	}
 
-	public Object clone() {
-		try {
-			return super.clone() ;
-		} catch ( CloneNotSupportedException e ) {}
-		return null ;
-	}
-
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
@@ -344,5 +331,12 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		peer.copyValues( annotation ) ;
 
 		return annotation ;
+	}
+
+	public Object clone() {
+		try {
+			return super.clone() ;
+		} catch ( CloneNotSupportedException e ) {}
+		return null ;
 	}
 }

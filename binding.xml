@@ -29,4 +29,7 @@
 	<elementBinding name="/SpanMeridian/@limit">
 		<member java-type="int"/>
 	</elementBinding>
+	<elementBinding name="/Epoch/Omega">
+		<java-class name="OmegaDay"/>
+	</elementBinding>
 </binding>

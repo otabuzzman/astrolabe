@@ -113,7 +113,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		double al ;
 		DMS dms ;
 
-		currentpoint = new astrolabe.Coordinate( positionOfScaleMarkValue( end(), 0 ) ) ;
+		currentpoint = new astrolabe.Coordinate( posVecOfScaleMarkVal( end() ) ) ;
 		currentpoint.register( this, QK_TERMINUS ) ;
 
 		al = valueOf( getAngle() ) ;
@@ -144,7 +144,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		ChartPage page ;
 		Geometry fov, cut, tmp ;
 		astrolabe.model.Annotation annotation ;
-		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
 		conf = new Configuration( this ) ;
@@ -226,14 +225,9 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 			ps.op( "stroke" ) ;
 			ps.op( "grestore" ) ;
 
-			if ( getDial() != null ) {
-				dial = getDial() ;
-
-				if ( dial.getDialDegree() != null ) {
-					emitter = dial( dial.getDialDegree(), base ) ;
-				} else { // dial.getDialHour() != null
-					emitter = dial( dial.getDialHour(), base ) ;
-				}
+			if ( getDialDeg() != null ) {
+				emitter = new DialDeg( base ) ;
+				getDialDeg().copyValues( emitter ) ;
 
 				ps.op( "gsave" ) ;
 
@@ -268,37 +262,20 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		}
 	}
 
-	public Object clone() {
-		try {
-			return super.clone() ;
-		} catch ( CloneNotSupportedException e ) {}
-		return null ;
-	}
-
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public Coordinate positionOfScaleMarkValue( double az, double shift ) {
+	public Vector posVecOfScaleMarkVal( double az ) {
 		Coordinate xy ;
 		double al ;
-		Vector v, t ;
 
 		al = valueOf( getAngle() ) ;	
 		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
-		v = new Vector( xy ) ;
 
-		if ( shift != 0 ) {
-			xy = directionOfScaleMarkValue( az ) ;
-			t = new Vector( xy ) ;
-			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
-			t.scale( shift ) ;
-			v.add( t ) ;
-		}
-
-		return new Coordinate( v.x, v.y ) ;
+		return new Vector( xy ) ;
 	}
 
-	public Coordinate directionOfScaleMarkValue( double az ) {
+	public Vector tanVecOfScaleMarkVal( double az ) {
 		Vector a, b ;
 		double al ;
 		Coordinate xy ;
@@ -309,32 +286,41 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
 		b = new Vector( xy ) ;
 
-		a.sub( b ) ;
-
-		return new Coordinate( a.x, a.y ) ;
+		return a.sub( b ).scale( 1 ) ;
 	}
 
-	public double valueOfScaleMarkN( int mark, double span ) {
+	public double valOfScaleMarkN( int mark, double span ) {
 		return new Wheel360Scale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
 	public Coordinate[] list( double begin, double end, double shift ) {
 		List<Coordinate> list ;
+		Vector a, b ;
 		double interval, distance ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		list = new java.util.Vector<Coordinate>() ;
 
-		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval )
-			list.add( positionOfScaleMarkValue( CAACoordinateTransformation.MapTo0To360Range( az ), shift ) ) ;
-		list.add( positionOfScaleMarkValue( end, shift ) ) ;
+		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval ) {
+			a = posVecOfScaleMarkVal( CAACoordinateTransformation.MapTo0To360Range( az ) ) ;
+			b = tanVecOfScaleMarkVal( CAACoordinateTransformation.MapTo0To360Range( az ) )
+			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+			.scale( shift )
+			.add( a ) ;
+			list.add( b.toCoordinate() ) ;
+		}
+		a = posVecOfScaleMarkVal( end ) ;
+		b = tanVecOfScaleMarkVal( end )
+		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+		.scale( shift )
+		.add( a ) ;
+		list.add( b.toCoordinate() ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( distance>0 && list.size()>2 )
 			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
-		else
-			return list.toArray( new Coordinate[0] ) ;
+		return list.toArray( new Coordinate[0] ) ;
 	}
 
 	public Coordinate convert( Coordinate local, boolean inverse ) {
@@ -668,21 +654,10 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		return annotation ;
 	}
 
-	private PostscriptEmitter dial( astrolabe.model.DialDegree peer, Baseline base ) {
-		DialDegree dial ;
-
-		dial = new DialDegree( base ) ;
-		peer.copyValues( dial ) ;
-
-		return dial ;
-	}
-
-	private PostscriptEmitter dial( astrolabe.model.DialHour peer, Baseline base ) {
-		DialHour dial ;
-
-		dial = new DialHour( base ) ;
-		peer.copyValues( dial ) ;
-
-		return dial ;
+	public Object clone() {
+		try {
+			return super.clone() ;
+		} catch ( CloneNotSupportedException e ) {}
+		return null ;
 	}
 }

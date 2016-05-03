@@ -116,14 +116,15 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 		BodyAreal bodyAreal ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate ceq ;
-		double epoch ;
-		Double Epoch ;
+		double e ;
+		Epoch epoch ;
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+
+		if ( epoch == null )
+			e = new Epoch().alpha() ;
 		else
-			epoch = Epoch.doubleValue() ;
+			e = epoch.alpha() ;
 
 		for ( CatalogADC6049Record record : catalog.values() ) {
 			record.register() ;
@@ -138,7 +139,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 			body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
 
 			for ( Coordinate eq : record.list().getCoordinates() ) {
-				ceq = CAAPrecession.PrecessEquatorial( eq.x, eq.y, 2451545./*J2000*/, epoch ) ;
+				ceq = CAAPrecession.PrecessEquatorial( eq.x, eq.y, 2451545./*J2000*/, e ) ;
 				pm = new astrolabe.model.Position() ;
 				// astrolabe.model.AngleType
 				pm.setLon( new astrolabe.model.Lon() ) ;
@@ -155,8 +156,8 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 
 			try {
 				body.validate() ;
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
+			} catch ( ValidationException ee ) {
+				throw new RuntimeException( ee.toString() ) ;
 			}
 
 			bodyAreal = new BodyAreal( converter, projector ) ;

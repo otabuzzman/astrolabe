@@ -4,18 +4,14 @@ package astrolabe;
 import caa.CAAEquationOfTime;
 
 @SuppressWarnings("serial")
-public class DialDay extends DialDegree {
+public class DialDay extends DialDeg {
 
 	// qualifier key (QK_)
 	private final static String QK_DAY				= "day" ;
 	private final static String QK_EQUATIONOFTIME	= "equationoftime" ;
 
-	private Baseline baseline ;
-
 	public DialDay( Baseline baseline ) {
 		super( baseline ) ;
-
-		this.baseline = baseline ;
 	}
 
 	protected void register( double jd ) {
@@ -52,26 +48,21 @@ public class DialDay extends DialDegree {
 	}
 
 	public boolean isMultipleSpan( double mark, double span ) {
-		boolean r ;
 		CAADate d ;
-		double jd0 ;
-
-		jd0 = baseline.valueOfScaleMarkN( 0, 1 ) ;
+		int dw ;
+		long dm ;
 
 		d = new CAADate() ;
-
-		if ( span==7 ) {
-			d.Set( mark, true ) ;
-			r = d.DayOfWeek()==1 ;
-		} else if ( span==30 ) {
-			d.Set( mark, true ) ;
-			r = d.Day()==1 ;
-		} else {
-			r = Math.isLim0( ( mark-jd0 )/span-(int) ( ( mark-jd0 )/span ) ) ;
-		}
-
+		d.Set( mark, true ) ;
+		dw = d.DayOfWeek() ;
+		dm = d.Day() ;
 		d.delete() ;
 
-		return r ;
+		if ( span == 7 )
+			return dw == 1 ;
+		if ( span == 30 )
+			return dm == 1 ;
+
+		return super.isMultipleSpan( mark, span ) ;
 	}
 }

@@ -1,10 +1,8 @@
 
 package astrolabe;
 
-import com.vividsolutions.jts.geom.Coordinate;
-
 @SuppressWarnings("serial")
-public class GraduationSpan extends astrolabe.model.GraduationSpan implements PostscriptEmitter {
+public class Scaleline extends astrolabe.model.Scaleline implements PostscriptEmitter {
 
 	// configuration key (CK_)
 	private final static String CK_SPACE			= "space" ;
@@ -23,41 +21,31 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
 
-	private double space ;
-	private double linelength ;
-	private double linewidth ;
-
-	private Vector position ;
-	private Vector direction ;
-
-	public GraduationSpan( Coordinate position, Coordinate direction ) {
-		Configuration conf ;
-
-		this.position = new Vector( position ) ;
-		this.direction = new Vector( direction ) ;
-
-		this.direction.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
-
-		conf = new Configuration( this ) ;
-
-		space = conf.getValue( CK_SPACE, DEFAULT_SPACE ) ;
-		linelength = conf.getValue( CK_LINELENGTH, DEFAULT_LINELENGTH ) ;
-		linewidth = conf.getValue( CK_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
-	}
-
 	public void headPS( ApplicationPostscriptStream ps ) {
+		double linewidth ;
+
+		linewidth = Configuration.getValue( this, CK_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
 		ps.push( linewidth ) ;
 		ps.op( "setlinewidth" ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
+		double gap, len ;
+
+		conf = new Configuration( this ) ;
+		gap = conf.getValue( CK_SPACE, DEFAULT_SPACE ) ;
+		len = conf.getValue( CK_LINELENGTH, DEFAULT_LINELENGTH ) ;
+
+		ps.push( gap ) ;
+		ps.push( 0 ) ;
+		ps.op( "translate" ) ;
 
 		ps.array( true ) ;
-		for ( Coordinate xy : list() ) {
-			ps.push( xy.x ) ;
-			ps.push( xy.y ) ;
-		}
+		ps.push( 0 ) ;
+		ps.push( 0 ) ;
+		ps.push( len ) ;
+		ps.push( 0 ) ;
 		ps.array( false ) ;
 
 		ps.op( "newpath" ) ;
@@ -93,7 +81,7 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 		ps.op( "stroke" ) ;
 		ps.op( "grestore" ) ;
 
-		ps.push( Math.atan2( direction.y, direction.x )-90 ) ;
+		ps.push( -90 ) ;
 		ps.op( "rotate" ) ;
 
 		if ( getAnnotationStraight() != null ) {
@@ -115,17 +103,5 @@ public class GraduationSpan extends astrolabe.model.GraduationSpan implements Po
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
-	}
-
-	private Coordinate[] list() {
-		Vector a, b ;
-
-		a = new Vector( direction ) ;
-		b = new Vector( direction ) ;
-
-		return new Coordinate[] {
-				a.scale( space ).add( position ),
-				b.scale( space+linelength ).add( position )
-		} ;
 	}
 }

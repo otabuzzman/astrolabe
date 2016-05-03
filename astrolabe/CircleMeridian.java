@@ -112,7 +112,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		double az ;
 		DMS dms ;
 
-		currentpoint = new astrolabe.Coordinate( positionOfScaleMarkValue( end(), 0 ) ) ;
+		currentpoint = new astrolabe.Coordinate( posVecOfScaleMarkVal( end() ) ) ;
 		currentpoint.register( this, QK_TERMINUS ) ;
 
 		az = valueOf( getAngle() ) ;
@@ -143,7 +143,6 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		ChartPage page ;
 		Geometry fov, cut, tmp ;
 		astrolabe.model.Annotation annotation ;
-		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
 		conf = new Configuration( this ) ;
@@ -225,14 +224,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 			ps.op( "stroke" ) ;
 			ps.op( "grestore" ) ;
 
-			if ( getDial() != null ) {
-				dial = getDial() ;
-
-				if ( dial.getDialDegree() != null ) {
-					emitter = dial( dial.getDialDegree(), base ) ;
-				} else { // dial.getDialHour() != null
-					emitter = dial( dial.getDialHour(), base ) ;
-				}
+			if ( getDialDeg() != null ) {
+				emitter = new DialDeg( base ) ;
+				getDialDeg().copyValues( emitter ) ;
 
 				ps.op( "gsave" ) ;
 
@@ -267,37 +261,20 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		}
 	}
 
-	public Object clone() {
-		try {
-			return super.clone() ;
-		} catch ( CloneNotSupportedException e ) {}
-		return null ;
-	}
-
 	public void tailPS( ApplicationPostscriptStream ps ) {
 	}
 
-	public Coordinate positionOfScaleMarkValue( double al, double shift ) {
+	public Vector posVecOfScaleMarkVal( double al ) {
 		Coordinate xy ;
 		double az ;
-		Vector v, t ;
 
 		az = valueOf( getAngle() ) ;	
 		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
-		v = new Vector( xy ) ;
 
-		if ( shift != 0 ) {
-			xy = directionOfScaleMarkValue( al ) ;
-			t = new Vector( xy ) ;
-			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
-			t.scale( shift ) ;
-			v.add( t ) ;
-		}
-
-		return new Coordinate( v.x, v.y ) ;
+		return new Vector( xy ) ;
 	}
 
-	public Coordinate directionOfScaleMarkValue( double al ) {
+	public Vector tanVecOfScaleMarkVal( double al ) {
 		Vector a, b ;
 		double az ;
 		Coordinate xy ;
@@ -308,32 +285,41 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
 		b = new Vector( xy ) ;
 
-		a.sub( b ) ;
-
-		return new Coordinate( a.x, a.y ) ;
+		return a.sub( b ).scale( 1 ) ;
 	}
 
-	public double valueOfScaleMarkN( int mark, double span ) {
+	public double valOfScaleMarkN( int mark, double span ) {
 		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
 	public Coordinate[] list( double begin, double end, double shift ) {
-		List<Coordinate> listxy ;
+		List<Coordinate> list ;
+		Vector a, b ;
 		double interval, distance ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
-		listxy = new java.util.Vector<Coordinate>() ;
+		list = new java.util.Vector<Coordinate>() ;
 
-		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval )
-			listxy.add( positionOfScaleMarkValue( al, shift ) ) ;
-		listxy.add( positionOfScaleMarkValue( end, shift ) ) ;
+		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval ) {
+			a = posVecOfScaleMarkVal( al ) ;
+			b = tanVecOfScaleMarkVal( al )
+			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+			.scale( shift )
+			.add( a ) ;
+			list.add( b.toCoordinate() ) ;
+		}
+		a = posVecOfScaleMarkVal( end ) ;
+		b = tanVecOfScaleMarkVal( end )
+		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
+		.scale( shift )
+		.add( a ) ;
+		list.add( b.toCoordinate() ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( distance>0 && listxy.size()>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
-		else
-			return listxy.toArray( new Coordinate[0] ) ;
+		if ( distance>0 && list.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
+		return list.toArray( new Coordinate[0] ) ;
 	}
 
 	public Coordinate convert( Coordinate local, boolean inverse ) {
@@ -594,21 +580,10 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		return annotation ;
 	}
 
-	private PostscriptEmitter dial( astrolabe.model.DialDegree peer, Baseline base ) {
-		DialDegree dial ;
-
-		dial = new DialDegree( base ) ;
-		peer.copyValues( dial ) ;
-
-		return dial ;
-	}
-
-	private PostscriptEmitter dial( astrolabe.model.DialHour peer, Baseline base ) {
-		DialHour dial ;
-
-		dial = new DialHour( base ) ;
-		peer.copyValues( dial ) ;
-
-		return dial ;
+	public Object clone() {
+		try {
+			return super.clone() ;
+		} catch ( CloneNotSupportedException e ) {}
+		return null ;
 	}
 }

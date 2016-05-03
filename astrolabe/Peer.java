@@ -172,8 +172,7 @@ public class Peer {
 	public static double valueOf( DateType date ) {
 		if ( date.getJD() == null )
 			return valueOf( date.getCalendar() ) ;
-		else
-			return valueOf( date.getJD() ) ;
+		return valueOf( date.getJD() ) ;
 	}
 
 	public static double valueOf( CalendarType calendar ) {
@@ -202,8 +201,7 @@ public class Peer {
 	public static double valueOf( TimeType time ) {
 		if ( time.getRational() == null )
 			return valueOf( time.getHMS() ) ;
-		else
-			return valueOf( time.getRational() ) ;
+		return valueOf( time.getRational() ) ;
 	}
 
 	public static double valueOf( HMSType hms ) {

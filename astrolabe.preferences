@@ -24,7 +24,7 @@
 						<entry key="distance" value="0"/>
 						<!--postscript value of brightness to fade to from current-->
 						<entry key="fade" value="0"/>
-						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, GraduationSpan, ListCutter, ShapeElliptical.-->
+						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, Scaleline, ListCutter, ShapeElliptical.-->
 						<!--percent of linewidth-->
 						<entry key="halo" value="4"/>
 						<!--astrolabe units-->
@@ -336,33 +336,7 @@
 					<entry key="map" value="lib/AtlasAzimuthalType.map"/>
 				</map>
 			</node>
-			<node name="DialDegree">
-				<map>
-					<entry key="rise" value="3.2"/>
-				</map>
-				<node name="baseline">
-					<map/>
-					<node name="none">
-						<map>
-							<entry key="space" value="1"/>
-						</map>
-					</node>
-					<node name="line">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value=".2"/>
-						</map>
-					</node>
-					<node name="rail">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value="1.2"/>
-							<entry key="linewidth" value=".01"/>
-						</map>
-					</node>
-				</node>
-			</node>
-			<node name="DialHour">
+			<node name="DialDeg">
 				<map>
 					<entry key="rise" value="3.2"/>
 				</map>
@@ -421,26 +395,26 @@
 					</map>
 				</node>
 			</node>
-			<node name="GraduationSpan">
+			<node name="Scaleline">
 				<map>
 					<entry key="space" value=".4"/>
 					<entry key="linelength" value="2.8"/>
 					<entry key="linewidth" value=".01"/>
 				</map>
-			</node>
-			<node name="GraduationHalf">
-				<map>
-					<entry key="space" value=".4"/>
-					<entry key="linelength" value="3.6"/>
-					<entry key="linewidth" value=".01"/>
-				</map>
-			</node>
-			<node name="GraduationFull">
-				<map>
-					<entry key="space" value=".4"/>
-					<entry key="linelength" value="4.2"/>
-					<entry key="linewidth" value=".01"/>
-				</map>
+				<node name="half">
+					<map>
+						<entry key="space" value=".4"/>
+						<entry key="linelength" value="3.6"/>
+						<entry key="linewidth" value=".01"/>
+					</map>
+				</node>
+				<node name="full">
+					<map>
+						<entry key="space" value=".4"/>
+						<entry key="linelength" value="4.2"/>
+						<entry key="linewidth" value=".01"/>
+					</map>
+				</node>
 			</node>
 			<node name="AnnotationStraight">
 				<map>

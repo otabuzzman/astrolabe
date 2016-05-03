@@ -126,8 +126,8 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Po
 		BodyStellar bodyStellar ;
 		astrolabe.model.Position pm ;
 		CAA2DCoordinate cpm, ceq ;
-		double epoch, ra, de, pmRA, pmDE ;
-		Double Epoch ;
+		double e, ra, de, pmRA, pmDE ;
+		Epoch epoch ;
 		boolean verbose ;
 
 		for ( int a=0 ; a<getArtworkCount() ; a++ ) {
@@ -164,11 +164,12 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Po
 			ps.op( "grestore" ) ;
 		}
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+
+		if ( epoch == null )
+			e = new Epoch().alpha() ;
 		else
-			epoch = Epoch.doubleValue() ;
+			e = epoch.alpha() ;
 
 		catalog = Arrays.asList( this.catalog
 				.values()
@@ -183,8 +184,8 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Po
 			if ( record.pmDE.length()>0 )
 				pmDE = new Double( record.pmDE ).doubleValue() ;
 			cpm = CAAPrecession.AdjustPositionUsingUniformProperMotion(
-					epoch-2451545., record.RA(), record.de(), pmRA, pmDE ) ;
-			ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, epoch ) ;
+					e-2451545., record.RA(), record.de(), pmRA, pmDE ) ;
+			ceq = CAAPrecession.PrecessEquatorial( cpm.X(), cpm.Y(), 2451545./*J2000*/, e ) ;
 			ra = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
 			de = ceq.Y() ;
 			cpm.delete() ;
@@ -214,8 +215,8 @@ public class CatalogADC5109 extends astrolabe.model.CatalogADC5109 implements Po
 
 			try {
 				body.validate() ;
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
+			} catch ( ValidationException ee ) {
+				throw new RuntimeException( ee.toString() ) ;
 			}
 
 			bodyStellar = new BodyStellar( converter, projector ) ;

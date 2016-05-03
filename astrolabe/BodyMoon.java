@@ -16,23 +16,16 @@ public class BodyMoon extends BodyOrbitalType {
 
 	private final static double DEFAULT_STRETCH		= 0 ;
 
-	private double epoch ;
-
 	public BodyMoon( Converter converter, Projector projector ) {
 		super( converter, projector ) ;
-
-		Double Epoch ;
-
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
-		epoch = Epoch.doubleValue() ;
 	}
 
 	public Coordinate jdToEquatorial( double jd ) {
 		double l, b, o ;
+		double epoch, stretch ;
 		CAA2DCoordinate c ;
-		double stretch ;
+
+		epoch = getEpochAlpha() ;
 
 		if ( getStretch() )
 			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
@@ -41,7 +34,7 @@ public class BodyMoon extends BodyOrbitalType {
 
 		l = CAAMoon.EclipticLongitude( jd ) ;
 		b = CAAMoon.EclipticLatitude( jd )
-		+( jd-epoch()[0] )*stretch ;
+		+( jd-epoch )*stretch ;
 
 		o = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( l, b, o ) ;

@@ -16,141 +16,12 @@
 					<Rational value="90"/>
 				</lat>
 			</Oblique>
-			<!--sonnenskalen-->
-			<Horizon>
-				<HorizonEquatorial practicality="always">
-					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="none" value="astrolabe"/>
-						<Frame number="1" anchor="topleft"/>
-					</AnnotationStraight>
-					<Circle>
-						<CircleParallel importance="canonical" name="suntrue">
-							<Begin>
-								<Angle>
-									<DMS min="0" sec="0.0" neg="false" deg="0"/>
-								</Angle>
-							</Begin>
-							<End>
-								<Angle>
-									<Rational value="359.9999"/>
-								</Angle>
-							</End>
-							<Angle>
-								<Rational value="0"/>
-							</Angle>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical" name="suntrue">
-							<Begin>
-								<Angle>
-									<DMS min="0" sec="0.0" neg="false" deg="0"/>
-								</Angle>
-							</Begin>
-							<End>
-								<Angle>
-									<Rational value="359.9999"/>
-								</Angle>
-							</End>
-							<Angle>
-								<Rational value="-20"/>
-							</Angle>
-						</CircleParallel>
-					</Circle>
-					<Circle>
-						<CircleParallel importance="canonical" name="sunmean">
-							<Begin>
-								<Angle>
-									<DMS min="0" sec="0.0" neg="false" deg="0"/>
-								</Angle>
-							</Begin>
-							<End>
-								<Angle>
-									<Rational value="359.9999"/>
-								</Angle>
-							</End>
-							<Angle>
-								<Rational value="-19.9"/>
-							</Angle>
-						</CircleParallel>
-					</Circle>
-				</HorizonEquatorial>
-			</Horizon>
-			<!--äquatorial-->
-			<Horizon>
-				<HorizonEquatorial practicality="always">
-					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="none" value="astrolabe"/>
-						<Frame number="1" anchor="topleft"/>
-					</AnnotationStraight>
-					<Circle>
-						<CircleParallel importance="canonical">
-							<Begin>
-								<Angle>
-									<Rational value="0.0"/>
-								</Angle>
-							</Begin>
-							<End>
-								<Angle>
-									<Rational value="359.9999"/>
-								</Angle>
-							</End>
-							<Dial>
-								<DialHour baseline="rail" reflect="false">
-									<GraduationSpan value=".5" division="3">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="30">
-												<Superscript value="m"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf value="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialcardinal" value="{skalastd}">
-												<Superscript value="h"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<Annotation>
-										<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
-											<Script purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
-												<Superscript value="m"/>
-											</Script>
-											<Script purpose="diallettering" value=")"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialHour>
-							</Dial>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="50">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-							<Annotation>
-								<AnnotationCurved anchor="topright" reverse="false" distance="87.5">
-									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
-								</AnnotationCurved>
-							</Annotation>
-							<Angle>
-								<Rational value="-25"/>
-							</Angle>
-						</CircleParallel>
-					</Circle>
-				</HorizonEquatorial>
-			</Horizon>
-			<!--ekliptisch-->
 			<Horizon>
 				<HorizonEcliptical practicality="sometimes">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
 						<Script purpose="none" value="astrolabe"/>
 						<Frame number="1" anchor="topleft"/>
 					</AnnotationStraight>
-					<!--planets-->
 					<Body>
 						<BodyPlanet type="mars" nature="celestial">
 							<Annotation>
@@ -158,12 +29,12 @@
 									<Script purpose="diallettering" value="Mars"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="true" baseline="none">
-								<GraduationSpan value="10" division="1">
+							<DialDay reflect="true" baseline="none" division="1">
+								<Scaleline value="10">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>

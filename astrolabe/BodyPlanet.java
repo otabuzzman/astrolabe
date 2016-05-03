@@ -20,32 +20,24 @@ public class BodyPlanet extends BodyOrbitalType {
 
 
 	private astrolabe.model.BodyPlanet peer ;	
-
-	private double epoch ;
-
 	public BodyPlanet( astrolabe.model.BodyPlanet peer, Converter converter, Projector projector ) {
 		super( converter, projector ) ;
 
-		Double Epoch ;
-
 		this.peer = peer ;
-
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
-		epoch = Epoch.doubleValue() ;
 	}
 
 	public Coordinate jdToEquatorial( double jd ) {
 		double l, b, o ;
 		Class<?> c ;
-		double stretch ;
+		double epoch, stretch ;
 		CAA2DCoordinate c2d ;
 		Method eclipticLongitude ;
 		Method eclipticLatitude ;
 
 		l = 0 ;
 		b = 0 ;
+
+		epoch = getEpochAlpha() ;
 
 		if ( getStretch() )
 			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
@@ -60,7 +52,7 @@ public class BodyPlanet extends BodyOrbitalType {
 
 			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } )
-			+( jd-epoch()[0] )*stretch ;
+			+( jd-epoch )*stretch ;
 		} catch ( ClassNotFoundException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( NoSuchMethodException e ) {

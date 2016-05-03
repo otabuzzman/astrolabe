@@ -12,15 +12,15 @@ public class CircleSouthernPolar extends CircleParallel {
 
 	public astrolabe.model.Angle getAngle() {
 		astrolabe.model.Angle r ;
-		double epoch, o ;
-		Double Epoch ;
+		double e, o ;
+		Epoch epoch ;
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+		if ( epoch == null )
+			e = new Epoch().alpha() ;
 		else
-			epoch = Epoch.doubleValue() ;
-		o = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
+			e = epoch.alpha() ;
+		o = CAANutation.MeanObliquityOfEcliptic( e ) ;
 
 		r = new astrolabe.model.Angle() ;
 		r.setRational( new astrolabe.model.Rational() ) ;

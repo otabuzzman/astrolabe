@@ -127,11 +127,11 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 			list.add( new Coordinate( va.x, va.y ) ) ;
 		}
+		list.add( list.get( 0 ) ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( distance>0 && list.size()>2 )
+		if ( distance>0 )
 			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
-		else
-			return list.toArray( new Coordinate[0] ) ;
+		return list.toArray( new Coordinate[0] ) ;
 	}
 }

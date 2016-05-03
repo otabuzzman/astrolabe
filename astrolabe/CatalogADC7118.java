@@ -136,14 +136,15 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 		astrolabe.model.ShapeElliptical shapeElliptical ;
 		astrolabe.model.Position position ;
 		CAA2DCoordinate ceq ;
-		double epoch, ra, de ;
-		Double Epoch ;
+		double e, ra, de ;
+		Epoch epoch ;
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+
+		if ( epoch == null )
+			e = new Epoch().alpha() ;
 		else
-			epoch = Epoch.doubleValue() ;
+			e = epoch.alpha() ;
 
 		threshold = Configuration.getValue( this, CK_THRESHOLDSCALE, DEFAULT_THRESHOLDSCALE ) ;
 
@@ -153,7 +154,7 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 		Collections.sort( catalog, comparator ) ;
 
 		for ( CatalogADC7118Record record : catalog ) {
-			ceq = CAAPrecession.PrecessEquatorial( record.RA(), record.de(), 2451545./*J2000*/, epoch ) ;
+			ceq = CAAPrecession.PrecessEquatorial( record.RA(), record.de(), 2451545./*J2000*/, e ) ;
 			ra = CAACoordinateTransformation.HoursToDegrees( ceq.X() ) ;
 			de = ceq.Y() ;
 			ceq.delete() ;
@@ -226,8 +227,8 @@ public class CatalogADC7118 extends astrolabe.model.CatalogADC7118 implements Po
 				}
 
 				ps.op( "grestore" ) ;
-			} catch ( ValidationException e ) {
-				throw new RuntimeException( e.toString() ) ;
+			} catch ( ValidationException ee ) {
+				throw new RuntimeException( ee.toString() ) ;
 			}
 
 			record.degister() ;

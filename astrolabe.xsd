@@ -22,15 +22,12 @@
 			<xs:complexContent>
 				<xs:extension base="DateType">
 					<xs:sequence>
-						<xs:element ref="A" minOccurs="0"/>
-						<xs:element ref="O" minOccurs="0"/>
+						<xs:element name="Omega" type="DateType" minOccurs="0"/>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="A" type="DateType"/>
-	<xs:element name="O" type="DateType"/>
 	<xs:complexType name="ChartAzimuthalType">
 		<xs:sequence>
 			<xs:element ref="ChartPage"/>
@@ -310,7 +307,7 @@
 		<xs:sequence>
 			<xs:element name="Begin" type="MarkType"/>
 			<xs:element name="End" type="MarkType"/>
-			<xs:element ref="Dial" minOccurs="0"/>
+			<xs:element ref="DialDeg" minOccurs="0"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -412,9 +409,7 @@
 	</xs:element>
 	<xs:complexType name="DialType">
 		<xs:sequence>
-			<xs:element ref="GraduationSpan"/>
-			<xs:element ref="GraduationHalf" minOccurs="0"/>
-			<xs:element ref="GraduationFull" minOccurs="0"/>
+			<xs:element ref="Scaleline" maxOccurs="unbounded"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -427,24 +422,22 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="division" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:positiveInteger">
+					<xs:minInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="reflect" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	<xs:element name="Dial">
-		<xs:complexType>
-			<xs:choice>
-				<xs:element ref="DialDegree"/>
-				<xs:element ref="DialHour"/>
-			</xs:choice>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="DialDegree">
+	<xs:element name="DialDeg">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="DialType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="DialHour" type="DialType"/>
 	<xs:element name="DialDay">
 		<xs:complexType>
 			<xs:complexContent>
@@ -452,7 +445,7 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="GraduationType">
+	<xs:complexType name="ScalelineType">
 		<xs:sequence>
 			<xs:element ref="AnnotationStraight" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -465,32 +458,10 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="GraduationSpan">
+	<xs:element name="Scaleline">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="GraduationType">
-					<xs:attribute name="division" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:positiveInteger">
-								<xs:minInclusive value="1"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="GraduationHalf">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="GraduationType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="GraduationFull">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="GraduationType"/>
+				<xs:extension base="ScalelineType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -738,6 +709,13 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="circle" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="BodyPlanet">
 		<xs:complexType>
@@ -770,13 +748,6 @@
 							<xs:restriction base="xs:string">
 								<xs:pattern value="mean"/>
 								<xs:pattern value="true"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-					<xs:attribute name="circle" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="[^,]+"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>

@@ -8,33 +8,54 @@ import caa.CAADate;
 @SuppressWarnings("serial")
 public class Epoch extends astrolabe.model.Epoch {
 
-	public Epoch() {
-		set( defoult() ) ;
+	private double alpha = Double.NEGATIVE_INFINITY ;
+	private double omega = Double.NEGATIVE_INFINITY ;
+
+	public double alpha() {
+		int y ;
+		CAADate a ;
+
+		if ( alpha>Double.NEGATIVE_INFINITY )
+			return alpha ;
+
+		if ( getCalendar() != null )
+			return alpha = valueOf( getCalendar() ) ;
+		if ( getJD() != null )
+			return alpha = valueOf( getJD() ) ;
+
+		y = Calendar.getInstance().get( Calendar.YEAR ) ;
+		a = new CAADate( y, 1, 1, 12, 0, 0, true ) ;
+		alpha = a.Julian() ;
+		a.delete() ;
+
+		setJD( new astrolabe.model.JD() ) ;
+		getJD().setValue( alpha ) ;
+
+		return alpha ;
 	}
 
-	public Epoch( double epoch ) {
-		set( epoch ) ;
-	}
+	public double omega() {
+		double alpha ;
+		CAADate t, a ;
 
-	public void set( double epoch ) {
-		if ( getJD() == null )
-			setJD( new astrolabe.model.JD() ) ;
-		getJD().setValue( epoch ) ;
-	}
+		if ( omega>Double.NEGATIVE_INFINITY )
+			return omega ;
 
-	public static double defoult() {
-		Double now ;
-		Calendar calendar ;
-		CAADate today ;
+		if ( getOmegaDay() != null ) {
+			if ( getOmegaDay().getCalendar() != null )
+				return omega = valueOf( getOmegaDay().getCalendar() ) ;
+			return omega = valueOf( getOmegaDay().getJD() ) ;
+		}
 
-		calendar = Calendar.getInstance() ;
-		today = new CAADate(
-				calendar.get( Calendar.YEAR ),
-				calendar.get( Calendar.MONTH ),
-				calendar.get( Calendar.DAY_OF_MONTH ), 12, 0, 0, true ) ;
-		now = new Double( today.Julian() ) ;
-		today.delete() ;
+		alpha = alpha() ;
+		t = new CAADate( alpha, true ) ;
+		a = new CAADate(
+				t.Year()+1, t.Month(), t.Day(),
+				t.Hour(), t.Minute(), t.Second(), true ) ;
+		omega = a.Julian() ;
+		t.delete() ;
+		a.delete() ;
 
-		return now.doubleValue() ;
+		return omega ;
 	}
 }

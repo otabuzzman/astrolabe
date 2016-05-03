@@ -14,8 +14,17 @@ public class HorizonEcliptical extends HorizonType {
 	private final static String QK_EPSILON	= "epsilon" ;
 	private final static String QK_LATITUDE	= "latitude" ;
 
+	private double epoch ;
+
 	public HorizonEcliptical( Projector projector ) {
 		super( projector ) ;
+
+		Epoch  epoch ;
+
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+		if ( epoch == null )
+			this.epoch = new Epoch().alpha() ;
+		this.epoch = epoch.alpha() ;
 	}
 
 	public void register() {
@@ -23,7 +32,7 @@ public class HorizonEcliptical extends HorizonType {
 		double e ;
 		DMS dms ;
 
-		e = CAANutation.MeanObliquityOfEcliptic( epoch() ) ;
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( 0, 90, e ) ;
 
 		dms = new DMS( e ) ;
@@ -45,7 +54,7 @@ public class HorizonEcliptical extends HorizonType {
 		CAA2DCoordinate c ;
 		double e ;
 
-		e = CAANutation.MeanObliquityOfEcliptic( epoch() ) ;
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 		c = CAACoordinateTransformation.Ecliptic2Equatorial( local.x, local.y, e ) ;
 
 		return new Coordinate( CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
@@ -54,19 +63,10 @@ public class HorizonEcliptical extends HorizonType {
 	private Coordinate inverse( Coordinate equatorial ) {
 		double e ;
 
-		e = CAANutation.MeanObliquityOfEcliptic( epoch() ) ;
+		e = CAANutation.MeanObliquityOfEcliptic( epoch ) ;
 
 		return new astrolabe.Coordinate(
 				CAACoordinateTransformation.Equatorial2Ecliptic(
 						CAACoordinateTransformation.DegreesToHours( equatorial.x ), equatorial.y, e ) ) ;
-	}
-
-	private double epoch() {
-		Double Epoch ;
-
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			return astrolabe.Epoch.defoult() ;
-		return Epoch.doubleValue() ;
 	}
 }

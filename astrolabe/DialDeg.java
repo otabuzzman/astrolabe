@@ -7,7 +7,7 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Coordinate;
 
 @SuppressWarnings("serial")
-public class DialDegree extends astrolabe.model.DialDegree implements PostscriptEmitter {
+public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitter {
 
 	private final static String CK_FADE			= "fade" ;
 
@@ -71,12 +71,12 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 			v = new java.util.Vector<Coordinate>() ;
 
-			span = getSpan() ;
-			o = baseline.valueOfScaleMarkN( -1, span ) ;
+			span = getScaleline()[0].getValue() ;
+			o = baseline.valOfScaleMarkN( -1, span ) ;
 
 			for ( m=0 ; ; m++ ) {
-				ma = baseline.valueOfScaleMarkN( m, span ) ;
-				mo = baseline.valueOfScaleMarkN( m+1, span ) ;
+				ma = baseline.valOfScaleMarkN( m, span ) ;
+				mo = baseline.valOfScaleMarkN( m+1, span ) ;
 
 				for ( Coordinate xy : baseline.list( ma, mo, getReflect()?-space:space ) )
 					v.add( xy ) ;
@@ -167,12 +167,12 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			double ma, mo, o, s, span ;
 			int m = 0 ;
 
-			span = getSpan()/getGraduationSpan().getDivision() ;
-			o = baseline.valueOfScaleMarkN( -1, span ) ;
+			span = getScaleline()[0].getValue()/getDivision() ;
+			o = baseline.valOfScaleMarkN( -1, span ) ;
 
 			for ( ; ; m++ ) {
-				ma = baseline.valueOfScaleMarkN( m, span ) ;
-				mo = baseline.valueOfScaleMarkN( m+1, span ) ;
+				ma = baseline.valOfScaleMarkN( m, span ) ;
+				mo = baseline.valOfScaleMarkN( m+1, span ) ;
 
 				s = m%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
@@ -375,27 +375,14 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 	private final static double DEFAULT_HALOMAX	= .4 ;
 
 	private Baseline baseline ;
-	//	private double unit ;
 
 	// attribute value (AV_)
 	private final static String AV_NONE = "none" ;
 	private final static String AV_LINE = "line" ;
 	private final static String AV_RAIL = "rail" ;
 
-	public DialDegree( Baseline baseline ) {
+	public DialDeg( Baseline baseline ) {
 		this.baseline = baseline ;	
-	}
-
-	public double getSpan() {
-		return getGraduationSpan().getValue() ;
-	}
-
-	public double getHalf() {
-		return getGraduationHalf() == null ? 0 : getGraduationHalf().getValue() ;
-	}
-
-	public double getFull() {
-		return getGraduationFull() == null ? 0 : getGraduationFull().getValue() ;
 	}
 
 	protected void register( double angle ) {
@@ -425,10 +412,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		double space, thickness ;
-		double a, o, c, s, rise ;
-		double mV, span, half, full ;
-		java.util.Vector<Double> mL ;
-		Coordinate b, t ;
+		double span, a, o, v ;
+		int n ;
+		Vector p, t ;
+		double rise, s ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -457,15 +444,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			break ;
 		}
 
-		span = getSpan() ;
-		a = c = baseline.valueOfScaleMarkN( 0, span ) ;
-		o = baseline.valueOfScaleMarkN( -1, span ) ;
-
-		mL = new java.util.Vector<Double>() ;		
-		for ( int mN=0 ; o>c ; mN++ ) {
-			c = baseline.valueOfScaleMarkN( mN, span ) ;
-			mL.add( c ) ;
-		}
+		span = getScaleline()[0].getValue() ;
+		a = baseline.valOfScaleMarkN( 0, span ) ;
+		o = baseline.valOfScaleMarkN( -1, span ) ;
+		n = (int) ( ( o-a )/span ) ;
 
 		ps.push( Configuration.getValue( this, CK_FADE, DEFAULT_FADE ) ) ;
 		ps.op( "currenthsbcolor" ) ;
@@ -474,18 +456,33 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		ps.op( "exch" ) ;
 		ps.op( "pop" ) ;
 		ps.op( "sub" ) ;
-		ps.push( mL.size()-1 ) ;
+		ps.push( n++ ) ;
 		ps.op( "div" ) ;
 
-		for ( int mN=0 ; mN<mL.size(); mN++ ) {
-			mV = mL.get( mN ) ;
+		for ( int i=0 ; n>i ; i++ ) {
+			v = baseline.valOfScaleMarkN( i, span ) ;
 
-			b = baseline.positionOfScaleMarkValue( mV, getReflect()?-( space+thickness ):space+thickness ) ;
-			t = baseline.directionOfScaleMarkValue( mV ) ;
-			if ( getReflect() ) {
-				t.x = -t.x ;
-				t.y = -t.y ;
-			}
+			register( v ) ;
+			ps.op( "gsave" ) ;
+
+			p = baseline.posVecOfScaleMarkVal( v ) ;
+			t = baseline.tanVecOfScaleMarkVal( v )
+			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
+
+			if ( getReflect() )
+				t.neg() ;
+
+			if ( space+thickness != 0 )
+				p.add( t.scale( space+thickness ) ) ;
+
+			ps.push( p.x ) ;
+			ps.push( p.y ) ;
+			ps.op( "translate" ) ;
+
+			ps.push( t.y ) ;
+			ps.push( t.x ) ;
+			ps.op( "atan" ) ;
+			ps.op( "rotate" ) ;
 
 			ps.op( "currenthsbcolor" ) ;
 			ps.push( 3 ) ;
@@ -493,24 +490,19 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.op( "add" ) ;
 			ps.op( "sethsbcolor" ) ;
 
-			register( mV ) ;
-			ps.op( "gsave" ) ;
+			for ( int j=getScalelineCount()-1 ; j>-1 ; j-- ) {
+				if ( ! isMultipleSpan( v, getScaleline()[j].getValue() ) )
+					continue ;
 
-			emitter = new GraduationSpan( b, t ) ;
-			getGraduationSpan().copyValues( emitter ) ;
-			if ( ( half = getHalf() )>0 )
-				if ( isMultipleSpan( mV, half ) ) {
-					emitter = new GraduationHalf( b, t ) ;
-					getGraduationHalf().copyValues( emitter ) ;
-				}
-			if ( ( full = getFull() )>0 )
-				if ( isMultipleSpan( mV, full ) ) {
-					emitter = new GraduationFull( b, t ) ;
-					getGraduationFull().copyValues( emitter ) ;
-				}
-			emitter.headPS( ps ) ;
-			emitter.emitPS( ps ) ;
-			emitter.tailPS( ps ) ;
+				emitter = new Scaleline() ;
+				getScaleline()[j].copyValues( emitter ) ;
+
+				emitter.headPS( ps ) ;
+				emitter.emitPS( ps ) ;
+				emitter.tailPS( ps ) ;
+
+				break ;
+			}
 
 			ps.op( "grestore" ) ;
 			degister() ;

@@ -21,78 +21,23 @@ public class BodySun extends BodyOrbitalType {
 
 	private astrolabe.model.BodySun peer ;	
 
-	private double epoch ;
-
 	public BodySun( astrolabe.model.BodySun peer, Converter converter, Projector projector ) {
 		super( converter, projector ) ;
 
-		Double Epoch ;
-
 		this.peer = peer ;
-
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
-		epoch = Epoch.doubleValue() ;
-	}
-
-	public Coordinate positionOfScaleMarkValue( double jd, double shift ) {
-		String circle ;
-		Baseline base ;
-		double a ;
-
-		if ( ( circle = peer.getCircle() ) != null )
-			base = (Baseline) Registry.retrieve( circle ) ;
-		else
-			base = null ;
-
-		if ( base == null )
-			return super.positionOfScaleMarkValue( jd, shift ) ;
-
-		a = angle( jd ) ;
-		return base.positionOfScaleMarkValue( a, shift ) ;
-	}
-
-	public Coordinate directionOfScaleMarkValue( double jd ) {
-		String circle ;
-		Baseline base ;
-		double a ;
-
-		if ( ( circle = peer.getCircle() ) != null )
-			base = (Baseline) Registry.retrieve( circle ) ;
-		else
-			base = null ;
-
-		if ( base == null )
-			return super.directionOfScaleMarkValue( jd ) ;
-
-		a = angle( jd ) ;
-		return base.directionOfScaleMarkValue( a ) ;
-	}
-
-	private double angle( double jd ) {
-		Object circle ;
-		Coordinate eq, lo ;
-
-		eq = jdToEquatorial( jd ) ;
-
-		circle = Registry.retrieve( peer.getCircle() ) ;
-		lo = ( (Converter) circle ).convert( eq, true ) ;
-
-		if ( circle instanceof CircleMeridian )
-			return lo.y ;
-		return lo.x ;
 	}
 
 	public Coordinate jdToEquatorial( double jd ) {
 		double l, b, o ;
-		double stretch ;
+		double epoch, stretch ;
 		CAA2DCoordinate c ;
 		Method eclipticLongitude ;
 		Method eclipticLatitude ;
 
 		l = 0 ;
 		b = 0 ;
+
+		epoch = getEpochAlpha() ;
 
 		if ( getStretch() )
 			stretch = Configuration.getValue( this, CK_STRETCH, DEFAULT_STRETCH ) ;
@@ -105,7 +50,7 @@ public class BodySun extends BodyOrbitalType {
 
 			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } )
-			+( jd-epoch()[0] )*stretch ;
+			+( jd-epoch )*stretch ;
 		} catch ( NoSuchMethodException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		} catch ( InvocationTargetException e ) {

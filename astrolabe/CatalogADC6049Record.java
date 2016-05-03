@@ -40,8 +40,7 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 	private int _le = 0 ;
 
-	public List<String>	RAh		; // Right ascension in hours
-	public List<String>	DEd		; // Declination in degrees
+	private List<Coordinate> record = new java.util.Vector<Coordinate>() ;
 	public String		con		; // Constellation abbreviation
 	public String		type	; // [OI] Type of point (Original or Interpolated)
 
@@ -53,14 +52,10 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	public CatalogADC6049Record( String data ) throws ParameterNotValidException {
 		BufferedReader b ;
 		String l, lv[] = null ;
-		String ra, pra ;
-		String de, pde ;
+		Coordinate pc, c ;
 		MessageCatalog cat ;
 		StringBuffer msg ;
 		String fmt ;
-
-		RAh = new java.util.Vector<String>() ;
-		DEd = new java.util.Vector<String>() ;
 
 		if ( data.charAt( CR_LENGTH18 ) == '\n' )
 			_le = CR_LENGTH18 ;
@@ -90,8 +85,9 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 
 					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg.toString() ) ) ;
 				}
-				RAh.add( lv[0] ) ;
-				DEd.add( lv[1] ) ;
+				record.add( new Coordinate(
+						Double.valueOf( lv[0] ),
+						Double.valueOf( lv[1] ) ) ) ;
 			}
 			con  = lv[2] ;
 			type = lv[3] ;
@@ -99,17 +95,12 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 			throw new RuntimeException( e.toString() ) ;
 		}
 
-		pra = RAh.get( RAh.size()-1 ) ;
-		pde = DEd.get( DEd.size()-1 ) ;
-		for ( int position=0 ; position<RAh.size() ; position++ ) {
-			ra = RAh.get( position ) ;
-			de = DEd.get( position ) ;
-			if ( ra.equals( pra ) && de.equals( pde ) ) {
-				RAh.remove( position ) ;
-				DEd.remove( position ) ;
-			}
-			pra = ra ;
-			pde = de ;
+		pc = record.get( record.size()-1 ) ;
+		for ( int position=0 ; position<record.size() ; position++ ) {
+			c = record.get( position ) ;
+			if ( c.equals2D( pc ) )
+				record.remove( position ) ;
+			pc = c ;
 		}
 	}
 
@@ -240,26 +231,14 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	public Geometry list() {
 		Coordinate[] lst ;
 		LineString rec ;
-		String RA, de ;
 		double dist ;
 
-		lst = new Coordinate[ RAh.size() ] ;
-
-		for ( int i=0 ; i<RAh.size() ; i++ ) {
-			RA = RAh.get( i ) ;
-			de = DEd.get( i ) ;
-
-			lst[i] = new Coordinate(
-					Double.valueOf( RA ),
-					Double.valueOf( de ) ) ;
-		}
-
+		lst = record.toArray( new Coordinate[0] ) ;
 		rec = new GeometryFactory().createLineString( lst ) ;
 
 		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( dist>0 && lst.length>2 )
 			return DouglasPeuckerSimplifier.simplify( rec, dist ) ;
-		else
-			return rec ;
+		return rec ;
 	}
 }

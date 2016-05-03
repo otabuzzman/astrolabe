@@ -53,17 +53,16 @@ public class HorizonLocal extends HorizonType {
 	}
 
 	public double getST() {
-		double jd0, gmst ;
-		Double Epoch ;
-		double epoch ;
+		double e, jd0, gmst ;
+		Epoch epoch ;
 
-		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
-		if ( Epoch == null )
-			epoch = astrolabe.Epoch.defoult() ;
+		epoch = (Epoch) Registry.retrieve( Epoch.class.getName() ) ;
+		if ( epoch == null )
+			e = new Epoch().alpha() ;
 		else
-			epoch = Epoch.doubleValue() ;
+			e = epoch.alpha() ;
 
-		jd0 = (int) ( epoch-.5 )+.5 ;
+		jd0 = (int) ( e-.5 )+.5 ;
 		gmst = CAASidereal.MeanGreenwichSiderealTime( jd0+utc()/24 ) ;
 
 		return gmst+longitude()/15 ;

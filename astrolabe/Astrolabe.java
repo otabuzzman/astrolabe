@@ -43,7 +43,16 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
+		Epoch epoch ;
 		astrolabe.model.Chart chart ;
+		ParserAttribute parser ;
+
+		parser = new ParserAttribute() ;
+		Registry.register( ParserAttribute.class.getName(), parser ) ;
+
+		epoch = new Epoch() ;
+		getEpoch().copyValues( epoch ) ;
+		Registry.register( Epoch.class.getName(), epoch ) ;
 
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			chart = getChart( ch ) ;
@@ -69,24 +78,13 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		FileInputStream s ;
 		InputStreamReader r ;
 		Astrolabe astrolabe ;
-		double epoch ;
 		String viewerDecl ;
 		Process viewerProc ;
 		TeeOutputStream out ;
 		ApplicationPostscriptStream ps ;
-		ParserAttribute parser ;
 		boolean verbose ;
 
 		try {
-			f = new File( argv[0] ) ;
-			s = new FileInputStream( f ) ;
-			r = new InputStreamReader( s, "UTF-8" ) ;
-			astrolabe = new Astrolabe() ;
-			readModel( r ).copyValues( astrolabe ) ;
-
-			epoch = valueOf( astrolabe.getEpoch() ) ;
-			Registry.register( Epoch.class.getName(), epoch ) ;
-
 			Configuration.init() ;
 
 			verbose = Configuration.getValue( Astrolabe.class, CK_VERBOSE, DEFAULT_VERBOSE ) ;
@@ -115,8 +113,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				}
 			}
 
-			parser = new ParserAttribute() ;
-			Registry.register( ParserAttribute.class.getName(), parser ) ;
+			f = new File( argv[0] ) ;
+			s = new FileInputStream( f ) ;
+			r = new InputStreamReader( s, "UTF-8" ) ;
+			astrolabe = new Astrolabe() ;
+			readModel( r ).copyValues( astrolabe ) ;
 
 			ps = new ApplicationPostscriptStream( out ) ;
 

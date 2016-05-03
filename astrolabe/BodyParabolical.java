@@ -24,17 +24,17 @@ public class BodyParabolical extends BodyOrbitalType {
 		// TODO Auto-generated method stub
 	}
 
-	public Coordinate positionOfScaleMarkValue( double angle, double shift ) {
+	public Vector posVecOfScaleMarkVal( double angle ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Coordinate directionOfScaleMarkValue( double angle ) {
+	public Vector tanVecOfScaleMarkVal( double angle ) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public double valueOfScaleMarkN( int mark, double span ) {
+	public double valOfScaleMarkN( int mark, double span ) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

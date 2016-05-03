@@ -116,9 +116,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			seg.add( lst ) ;
 		else {
 			tmp = new GeometryFactory().createLineString( lst ) ;
+			if ( ! gov.intersects( tmp ) )
+				return ;
 			cut = gov.intersection( tmp ) ;
-			for ( int i=0 ; cut.getNumGeometries()>0 ; i++ )
-				seg.add( cut.getGeometryN( i ).getCoordinates() );
+			for ( int i=0 ; cut.getNumGeometries()>i ; i++ )
+				seg.add( cut.getGeometryN( i ).getCoordinates() ) ;
 			if ( seg.size()>1 )
 				Collections.sort( seg, comparator ) ;
 		}
@@ -233,10 +235,9 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 
 			dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-			if ( dist>0 && outline.size()>2 )
+			if ( dist>0 )
 				return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( outline.toArray( new Coordinate[0] ) ), dist ).getCoordinates() ;
-			else
-				return outline.toArray( new Coordinate[0] ) ;
+			return outline.toArray( new Coordinate[0] ) ;
 		} else {
 			ellipse = new ShapeElliptical( converter, projector ) ;
 			getBodyArealTypeChoice().getShapeElliptical().copyValues( ellipse ) ;
