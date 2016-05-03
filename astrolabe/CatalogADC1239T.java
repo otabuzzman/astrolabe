@@ -130,33 +130,40 @@ public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements 
 		CAA2DCoordinate cpm, ceq ;
 		double epoch, ra, de, pmRA, pmDE ;
 		Double Epoch ;
-
-		// Artwork.verbose() ;
+		boolean verbose ;
 
 		for ( int a=0 ; a<getArtworkCount() ; a++ ) {
 			emitter = new Artwork( projector ) ;
 			getArtwork( a ).copyValues( emitter ) ;
 
-			ps.operator.gsave() ;
+			verbose = Configuration.getValue( emitter, Astrolabe.CK_VERBOSE, Astrolabe.DEFAULT_VERBOSE ) ;
+
+			if ( verbose )
+				Artwork.verbose() ;
+
+			ps.op( "gsave" ) ;
 
 			emitter.headPS( ps ) ;
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
+
+			if ( verbose )
+				Artwork.verbose() ;
 		}
 
 		for ( int s=0 ; s<getSignCount() ; s++ ) {
 			emitter = new Sign( projector ) ;
 			getSign( s ).copyValues( emitter ) ;
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			emitter.headPS( ps ) ;
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 
 		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
@@ -217,13 +224,13 @@ public class CatalogADC1239T extends astrolabe.model.CatalogADC1239T implements 
 			body.getBodyStellar().copyValues( bodyStellar ) ;
 
 			bodyStellar.register() ;
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			bodyStellar.headPS( ps ) ;
 			bodyStellar.emitPS( ps ) ;
 			bodyStellar.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 			bodyStellar.degister() ;
 
 			record.degister() ;

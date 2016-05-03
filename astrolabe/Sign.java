@@ -79,10 +79,10 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 			}
 			ps.array( false ) ;
 
-			ps.operator.newpath() ;
-			ps.gdraw() ;
+			ps.op( "newpath" ) ;
+			ps.op( "gdraw" ) ;
 
-			ps.operator.stroke() ;
+			ps.op( "stroke" ) ;
 
 			if ( limb.getAnnotation() != null ) {
 				annotation = limb.getAnnotation() ;
@@ -93,13 +93,13 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 					emitter = annotation( annotation.getAnnotationCurved() ) ;
 				}
 
-				ps.operator.gsave() ;
+				ps.op( "gsave" ) ;
 
 				emitter.headPS( ps ) ;
 				emitter.emitPS( ps ) ;
 				emitter.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 		}
 

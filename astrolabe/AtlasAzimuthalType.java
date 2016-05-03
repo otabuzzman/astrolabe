@@ -534,13 +534,13 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		for ( int ap=0 ; ap<getAtlasPageCount() ; ap++ ) {
 			atlasPage = (AtlasPage) getAtlasPage( ap ) ;
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			atlasPage.headPS( ps ) ;
 			atlasPage.emitPS( ps ) ;
 			atlasPage.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 	}
 

@@ -61,13 +61,13 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 			emitter = new AnnotationStraight() ;
 			getAnnotationStraight( an ).copyValues( emitter ) ;
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			emitter.headPS( ps ) ;
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
@@ -327,12 +327,12 @@ public class HorizonEcliptical extends astrolabe.model.HorizonEcliptical impleme
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
-		ps.operator.gsave() ;
+		ps.op( "gsave" ) ;
 
 		emitter.headPS( ps ) ;
 		emitter.emitPS( ps ) ;
 		emitter.tailPS( ps ) ;
 
-		ps.operator.grestore() ;
+		ps.op( "grestore" ) ;
 	}
 }

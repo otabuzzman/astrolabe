@@ -163,13 +163,13 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 					body.getBodyAreal().copyValues( bodyDS9 ) ;
 
 					bodyDS9.register() ;
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					bodyDS9.headPS( ps ) ;
 					bodyDS9.emitPS( ps ) ;
 					bodyDS9.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 					bodyDS9.degister() ;
 				}
 			}

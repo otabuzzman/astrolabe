@@ -19,11 +19,11 @@ public class AtlasPage extends astrolabe.model.AtlasPage implements PostscriptEm
 		ps.push( getP3y() ) ;
 		ps.array( false ) ;
 
-		ps.operator.newpath() ;
-		ps.gdraw() ;
+		ps.op( "newpath" ) ;
+		ps.op( "gdraw" ) ;
 
-		ps.operator.closepath() ;
-		ps.operator.stroke() ;
+		ps.op( "closepath" ) ;
+		ps.op( "stroke" ) ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {

@@ -58,27 +58,30 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 
 		psunit = Configuration.getValue( this, CK_PSUNIT, DEFAULT_PSUNIT ) ;
 
-		ps.dsc.beginSetup() ;
+		ps.dc( "%BeginSetup", null ) ;
 
 		ps.dict( true ) ;
-		ps.push( "/PageSize" ) ;
+		ps.script( "/PageSize" ) ;
 		ps.array( true ) ;
 		ps.push( size[0]*psunit ) ;
 		ps.push( size[1]*psunit ) ;
 		ps.array( false ) ;
 		ps.dict( false ) ;
-		ps.operator.setpagedevice() ;
+		ps.op( "setpagedevice" ) ;
 
 		seed = new Date().getTime()/1000 ;
-		ps.operator.srand( seed ) ;
+		ps.push( seed ) ;
+		ps.op( "srand" ) ;
 
-		ps.dsc.endSetup() ;
+		ps.dc( "%EndSetup", null ) ;
 
-		ps.dsc.beginPageSetup() ;
+		ps.dc( "%BeginPageSetup", null ) ;
 
-		ps.operator.scale( psunit ) ;
+		ps.push( psunit ) ;
+		ps.push( psunit ) ;
+		ps.op( "scale" ) ;
 
-		ps.dsc.endPageSetup() ;
+		ps.dc( "%EndPageSetup", null ) ;
 
 		if ( size[0]>view[0] ) {
 			ps.array( true ) ;
@@ -92,19 +95,19 @@ public class ChartPage extends astrolabe.model.ChartPage implements PostscriptEm
 			ps.push( -view[1]/2 ) ;
 			ps.array( false ) ;
 
-			ps.operator.newpath() ;
-			ps.gdraw() ;
+			ps.op( "newpath" ) ;
+			ps.op( "gdraw" ) ;
 
-			ps.operator.closepath() ;
-			ps.operator.stroke() ;
+			ps.op( "closepath" ) ;
+			ps.op( "stroke" ) ;
 
 			ps.push( -view[0]/2 ) ;
 			ps.push( view[1]/2 ) ;
-			ps.operator.moveto() ;
+			ps.op( "moveto" ) ;
 		} else {
 			ps.push( -size[0]/2 ) ;
 			ps.push( size[1]/2 ) ;
-			ps.operator.moveto() ;
+			ps.op( "moveto" ) ;
 		}
 	}
 

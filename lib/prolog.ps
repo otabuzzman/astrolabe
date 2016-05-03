@@ -3,7 +3,6 @@
 (lib/text.ps) run
 (lib/math.ps) run
 (lib/graph.ps) run
-(lib/image.ps) run
 
 (lib/Astrolabe.ps) run
 
@@ -19,3 +18,62 @@
 	.28 setlinewidth
 	} bind
 >> setpagedevice
+
+/BGcolor {
+	1 1 1
+} bind def
+
+% <halo width> <brightness increase> hfade -
+/hfade {
+	flattenpath
+	{moveto}
+	{
+	lineto
+	gsave
+	1 index
+	setlinewidth
+	0 setlinecap
+	BGcolor
+	setrgbcolor
+	stroke
+	grestore
+	currenthsbcolor
+	3 index
+	add
+	sethsbcolor
+	currentpoint
+	stroke
+	moveto
+	}
+	{} {}
+	pathforall
+	pop pop
+} def
+% upix -
+/upix {
+	gsave
+	0 1
+	1 1
+	1 0
+	0 0
+	moveto
+	lineto
+	lineto
+	lineto
+	closepath
+	fill
+	grestore
+} def
+% udot -
+/udot {
+	gsave
+	.5 .5
+	.5
+	0 359
+	.5 .5
+	moveto
+	arc
+	closepath
+	fill
+	grestore
+} def

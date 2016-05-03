@@ -112,7 +112,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		}
 
 		for ( int s=0 ; s<segment.size() ; s++ ) {
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			ps.array( true ) ;
 			for ( Coordinate c : segment.get( s ) ) {
@@ -121,35 +121,42 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 			ps.array( false ) ;
 
-			ps.operator.newpath() ;
-			ps.gdraw() ;
+			ps.op( "newpath" ) ;
+			ps.op( "gdraw" ) ;
 
 			// halo stroke
-			ps.operator.currentlinewidth() ;
+			ps.op( "currentlinewidth" ) ;
 
-			ps.operator.dup() ;
-			ps.operator.div( 100 ) ;
+			ps.op( "dup" ) ;
+			ps.push( 100 ) ;
+			ps.op( "div" ) ;
 			conf = new Configuration( this ) ;
 			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-			ps.operator.mul() ;
+			ps.op( "mul" ) ;
 			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-			ps.max() ;
+			ps.op( "max" ) ;
 			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-			ps.min() ;
+			ps.op( "min" ) ;
 
-			ps.operator.mul( 2 ) ;
-			ps.operator.add() ;
-			ps.operator.gsave() ;
-			ps.operator.setlinewidth() ;
-			ps.operator.setlinecap( 2 ) ;
-			ps.operator.setdash( 0 ) ;
-			ps.operator.setgray( 1 ) ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.push( 2 ) ;
+			ps.op( "mul" ) ;
+			ps.op( "add" ) ;
+			ps.op( "gsave" ) ;
+			ps.op( "setlinewidth" ) ;
+			ps.push( 2 ) ;
+			ps.op( "setlinecap" ) ;
+			ps.array( true ) ;
+			ps.array( false ) ;
+			ps.push( 0 ) ;
+			ps.op( "setdash" ) ;
+			ps.push( 1 ) ;
+			ps.op( "setgray" ) ;
+			ps.op( "stroke" ) ;
+			ps.op( "grestore" ) ;
 
-			ps.operator.gsave() ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.op( "gsave" ) ;
+			ps.op( "stroke" ) ;
+			ps.op( "grestore" ) ;
 
 			xy = segment.get( s )[ segment.get( s ).length-1 ] ;
 			p = new Vector( xy ) ;
@@ -159,7 +166,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			z.sub( p ) ;
 			a = Math.atan2( z.y, z.x )-90 ;
 
-			ps.operator.rotate( a ) ;
+			ps.push( a ) ;
+			ps.op( "rotate" ) ;
 
 			if ( s == 0 && getAnnotation() != null ) {
 				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
@@ -171,17 +179,17 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 						emitter = annotation( annotation.getAnnotationCurved() ) ;
 					}
 
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					emitter.headPS( ps ) ;
 					emitter.emitPS( ps ) ;
 					emitter.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 				}
 			}
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 	}
 

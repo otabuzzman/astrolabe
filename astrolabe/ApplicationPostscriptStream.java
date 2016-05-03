@@ -2,13 +2,17 @@
 package astrolabe;
 
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 
-	// configuration key (CK_)
+	private final HashSet<String> prolog = new HashSet<String>() ;
+
+	// configuration key (CK_), node (CN_)
 	private final static String CK_PROLOG 	= "prolog" ;
+	private final static String CN_PROLIB 	= "prolib" ;
 
 	private final static String CK_FONTNAME	= "fontname" ;
 	private final static String CK_ENCODING	= "encoding" ;
@@ -34,41 +38,31 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 						continue ;
 					addUnicodeControlBlock( desc[b], fontname, encoding ) ;
 				}
+			if ( ! node.nodeExists( CN_PROLIB ) )
+				return ;
+			for ( String key : node.node( CN_PROLIB ).keys() )
+				prolog.add( key ) ;
 		} catch ( BackingStoreException e ) {
 			return ;
 		}
 	}
 
-	public void push( String string ) {
-		try {
-			super.push( string ) ;
-		} catch ( ParameterNotValidException e ) {
-			throw new RuntimeException( e.getMessage() ) ;
-		}
-	} 
-
-	public void push( String[] string ) {
-		array( true ) ;
-		for ( String def : string )
-			push( def ) ;
-		array( false ) ;
-	}
-
-	public void script( String script ) {   
-		for ( String token : script.trim().split( "\\p{Space}+" ) )
-			push( token ) ;
+	public boolean op( String op ) {
+		if ( prolog.contains( op ) )
+			return script( op ) ;
+		return super.op( op ) ;
 	}
 
 	public void emitDSCHeader() {
-		push( "%!PS-Adobe-3.0" ) ;
-		dsc.creator( getClass().getName() ) ;
-		dsc.creationDate( new java.util.Date().toString() ) ;
-		dsc.endComments() ;
+		dc( "!PS-Adobe-3.0", null ) ;
+		dc( "%Creator:", new String[] { getClass().getName() } ) ;
+		dc( "%CreationDate:", new String[] { new java.util.Date().toString() } ) ;
+		dc( "%EndComments", null ) ;
 	}
 
 	public void emitDSCTrailer() {
-		dsc.trailer() ;
-		dsc.eOF() ;
+		dc( "%Trailer", null ) ;
+		dc( "%EOF", null ) ;
 	}
 
 	public void emitDSCProlog() {
@@ -87,76 +81,8 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 			return ;
 		}
 
-		dsc.beginProlog() ;
+		dc( "%BeginProlog", null ) ;
 		script( prolog ) ;
-		dsc.endProlog() ;
-	}
-
-	public void pagesize() {        
-		print( "pagesize\n" ) ;
-	}
-
-	public void tpath() {        
-		print( "tpath\n" ) ;
-	}
-
-	public void tshow() {        
-		print( "tshow\n" ) ;
-	}
-
-	public void twidth() {        
-		print( "twidth\n" ) ;
-	}
-
-	public void setencoding() {        
-		print( "setencoding\n" ) ;
-	}
-
-	public void gdraw() {        
-		print( "gdraw\n" ) ;
-	}
-
-	public void glen() {        
-		print( "glen\n" ) ;
-	}
-
-	public void gmove() {        
-		print( "gmove\n" ) ;
-	}
-
-	public void gpath() {        
-		print( "gpath\n" ) ;
-	}
-
-	public void grev() {        
-		print( "grev\n" ) ;
-	}
-
-	public void idict() {        
-		print( "idict\n" ) ;
-	}
-
-	public void max() {        
-		print( "max\n" ) ;
-	}
-
-	public void min() {        
-		print( "min\n" ) ;
-	}
-
-	public void vabs() {        
-		print( "vabs\n" ) ;
-	}
-
-	public void vadd() {        
-		print( "vadd\n" ) ;
-	}
-
-	public void vsub() {        
-		print( "vsub\n" ) ;
-	}
-
-	public void vmul() {        
-		print( "vmul\n" ) ;
+		dc( "%EndProlog", null ) ;
 	}
 }

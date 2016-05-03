@@ -16,6 +16,9 @@ import org.exolab.castor.xml.ValidationException;
 public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEmitter {
 
 	// configuration key (CK_)
+	public final static String CK_VERBOSE		= "verbose" ;
+	public final static boolean DEFAULT_VERBOSE	= false ;
+
 	private final static String CK_VIEWER		= "viewer" ;
 	private final static String CK_LIBCAA		= "libcaa" ;
 
@@ -72,6 +75,7 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		TeeOutputStream out ;
 		ApplicationPostscriptStream ps ;
 		ParserAttribute parser ;
+		boolean verbose ;
 
 		try {
 			f = new File( argv[0] ) ;
@@ -85,10 +89,14 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 
 			out =  new TeeOutputStream( System.out ) ;
 
-			// Configuration.verbose() ;
-			// ApplicationResource.verbose() ;
-
 			Configuration.init() ;
+
+			verbose = Configuration.getValue( Astrolabe.class, CK_VERBOSE, DEFAULT_VERBOSE ) ;
+
+			if ( verbose ) {
+				Configuration.verbose() ;
+				ApplicationResource.verbose() ;
+			}
 
 			viewerDecl = Configuration.getValue(
 					Astrolabe.class, CK_VIEWER, null ) ;
@@ -127,6 +135,11 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			Registry.degister( ParserAttribute.class.getName() ) ;
 			Registry.degister( Epoch.class.getName() ) ;
 			Registry.remove() ;
+
+			if ( verbose ) {
+				Configuration.verbose() ;
+				ApplicationResource.verbose() ;
+			}
 		} catch ( Exception e ) {
 			e.printStackTrace() ;
 			System.exit( 1 ) ;
@@ -229,13 +242,13 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
-		ps.operator.gsave() ;
+		ps.op( "gsave" ) ;
 
 		emitter.headPS( ps ) ;
 		emitter.emitPS( ps ) ;
 		emitter.tailPS( ps ) ;
 
-		ps.operator.grestore() ;
+		ps.op( "grestore" ) ;
 	}
 
 	static {

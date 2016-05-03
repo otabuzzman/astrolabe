@@ -172,7 +172,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 			}
 
 			try {
-				ps.operator.gsave() ;
+				ps.op( "gsave" ) ;
 
 				if ( s>threshold ) {
 					area = new BodyAreal( converter, projector ) ;
@@ -216,7 +216,7 @@ public class CatalogADC7237 extends astrolabe.model.CatalogADC7237 implements Po
 					star.tailPS( ps ) ;
 				}
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			} catch ( ValidationException e ) {
 				throw new RuntimeException( e.toString() ) ;
 			}

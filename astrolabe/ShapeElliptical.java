@@ -43,37 +43,44 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 		}
 		ps.array( false ) ;
 
-		ps.operator.newpath() ;
-		ps.gdraw() ;
+		ps.op( "newpath" ) ;
+		ps.op( "gdraw" ) ;
 
-		ps.operator.closepath() ;
+		ps.op( "closepath" ) ;
 
 		// halo stroke
-		ps.operator.currentlinewidth() ;
+		ps.op( "currentlinewidth" ) ;
 
-		ps.operator.dup() ;
-		ps.operator.div( 100 ) ;
+		ps.op( "dup" ) ;
+		ps.push( 100 ) ;
+		ps.op( "div" ) ;
 		conf = new Configuration( this ) ;
 		ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-		ps.operator.mul() ;
+		ps.op( "mul" ) ;
 		ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-		ps.max() ;
+		ps.op( "max" ) ;
 		ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-		ps.min() ;
+		ps.op( "min" ) ;
 
-		ps.operator.mul( 2 ) ;
-		ps.operator.add() ;
-		ps.operator.gsave() ;
-		ps.operator.setlinewidth() ;
-		ps.operator.setlinecap( 2 ) ;
-		ps.operator.setdash( 0 ) ;
-		ps.operator.setgray( 1 ) ;
-		ps.operator.stroke() ;
-		ps.operator.grestore() ;
+		ps.push( 2 ) ;
+		ps.op( "mul" ) ;
+		ps.op( "add" ) ;
+		ps.op( "gsave" ) ;
+		ps.op( "setlinewidth" ) ;
+		ps.push( 2 ) ;
+		ps.op( "setlinecap" ) ;
+		ps.array( true ) ;
+		ps.array( false ) ;
+		ps.push( 0 ) ;
+		ps.op( "setdash" ) ;
+		ps.push( 1 ) ;
+		ps.op( "setgray" ) ;
+		ps.op( "stroke" ) ;
+		ps.op( "grestore" ) ;
 
-		ps.operator.gsave() ;
-		ps.operator.stroke() ;
-		ps.operator.grestore() ;
+		ps.op( "gsave" ) ;
+		ps.op( "stroke" ) ;
+		ps.op( "grestore" ) ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {

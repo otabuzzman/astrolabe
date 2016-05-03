@@ -7,7 +7,7 @@
 	</Epoch>
 	<Chart>
 		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a4" view="100"/>
+			<ChartPage size="a0" view="100"/>
 			<Oblique>
 				<lon>
 					<Rational value="0"/>
@@ -102,7 +102,12 @@
 						</CircleParallel>
 					</Circle>
 					<Body>
-						<BodyMoon nature="celestial"/>
+						<BodyMoon nature="celestial">
+							<DialDay name="moon" reflect="false" baseline="none">
+								<GraduationSpan value="1" division="1">
+							</GraduationSpan>
+							</DialDay>
+						</BodyMoon>
 					</Body>
 					<!--MCCM-->
 					<Catalog>

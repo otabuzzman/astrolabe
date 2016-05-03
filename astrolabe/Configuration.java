@@ -54,9 +54,9 @@ public final class Configuration {
 
 		try {
 			Preferences.importPreferences( new FileInputStream( file ) ) ;
-		} catch (Exception e) {
-			if ( verbose )
-				log.info( ParameterNotValidError.errmsg( file, e.getLocalizedMessage() ) ) ;
+		} catch ( Exception e ) {
+			log.info( ParameterNotValidError.errmsg( file, e.getLocalizedMessage() ) ) ;
+
 			return false ;
 		}
 

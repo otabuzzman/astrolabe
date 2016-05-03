@@ -61,7 +61,7 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		margin = conf.getValue( CK_MARGIN, DEFAULT_MARGIN ) ;
 		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
 
-		ps.operator.gsave() ;
+		ps.op( "gsave" ) ;
 
 		if ( getFrame() != null ) {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
@@ -76,7 +76,9 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 				xyVal[0] = frame[0]+frame[2]*new Double( xyRaw[0] ).doubleValue() ;
 				xyVal[1] = frame[1]+frame[3]*new Double( xyRaw[1] ).doubleValue() ;
 
-				ps.operator.moveto( xyVal ) ;
+				ps.push( xyVal[0] ) ;
+				ps.push( xyVal[1] ) ;
+				ps.op( "moveto" ) ;
 			}
 		}
 
@@ -101,78 +103,88 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		ps.array( false ) ;
 
 		if ( n0==ns ) {
-			ps.operator.pop() ;
-			ps.operator.grestore() ;
+			ps.op( "pop" ) ;
+			ps.op( "grestore" ) ;
 
 			return ;
 		}
 
-		ps.operator.currentpoint() ;
-		ps.operator.translate() ;
+		ps.op( "currentpoint" ) ;
+		ps.op( "translate" ) ;
 
 		if ( getRadiant() ) {
-			ps.operator.rotate( 90 ) ;
+			ps.push( 90 ) ;
+			ps.op( "rotate" ) ;
 		}
 
 		if ( new Boolean( getReverse() ).booleanValue() ) {
-			ps.operator.rotate( 180 ) ;
+			ps.push( 180 ) ;
+			ps.op( "rotate" ) ;
 		}
 
 		if ( getAnchor().equals( AV_BOTTOMLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( AV_BOTTOMMIDDLE ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( -2 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( -2 ) ;
+			ps.op( "div" ) ;
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( AV_BOTTOMRIGHT ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.operator.mul( -1 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( margin ) ;
+			ps.op( "add" ) ;
+			ps.push( -1 ) ;
+			ps.op( "mul" ) ;
 			ps.push( rise ) ;
 		} else if ( getAnchor().equals( AV_MIDDLELEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( AV_MIDDLE ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( -2 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( -2 ) ;
+			ps.op( "div" ) ;
 			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( AV_MIDDLERIGHT ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.operator.mul( -1 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( margin ) ;
+			ps.op( "add" ) ;
+			ps.push( -1 ) ;
+			ps.op( "mul" ) ;
 			ps.push( -height/2 ) ;
 		} else if ( getAnchor().equals( AV_TOPLEFT ) ) {
 			ps.push( margin ) ;
 			ps.push( -( height+rise ) ) ;
 		} else if ( getAnchor().equals( AV_TOPMIDDLE ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.div( -2 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( -2 ) ;
+			ps.op( "div" ) ;
 			ps.push( -( height+rise ) ) ;
 		} else if ( getAnchor().equals( AV_TOPRIGHT ) ) {
-			ps.operator.dup() ;
-			ps.twidth() ;
-			ps.operator.pop() ;
-			ps.operator.add( margin ) ;
-			ps.operator.mul( -1 ) ;
+			ps.op( "dup" ) ;
+			ps.op( "twidth" ) ;
+			ps.op( "pop" ) ;
+			ps.push( margin ) ;
+			ps.op( "add" ) ;
+			ps.push( -1 ) ;
+			ps.op( "mul" ) ;
 			ps.push( -( height+rise ) ) ;
 		}
 
-		ps.operator.moveto() ;
-		ps.tshow() ;
+		ps.op( "moveto" ) ;
+		ps.op( "tshow" ) ;
 
-		ps.operator.grestore() ;
-
+		ps.op( "grestore" ) ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
@@ -183,13 +195,16 @@ public class AnnotationStraight extends astrolabe.model.AnnotationStraight imple
 		if ( text.getValue().length()>0 )
 			for ( UnicodeControlBlock unicodeControlBlock : ps.getUnicodeControlBlockArray( text.getValue() ) ) {
 				ps.array( true ) ;
-				ps.push( unicodeControlBlock.fontname ) ;
-				ps.push( unicodeControlBlock.encoding ) ;
+				ps.script( unicodeControlBlock.fontname ) ;
+				ps.array( true ) ;
+				for ( String e : unicodeControlBlock.encoding )
+					ps.script( e ) ;
+				ps.array( false ) ;
 				ps.push( height ) ;
 				ps.push( shift ) ;
 				ps.push( true ) ;
 				ps.push( true ) ;
-				ps.push( "("+unicodeControlBlock.string+")" ) ;
+				ps.script( "("+unicodeControlBlock.string+")" ) ;
 				ps.array( false ) ;
 			}
 

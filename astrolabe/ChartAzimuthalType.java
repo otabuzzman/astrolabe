@@ -52,8 +52,8 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
-		ps.operator.showpage() ;
-		ps.dsc.pageTrailer() ;
+		ps.op( "showpage" ) ;
+		ps.dc( "%PageTrailer", null ) ;
 	}
 
 	public Coordinate project( Coordinate coordinate, boolean inverse ) {
@@ -199,12 +199,12 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
-		ps.operator.gsave() ;
+		ps.op( "gsave" ) ;
 
 		emitter.headPS( ps ) ;
 		emitter.emitPS( ps ) ;
 		emitter.tailPS( ps ) ;
 
-		ps.operator.grestore() ;
+		ps.op( "grestore" ) ;
 	}
 }

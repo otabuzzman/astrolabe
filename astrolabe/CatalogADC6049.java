@@ -163,13 +163,13 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 			body.getBodyAreal().copyValues( bodyAreal ) ;
 
 			bodyAreal.register() ;
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			bodyAreal.headPS( ps ) ;
 			bodyAreal.emitPS( ps ) ;
 			bodyAreal.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 			bodyAreal.degister() ;
 
 			record.degister() ;

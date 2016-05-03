@@ -9,6 +9,10 @@ import com.vividsolutions.jts.geom.Coordinate;
 @SuppressWarnings("serial")
 public class DialDegree extends astrolabe.model.DialDegree implements PostscriptEmitter {
 
+	private final static String CK_FADE			= "fade" ;
+
+	private final static double DEFAULT_FADE	= 0 ;
+
 	private class None implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
@@ -55,7 +59,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 
 		public void headPS(ApplicationPostscriptStream ps) {
-			ps.operator.setlinewidth( thickness ) ;
+			ps.push( thickness ) ;
+			ps.op( "setlinewidth" ) ;
 		}
 
 		public void emitPS(ApplicationPostscriptStream ps) {
@@ -87,34 +92,38 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			}
 			ps.array( false ) ;
 
-			ps.operator.newpath() ;
-			ps.gdraw() ;
+			ps.op( "newpath" ) ;
+			ps.op( "gdraw" ) ;
 
 			// halo stroke
-			ps.operator.currentlinewidth() ;
+			ps.op( "currentlinewidth" ) ;
 
-			ps.operator.dup() ;
-			ps.operator.div( 100 ) ;
+			ps.op( "dup" ) ;
+			ps.push( 100 ) ;
+			ps.op( "div" ) ;
 			conf = new Configuration( this ) ;
 			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-			ps.operator.mul() ;
+			ps.op( "mul" ) ;
 			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-			ps.max() ;
+			ps.op( "max" ) ;
 			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-			ps.min() ;
+			ps.op( "min" ) ;
 
-			ps.operator.mul( 2 ) ;
-			ps.operator.add() ;
-			ps.operator.gsave() ;
-			ps.operator.setlinewidth() ;
-			ps.operator.setlinecap( 2 ) ;
-			ps.operator.setgray( 1 ) ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.push( 2 ) ;
+			ps.op( "mul" ) ;
+			ps.op( "add" ) ;
+			ps.op( "gsave" ) ;
+			ps.op( "setlinewidth" ) ;
+			ps.push( 2 ) ;
+			ps.op( "setlinecap" ) ;
+			ps.push( 1 ) ;
+			ps.op( "setgray" ) ;
+			ps.op( "stroke" ) ;
+			ps.op( "grestore" ) ;
 
-			ps.operator.gsave() ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.op( "gsave" ) ;
+			ps.op( "stroke" ) ;
+			ps.op( "grestore" ) ;
 		}
 
 		public void tailPS(ApplicationPostscriptStream ps) {
@@ -148,7 +157,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 
 		public void headPS(ApplicationPostscriptStream ps) {
-			ps.operator.setlinewidth( linewidth ) ;
+			ps.push( linewidth ) ;
+			ps.op( "setlinewidth" ) ;
 		}
 
 		public void emitPS(ApplicationPostscriptStream ps) {
@@ -176,29 +186,32 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				}
 				ps.array( false ) ;
 
-				ps.operator.newpath() ;
-				ps.gdraw() ;
+				ps.op( "newpath" ) ;
+				ps.op( "gdraw" ) ;
 
 				// halo stroke
-				ps.operator.currentlinewidth() ;
+				ps.op( "currentlinewidth" ) ;
 
-				ps.operator.dup() ;
-				ps.operator.div( 100 ) ;
+				ps.op( "dup" ) ;
+				ps.push( 100 ) ;
+				ps.op( "div" ) ;
 				conf = new Configuration( this ) ;
 				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.operator.mul() ;
+				ps.op( "mul" ) ;
 				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.max() ;
+				ps.op( "max" ) ;
 				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.min() ;
+				ps.op( "min" ) ;
 
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.push( 2 ) ;
+				ps.op( "mul" ) ;
+				ps.op( "add" ) ;
+				ps.op( "gsave" ) ;
+				ps.op( "setlinewidth" ) ;
+				ps.push( 1 ) ;
+				ps.op( "setgray" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 
 				s = space+( m%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
@@ -212,29 +225,32 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				}
 				ps.array( false ) ;
 
-				ps.operator.newpath() ;
-				ps.gdraw() ;
+				ps.op( "newpath" ) ;
+				ps.op( "gdraw" ) ;
 
 				// halo stroke
-				ps.operator.currentlinewidth() ;
+				ps.op( "currentlinewidth" ) ;
 
-				ps.operator.dup() ;
-				ps.operator.div( 100 ) ;
+				ps.op( "dup" ) ;
+				ps.push( 100 ) ;
+				ps.op( "div" ) ;
 				conf = new Configuration( this ) ;
 				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.operator.mul() ;
+				ps.op( "mul" ) ;
 				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.max() ;
+				ps.op( "max" ) ;
 				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.min() ;
+				ps.op( "min" ) ;
 
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.push( 2 ) ;
+				ps.op( "mul" ) ;
+				ps.op( "add" ) ;
+				ps.op( "gsave" ) ;
+				ps.op( "setlinewidth" ) ;
+				ps.push( 1 ) ;
+				ps.op( "setgray" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 
 				rvDRv = new java.util.Vector<Coordinate>( vDRv ) ;
 				Collections.reverse( rvDRv ) ;
@@ -248,10 +264,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					}
 					ps.array( false ) ;
 
-					ps.operator.newpath() ;
-					ps.gdraw() ;
-					ps.operator.closepath() ;
-					ps.operator.fill() ;
+					ps.op( "newpath" ) ;
+					ps.op( "gdraw" ) ;
+					ps.op( "closepath" ) ;
+					ps.op( "fill" ) ;
 				} else { // subunit unfilled
 					java.util.Vector<Coordinate> fw, rv ;
 
@@ -265,11 +281,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					}
 					ps.array( false ) ;
 
-					ps.operator.newpath() ;
-					ps.gdraw() ;
-					ps.operator.gsave() ;
-					ps.operator.stroke() ;
-					ps.operator.grestore() ;
+					ps.op( "newpath" ) ;
+					ps.op( "gdraw" ) ;
+					ps.op( "gsave" ) ;
+					ps.op( "stroke" ) ;
+					ps.op( "grestore" ) ;
 					ps.array( true ) ;
 					for ( Coordinate xy : rv ) {
 						ps.push( xy.x ) ;
@@ -277,11 +293,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					}
 					ps.array( false ) ;
 
-					ps.operator.newpath() ;
-					ps.gdraw() ;
-					ps.operator.gsave() ;
-					ps.operator.stroke() ;
-					ps.operator.grestore() ;
+					ps.op( "newpath" ) ;
+					ps.op( "gdraw" ) ;
+					ps.op( "gsave" ) ;
+					ps.op( "stroke" ) ;
+					ps.op( "grestore" ) ;
 				}
 
 				if ( mo==o )
@@ -291,7 +307,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				Coordinate xy ;
 				int i ;
 
-				ps.operator.newpath() ;
+				ps.op( "newpath" ) ;
 				i = vDFw.size()/2 ;
 				xy = vDFw.get( i ) ;
 				ps.push( xy.x ) ;
@@ -299,34 +315,38 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				xy = vDFw.get( i-1 ) ;
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
-				ps.operator.moveto() ;
-				ps.operator.lineto() ;
+				ps.op( "moveto" ) ;
+				ps.op( "lineto" ) ;
 
 				// halo stroke
-				ps.operator.currentlinewidth() ;
+				ps.op( "currentlinewidth" ) ;
 
-				ps.operator.dup() ;
-				ps.operator.div( 100 ) ;
+				ps.op( "dup" ) ;
+				ps.push( 100 ) ;
+				ps.op( "div" ) ;
 				conf = new Configuration( this ) ;
 				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.operator.mul() ;
+				ps.op( "mul" ) ;
 				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.max() ;
+				ps.op( "max" ) ;
 				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.min() ;
+				ps.op( "min" ) ;
 
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.push( 2 ) ;
+				ps.op( "mul" ) ;
+				ps.op( "add" ) ;
+				ps.op( "gsave" ) ;
+				ps.op( "setlinewidth" ) ;
+				ps.push( 2 ) ;
+				ps.op( "setlinecap" ) ;
+				ps.push( 1 ) ;
+				ps.op( "setgray" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 
-				ps.operator.gsave() ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.op( "gsave" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 			}
 		}
 
@@ -405,8 +425,9 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		double space, thickness ;
-		double a, o, s, rise ;
-		double mo, span, half, full ;
+		double a, o, c, s, rise ;
+		double mV, span, half, full ;
+		java.util.Vector<Double> mL ;
 		Coordinate b, t ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
@@ -437,31 +458,53 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 
 		span = getSpan() ;
-		a = baseline.valueOfScaleMarkN( 0, span ) ;
+		a = c = baseline.valueOfScaleMarkN( 0, span ) ;
 		o = baseline.valueOfScaleMarkN( -1, span ) ;
 
-		for ( int m=0 ; ; m++ ) {
-			mo = baseline.valueOfScaleMarkN( m, span ) ;
+		mL = new java.util.Vector<Double>() ;		
+		for ( int mN=0 ; o>=c ; mN++ ) {
+			c = baseline.valueOfScaleMarkN( mN, span ) ;
+			mL.add( c ) ;
+		}
 
-			b = baseline.positionOfScaleMarkValue( mo, getReflect()?-( space+thickness ):space+thickness ) ;
-			t = baseline.directionOfScaleMarkValue( mo ) ;
+		ps.push( Configuration.getValue( this, CK_FADE, DEFAULT_FADE ) ) ;
+		ps.op( "currenthsbcolor" ) ;
+		ps.op( "exch" ) ;
+		ps.op( "pop" ) ;
+		ps.op( "exch" ) ;
+		ps.op( "pop" ) ;
+		ps.op( "sub" ) ;
+		ps.push( mL.size()-1 ) ;
+		ps.op( "div" ) ;
+
+		for ( int mN=0 ; mN<mL.size(); mN++ ) {
+			mV = mL.get( mN ) ;
+
+			b = baseline.positionOfScaleMarkValue( mV, getReflect()?-( space+thickness ):space+thickness ) ;
+			t = baseline.directionOfScaleMarkValue( mV ) ;
 			if ( getReflect() ) {
 				t.x = -t.x ;
 				t.y = -t.y ;
 			}
 
-			register( mo ) ;
-			ps.operator.gsave() ;
+			ps.op( "currenthsbcolor" ) ;
+			ps.push( 3 ) ;
+			ps.op( "index" ) ;
+			ps.op( "add" ) ;
+			ps.op( "sethsbcolor" ) ;
+
+			register( mV ) ;
+			ps.op( "gsave" ) ;
 
 			emitter = new GraduationSpan( b, t ) ;
 			getGraduationSpan().copyValues( emitter ) ;
 			if ( ( half = getHalf() )>0 )
-				if ( isMultipleSpan( mo, half ) ) {
+				if ( isMultipleSpan( mV, half ) ) {
 					emitter = new GraduationHalf( b, t ) ;
 					getGraduationHalf().copyValues( emitter ) ;
 				}
 			if ( ( full = getFull() )>0 )
-				if ( isMultipleSpan( mo, full ) ) {
+				if ( isMultipleSpan( mV, full ) ) {
 					emitter = new GraduationFull( b, t ) ;
 					getGraduationFull().copyValues( emitter ) ;
 				}
@@ -469,12 +512,11 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 			degister() ;
-
-			if ( mo==o )
-				break ;
 		}
+
+		ps.op( "pop" ) ;
 
 		rise = Configuration.getValue( this, CK_RISE, DEFAULT_RISE ) ;
 
@@ -486,8 +528,8 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		}
 		ps.array( false ) ;
 
-		ps.operator.newpath() ;
-		ps.gdraw() ;
+		ps.op( "newpath" ) ;
+		ps.op( "gdraw" ) ;
 
 		if ( getAnnotation() != null ) {
 			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
@@ -499,13 +541,13 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					emitter = annotation( annotation.getAnnotationCurved() ) ;
 				}
 
-				ps.operator.gsave() ;
+				ps.op( "gsave" ) ;
 
 				emitter.headPS( ps ) ;
 				emitter.emitPS( ps ) ;
 				emitter.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 		}
 	}

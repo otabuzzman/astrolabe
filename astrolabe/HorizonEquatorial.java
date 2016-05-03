@@ -35,13 +35,13 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 			emitter = new AnnotationStraight() ;
 			getAnnotationStraight( an ).copyValues( emitter ) ;
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			emitter.headPS( ps ) ;
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 
 		for ( int cl=0 ; cl<getCircleCount() ; cl++ ) {
@@ -103,13 +103,13 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 				emitter = catalog( catalog.getCatalogDS9() ) ;
 			}
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			emitter.headPS( ps ) ;
 			emitter.emitPS( ps ) ;
 			emitter.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 	}
 
@@ -390,12 +390,12 @@ public class HorizonEquatorial extends astrolabe.model.HorizonEquatorial impleme
 	}
 
 	private void emitPS( ApplicationPostscriptStream ps, PostscriptEmitter emitter ) {
-		ps.operator.gsave() ;
+		ps.op( "gsave" ) ;
 
 		emitter.headPS( ps ) ;
 		emitter.emitPS( ps ) ;
 		emitter.tailPS( ps ) ;
 
-		ps.operator.grestore() ;
+		ps.op( "grestore" ) ;
 	}
 }

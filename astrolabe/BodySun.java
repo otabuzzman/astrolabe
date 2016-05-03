@@ -176,13 +176,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				body = new BodySun( converter, projector ) ;
 				peer.copyValues( body ) ;
 
-				ps.operator.gsave();
+				ps.op( "gsave" ) ;
 
 				body.headPS( ps ) ;
 				body.emitPS( ps, false ) ;
 				body.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 		} else {
 			circle = (Baseline) Registry.retrieve( getCircle() ) ;
@@ -196,34 +196,38 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				}
 				ps.array( false ) ;
 
-				ps.operator.newpath() ;
-				ps.gdraw() ;
+				ps.op( "newpath" ) ;
+				ps.op( "gdraw" ) ;
 
 				// halo stroke
-				ps.operator.currentlinewidth() ;
+				ps.op( "currentlinewidth" ) ;
 
-				ps.operator.dup() ;
-				ps.operator.div( 100 ) ;
+				ps.op( "dup" ) ;
+				ps.push( 100 ) ;
+				ps.op( "div" ) ;
 				conf = new Configuration( this ) ;
 				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.operator.mul() ;
+				ps.op( "mul" ) ;
 				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.max() ;
+				ps.op( "max" ) ;
 				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.min() ;
+				ps.op( "min" ) ;
 
-				ps.operator.mul( 2 ) ;
-				ps.operator.add() ;
-				ps.operator.gsave() ;
-				ps.operator.setlinewidth() ;
-				ps.operator.setlinecap( 2 ) ;
-				ps.operator.setgray( 1 ) ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.push( 2 ) ;
+				ps.op( "mul" ) ;
+				ps.op( "add" ) ;
+				ps.op( "gsave" ) ;
+				ps.op( "setlinewidth" ) ;
+				ps.push( 2 ) ;
+				ps.op( "setlinecap" ) ;
+				ps.push( 1 ) ;
+				ps.op( "setgray" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 
-				ps.operator.gsave() ;
-				ps.operator.stroke() ;
-				ps.operator.grestore() ;
+				ps.op( "gsave" ) ;
+				ps.op( "stroke" ) ;
+				ps.op( "grestore" ) ;
 
 				if ( getDialDay() != null ) {
 					PostscriptEmitter dial ;
@@ -231,13 +235,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					dial = new DialDay( this ) ;
 					getDialDay().copyValues( dial ) ;
 
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					dial.headPS( ps ) ;
 					dial.emitPS( ps ) ;
 					dial.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 				}
 			} else {
 				if ( getDialDay() != null ) {
@@ -246,13 +250,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 					dial = new DialDay( this ) ;
 					getDialDay().copyValues( dial ) ;
 
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					dial.headPS( ps ) ;
 					dial.emitPS( ps ) ;
 					dial.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 				}
 			}
 
@@ -266,13 +270,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 						emitter = annotation( annotation.getAnnotationCurved() ) ;
 					}
 
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					emitter.headPS( ps ) ;
 					emitter.emitPS( ps ) ;
 					emitter.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 				}
 			}
 		}

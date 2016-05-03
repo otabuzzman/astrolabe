@@ -69,17 +69,19 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;
 		spin = -CAACoordinateTransformation.HoursToDegrees( getSpin() ) ;
 
-		ps.operator.mark() ;
+		ps.op( "mark" ) ;
 
 		ps.push( xy.x ) ;
 		ps.push( xy.y ) ;
-		ps.operator.moveto() ;
+		ps.op( "moveto") ;
 
-		ps.operator.currentpoint() ;
-		ps.operator.copy( 2 ) ;
-		ps.operator.copy( 2 ) ;
-		ps.operator.newpath() ;
-		ps.operator.moveto() ;
+		ps.op( "currentpoint" ) ;
+		ps.push( 2 ) ;
+		ps.op( "copy" ) ;
+		ps.push( 2 ) ;
+		ps.op( "copy" ) ;
+		ps.op( "newpath" ) ;
+		ps.op( "moveto" ) ;
 
 		script = new astrolabe.model.Script() ;
 		getScript().copyValues( script ) ;
@@ -88,7 +90,7 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		if ( height<0 )
 			height = Double.valueOf( script.getPurpose() ) ;
 		if ( height==0 ) {
-			ps.operator.cleartomark() ;
+			ps.op( "cleartomark" ) ;
 
 			return ;
 		}
@@ -97,75 +99,98 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		AnnotationStraight.emitPS( ps, script, height, 0, 0, 0, 0, 0 ) ;
 		ps.array( false ) ;								// p, p, text
 
-		ps.operator.dup() ;
-		ps.operator.get( 0 ) ;
+		ps.op( "dup" ) ;
+		ps.push( 0 ) ;
+		ps.op( "get" ) ;
 
-		ps.operator.dup( 2 ) ;
-		ps.operator.get( 0 ) ; // font
-		ps.operator.exch() ;
-		ps.operator.get( 1 ) ; // encoding
-		ps.setencoding() ;
+		ps.op( "dup" ) ;
+		ps.op( "dup" ) ;
+		ps.push( 0 ) ;
+		ps.op( "get" ) ;		// font
+		ps.op( "exch" ) ;
+		ps.push( 1 ) ;
+		ps.op( "get" ) ;		// encoding
+		ps.op( "setencoding" ) ;
 
-		ps.operator.dup( 2 ) ;
-		ps.operator.get( 0 ) ; // font
-		ps.operator.exch() ;
-		ps.operator.get( 2 ) ; // size
-		ps.operator.selectfont() ;
+		ps.op( "dup" ) ;
+		ps.op( "dup" ) ;
+		ps.push( 0 ) ;
+		ps.op( "get" ) ;		// font
+		ps.op( "exch" ) ;
+		ps.push( 2 ) ;
+		ps.op( "get" ) ;		// size
+		ps.op( "selectfont" ) ;
 
-		ps.operator.get( 6 ) ; // glyph
+		ps.push( 6 ) ;
+		ps.op( "get" ) ; 		// glyph
 		ps.push( false ) ;
-		ps.operator.charpath() ;						// p, p, text
-		ps.operator.roll( 3, 1 ) ;						// p, text, p
-		ps.operator.pathbbox() ;						// p, text, p, ll, ur
+		ps.op( "charpath" ) ;						// p, p, text
+		ps.push( 3 ) ;
+		ps.push( 1 ) ;
+		ps.op( "roll" ) ;							// p, l, text, p, ll, ur, d/2
+		ps.op( "pathbbox" ) ;						// p, text, p, ll, ur
 
-		ps.operator.copy( 4 ) ;
-		ps.vsub() ;
+		ps.push( 4 ) ;
+		ps.op( "copy" ) ;
+		ps.op( "vsub" ) ;
 		ps.push( .5 ) ;
-		ps.vmul() ;										// p, text, p, ll, ur, d/2
+		ps.op( "vmul" ) ;									// p, text, p, ll, ur, d/2
 
 		// preserve length of d/2*goldensection
-		ps.operator.copy( 2 ) ;
-		ps.vabs() ;
-		ps.operator.mul( Math.goldensection ) ;
-		ps.operator.roll( 10, 1 ) ;						// p, l, text, p, ll, ur, d/2
+		ps.push( 2 ) ;
+		ps.op( "copy" ) ;
+		ps.op( "vabs" ) ;
+		ps.push( Math.goldensection ) ;
+		ps.op( "mul" ) ;
+		ps.push( 10 ) ;
+		ps.push( 1 ) ;
+		ps.op( "roll" ) ;							// p, l, text, p, ll, ur, d/2
 
-		ps.vadd() ;										// p, l, text, p, ll, gc
+		ps.op( "vadd" ) ;									// p, l, text, p, ll, gc
 
-		ps.operator.roll( 4, 2 ) ;
-		ps.operator.pop( 2 ) ;							// p, l, text, p, gc
-		ps.vsub() ;										// p, l, text, o
+		ps.push( 4 ) ;
+		ps.push( 2 ) ;
+		ps.op( "roll" ) ;
+		ps.op( "pop" ) ;
+		ps.op( "pop" ) ;							// p, l, text, p, gc
+		ps.op( "vsub" ) ;									// p, l, text, o
 
-		ps.operator.roll( 6, 4 ) ;						// l, text, o, p
-		ps.operator.translate() ;
+		ps.push( 6 ) ;
+		ps.push( 4 ) ;
+		ps.op( "roll" ) ;							// l, text, o, p
+		ps.op( "translate" ) ;
 
-		ps.operator.gsave() ;
-		ps.operator.rotate( turn ) ;
+		ps.op( "gsave" ) ;
+		ps.push( turn ) ;
+		ps.op( "rotate" ) ;
 
-		ps.operator.moveto() ;
+		ps.op( "moveto" ) ;
 
-		ps.tshow() ;
-		ps.operator.grestore() ;	// l
+		ps.op( "tshow" ) ;
+		ps.op( "grestore" ) ;	// l
 
-		ps.operator.rotate( spin ) ;
+		ps.push( spin ) ;
+		ps.op( "rotate" ) ;
 
-		ps.operator.newpath() ;
+		ps.op( "newpath" ) ;
 		ps.push( 0 ) ;
-		ps.operator.exch() ;
+		ps.op( "exch" ) ;
 		ps.push( 0 ) ;
-		ps.operator.exch() ;		// 0, 0, l
+		ps.op( "exch" ) ;		// 0, 0, l
 		ps.push( 0 ) ;
 		ps.push( 359 ) ;
-		ps.operator.arc() ;
-		ps.gpath() ;
-		ps.grev() ;
-		ps.operator.newpath() ;
-		ps.gdraw() ;
+		ps.op( "arc" ) ;
+		ps.op( "gpath" ) ;
+		ps.op( "grev" ) ;
+		ps.op( "newpath" ) ;
+		ps.op( "gdraw" ) ;
 
-		ps.operator.currentpoint() ;
-		ps.operator.translate() ;
-		ps.operator.rotate( -spin ) ;
+		ps.op( "currentpoint" ) ;
+		ps.op( "translate" ) ;
+		ps.push( -spin ) ;
+		ps.op( "rotate" ) ;
 
-		ps.operator.cleartomark() ;
+		ps.op( "cleartomark" ) ;
 
 		if ( getAnnotation() != null ) {
 			for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
@@ -177,13 +202,13 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 					emitter = annotation( annotation.getAnnotationCurved() ) ;
 				}
 
-				ps.operator.gsave() ;
+				ps.op( "gsave" ) ;
 
 				emitter.headPS( ps ) ;
 				emitter.emitPS( ps ) ;
 				emitter.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 		}
 	}

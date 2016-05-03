@@ -30,13 +30,13 @@ public class ChartGnomonic extends ChartAzimuthalType {
 			atlas.emitAUX() ;
 			atlas.tailAUX() ;
 
-			ps.operator.gsave() ;
+			ps.op( "gsave" ) ;
 
 			atlas.headPS( ps ) ;
 			atlas.emitPS( ps ) ;
 			atlas.tailPS( ps ) ;
 
-			ps.operator.grestore() ;
+			ps.op( "grestore" ) ;
 		}
 	}
 

@@ -10,12 +10,13 @@
 				<map/>
 				<node name="Object">
 					<map>
+						<entry key="verbose" value="false"/>
 						<!--used by DMS, ProstscriptStream, Rational.-->
 						<entry key="precision" value="2"/>
 						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical, Artwork.-->
 						<entry key="interval" value="1"/>
-						<!--percent of brightness, increase if current less than 50 percent decrease if conrary-->
-						<entry key="fade" value="92"/>
+						<!--postscript value of brightness to fade to from current-->
+						<entry key="fade" value="0"/>
 						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, GraduationSpan, ListCutter, ShapeElliptical.-->
 						<!--percent of linewidth-->
 						<entry key="halo" value="4"/>
@@ -27,6 +28,12 @@
 						<entry key="psunit" value="2.834646"/>
 						<!--used by ASCII85Encoder.-->
 						<entry key="cpl" value="72"/>
+						<!--used by Artwork, ImageOperator, ImageDiscrete.-->
+						<!--RGB 0..1 each-->
+						<entry key="alpha" value="0:0:0,.0833:.0833:.0833"/>
+						<!--used by ImageOperator, ImageDiscrete.-->
+						<!--RGB 0..1 each-->
+						<entry key="tonemap" value=".8157:.8157:.8157,.9569:.9569:.9569"/>
 					</map>
 				</node>
 			</node>
@@ -218,6 +225,52 @@
 				<map>
 					<entry key="prolog" value="(lib/prolog.ps) run"/>
 				</map>
+				<node name="prolib">
+					<map>
+						<!--prolog.ps-->
+						<entry key="BGcolor" value=""/>
+						<entry key="hfade" value=""/>
+						<entry key="upix" value=""/>
+						<entry key="udot" value=""/>
+						<!--graph.ps-->
+						<entry key="gpath" value=""/>
+						<entry key="gdraw" value=""/>
+						<entry key="gmove" value=""/>
+						<entry key="glen" value=""/>
+						<entry key="grev" value=""/>
+						<!--math.ps-->
+						<entry key="inc" value=""/>
+						<entry key="dec" value=""/>
+						<entry key="inv" value=""/>
+						<entry key="min" value=""/>
+						<entry key="max" value=""/>
+						<entry key="asin" value=""/>
+						<entry key="acos" value=""/>
+						<entry key="matrotarb" value=""/>
+						<entry key="vabs" value=""/>
+						<entry key="vadd" value=""/>
+						<entry key="vangle" value=""/>
+						<entry key="vapply" value=""/>
+						<entry key="vdot" value=""/>
+						<entry key="vmul" value=""/>
+						<entry key="vscale" value=""/>
+						<entry key="vsub" value=""/>
+						<entry key="vdot" value=""/>
+						<entry key="vdup" value=""/>
+						<entry key="vpop" value=""/>
+						<entry key="vexch" value=""/>
+						<entry key="vcopy" value=""/>
+						<entry key="vroll" value=""/>
+						<entry key="vget" value=""/>
+						<entry key="vput" value=""/>
+						<entry key="vcon" value=""/>
+						<!--text.ps-->
+						<entry key="tpath" value=""/>
+						<entry key="tshow" value=""/>
+						<entry key="twidth" value=""/>
+						<entry key="setencoding" value=""/>
+					</map>
+				</node>
 				<node name="E000..F8FF-23">
 					<map>
 						<entry key="fontname" value="/Justinian"/>
@@ -355,6 +408,12 @@
 						</map>
 					</node>
 				</node>
+				<node name="moon">
+					<map>
+						<!--postscript value of brightness to fade to from current-->
+						<entry key="fade" value=".92"/>
+					</map>
+				</node>
 			</node>
 			<node name="GraduationSpan">
 				<map>
@@ -413,12 +472,16 @@
 					<map>
 						<entry key="interval" value=".2"/>
 						<entry key="stretch" value=".034"/>
+						<!--postscript value of brightness to fade to from current-->
+						<entry key="fade" value=".92"/>
 					</map>
 				</node>
 				<node name="venus">
 					<map>
 						<entry key="interval" value=".6"/>
 						<entry key="stretch" value=".034"/>
+						<!--postscript value of brightness to fade to from current-->
+						<entry key="fade" value=".92"/>
 					</map>
 				</node>
 				<node name="mars">
@@ -454,8 +517,10 @@
 			</node>
 			<node name="BodyMoon">
 				<map>
-					<entry key="interval" value=".02"/>
+					<entry key="interval" value=".32"/>
 					<entry key="stretch" value=".012"/>
+					<!--postscript value of brightness to fade to from current-->
+					<entry key="fade" value=".92"/>
 				</map>
 			</node>
 			<node name="BodySun">
@@ -625,16 +690,13 @@
 			</node>
 			<node name="Artwork">
 				<map>
+					<entry key="verbose" value="true"/>
 					<entry key="dpi" value="300"/>
 					<entry key="interval" value="16"/>
-					<!--RGB from 0 to 255 each-->
-					<entry key="alpha" value="0:0:0"/>
+					<entry key="imageop" value="false"/>
+					<entry key="noimage" value="false"/>
 					<!--percent-->
 					<entry key="minsection" value="25"/>
-					<!--keys must equal to allowed values of concerning attributes in XSD.-->
-					<!--attribute tonemap-->
-					<entry key="original" value="0:0:0,255:255:255"/>
-					<entry key="pale" value="208:208:208,244:244:244"/>
 				</map>
 			</node>
 			<node name="Sign">

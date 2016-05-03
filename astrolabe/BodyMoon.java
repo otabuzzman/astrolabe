@@ -20,6 +20,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 	// configuration key (CK_)
 	private final static String CK_INTERVAL			= "interval" ;
 	private final static String CK_STRETCH			= "stretch" ;
+	private final static String CK_FADE				= "fade" ;
 
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
@@ -27,6 +28,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private final static double DEFAULT_STRETCH		= 0 ;
+	private final static double DEFAULT_FADE		= 0 ;
 
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
@@ -121,7 +123,7 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 		List<Double> listjd ;
 		double jdAe, jdOe ;
 		Coordinate[] list ;
-		double[] epoch ;
+		double epoch[] ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -177,13 +179,13 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 				body = new BodyMoon( converter, projector ) ;
 				peer.copyValues( body ) ;
 
-				ps.operator.gsave();
+				ps.op( "gsave" ) ;
 
 				body.headPS( ps ) ;
 				body.emitPS( ps, false ) ;
 				body.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 		} else {
 			list = list( null, epoch[0], epoch[1], 0 ) ;
@@ -194,34 +196,41 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 			}
 			ps.array( false ) ;
 
-			ps.operator.newpath() ;
-			ps.gdraw() ;
+			ps.op( "newpath" ) ;
+			ps.op( "gdraw" ) ;
 
 			// halo stroke
-			ps.operator.currentlinewidth() ;
+			ps.op( "currentlinewidth" ) ;
 
-			ps.operator.dup() ;
-			ps.operator.div( 100 ) ;
+			ps.op( "dup" ) ;
+			ps.push( 100 ) ;
+			ps.op( "div" ) ;
 			conf = new Configuration( this ) ;
 			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-			ps.operator.mul() ;
+			ps.op( "mul" ) ;
 			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-			ps.max() ;
+			ps.op( "max" ) ;
 			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-			ps.min() ;
+			ps.op( "min" ) ;
 
-			ps.operator.mul( 2 ) ;
-			ps.operator.add() ;
-			ps.operator.gsave() ;
-			ps.operator.setlinewidth() ;
-			ps.operator.setlinecap( 2 ) ;
-			ps.operator.setgray( 1 ) ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.push( 2 ) ;
+			ps.op( "mul" ) ;
+			ps.op( "add" ) ;
 
-			ps.operator.gsave() ;
-			ps.operator.stroke() ;
-			ps.operator.grestore() ;
+			ps.op( "gsave" ) ;
+			ps.push( 1 ) ;
+			ps.op( "setlinecap" ) ;
+			ps.push( conf.getValue( CK_FADE, DEFAULT_FADE ) ) ;
+			ps.op( "currenthsbcolor" ) ;
+			ps.op( "exch" ) ;
+			ps.op( "pop" ) ;
+			ps.op( "exch" ) ;
+			ps.op( "pop" ) ;
+			ps.op( "sub" ) ;
+			ps.push( list.length-1 ) ;
+			ps.op( "div" ) ;
+			ps.op( "hfade" ) ;
+			ps.op( "grestore" ) ;
 
 			if ( getDialDay() != null ) {
 				PostscriptEmitter dial ;
@@ -229,13 +238,13 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 				dial = new DialDay( this ) ;
 				getDialDay().copyValues( dial ) ;
 
-				ps.operator.gsave() ;
+				ps.op( "gsave" ) ;
 
 				dial.headPS( ps ) ;
 				dial.emitPS( ps ) ;
 				dial.tailPS( ps ) ;
 
-				ps.operator.grestore() ;
+				ps.op( "grestore" ) ;
 			}
 
 			if ( getAnnotation() != null ) {
@@ -248,13 +257,13 @@ public class BodyMoon extends astrolabe.model.BodyMoon implements PostscriptEmit
 						emitter = annotation( annotation.getAnnotationCurved() ) ;
 					}
 
-					ps.operator.gsave() ;
+					ps.op( "gsave" ) ;
 
 					emitter.headPS( ps ) ;
 					emitter.emitPS( ps ) ;
 					emitter.tailPS( ps ) ;
 
-					ps.operator.grestore() ;
+					ps.op( "grestore" ) ;
 				}
 			}
 		}

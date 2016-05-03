@@ -2,7 +2,7 @@
 
 (lib/math.ps) run
 
-% <t> <distance> tpath -
+% <text> <distance> tpath -
 /tpath {
 32 dict begin
 	/td exch def
@@ -135,7 +135,7 @@
 	grestore
 end
 } def
-% <t> tshow -
+% <text> tshow -
 /tshow {
 	{
 	dup
@@ -179,7 +179,7 @@ end
 	ifelse
 	} forall
 } def
-% <t> twidth <x> <y>
+% <text> twidth <x> <y>
 /twidth {
 	0 exch
 	{
