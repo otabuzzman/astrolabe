@@ -111,20 +111,18 @@
 							<End>
 								<Reference circle="eqp-24.5" node="leading"/>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="10" division="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="bottomleft" reverse="false" distance="18.5">
-											<Script purpose="diallettering" value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="10">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="bottomleft" reverse="false" distance="18.5">
+										<Script purpose="diallettering" value="Galaktische L&#x00e4;nge (&#x0394;l 10&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="0.0"/>
 							</Angle>
@@ -301,20 +299,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="12">
-											<Script purpose="guidance" value="Galaktische Breite (&#x0394;b 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middleleft" reverse="false" distance="12">
+										<Script purpose="guidance" value="Galaktische Breite (&#x0394;b 20&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="180"/>
 							</Angle>
@@ -561,20 +557,18 @@
 									<Rational value="359.9999"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="10" division="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="bottomleft" reverse="false" distance=".4">
-											<Script purpose="diallettering" value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="10">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="bottomleft" reverse="false" distance=".4">
+										<Script purpose="diallettering" value="Ekliptische L&#x00e4;nge (&#x0394;&#x03bb; 10&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="20"/>
 							</Angle>
@@ -687,20 +681,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middle" reverse="false" distance="20">
-											<Script purpose="guidance" value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middle" reverse="false" distance="20">
+										<Script purpose="guidance" value="Ekliptische Breite (&#x0394;&#x03b2; 20&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="45"/>
 							</Angle>
@@ -1014,12 +1006,12 @@
 									<Script purpose="diallettering" value="Mars"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="true" baseline="none">
-								<GraduationSpan value="10" division="1">
+							<DialDay reflect="true" baseline="none" division="1">
+								<Scaleline value="10">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>
@@ -1030,12 +1022,12 @@
 									<Script purpose="diallettering" value="Jupiter"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="false" baseline="none">
-								<GraduationSpan value="90" division="1">
+							<DialDay reflect="false" baseline="none" division="1">
+								<Scaleline value="90">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>
@@ -1046,12 +1038,12 @@
 									<Script purpose="diallettering" value="Saturn"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="false" baseline="none">
-								<GraduationSpan value="90" division="1">
+							<DialDay reflect="false" baseline="none" division="1">
+								<Scaleline value="90">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>
@@ -1062,12 +1054,12 @@
 									<Script purpose="guidance" value="Uranus"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="false" baseline="none">
-								<GraduationSpan value="90" division="1">
+							<DialDay reflect="false" baseline="none" division="1">
+								<Scaleline value="90">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>
@@ -1078,20 +1070,20 @@
 									<Script purpose="guidance" value="Neptun"/>
 								</AnnotationCurved>
 							</Annotation>
-							<DialDay reflect="true" baseline="none">
-								<GraduationSpan value="180" division="1">
+							<DialDay reflect="true" baseline="none" division="1">
+								<Scaleline value="180">
 									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
 										<Script purpose="guidance" value="{T}. {monatkurz}"/>
 									</AnnotationStraight>
-								</GraduationSpan>
+								</Scaleline>
 							</DialDay>
 						</BodyPlanet>
 					</Body>
 					<!--true sun-->
 					<Body>
 						<BodySun type="true" circle="suntrue" nature="celestial">
-							<DialDay reflect="false" baseline="rail">
-								<GraduationSpan value="1" division="4">
+							<DialDay reflect="false" baseline="rail" division="4">
+								<Scaleline value="1">
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
 										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
@@ -1103,8 +1095,8 @@
 											<Superscript value="s"/>
 										</Script>
 									</AnnotationStraight>
-								</GraduationSpan>
-								<GraduationHalf value="7">
+								</Scaleline>
+								<Scaleline name="half" value="7">
 									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
 										<Script purpose="guidance" value="{julianischertag}"/>
 									</AnnotationStraight>
@@ -1119,8 +1111,8 @@
 											<Superscript value="s"/>
 										</Script>
 									</AnnotationStraight>
-								</GraduationHalf>
-								<GraduationFull value="30">
+								</Scaleline>
+								<Scaleline name="full" value="30">
 									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
 										<Script purpose="dialcardinal" value="{monat}"/>
 									</AnnotationStraight>
@@ -1135,7 +1127,7 @@
 											<Superscript value="s"/>
 										</Script>
 									</AnnotationStraight>
-								</GraduationFull>
+								</Scaleline>
 								<Annotation>
 									<AnnotationCurved anchor="bottommiddle" reverse="false" distance="99.06">
 										<Script purpose="diallettering" value="Wahre Sonne (&#x0394;T 6">
@@ -1150,17 +1142,17 @@
 					<!--mean sun-->
 					<Body>
 						<BodySun type="mean" circle="sunmean" nature="celestial">
-							<DialDay reflect="true" baseline="rail">
-								<GraduationSpan value="1" division="4">
+							<DialDay reflect="true" baseline="rail" division="4">
+								<Scaleline value="1">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 										<Script purpose="guidance" value="{T}."/>
 									</AnnotationStraight>
-								</GraduationSpan>
-								<GraduationHalf value="7">
+								</Scaleline>
+								<Scaleline name="half" value="7">
 									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
 										<Script purpose="guidance" value="{wochentagkurz}"/>
 									</AnnotationStraight>
-								</GraduationHalf>
+								</Scaleline>
 								<Annotation>
 									<AnnotationCurved anchor="topmiddle" reverse="false" distance="99.06">
 										<Script purpose="diallettering" value="Mittlere Sonne 2000 (&#x0394;T 6">
@@ -1333,20 +1325,18 @@
 									<DMS neg="false" deg="359" min="59" sec="59.9"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="rail" reflect="false">
-									<GraduationSpan division="4" value="10">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance=".45">
-											<Script purpose="diallettering" value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="rail" division="4" reflect="false">
+								<Scaleline value="10">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialfraction" value="{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middleleft" reverse="false" distance=".45">
+										<Script purpose="diallettering" value="Azimuth (&#x0394;A 2.5&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<DMS neg="false" deg="30" min="0" sec="0.0"/>
 							</Angle>
@@ -1508,20 +1498,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middle" reverse="false" distance="22">
-											<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middle" reverse="false" distance="22">
+										<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
@@ -1762,20 +1750,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middle" reverse="false" distance="22">
-											<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middle" reverse="false" distance="22">
+										<Script purpose="guidance" value="Altitude (&#x0394;h 10&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="300"/>
 							</Angle>
@@ -1936,32 +1922,30 @@
 									<Rational value="359.9999"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialHour baseline="rail" reflect="true">
-									<GraduationSpan value=".5" division="4">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="30">
-												<Superscript value="m"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf value="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialcardinal" value="{skalastd>12?skalastd-12:skalastd+12}">
-												<Superscript value="h"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<Annotation>
-										<AnnotationCurved anchor="middle" reverse="true" distance="1.04">
-											<Script purpose="diallettering" value="Lokalzeit (&#x0394;t 7.5">
-												<Superscript value="m"/>
-											</Script>
-											<Script purpose="diallettering" value=")"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialHour>
-							</Dial>
+							<DialDeg baseline="rail" division="4" reflect="true">
+								<Scaleline value="7.5">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialfraction" value="30">
+											<Superscript value="m"/>
+										</Script>
+									</AnnotationStraight>
+								</Scaleline>
+								<Scaleline name="half" value="1">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{skalagrd/15>12?skalagrd/15-12:skalagrd/15+12}">
+											<Superscript value="h"/>
+										</Script>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middle" reverse="true" distance="1.04">
+										<Script purpose="diallettering" value="Lokalzeit (&#x0394;t 7.5">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="diallettering" value=")"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="-17.5"/>
 							</Angle>
@@ -1997,32 +1981,30 @@
 									<Rational value="359.9999"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialHour baseline="rail" reflect="false">
-									<GraduationSpan value=".5" division="3">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialfraction" value="30">
-												<Superscript value="m"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<GraduationHalf value="1">
-										<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-											<Script purpose="dialcardinal" value="{skalastd}">
-												<Superscript value="h"/>
-											</Script>
-										</AnnotationStraight>
-									</GraduationHalf>
-									<Annotation>
-										<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
-											<Script purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
-												<Superscript value="m"/>
-											</Script>
-											<Script purpose="diallettering" value=")"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialHour>
-							</Dial>
+							<DialDeg baseline="rail" division="3" reflect="false">
+								<Scaleline value=".5">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialfraction" value="30">
+											<Superscript value="m"/>
+										</Script>
+									</AnnotationStraight>
+								</Scaleline>
+								<Scaleline name="half" value="1">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{skalagrd/15}">
+											<Superscript value="h"/>
+										</Script>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="bottommiddle" reverse="false" distance="1.04">
+										<Script purpose="diallettering" value="Rektaszension (&#x0394;&#x03b1; 10">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="diallettering" value=")"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Annotation>
 								<AnnotationCurved anchor="topright" reverse="false" distance="12.5">
 									<Script purpose="guidance" value="&#x03b4; {h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{h&#x00f6;hegrd}&#x00b0;"/>
@@ -2355,20 +2337,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+										<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="60"/>
 							</Angle>
@@ -2505,20 +2485,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+										<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="180"/>
 							</Angle>
@@ -2655,20 +2633,18 @@
 									<DMS neg="false" deg="85" min="0" sec="0.0"/>
 								</Angle>
 							</End>
-							<Dial>
-								<DialDegree baseline="none" reflect="false">
-									<GraduationSpan value="20" division="1">
-										<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
-											<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
-										</AnnotationStraight>
-									</GraduationSpan>
-									<Annotation>
-										<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
-											<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
-										</AnnotationCurved>
-									</Annotation>
-								</DialDegree>
-							</Dial>
+							<DialDeg baseline="none" division="1" reflect="false">
+								<Scaleline value="20">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Annotation>
+									<AnnotationCurved anchor="middleleft" reverse="false" distance="10">
+										<Script purpose="guidance" value="Deklination (&#x0394;&#x03b4; 20&#x00b0;)"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDeg>
 							<Angle>
 								<Rational value="300"/>
 							</Angle>
