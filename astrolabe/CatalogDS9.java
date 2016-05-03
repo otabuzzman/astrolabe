@@ -123,7 +123,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Body body ;
-		BodyDS9 bodyDS9 ;
+		BodyAreal bodyDS9 ;
 		astrolabe.model.Position pm ;
 
 		for ( ContourLevel contour : catalog ) {
@@ -159,7 +159,7 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 						throw new RuntimeException( e.toString() ) ;
 					}
 
-					bodyDS9 = new BodyDS9( converter, projector ) ;
+					bodyDS9 = new BodyAreal( converter, projector ) ;
 					body.getBodyAreal().copyValues( bodyDS9 ) ;
 
 					bodyDS9.register() ;

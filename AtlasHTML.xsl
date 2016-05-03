@@ -6,10 +6,6 @@
 
 	<xsl:output method="html" encoding="UTF-8"/>
 
-	<xsl:template xmlns:ns="http://www.chartacaeli.eu/astrolabe/model" match="Atlas">
-		<xsl:apply-templates/>
-	</xsl:template>
-
 	<xsl:template xmlns:ns="http://www.chartacaeli.eu/astrolabe/model" match="AtlasPage">
 		<xsl:value-of select="@p0x"/><xsl:text> </xsl:text>
 		<xsl:value-of select="@p0y"/><xsl:text> </xsl:text>

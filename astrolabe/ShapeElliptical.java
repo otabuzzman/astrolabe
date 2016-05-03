@@ -4,19 +4,22 @@ package astrolabe;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements PostscriptEmitter {
 
 	// configuration key (CK_)
 	private final static String CK_INTERVAL			= "interval" ;
+	private static final String CK_DISTANCE			= "distance" ;
 
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
 
-
 	private final static double DEFAULT_INTERVAL	= 10 ;
+	private static final double DEFAULT_DISTANCE	= 0 ;
 
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
@@ -88,7 +91,7 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 
 	public Coordinate[] list() {
 		List<Coordinate> list ;
-		double interval, d, a ;
+		double interval, distance, d, a ;
 		double pa, pas, pac, mrot[] ;
 		Coordinate p ;
 		Vector vp, vd, va ;
@@ -125,6 +128,10 @@ public class ShapeElliptical extends astrolabe.model.ShapeElliptical implements 
 			list.add( new Coordinate( va.x, va.y ) ) ;
 		}
 
-		return list.toArray( new Coordinate[0] ) ;
+		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( distance>0 && list.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
+		else
+			return list.toArray( new Coordinate[0] ) ;
 	}
 }

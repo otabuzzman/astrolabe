@@ -5,44 +5,38 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.exolab.castor.xml.ValidationException;
-
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
-import caa.CAADate;
 import caa.CAANutation;
 import caa.CAASun;
 
 @SuppressWarnings("serial")
-public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitter, Baseline {
+public class BodySun extends BodyOrbitalType {
 
 	// configuration key (CK_)
 	private final static String CK_INTERVAL			= "interval" ;
+	private static final String CK_DISTANCE			= "distance" ;
 	private final static String CK_STRETCH			= "stretch" ;
 
-	private final static String CK_HALO				= "halo" ;
-	private final static String CK_HALOMIN			= "halomin" ;
-	private final static String CK_HALOMAX			= "halomax" ;
-
 	private final static double DEFAULT_INTERVAL	= 1 ;
+	private static final double DEFAULT_DISTANCE	= 0 ;
 	private final static double DEFAULT_STRETCH		= 0 ;
 
-	private final static double DEFAULT_HALO		= 4 ;
-	private final static double DEFAULT_HALOMIN		= .08 ;
-	private final static double DEFAULT_HALOMAX		= .4 ;
-
-	private Converter converter ;
+	private astrolabe.model.BodySun peer ;	
 	private Projector projector ;
 
 	private double epoch ;
 
-	public BodySun( Converter converter, Projector projector ) {
+	public BodySun( astrolabe.model.BodySun peer, Converter converter, Projector projector ) {
+		super( converter, projector ) ;
+
 		Double Epoch ;
 
-		this.converter = converter ;
+		this.peer = peer ;
 		this.projector = projector ;
 
 		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
@@ -51,247 +45,13 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		epoch = Epoch.doubleValue() ;
 	}
 
-	public double[] epoch() {
-		double epochlo ;
-		double jdAy, jdOy ;
-		CAADate epoch ;
-		long year ;
-
-		epoch = new CAADate() ;
-		epoch.Set( this.epoch, true ) ;
-
-		year = epoch.Year() ;
-		epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
-		jdAy = epoch.Julian() ;
-		epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
-		jdOy = epoch.Julian() ;
-
-		if ( getEpoch() != null ) {
-			epochlo = valueOf( getEpoch() ) ;
-			epoch.Set( epochlo, true ) ;
-
-			year = epoch.Year() ;
-			epoch.Set( year, 1, 1, 0, 0, 0, true ) ;
-			jdAy = epoch.Julian() ;
-			epoch.Set( year, 12, 31, 0, 0, 0, true ) ;
-			jdOy = epoch.Julian() ;
-
-			epoch.Set( epochlo, true ) ;
-			if ( getEpoch().getA() != null ) {
-				jdAy = valueOf( getEpoch().getA() ) ;
-				jdOy = epoch.Julian() ;
-			}
-			if ( getEpoch().getO() != null ) {
-				if ( getEpoch().getA() == null )
-					jdAy = epoch.Julian() ;
-				jdOy = valueOf( getEpoch().getO() ) ;
-			}
-		}
-
-		epoch.delete() ;
-
-		return new double[] { jdAy, jdOy } ;
-	}
-
-	public void headPS( ApplicationPostscriptStream ps ) {
-		String gstate ;
-
-		if ( ( gstate = Configuration.getValue( this, getNature(), null ) ) == null )
-			return ;
-		ps.script( gstate ) ;
-	}
-
-	public void emitPS( ApplicationPostscriptStream ps ) {
-		emitPS( ps, true ) ;
-	}
-
-	public void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
-		Configuration conf ;
-		ListCutter cutter ;
-		Geometry fov ;
-		ChartPage page ;
-		astrolabe.model.BodySun peer ;
-		BodySun body ;
-		List<int[]> listid ;
-		List<Double> listjd ;
-		double jdAe, jdOe ;
-		Baseline circle ;
-		Coordinate[] list ;
-		double[] epoch ;
-		astrolabe.model.Annotation annotation ;
-		PostscriptEmitter emitter ;
-
-		epoch = epoch() ;
-
-		if ( cut ) {
-			fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-			if ( fov == null ) {
-				page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
-				if ( page != null )
-					fov = page.getViewGeometry() ;
-			}
-
-			listjd = new java.util.Vector<Double>() ;
-			listid = new java.util.Vector<int[]>() ;
-			list = list( listjd, epoch[0], epoch[1], 0 ) ;
-
-			if ( fov == null ) {
-				listid.add( new int[] { 0, list.length-1 } ) ;
-			} else {
-				cutter = new ListCutter( list, fov ) ;
-				cutter.segmentsInterior( listid ) ;
-			}
-
-			for ( int[] jdid : listid ) {
-				jdAe = listjd.get( jdid[0] ) ;
-				jdOe = listjd.get( jdid[1] ) ;
-
-				peer = new astrolabe.model.BodySun() ;
-				peer.setName( getName() ) ;
-
-				peer.setStretch( getStretch() ) ;
-				peer.setType( getType() ) ;
-				peer.setNature( getNature() ) ;
-				peer.setCircle( getCircle() ) ;
-
-				peer.setAnnotation( getAnnotation() ) ;
-
-				peer.setEpoch( new astrolabe.model.Epoch() ) ;
-				peer.getEpoch().setA( new astrolabe.model.A() ) ;
-				peer.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
-				peer.getEpoch().setJD( new astrolabe.model.JD() ) ;
-
-				peer.getEpoch().getA().getJD().setValue( jdAe ) ;
-				peer.getEpoch().getJD().setValue( jdOe ) ;
-
-
-				peer.setDialDay( getDialDay() ) ;
-
-				try {
-					peer.validate() ;
-				} catch ( ValidationException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				body = new BodySun( converter, projector ) ;
-				peer.copyValues( body ) ;
-
-				ps.op( "gsave" ) ;
-
-				body.headPS( ps ) ;
-				body.emitPS( ps, false ) ;
-				body.tailPS( ps ) ;
-
-				ps.op( "grestore" ) ;
-			}
-		} else {
-			circle = (Baseline) Registry.retrieve( getCircle() ) ;
-
-			if ( circle==null ) {
-				list = list( null, epoch[0], epoch[1], 0 ) ;
-				ps.array( true ) ;
-				for ( Coordinate xy : list ) {
-					ps.push( xy.x ) ;
-					ps.push( xy.y ) ;
-				}
-				ps.array( false ) ;
-
-				ps.op( "newpath" ) ;
-				ps.op( "gdraw" ) ;
-
-				// halo stroke
-				ps.op( "currentlinewidth" ) ;
-
-				ps.op( "dup" ) ;
-				ps.push( 100 ) ;
-				ps.op( "div" ) ;
-				conf = new Configuration( this ) ;
-				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.op( "mul" ) ;
-				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.op( "max" ) ;
-				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.op( "min" ) ;
-
-				ps.push( 2 ) ;
-				ps.op( "mul" ) ;
-				ps.op( "add" ) ;
-				ps.op( "gsave" ) ;
-				ps.op( "setlinewidth" ) ;
-				ps.push( 2 ) ;
-				ps.op( "setlinecap" ) ;
-				ps.push( 1 ) ;
-				ps.op( "setgray" ) ;
-				ps.op( "stroke" ) ;
-				ps.op( "grestore" ) ;
-
-				ps.op( "gsave" ) ;
-				ps.op( "stroke" ) ;
-				ps.op( "grestore" ) ;
-
-				if ( getDialDay() != null ) {
-					PostscriptEmitter dial ;
-
-					dial = new DialDay( this ) ;
-					getDialDay().copyValues( dial ) ;
-
-					ps.op( "gsave" ) ;
-
-					dial.headPS( ps ) ;
-					dial.emitPS( ps ) ;
-					dial.tailPS( ps ) ;
-
-					ps.op( "grestore" ) ;
-				}
-			} else {
-				if ( getDialDay() != null ) {
-					PostscriptEmitter dial ;
-
-					dial = new DialDay( this ) ;
-					getDialDay().copyValues( dial ) ;
-
-					ps.op( "gsave" ) ;
-
-					dial.headPS( ps ) ;
-					dial.emitPS( ps ) ;
-					dial.tailPS( ps ) ;
-
-					ps.op( "grestore" ) ;
-				}
-			}
-
-			if ( getAnnotation() != null ) {
-				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					annotation = getAnnotation( i ) ;
-
-					if ( annotation.getAnnotationStraight() != null ) {
-						emitter = annotation( annotation.getAnnotationStraight() ) ;
-					} else { // annotation.getAnnotationCurved() != null
-						emitter = annotation( annotation.getAnnotationCurved() ) ;
-					}
-
-					ps.op( "gsave" ) ;
-
-					emitter.headPS( ps ) ;
-					emitter.emitPS( ps ) ;
-					emitter.tailPS( ps ) ;
-
-					ps.op( "grestore" ) ;
-				}
-			}
-		}
-	}
-
-	public void tailPS( ApplicationPostscriptStream ps ) {
-	}
-
 	public Coordinate positionOfScaleMarkValue( double jd, double shift ) {
 		Coordinate eq, xy ;
 		Baseline circle ;
 		double a ;
 		Vector v, t ;
 
-		circle = (Baseline) Registry.retrieve( getCircle() ) ;
+		circle = (Baseline) Registry.retrieve( peer.getCircle() ) ;
 
 		if ( circle==null ) {
 			eq = jdToEquatorial( jd ) ;
@@ -320,7 +80,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		Method eclipticLongitude ;
 		Method eclipticLatitude ;
 
-		circle = (Baseline) Registry.retrieve( getCircle() ) ;
+		circle = (Baseline) Registry.retrieve( peer.getCircle() ) ;
 
 		if ( circle==null ) {
 			l = 0 ;
@@ -332,8 +92,8 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 				stretch = 0 ;
 
 			try {
-				eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
-				eclipticLatitude = getClass().getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
+				eclipticLongitude = getClass().getMethod( peer.getType()+"EclipticLongitude", new Class[] { double.class } ) ;
+				eclipticLatitude = getClass().getMethod( peer.getType()+"EclipticLatitude", new Class[] { double.class } ) ;
 
 				l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 				b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } ) ;
@@ -358,7 +118,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 		eq = jdToEquatorial( jd ) ;
 
-		circle = Registry.retrieve( getCircle() ) ;
+		circle = Registry.retrieve( peer.getCircle() ) ;
 		lo = ( (Converter) circle ).convert( eq, true ) ;
 
 		if ( circle instanceof CircleMeridian )
@@ -373,7 +133,7 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 	public Coordinate[] list( final List<Double> listjd, double jdA, double jdO, double shift ) {
 		List<Coordinate> listxy ;
 		double interval ;
-		double d, e, g ;
+		double d, e, g, dist ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
@@ -397,7 +157,11 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 		if ( listjd != null )
 			listjd.add( jdO ) ;
 
-		return listxy.toArray( new Coordinate[0] ) ;
+		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( dist>0 && listxy.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), dist ).getCoordinates() ;
+		else
+			return listxy.toArray( new Coordinate[0] ) ;
 	}
 
 	public Coordinate jdToEquatorial( double jd ) {
@@ -416,8 +180,8 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 			stretch = 0 ;
 
 		try {
-			eclipticLongitude = getClass().getMethod( getType()+"EclipticLongitude", new Class[] { double.class } ) ;
-			eclipticLatitude = getClass().getMethod( getType()+"EclipticLatitude", new Class[] { double.class } ) ;
+			eclipticLongitude = getClass().getMethod( peer.getType()+"EclipticLongitude", new Class[] { double.class } ) ;
+			eclipticLatitude = getClass().getMethod( peer.getType()+"EclipticLatitude", new Class[] { double.class } ) ;
 
 			l = (Double) eclipticLongitude.invoke( null, new Object[] { new Double( jd ) } ) ;
 			b = (Double) eclipticLatitude.invoke( null, new Object[] { new Double( jd ) } )
@@ -459,23 +223,5 @@ public class BodySun extends astrolabe.model.BodySun implements PostscriptEmitte
 
 	public static double trueEclipticLatitude( double JD ) {
 		return CAASun.GeometricEclipticLatitude( JD ) ;
-	}
-
-	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
-		AnnotationStraight annotation ;
-
-		annotation = new AnnotationStraight() ;
-		peer.copyValues( annotation ) ;
-
-		return annotation ;
-	}
-
-	private PostscriptEmitter annotation( astrolabe.model.AnnotationCurved peer ) {
-		AnnotationCurved annotation ;
-
-		annotation = new AnnotationCurved() ;
-		peer.copyValues( annotation ) ;
-
-		return annotation ;
 	}
 }

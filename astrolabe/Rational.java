@@ -9,6 +9,8 @@ public class Rational extends astrolabe.model.Rational {
 
 	private final static int DEFAULT_PRECISION	= 6 ;
 
+	public Rational() {}
+
 	public Rational( double value ) {
 		this( value, -1 ) ;
 	}

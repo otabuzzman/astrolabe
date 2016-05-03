@@ -7,9 +7,16 @@ import java.io.StringReader;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implements CatalogRecord {
+
+	// configuration key (CK_)
+	private static final String CK_DISTANCE			= "distance" ;
+
+	private static final double DEFAULT_DISTANCE	= 0 ;
 
 	public List<String[]> element = new java.util.Vector<String[]>() ;
 
@@ -61,6 +68,7 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 	public Coordinate[] list() {
 		Coordinate[] list ;
 		String[] eq ;
+		double dist ;
 
 		list = new Coordinate[ element.size() ] ;
 
@@ -72,6 +80,10 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 					Double.valueOf( eq[1] ) ) ;
 		}
 
-		return list ;
+		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( dist>0 && list.length>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list ), dist ).getCoordinates() ;
+		else
+			return list ;
 	}
 }

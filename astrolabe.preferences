@@ -15,6 +15,8 @@
 						<entry key="precision" value="2"/>
 						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical, Artwork.-->
 						<entry key="interval" value="1"/>
+						<!--used by CircleMeridian, CircleParallel, BodyAreal, BodyPlanet, BodyMoon, BodySun, CatalogADC6049Record, CatalogDS9Record, ShapeElliptical.-->
+						<entry key="distance" value="0"/>
 						<!--postscript value of brightness to fade to from current-->
 						<entry key="fade" value="0"/>
 						<!--used by BodyAreal, BodyMoon, BodyPlanet, BodySun, CircleMeridian, CircleParallel, GraduationSpan, ListCutter, ShapeElliptical.-->
@@ -327,7 +329,7 @@
 			</node>
 			<node name="AtlasAzimuthalType">
 				<map>
-					<entry key="map" value="Atlas.map"/>
+					<entry key="map" value="lib/AtlasAzimuthalType.map"/>
 				</map>
 			</node>
 			<node name="DialDegree">
@@ -464,6 +466,11 @@
 					<entry key="superscriptshrink" value=".8"/>
 					<entry key="margin" value="1.2"/>
 					<entry key="rise" value="1.2"/>
+				</map>
+			</node>
+			<node name="BodyAreal">
+				<map>
+					<entry key="distance" value=".2"/>
 				</map>
 			</node>
 			<node name="BodyPlanet">
@@ -690,8 +697,8 @@
 			</node>
 			<node name="Artwork">
 				<map>
-					<entry key="verbose" value="true"/>
-					<entry key="dpi" value="300"/>
+					<entry key="verbose" value="false"/>
+					<entry key="dpi" value="36"/>
 					<entry key="interval" value="16"/>
 					<entry key="imageop" value="false"/>
 					<entry key="noimage" value="false"/>

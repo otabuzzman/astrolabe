@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.exolab.castor.xml.ValidationException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
@@ -32,12 +32,14 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 	// configuration key (CK_)
 	private final static String CK_INTERVAL			= "interval" ;
+	private static final String CK_DISTANCE			= "distance" ;
 
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
 
 	private final static double DEFAULT_INTERVAL	= 1 ;
+	private static final double DEFAULT_DISTANCE	= 0 ;
 
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
@@ -133,98 +135,30 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		emitPS( ps, true ) ;
-	}
-
-	private void emitPS( ApplicationPostscriptStream ps, boolean cut ) {
 		Configuration conf ;
 		ListCutter cutter ;
 		List<Coordinate[]> segment ;
 		Coordinate[] list ;
 		ChartPage page ;
-		double a, o, d ;
 		Geometry fov ;
-		astrolabe.model.CircleParallel peer ;
-		CircleParallel circle ;
-		Coordinate lob, loe ;
 		astrolabe.model.Annotation annotation ;
 		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
-		if ( cut ) {
-			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
-
-			if ( page == null ) {
-				emitPS( ps, false ) ;
-
-				return ;
-			}
-
-			a = begin() ;
-			o = end() ;
-
-			list = list( null, a, o, 0 ) ;
+		fov = null ;
+		page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
+		if ( page != null )
 			fov = page.getViewGeometry() ;
-			cutter = new ListCutter( list, fov ) ;
-			segment = cutter.segmentsIntersecting( true ) ;
 
-			for ( Coordinate[] s : segment ) {
-				if ( s.length == list.length ) {
-					d = valueOf( getAngle() ) ;
-					lob = new Coordinate( a, d ) ;
-					loe = new Coordinate( o, d ) ;
-				} else {
-					lob = converter.convert( projector.project( s[0], true ), true ) ;
-					loe = converter.convert( projector.project( s[s.length-1], true ), true ) ;
-				}
+		list = list( null, begin(), end(), 0 ) ;
+		cutter = new ListCutter( list, fov ) ;
+		segment = cutter.segmentsIntersecting( true ) ;
 
-				try {
-					peer = new astrolabe.model.CircleParallel() ;
-					peer.setName( getName() ) ;
+		for ( Coordinate[] s : segment ) {
+			ps.op( "gsave" ) ;
 
-					peer.setImportance( getImportance() ) ;
-
-					// astrolabe.model.AngleType
-					peer.setAngle( new astrolabe.model.Angle() ) ;
-					peer.getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getAngle().getRational().setValue( valueOf( getAngle() ) ) ;
-
-					peer.setBegin( new astrolabe.model.Begin() ) ;
-					// astrolabe.model.AngleType
-					peer.getBegin().setAngle( new astrolabe.model.Angle() ) ;
-					peer.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getBegin().getAngle().getRational().setValue( lob.x ) ;
-					peer.setEnd( new astrolabe.model.End() ) ;
-					// astrolabe.model.AngleType
-					peer.getEnd().setAngle( new astrolabe.model.Angle() ) ;
-					peer.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
-					peer.getEnd().getAngle().getRational().setValue( loe.x ) ;
-
-					peer.setDial( getDial() ) ;
-					peer.setAnnotation( getAnnotation() ) ;
-
-					peer.validate() ;
-				} catch ( ValidationException e ) {
-					throw new RuntimeException( e.toString() ) ;
-				}
-
-				circle = new CircleParallel( converter, projector ) ;
-				peer.copyValues( circle ) ;
-
-				circle.register() ;
-				ps.op( "gsave" ) ;
-
-				circle.headPS( ps ) ;
-				circle.emitPS( ps, false ) ;
-				circle.tailPS( ps ) ;
-
-				ps.op( "grestore" ) ;
-				circle.degister() ;
-			}
-		} else {
-			list = list( null, begin(), end(), 0 ) ;
 			ps.array( true ) ;
-			for ( Coordinate xy : list ) {
+			for ( Coordinate xy : s ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}
@@ -300,6 +234,8 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 					ps.op( "grestore" ) ;
 				}
 			}
+
+			ps.op( "grestore" ) ;
 		}
 	}
 
@@ -348,7 +284,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 
 	public Coordinate[] list( final List<Double> lista, double begin, double end, double shift ) {
 		List<Coordinate> listxy ;
-		double interval ;
+		double interval, distance ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
@@ -364,7 +300,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		if ( lista != null )
 			lista.add( end ) ;
 
-		return listxy.toArray( new Coordinate[0] ) ;
+		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( distance>0 && listxy.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
+		else
+			return listxy.toArray( new Coordinate[0] ) ;
 	}
 
 	public Coordinate convert( Coordinate local, boolean inverse ) {

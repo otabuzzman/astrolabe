@@ -26,7 +26,7 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	// configuration key (CK_)
 	private final static String CK_MAP		= "map" ;
 
-	private final static String DEFAULT_MAP	= "Atlas.map" ;
+	private final static String DEFAULT_MAP	= "AtlasAzimuthalType.map" ;
 
 	private double originRA ;
 	private double originde ;
@@ -48,6 +48,8 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 	private int spanlim = -1 ;
 	private double spanme = Double.NEGATIVE_INFINITY ;
 	private double spanpa = Double.NEGATIVE_INFINITY ;
+
+	public AtlasAzimuthalType() {}
 
 	public AtlasAzimuthalType( astrolabe.model.Atlas atlas, double[] size, boolean northern, Projector projector ) {
 		astrolabe.model.AngleType angle ;
@@ -553,13 +555,6 @@ public class AtlasAzimuthalType extends astrolabe.model.AtlasAzimuthalType {
 		String map ;
 		Writer xmlw ;
 
-		// 1. make AtlasStereographic.map (e.g.)
-		// 2. remove unused class definitions from AtlasStereographic.map
-		// 3. remove unused field definitions from AtlasStereographic and AtlasPage
-		// 4. remove required attribute from field definitions for Lon and Lat
-		// 5. remove package model from class definitions AtlasStereographic, AtlasPage, DMS and Rational
-		// 6. rename AtlasStereographic to Atlas
-		// 7. rename AtlasStereographic.map to Atlas.map
 		try {
 			map = Configuration.getValue( this, CK_MAP, DEFAULT_MAP ) ;
 

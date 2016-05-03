@@ -11,9 +11,16 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record implements CatalogRecord {
+
+	// configuration key (CK_)
+	private static final String CK_DISTANCE			= "distance" ;
+
+	private static final double DEFAULT_DISTANCE	= 0 ;
 
 	// qualifier key (QK_)
 	private final static String QK_CON				= "con" ;
@@ -231,6 +238,7 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	public Coordinate[] list() {
 		Coordinate[] list ;
 		String RA, de ;
+		double dist ;
 
 		list = new Coordinate[ RAh.size() ] ;
 
@@ -243,6 +251,10 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 					Double.valueOf( de ) ) ;
 		}
 
-		return list ;
+		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( dist>0 && list.length>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list ), dist ).getCoordinates() ;
+		else
+			return list ;
 	}
 }

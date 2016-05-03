@@ -6,9 +6,10 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Coordinate;
 
 @SuppressWarnings("serial")
-public class BodyParabolical extends astrolabe.model.BodyParabolical implements PostscriptEmitter, Baseline {
+public class BodyParabolical extends BodyOrbitalType {
 
-	public BodyParabolical( Converter converter, Projector projector ) {
+	public BodyParabolical( astrolabe.model.BodyParabolical peer, Converter converter, Projector projector ) {
+		super( converter, projector ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {

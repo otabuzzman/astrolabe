@@ -4,7 +4,7 @@
 # Gebrauch:
 # xsltproc <atlas definition transform> <atlas definition xml> | [ LANG=<country> ] ./prepATlasHTML.sh <atlas img> <atlas img ratio> <atlas page url template>
 #
-# xsltproc AtlasHTML.xsl atlas-stereographic-northern.xad |\
+# xsltproc AtlasHTML.xsl atlas-stereographic-northern.xml |\
 #	LANG=de ./prepAtlasHTML.sh atlas-stereographic-northern.png 1.7353 "pdf/atlas-stereographic-northern-page%03d.pdf"
 #
 

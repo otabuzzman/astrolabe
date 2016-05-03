@@ -6,9 +6,10 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Coordinate;
 
 @SuppressWarnings("serial")
-public class BodyElliptical extends astrolabe.model.BodyElliptical implements PostscriptEmitter, Baseline {
+public class BodyElliptical extends BodyOrbitalType {
 
-	public BodyElliptical( Converter converter, Projector projector ) {
+	public BodyElliptical( astrolabe.model.BodyElliptical peer, Converter converter, Projector projector ) {
+		super( converter, projector ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {

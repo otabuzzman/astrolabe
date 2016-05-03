@@ -1,6 +1,8 @@
 
 package astrolabe;
 
+import org.exolab.castor.xml.ValidationException;
+
 import com.vividsolutions.jts.geom.Coordinate;
 
 import caa.CAACoordinateTransformation;
@@ -35,6 +37,9 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Horizon horizon ;
+		ChartPage page ;
+		double[] view ;
+		AtlasAzimuthalType atlas ;
 
 		for ( int ho=0 ; ho<getHorizonCount() ; ho++ ) {
 			horizon = getHorizon( ho ) ;
@@ -48,6 +53,32 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			} else { // horizon.getHorizonGalactic() != null
 				horizon( ps, horizon.getHorizonGalactic() ) ;
 			}
+		}
+
+		if ( getAtlas() != null ) {
+			page = new ChartPage() ;
+			getChartPage().copyValues( page ) ;
+
+			view = page.view() ;
+
+			try {
+				atlas = new AtlasAzimuthalType( getAtlas(), new double[] { view[0], view[1] }, getNorthern(), this ) ;
+				atlas.addAllAtlasPage() ;
+			} catch ( ValidationException e ) {
+				throw new RuntimeException( e.toString() ) ;
+			}
+
+			atlas.headAUX() ;
+			atlas.emitAUX() ;
+			atlas.tailAUX() ;
+
+			ps.op( "gsave" ) ;
+
+			atlas.headPS( ps ) ;
+			atlas.emitPS( ps ) ;
+			atlas.tailPS( ps ) ;
+
+			ps.op( "grestore" ) ;
 		}
 	}
 
@@ -159,7 +190,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonLocal peer ) {
 		HorizonLocal horizon ;
 
-		horizon = new HorizonLocal( this ) ;
+		horizon = new HorizonLocal( peer, this ) ;
 		peer.copyValues( horizon ) ;
 
 		horizon.register() ;
@@ -170,7 +201,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 	private void horizon( ApplicationPostscriptStream ps, astrolabe.model.HorizonEquatorial peer ) {
 		HorizonEquatorial horizon ;
 
-		horizon = new HorizonEquatorial( this ) ;
+		horizon = new HorizonEquatorial( peer, this ) ;
 		peer.copyValues( horizon ) ;
 
 		emitPS( ps, horizon ) ;

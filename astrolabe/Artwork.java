@@ -98,7 +98,6 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 		u = Configuration.getValue( this, CK_PSUNIT, DEFAULT_PSUNIT ) ;
 		d = Configuration.getValue( this, CK_DPI, DEFAULT_DPI) ;
-		d = 36 ;
 		interval = 72/( u*d ) ;
 
 		popC = prepPopper4Canvas() ;

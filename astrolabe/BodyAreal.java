@@ -9,6 +9,8 @@ import caa.CAACoordinateTransformation;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEmitter {
@@ -21,10 +23,12 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	private final static String CK_HALO			= "halo" ;
 	private final static String CK_HALOMIN		= "halomin" ;
 	private final static String CK_HALOMAX		= "halomax" ;
+	private static final String CK_DISTANCE		= "distance" ;
 
-	private final static double DEFAULT_HALO	= 4 ;
-	private final static double DEFAULT_HALOMIN	= .08 ;
-	private final static double DEFAULT_HALOMAX	= .4 ;
+	private final static double DEFAULT_HALO		= 4 ;
+	private final static double DEFAULT_HALOMIN		= .08 ;
+	private final static double DEFAULT_HALOMAX		= .4 ;
+	private static final double DEFAULT_DISTANCE	= 0 ;
 
 	private Converter converter ;
 	private Projector projector ;
@@ -199,7 +203,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 	public Coordinate[] list() {
 		List<Coordinate> outline ;
 		ShapeElliptical ellipse ;
-		double lo, la ;
+		double lo, la, dist ;
 
 		if ( getBodyArealTypeChoice().getPositionCount()>0 ) {
 			outline = new java.util.Vector<Coordinate>() ;
@@ -220,7 +224,11 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				outline.add( projector.project( converter.convert( new Coordinate( lo, la ), false ), false ) ) ;
 			}
 
-			return outline.toArray( new Coordinate[0] ) ;
+			dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+			if ( dist>0 && outline.size()>2 )
+				return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( outline.toArray( new Coordinate[0] ) ), dist ).getCoordinates() ;
+			else
+				return outline.toArray( new Coordinate[0] ) ;
 		} else {
 			ellipse = new ShapeElliptical( converter, projector ) ;
 			getBodyArealTypeChoice().getShapeElliptical().copyValues( ellipse ) ;
