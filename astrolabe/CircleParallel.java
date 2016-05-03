@@ -16,7 +16,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class CircleParallel extends astrolabe.model.CircleParallel implements PostscriptEmitter, Baseline {
+public class CircleParallel extends astrolabe.model.CircleParallel implements PostscriptEmitter, Baseline, Converter {
 
 	// qualifier key (QK_)
 	private final static String QK_ALTITUDE			= "altitude" ;
@@ -52,9 +52,13 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 	private Converter converter ;
 	private Projector projector ;
 
+	private Coordinate zenit ;
+
 	public CircleParallel( Converter converter, Projector projector ) {
 		this.converter = converter ;
 		this.projector = projector ;
+
+		zenit = convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
 	public double begin() {
@@ -281,6 +285,150 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		return list.toArray( new Coordinate[0] ) ;
 	}
 
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return converter.convert( local, inverse ) ;
+	}
+
+	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
+		CAA2DCoordinate cA, cO, c ;
+		double blA, blB, blGa, rdB, gnB ;
+		double rdST, rdLa, gnST, gnLa ;
+		Coordinate gnhoC, rdeqA, rdeqO, rdhoA, rdhoO ;
+		Coordinate gneq, gnho ;
+		double inaz[], gnaz, al, gnal ;
+		double gnb, gne ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
+
+		al = valueOf( getAngle() ) ;
+		gnal = valueOf( gn.getAngle() ) ;
+
+		rdST = zenit.x ;
+		rdLa = zenit.y ;
+		gnhoC = gn.convert( new Coordinate( 0, 90 ), false ) ;
+		gnST = gnhoC.x ;
+		gnLa = gnhoC.y ;
+
+		rdB = 90-al ;
+		gnB = 90-gnal ;
+		blA = 90-rdLa ;
+		blB = 90-gnLa ;
+		blGa = gnST-rdST ;
+
+		inaz = CircleParallel.intersection( rdB, gnB, blA, blB, blGa ) ;
+
+		// unconvert local rd into actual
+		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa/*horizon.getLa()*/ ) ;
+		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
+		rdhoA = converter.convert( rdeqA, true ) ;
+
+		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
+		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
+		rdhoO = converter.convert( rdeqO, true ) ;
+
+		// sort associated values
+		if ( rdhoA.x>rdhoO.x ) {
+			double v ;
+
+			v = rdhoA.x ;
+			rdhoA.x = rdhoO.x ;
+			rdhoO.x = v ;
+
+			v = inaz[2] ;
+			inaz[2] = inaz[3] ;
+			inaz[3] = v ;
+		}
+
+		// unconvert local gn into actual
+		c = CAACoordinateTransformation.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gnal, gnLa ) ;
+		gneq = new Coordinate( gnST-CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
+		gnho = gn.converter.convert( gneq, true ) ;
+
+		gnb = gn.begin() ;
+		gne = gn.end() ;
+
+		gnaz = CAACoordinateTransformation.MapTo0To360Range( gnho.x ) ;
+		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) ) {
+			cat = new MessageCatalog( this ) ;
+			fmt = cat.message( MK_EINTSEC, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
+		}
+
+		return leading?rdhoO.x:rdhoA.x ;
+	}
+
+	public double intersect( CircleMeridian gn, boolean leading ) throws ParameterNotValidException {
+		CAA2DCoordinate cA, cO ;
+		double blA, blB, blGa, rdB ;
+		double rdST, rdLa ;
+		Coordinate rdeqA, rdeqO, rdhoA, rdhoO ;
+		double inaz[], al, gnal ;
+		double gnb, gne ;
+		MessageCatalog cat ;
+		StringBuffer msg ;
+		String fmt ;
+
+		al = valueOf( getAngle() ) ;
+
+		rdST = zenit.x ;
+		rdLa = zenit.y ;
+
+		rdB = 90-al ;
+		blA = 90-rdLa ;
+		blB = 90-gn.transformParallelLa() ;
+		blGa = gn.transformParallelST()-rdST ;
+
+		inaz = CircleParallel.intersection( rdB, 90, blA, blB, blGa ) ;
+
+		// unconvert local rd into actual
+		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa ) ;
+		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
+		rdhoA = converter.convert( rdeqA, true ) ;
+
+		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
+		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
+		rdhoO = converter.convert( rdeqO, true ) ;
+
+		// sort associated values
+		if ( rdhoA.x>rdhoO.x ) {
+			double v ;
+
+			v = rdhoA.x ;
+			rdhoA.x = rdhoO.x ;
+			rdhoO.x = v ;
+
+			v = inaz[2] ;
+			inaz[2] = inaz[3] ;
+			inaz[3] = v ;
+		}
+
+		gnal = leading?gn.transformMeridianAl( inaz[3] ):gn.transformMeridianAl( inaz[2] ) ;
+
+		gnb = gn.begin() ;
+		gne = gn.end() ;
+
+		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne ) {
+			cat = new MessageCatalog( this ) ;
+			fmt = cat.message( MK_EINTSEC, null ) ;
+			if ( fmt != null ) {
+				msg = new StringBuffer() ;
+				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
+			} else
+				msg = null ;
+
+			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
+		}
+
+		return leading?rdhoO.x:rdhoA.x ;
+	}
+
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) {
 		double blC, blAl, blBe ;
 		double rdGa[], rdDe ;
@@ -440,152 +588,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		inaz[3] = gnaz[1] ;
 
 		return inaz ;
-	}
-
-	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
-		CAA2DCoordinate cA, cO, c ;
-		double blA, blB, blGa, rdB, gnB ;
-		double rdST, rdLa, gnST, gnLa ;
-		Coordinate rdhoC, gnhoC, rdeqA, rdeqO, rdhoA, rdhoO ;
-		Coordinate gneq, gnho ;
-		double inaz[], gnaz, al, gnal ;
-		double gnb, gne ;
-		MessageCatalog cat ;
-		StringBuffer msg ;
-		String fmt ;
-
-		al = valueOf( getAngle() ) ;
-		gnal = valueOf( gn.getAngle() ) ;
-
-		rdhoC = zenit() ;
-		rdST = rdhoC.x ;
-		rdLa = rdhoC.y ;
-		gnhoC = gn.zenit() ;
-		gnST = gnhoC.x ;
-		gnLa = gnhoC.y ;
-
-		rdB = 90-al ;
-		gnB = 90-gnal ;
-		blA = 90-rdLa ;
-		blB = 90-gnLa ;
-		blGa = gnST-rdST ;
-
-		inaz = CircleParallel.intersection( rdB, gnB, blA, blB, blGa ) ;
-
-		// unconvert local rd into actual
-		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa/*horizon.getLa()*/ ) ;
-		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
-		rdhoA = converter.convert( rdeqA, true ) ;
-
-		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
-		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
-		rdhoO = converter.convert( rdeqO, true ) ;
-
-		// sort associated values
-		if ( rdhoA.x>rdhoO.x ) {
-			double v ;
-
-			v = rdhoA.x ;
-			rdhoA.x = rdhoO.x ;
-			rdhoO.x = v ;
-
-			v = inaz[2] ;
-			inaz[2] = inaz[3] ;
-			inaz[3] = v ;
-		}
-
-		// unconvert local gn into actual
-		c = CAACoordinateTransformation.Horizontal2Equatorial( leading?inaz[3]:inaz[2], gnal, gnLa ) ;
-		gneq = new Coordinate( gnST-CAACoordinateTransformation.HoursToDegrees( c.X() ), c.Y() ) ;
-		gnho = gn.converter.convert( gneq, true ) ;
-
-		gnb = gn.begin() ;
-		gne = gn.end() ;
-
-		gnaz = CAACoordinateTransformation.MapTo0To360Range( gnho.x ) ;
-		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) ) {
-			cat = new MessageCatalog( this ) ;
-			fmt = cat.message( MK_EINTSEC, null ) ;
-			if ( fmt != null ) {
-				msg = new StringBuffer() ;
-				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
-			} else
-				msg = null ;
-
-			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
-		}
-
-		return leading?rdhoO.x:rdhoA.x ;
-	}
-
-	public double intersect( CircleMeridian gn, boolean leading ) throws ParameterNotValidException {
-		CAA2DCoordinate cA, cO ;
-		double blA, blB, blGa, rdB ;
-		double rdST, rdLa ;
-		Coordinate rdhoC, rdeqA, rdeqO, rdhoA, rdhoO ;
-		double inaz[], al, gnal ;
-		double gnb, gne ;
-		MessageCatalog cat ;
-		StringBuffer msg ;
-		String fmt ;
-
-		al = valueOf( getAngle() ) ;
-
-		rdhoC = zenit() ;
-		rdST = rdhoC.x ;
-		rdLa = rdhoC.y ;
-
-		rdB = 90-al ;
-		blA = 90-rdLa ;
-		blB = 90-gn.transformParallelLa() ;
-		blGa = gn.transformParallelST()-rdST ;
-
-		inaz = CircleParallel.intersection( rdB, 90, blA, blB, blGa ) ;
-
-		// unconvert local rd into actual
-		cA = CAACoordinateTransformation.Horizontal2Equatorial( inaz[0], al, rdLa ) ;
-		rdeqA = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cA.X() ), cA.Y() ) ;
-		rdhoA = converter.convert( rdeqA, true ) ;
-
-		cO = CAACoordinateTransformation.Horizontal2Equatorial( inaz[1], al, rdLa ) ;
-		rdeqO = new Coordinate( rdST-CAACoordinateTransformation.HoursToDegrees( cO.X() ), cO.Y() ) ;
-		rdhoO = converter.convert( rdeqO, true ) ;
-
-		// sort associated values
-		if ( rdhoA.x>rdhoO.x ) {
-			double v ;
-
-			v = rdhoA.x ;
-			rdhoA.x = rdhoO.x ;
-			rdhoO.x = v ;
-
-			v = inaz[2] ;
-			inaz[2] = inaz[3] ;
-			inaz[3] = v ;
-		}
-
-		gnal = leading?gn.transformMeridianAl( inaz[3] ):gn.transformMeridianAl( inaz[2] ) ;
-
-		gnb = gn.begin() ;
-		gne = gn.end() ;
-
-		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne ) {
-			cat = new MessageCatalog( this ) ;
-			fmt = cat.message( MK_EINTSEC, null ) ;
-			if ( fmt != null ) {
-				msg = new StringBuffer() ;
-				msg.append( MessageFormat.format( fmt, new Object[] { gn.getClass().getSimpleName()+'.'+'<'+gn.getName()+'>' } ) ) ;
-			} else
-				msg = null ;
-
-			throw new ParameterNotValidException( ParameterNotValidError.errmsg( getClass().getSimpleName()+'.'+'<'+getName()+'>', msg.toString() ) ) ;
-		}
-
-		return leading?rdhoO.x:rdhoA.x ;
-	}
-
-	public Coordinate zenit() {
-		return converter.convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

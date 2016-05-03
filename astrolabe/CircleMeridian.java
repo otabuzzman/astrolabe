@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
-public class CircleMeridian extends astrolabe.model.CircleMeridian implements PostscriptEmitter, Baseline {
+public class CircleMeridian extends astrolabe.model.CircleMeridian implements PostscriptEmitter, Baseline, Converter {
 
 	// qualifier key (QK_)
 	private final static String QK_AZIMUTH			= "azimuth" ;
@@ -52,9 +52,13 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private Converter converter ;
 	private Projector projector ;
 
+	private Coordinate zenit ;
+
 	public CircleMeridian( Converter converter, Projector projector ) {
 		this.converter = converter ;
 		this.projector = projector ;
+
+		zenit = convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
 	public double begin() {
@@ -280,109 +284,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return list.toArray( new Coordinate[0] ) ;
 	}
 
-	private double[] transform() {
-		double[] r = new double[3] ;
-		double blB, vlA, vlD, vlAl, vlDe ;
-		double az, gnaz, rdST, rdLa ;
-		Coordinate rdhoC, gneq, gnho ;
-
-		rdhoC = zenit() ;
-		rdST = rdhoC.x ;
-		rdLa = rdhoC.y ;
-
-		blB = 90-rdLa;
-		if ( blB==0 ) {	// prevent infinity from tan
-			blB = Math.lim0 ;
-		}
-
-		// convert actual gn into local
-		az = valueOf( getAngle() ) ;
-		gneq = converter.convert( new Coordinate( az, 0 ), false ) ;
-		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa/*horizon.getLa()*/ ) ) ;
-		gnaz = gnho.x ;
-		if ( gnaz==0 ) { // prevent infinity from tan
-			gnaz = Math.lim0 ;
-		}
-
-		if ( Math.tan( gnaz )>0 ) {	// QI, QIII
-			vlAl = gnaz ;
-			while ( vlAl>90 ) { // mapTo0To90Range
-				vlAl = vlAl-90 ;
-			}
-			while ( vlAl<0 ) {
-				vlAl = vlAl+90 ;
-			}
-
-			// Rule of Napier : cos(90-a) = sin(al)*sin(c)
-			vlA = Math.acos( Math.sin( vlAl )*Math.sin( blB ) ) ;
-			// Rule of Napier : cos(be) = cot(90-a)*cot(c)
-			vlDe = Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
-
-			r[1] = rdST-180+vlDe;
-		} else { // QII, QIV
-			vlAl = gnaz ;
-			while ( vlAl>90 ) { // mapTo0To90Range
-				vlAl = vlAl-90 ;
-			}
-			while ( vlAl<0 ) {
-				vlAl = vlAl+90 ;
-			}
-			vlAl = 90-vlAl ;
-
-			vlA = Math.acos( Math.sin( vlAl )*Math.sin( blB ) ) ;
-			vlDe = Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
-
-			r[1] = rdST+180-vlDe;
-		}
-
-		r[0] = 90-vlA ;
-
-		// Rule of Napier : cos(c) = sin(90-a)*sin(90-b)
-		// sin(90-b) = cos(c):sin(90-a)
-		vlD = 90-Math.asin( Math.truncate( Math.cos( blB )/Math.sin( vlA ) ) ) ;
-
-		r[2] = vlD ;
-
-		return r ;
-	}
-
-	public double transformParallelLa() {
-		return transform()[0] ;
-	}
-
-	public double transformParallelST() {
-		return transform()[1] ;
-	}
-
-	public double transformMeridianAl( double vlaz ) {
-		double az, gnaz, gnal, vlD ;
-		double rdST, rdLa ;
-		Coordinate rdhoC, gneq, gnho ;
-
-		rdhoC = zenit() ;
-		rdST = rdhoC.x ;
-		rdLa = rdhoC.y ;
-
-		// convert actual gn into local
-		az = valueOf( getAngle() ) ;
-		gneq = converter.convert( new Coordinate( az, 0 ), false ) ;
-		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
-				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa ) ) ;
-		gnaz = gnho.x ;
-		if ( gnaz==0 ) { // prevent infinity from tan
-			gnaz = Math.lim0 ;
-		}
-
-		// convert vl az into gn
-		vlD = transform()[2] ;
-		gnal = Math.tan( gnaz )>0?vlaz-vlD:vlaz+vlD ;
-		// convert gn az into al
-		gnal = gnaz>180?gnal-90:-( gnal-270 ) ;
-		// map range from -180 to 180
-		gnal = gnal>180?gnal-360:gnal ;
-
-		return gnal ;
+	public Coordinate convert( Coordinate local, boolean inverse ) {
+		return converter.convert( local, inverse ) ;
 	}
 
 	public double intersect( CircleParallel gn, boolean leading ) throws ParameterNotValidException {
@@ -391,14 +294,13 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		double rdST, gnST, gnLa ;
 		double inaz[], gnaz, gnal ;
 		double gnb, gne ;
-		Coordinate rdhoC, gnhoC, gneqA, gneqO, gnhoA, gnhoO ;
+		Coordinate gnhoC, gneqA, gneqO, gnhoA, gnhoO ;
 		MessageCatalog cat ;
 		StringBuffer msg ;
 		String fmt ;
 
-		rdhoC = zenit() ;
-		rdST = rdhoC.x ;
-		gnhoC = gn.zenit() ;
+		rdST = zenit.x ;
+		gnhoC = gn.convert( new Coordinate( 0, 90 ), false ) ;
 		gnST = gnhoC.x ;
 		gnLa = gnhoC.y ;
 
@@ -510,8 +412,107 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return leading?inaz[1]:inaz[0] ;
 	}
 
-	public Coordinate zenit() {
-		return converter.convert( new Coordinate( 0, 90 ), false ) ;
+	public double transformMeridianAl( double vlaz ) {
+		double az, gnaz, gnal, vlD ;
+		double rdST, rdLa ;
+		Coordinate gneq, gnho ;
+
+		rdST = zenit.x ;
+		rdLa = zenit.y ;
+
+		// convert actual gn into local
+		az = valueOf( getAngle() ) ;
+		gneq = converter.convert( new Coordinate( az, 0 ), false ) ;
+		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa ) ) ;
+		gnaz = gnho.x ;
+		if ( gnaz==0 ) { // prevent infinity from tan
+			gnaz = Math.lim0 ;
+		}
+
+		// convert vl az into gn
+		vlD = transform()[2] ;
+		gnal = Math.tan( gnaz )>0?vlaz-vlD:vlaz+vlD ;
+		// convert gn az into al
+		gnal = gnaz>180?gnal-90:-( gnal-270 ) ;
+		// map range from -180 to 180
+		gnal = gnal>180?gnal-360:gnal ;
+
+		return gnal ;
+	}
+
+	public double transformParallelST() {
+		return transform()[1] ;
+	}
+
+	public double transformParallelLa() {
+		return transform()[0] ;
+	}
+
+	private double[] transform() {
+		double[] r = new double[3] ;
+		double blB, vlA, vlD, vlAl, vlDe ;
+		double az, gnaz, rdST, rdLa ;
+		Coordinate gneq, gnho ;
+
+		rdST = zenit.x ;
+		rdLa = zenit.y ;
+
+		blB = 90-rdLa;
+		if ( blB==0 ) {	// prevent infinity from tan
+			blB = Math.lim0 ;
+		}
+
+		// convert actual gn into local
+		az = valueOf( getAngle() ) ;
+		gneq = converter.convert( new Coordinate( az, 0 ), false ) ;
+		gnho = new astrolabe.Coordinate( CAACoordinateTransformation.Equatorial2Horizontal(
+				CAACoordinateTransformation.DegreesToHours( rdST-gneq.x ), gneq.y, rdLa/*horizon.getLa()*/ ) ) ;
+		gnaz = gnho.x ;
+		if ( gnaz==0 ) { // prevent infinity from tan
+			gnaz = Math.lim0 ;
+		}
+
+		if ( Math.tan( gnaz )>0 ) {	// QI, QIII
+			vlAl = gnaz ;
+			while ( vlAl>90 ) { // mapTo0To90Range
+				vlAl = vlAl-90 ;
+			}
+			while ( vlAl<0 ) {
+				vlAl = vlAl+90 ;
+			}
+
+			// Rule of Napier : cos(90-a) = sin(al)*sin(c)
+			vlA = Math.acos( Math.sin( vlAl )*Math.sin( blB ) ) ;
+			// Rule of Napier : cos(be) = cot(90-a)*cot(c)
+			vlDe = Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
+
+			r[1] = rdST-180+vlDe;
+		} else { // QII, QIV
+			vlAl = gnaz ;
+			while ( vlAl>90 ) { // mapTo0To90Range
+				vlAl = vlAl-90 ;
+			}
+			while ( vlAl<0 ) {
+				vlAl = vlAl+90 ;
+			}
+			vlAl = 90-vlAl ;
+
+			vlA = Math.acos( Math.sin( vlAl )*Math.sin( blB ) ) ;
+			vlDe = Math.acos( Math.truncate( Math.cot( vlA )*Math.cot( blB ) ) ) ;
+
+			r[1] = rdST+180-vlDe;
+		}
+
+		r[0] = 90-vlA ;
+
+		// Rule of Napier : cos(c) = sin(90-a)*sin(90-b)
+		// sin(90-b) = cos(c):sin(90-a)
+		vlD = 90-Math.asin( Math.truncate( Math.cos( blB )/Math.sin( vlA ) ) ) ;
+
+		r[2] = vlD ;
+
+		return r ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {
