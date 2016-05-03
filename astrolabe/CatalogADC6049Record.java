@@ -11,7 +11,9 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
@@ -228,33 +230,36 @@ public class CatalogADC6049Record extends astrolabe.model.CatalogADC6049Record i
 	}
 
 	public double RA() {
-		return new Double( RAh.get( 0 ) ).doubleValue() ;		
+		return Double.POSITIVE_INFINITY ;		
 	}
 
 	public double de() {
-		return new Double( DEd.get( 0 ) ).doubleValue() ;
+		return Double.POSITIVE_INFINITY ;		
 	}
 
-	public Coordinate[] list() {
-		Coordinate[] list ;
+	public Geometry list() {
+		Coordinate[] lst ;
+		LineString rec ;
 		String RA, de ;
 		double dist ;
 
-		list = new Coordinate[ RAh.size() ] ;
+		lst = new Coordinate[ RAh.size() ] ;
 
 		for ( int i=0 ; i<RAh.size() ; i++ ) {
 			RA = RAh.get( i ) ;
 			de = DEd.get( i ) ;
 
-			list[i] = new Coordinate(
+			lst[i] = new Coordinate(
 					Double.valueOf( RA ),
 					Double.valueOf( de ) ) ;
 		}
 
+		rec = new GeometryFactory().createLineString( lst ) ;
+
 		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( dist>0 && list.length>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list ), dist ).getCoordinates() ;
+		if ( dist>0 && lst.length>2 )
+			return DouglasPeuckerSimplifier.simplify( rec, dist ) ;
 		else
-			return list ;
+			return rec ;
 	}
 }

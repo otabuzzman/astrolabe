@@ -109,7 +109,7 @@ public class Vector extends Coordinate {
 	}
 
 	public Coordinate toCoordinate() {
-		return new Coordinate( x, y, z ) ;
+		return (Coordinate) clone() ;
 	}
 
 	public static Coordinate[] con( Coordinate[] list ) {
@@ -135,9 +135,5 @@ public class Vector extends Coordinate {
 			len = len+new Vector( c ).abs() ;
 
 		return len ;
-	}
-
-	public String toString() {
-		return "["+x+","+y+","+z+"]" ;
 	}
 }

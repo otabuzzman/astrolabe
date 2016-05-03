@@ -1,7 +1,6 @@
 
 package astrolabe;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,169 +10,195 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.exolab.castor.xml.ValidationException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.CoordinateSequenceFilter;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 @SuppressWarnings("serial")
 public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements PostscriptEmitter {
 
+	// attribute value (AV_)
+	private final static String AV_LINE = "line" ;
+
 	private final static Log log = LogFactory.getLog( CatalogDS9.class ) ;
 
-	private class ContourLevel {
-		public String ident ;
-		public double level ;
-		public List<List<CatalogDS9Record>> contour ;
-	}
+	private class CoordinateToCartesianFilter implements CoordinateSequenceFilter {
 
-	private List<ContourLevel> catalog ;
+		private Converter converter ;
+		private Projector projector ;
 
-	private Converter converter ;
-	private Projector projector ;
+		public CoordinateToCartesianFilter( Projector projector, Converter converter ) {
+			this.converter = converter ;
+			this.projector = projector ;
+		}
 
-	public CatalogDS9( Converter converter, Projector projector ) {
-		this.converter = converter ;
-		this.projector = projector ;
-	}
+		public void filter( CoordinateSequence seq, int i ) {
+			Coordinate xy ;
 
-	@SuppressWarnings("unchecked")
-	private List<ContourLevel> unsafecast( Object hashtable ) {
-		return (List<ContourLevel>) hashtable ;
-	}
+			xy = projector.project( converter.convert( seq.getCoordinate( i ), false ), false ) ;
 
-	public void addAllCatalogRecord() {
-		ContourLevel contour ;
-		List<CatalogDS9Record> entry ;
-		CatalogDS9Record element ;
-		String key, uri[] ;
-		Reader reader ;
-		double[] lev ;
+			seq.setOrdinate( i, 0, xy.x ) ;
+			seq.setOrdinate( i, 1, xy.y ) ;
+		}
 
-		key = getClass().getSimpleName()+":"+getName() ;
-		catalog = unsafecast( Registry.retrieve( key ) ) ;
-		if ( catalog == null ) {
-			catalog = new java.util.Vector<ContourLevel>() ;
-			Registry.register( key, catalog ) ;
-		} else
-			return ;
+		public boolean isDone() {
+			return false ;
+		}
 
-		try {
-			if ( getLevel() != null ) {
-				reader = reader( getLevel().getUrl() ) ;
-				lev = level( reader ) ;
-				Arrays.sort( lev ) ;
-				uri = new String[lev.length] ;
-				for ( int u=0 ; u<uri.length ; u++ )
-					uri[u] = String.format( getUrl(), u ) ;
-			} else {
-				lev = new double[] { Double.NEGATIVE_INFINITY } ;
-				uri = new String[] { getUrl() } ;
-			}
-
-			for ( int u=0 ; u<uri.length ; u++ ) {
-				contour = new ContourLevel() ;
-				contour.ident = URLEncoder.encode( uri[u], "UTF-8" ) ;
-				contour.level = lev[u] ;
-				contour.contour = new java.util.Vector<List<CatalogDS9Record>>() ;
-
-				reader = reader( uri[u] ) ;
-				while ( ( element = record( reader ) ) != null ) {
-					entry = new java.util.Vector<CatalogDS9Record>() ;
-					contour.contour.add( entry ) ;
-
-					for ( astrolabe.model.CatalogDS9Record select : getCatalogDS9Record() ) {
-						select.copyValues( element ) ;
-						if ( Boolean.parseBoolean( element.getSelect() ) ) {
-							entry.add( element ) ;
-
-							break ;
-						}
-					}
-				}
-				reader.close() ;
-
-				catalog.add( contour ) ;
-			}
-		} catch ( URISyntaxException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( MalformedURLException e ) {
-			throw new RuntimeException( e.toString() ) ;
-		} catch ( IOException e ) {
-			throw new RuntimeException( e.toString() ) ;
+		public boolean isGeometryChanged() {
+			return true ;
 		}
 	}
 
-	public void delAllCatalogRecord() {
-		catalog.clear() ;
-	}
+	private CoordinateToCartesianFilter coordinateToCartesianFilter ;
 
-	public CatalogRecord[] getCatalogRecord() {
-		return catalog.toArray( new CatalogRecord[0] ) ;
+	public CatalogDS9( Converter converter, Projector projector ) {
+		coordinateToCartesianFilter = new CoordinateToCartesianFilter( projector, converter ) ;
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		astrolabe.model.Body body ;
-		BodyAreal bodyDS9 ;
-		astrolabe.model.Position pm ;
+		String uri ;
+		Reader reader ;
+		CatalogDS9Record record ;
+		astrolabe.model.CatalogDS9Record select ;
+		boolean line, draw ;
+		FieldOfView fov ;
+		Geometry gov ;
+		ChartPage page ;
+		Geometry rec, cmb ;
+		LineString elm ;
+		Geometry tmp, mem ;
 
-		for ( ContourLevel contour : catalog ) {
+		try {
+			for ( int i=0 ; getCatalogDS9RecordCount()>i ; i++ ) {
+				ps.op( "gsave" ) ;
 
-			ps.script( Configuration.getValue( this, contour.ident, "" ) ) ;
+				uri = String.format( getUrl(), i ) ;
+				reader = reader( uri ) ;
+				record = record( reader ) ;
+				reader.close() ;
 
-			for ( List<CatalogDS9Record> entry : contour.contour ) {
-				for ( CatalogDS9Record element : entry ) {
-					body = new astrolabe.model.Body() ;
-					body.setBodyAreal( new astrolabe.model.BodyAreal() ) ;
+				select = getCatalogDS9Record( i ) ;
+				select.copyValues( record ) ;
 
-					body.getBodyAreal().setAnnotation( element.getAnnotation() ) ;
+				if ( ! Boolean.parseBoolean( record.getSelect() ) )
+					continue ;
+				line = record.getContour().equals( AV_LINE ) ;
 
-					body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
-
-					for ( Coordinate eq : element.list() ) {
-						pm = new astrolabe.model.Position() ;
-						// astrolabe.model.AngleType
-						pm.setLon( new astrolabe.model.Lon() ) ;
-						pm.getLon().setRational( new astrolabe.model.Rational() ) ;
-						pm.getLon().getRational().setValue( eq.x ) ;  
-						// astrolabe.model.AngleType
-						pm.setLat( new astrolabe.model.Lat() ) ;
-						pm.getLat().setRational( new astrolabe.model.Rational() ) ;
-						pm.getLat().getRational().setValue( eq.y ) ;  
-
-						body.getBodyAreal().getBodyArealTypeChoice().addPosition( pm ) ;
-					}
-
-					try {
-						body.validate() ;
-					} catch ( ValidationException e ) {
-						throw new RuntimeException( e.toString() ) ;
-					}
-
-					bodyDS9 = new BodyAreal( converter, projector ) ;
-					body.getBodyAreal().copyValues( bodyDS9 ) ;
-
-					bodyDS9.register() ;
-					ps.op( "gsave" ) ;
-
-					bodyDS9.headPS( ps ) ;
-					bodyDS9.emitPS( ps ) ;
-					bodyDS9.tailPS( ps ) ;
-
-					ps.op( "grestore" ) ;
-					bodyDS9.degister() ;
+				fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+				if ( fov != null && fov.isClosed() )
+					gov = fov.makeGeometry() ;
+				else {
+					page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
+					if ( page != null )
+						gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+					else
+						gov = null ;
 				}
+
+				draw = false ;
+				cmb = null ;
+				mem = null ;
+
+				rec = record.list() ;
+				rec.apply( coordinateToCartesianFilter ) ;
+
+				for ( int j=0 ; rec.getNumGeometries()>j ; j++ ) {
+					elm = (LineString) rec.getGeometryN( j ) ;
+
+					if ( gov == null ) {
+						draw = gdraw( ps, elm ) ;
+						continue ;
+					}
+
+					if ( ! elm.isClosed() )
+						continue ;
+					if ( ! elm.intersects( gov ) )
+						continue ;
+
+					if ( gov.contains( elm ) ) {
+						draw = gdraw( ps, elm ) ;
+						continue ;
+					}
+
+					if ( line ) {
+						tmp = gov.intersection( elm ) ;
+						draw = gdraw( ps, tmp ) ;
+						continue ;
+					}
+
+					// pragma
+					tmp = new GeometryFactory().createPolygon( elm.getCoordinates() ) ;
+					if ( record.combine == 0 ) {
+						draw = gdraw( ps, gov.intersection( tmp ) ) ;
+						continue ;
+					}
+					if ( cmb == null ) {
+						cmb = gov.intersection( tmp ) ;
+						mem = tmp ;
+					} else {
+						if ( cmb.intersects( tmp ) )
+							cmb = cmb.difference( tmp ) ;
+						else {
+							cmb = gov.difference( mem ) ;
+							cmb = cmb.difference( tmp ) ;
+						}
+					}
+				}
+
+				if ( cmb != null )
+					draw = gdraw( ps, cmb ) ;
+
+				if ( draw && gov == null )
+					ps.script( Configuration.getValue( record, AV_LINE, "" ) ) ;
+				else
+					ps.script( Configuration.getValue( record, record.getContour(), "" ) ) ;
+
+				ps.op( "grestore" ) ;
 			}
+		} catch ( MalformedURLException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( URISyntaxException e ) {
+			throw new RuntimeException( e.toString() ) ;
+		} catch ( IOException e ) {
+			throw new RuntimeException( e.toString() ) ;
 		}
+	}
+
+	static private boolean gdraw( ApplicationPostscriptStream ps, Geometry geometry ) {
+		Geometry g ;
+		int n ;
+
+		if ( geometry.getNumPoints() == 0 )
+			return false ;
+
+		n = geometry.getNumGeometries() ;
+
+		for ( int i=0 ; n>i ; i++ ) {
+			g = geometry.getGeometryN( i ) ;
+
+			ps.array( true ) ;
+			for ( Coordinate c : g.getCoordinates() ) {
+				ps.push( c.x ) ;
+				ps.push( c.y ) ;
+			}
+			ps.array( false ) ;
+
+			ps.op( "gdraw" ) ;
+		}
+
+		return true ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
@@ -213,23 +238,14 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 	public CatalogDS9Record record( java.io.Reader catalog ) throws IOException {
 		StringBuilder b ;
 		char[] c ;
-		boolean m ;
 
 		b = new StringBuilder() ;
 		c = new char[1] ;
-		m = false ;
 
-		while ( catalog.read( c, 0, 1 )>-1 ) {
+		while ( catalog.read( c, 0, 1 )>-1 )
 			b.append( c ) ;
-			if ( c[0] == '\n' ) {
-				if ( m )
-					return record( b.substring( 0, b.length()-1 ) ) ;
-				m = true ;
-			} else
-				m = false ;
-		}
 
-		return null ;
+		return record( b.substring( 0 ) ) ;
 	}
 
 	private CatalogDS9Record record( String record ) {
@@ -240,23 +256,6 @@ public class CatalogDS9 extends astrolabe.model.CatalogDS9 implements Postscript
 		} catch ( ParameterNotValidException e ) {
 			log.warn( ParameterNotValidError.errmsg( '"'+record+'"', e.getMessage() ) ) ;
 		}
-
-		return r ;
-	}
-
-	private double[] level( java.io.Reader catalog ) throws IOException {
-		List<String> input = new java.util.Vector<String>() ;
-		BufferedReader b ;
-		String entry ;
-		double[] r ;
-
-		b = new BufferedReader( catalog ) ;
-		while ( ( entry = b.readLine() ) != null )
-			input.add( entry ) ;
-
-		r = new double[ input.size() ] ;
-		for ( int e=0 ; e<input.size() ; e++ )
-			r[e] = Double.valueOf( input.get( e ) ) ;
 
 		return r ;
 	}

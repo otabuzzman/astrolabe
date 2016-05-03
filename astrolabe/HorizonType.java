@@ -210,7 +210,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 
 			if ( a.equals2D( o ) ) {
 				l = new Coordinate[line.length+1] ;
-				l[l.length-1] = line[0] ;
+				l[l.length-1] = new Coordinate( line[0] ) ;
 				System.arraycopy( line, 0, l, 0, line.length ) ;
 			}
 		}

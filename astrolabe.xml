@@ -429,10 +429,20 @@
 					</AnnotationStraight>
 					<!--MCCM-->
 					<Catalog>
-						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/DS9/catalog.con-->
+						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/MCCM/cat_%04d.con-->
 						<CatalogDS9 name="MCCM" url="lib/cat/MCCM/cat_%04d.con">
-							<CatalogDS9Record select="true"/>
-							<Level url="lib/cat/MCCM/catalog.lev"/>
+							<CatalogDS9Record name="0490" select="true" contour="fill"/>
+							<CatalogDS9Record name="0420" select="true" contour="fill"/>
+							<CatalogDS9Record name="0360" select="true" contour="fill"/>
+							<CatalogDS9Record name="0300" select="true" contour="fill"/>
+							<CatalogDS9Record name="0248" select="true" contour="fill"/>
+							<CatalogDS9Record name="0210" select="false" contour="fill"/>
+							<CatalogDS9Record name="0176" select="true" contour="fill"/>
+							<CatalogDS9Record name="0142" select="true" contour="fill"/>
+							<CatalogDS9Record name="0120" select="true" contour="fill"/>
+							<CatalogDS9Record name="0095" select="true" contour="fill"/>
+							<CatalogDS9Record name="0078" select="true" contour="fill"/>
+							<CatalogDS9Record name="0065" select="true" contour="fill"/>
 						</CatalogDS9>
 					</Catalog>
 				</HorizonEquatorial>

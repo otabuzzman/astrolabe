@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
 <xs:schema xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartacaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
@@ -919,11 +918,6 @@
 				<xs:extension base="CatalogType">
 					<xs:sequence>
 						<xs:element ref="CatalogDS9Record" maxOccurs="unbounded"/>
-						<xs:element name="Level" minOccurs="0">
-							<xs:complexType>
-								<xs:attribute name="url" type="xs:anyURI" use="required"/>
-							</xs:complexType>
-						</xs:element>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
@@ -933,6 +927,7 @@
 		<xs:sequence>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="select" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -1019,7 +1014,16 @@
 	<xs:element name="CatalogDS9Record">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="CatalogRecordType"/>
+				<xs:extension base="CatalogRecordType">
+					<xs:attribute name="contour" use="optional" default="fill">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="fill"/>
+								<xs:pattern value="line"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>

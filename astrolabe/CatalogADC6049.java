@@ -137,7 +137,7 @@ public class CatalogADC6049 extends astrolabe.model.CatalogADC6049 implements Po
 
 			body.getBodyAreal().setBodyArealTypeChoice( new astrolabe.model.BodyArealTypeChoice() ) ;
 
-			for ( Coordinate eq : record.list() ) {
+			for ( Coordinate eq : record.list().getCoordinates() ) {
 				ceq = CAAPrecession.PrecessEquatorial( eq.x, eq.y, 2451545./*J2000*/, epoch ) ;
 				pm = new astrolabe.model.Position() ;
 				// astrolabe.model.AngleType

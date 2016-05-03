@@ -7,6 +7,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
 public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record implements CatalogRecord {
@@ -904,7 +906,7 @@ public class CatalogADC5109Record extends astrolabe.model.CatalogADC5109Record i
 		return new Double( DE+DEs ).doubleValue() ;
 	}
 
-	public Coordinate[] list() {
-		return new Coordinate[] { new Coordinate( RA(), de() ) } ;
+	public Geometry list() {
+		return new GeometryFactory().createPoint( new Coordinate( RA(), de() ) ) ;
 	}
 }

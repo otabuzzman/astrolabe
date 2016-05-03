@@ -58,7 +58,7 @@ public class FieldOfView implements PostscriptEmitter {
 
 			switch ( XAB.getNumGeometries() ) {
 			case 2: // 1 node
-				set( cat(
+				set( chain(
 						XAB.getGeometryN( 0 ).getCoordinates(),
 						XBA.getGeometryN( 1 ).getCoordinates() ) ) ;
 
@@ -69,10 +69,10 @@ public class FieldOfView implements PostscriptEmitter {
 
 				// end of LineString A connected with start of B (regular)
 				if ( lnStrA1[0].equals2D( lnStrB1[lnStrB1.length-1] ) )
-					set( cat( lnStrA1, lnStrB1 ) ) ;
+					set( chain( lnStrA1, lnStrB1 ) ) ;
 				// start of LineString A connected with start of B (irregular)
 				else
-					set( cat( lnStrA1, XBA.getGeometryN( 1 ).reverse().getCoordinates() ) ) ;
+					set( chain( lnStrA1, XBA.getGeometryN( 1 ).reverse().getCoordinates() ) ) ;
 
 				break ;
 			default: // 2+ nodes
@@ -102,15 +102,15 @@ public class FieldOfView implements PostscriptEmitter {
 			lnStrA2 = XAB.getGeometryN( 2 ).getCoordinates() ;
 			lnStrB1 = XBA.getGeometryN( 1 ).getCoordinates() ;
 			if ( lnStrA0[lnStrA0.length-1].equals2D( lnStrB1[0] ) ) {
-				crds0 = cat( lnStrA0, lnStrB1, lnStrA2 ) ;
-				crds1 = cat( lnStrA1, XBA.getGeometryN( 1 ).reverse().getCoordinates() ) ;
+				crds0 = chain( lnStrA0, lnStrB1, lnStrA2 ) ;
+				crds1 = chain( lnStrA1, XBA.getGeometryN( 1 ).reverse().getCoordinates() ) ;
 			} else {
-				crds0 = cat( lnStrA0, XBA.getGeometryN( 1 ).reverse().getCoordinates(), lnStrA2 ) ;
-				crds1 = cat( lnStrA1, lnStrB1 ) ;
+				crds0 = chain( lnStrA0, XBA.getGeometryN( 1 ).reverse().getCoordinates(), lnStrA2 ) ;
+				crds1 = chain( lnStrA1, lnStrB1 ) ;
 			}
 
 			X = new GeometryFactory().createPolygon( crds0 ) ;
-			P = pragmaGetRHPoint( lnStrB1[0], lnStrB1[1] ) ;
+			P = pragmaGetSidePoint( lnStrB1[0], lnStrB1[1], true ) ;
 			if ( X.contains( P ) )
 				set( crds0 ) ;
 			else
@@ -128,7 +128,7 @@ public class FieldOfView implements PostscriptEmitter {
 			fov.add( c ) ;
 	}
 
-	static private Coordinate[] cat( Coordinate[] a, Coordinate[]... o ) {
+	static protected Coordinate[] chain( Coordinate[] a, Coordinate[]... o ) {
 		java.util.Vector<Coordinate> list = new java.util.Vector<Coordinate>() ;
 		int skip ;
 
@@ -149,7 +149,17 @@ public class FieldOfView implements PostscriptEmitter {
 		return list.toArray( new Coordinate[0] );
 	}
 
-	private Point pragmaGetRHPoint( Coordinate a, Coordinate o ) {
+	static protected Coordinate[] close( Coordinate[] c ) {
+		Coordinate[] n = new Coordinate[c.length+1] ;
+
+		n[c.length] = (Coordinate) c[0].clone() ;
+		for ( int i=0 ; c.length>i ; i++ )
+			n[i] = c[i] ;
+
+		return n ;
+	}
+
+	private Point pragmaGetSidePoint( Coordinate a, Coordinate o, boolean left ) {
 		Vector m, n, s, t ;
 		double l ;
 
@@ -159,7 +169,10 @@ public class FieldOfView implements PostscriptEmitter {
 		l = s.abs() ;
 		s.scale( l*.5 ) ;
 		t = new Vector( s ) ;
-		t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
+		if ( left )
+			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
+		else
+			t.apply( new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ) ;
 		t.scale( l*.01 ) ;
 
 		return new GeometryFactory().createPoint( m.add( s ).add( t ).toCoordinate() ) ;
@@ -180,14 +193,8 @@ public class FieldOfView implements PostscriptEmitter {
 	}
 
 	static public Geometry makeGeometry( Coordinate[] list, boolean close ) {
-		Coordinate[] clst ;
-
 		if ( close ) {
-			clst = new Coordinate[list.length+1] ;
-			clst[list.length] = list[0] ;
-			for ( int c=0 ; c<list.length ; c++ )
-				clst[c] = list[c] ;
-			return new GeometryFactory().createPolygon( clst ) ;
+			return new GeometryFactory().createPolygon( close( list ) ) ;
 		} else
 			return new GeometryFactory().createPolygon( list ) ;
 	}

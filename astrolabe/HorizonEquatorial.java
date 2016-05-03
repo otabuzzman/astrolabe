@@ -141,7 +141,6 @@ public class HorizonEquatorial extends HorizonType {
 		catalog = new CatalogDS9( this, projector ) ;
 		peer.copyValues( catalog ) ;
 
-		catalog.addAllCatalogRecord() ;
 		return catalog ;
 	}
 }

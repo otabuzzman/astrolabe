@@ -285,7 +285,7 @@ public final class Math {
 	}
 
 	public static boolean isLim0( double v ) {
-		return java.lang.Math.abs( v )<lim0?true:false ;
+		return lim0>java.lang.Math.abs( v ) ;
 	}
 
 	public static boolean isNaN( double v ) {

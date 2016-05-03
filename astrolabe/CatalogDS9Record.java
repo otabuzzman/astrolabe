@@ -7,38 +7,53 @@ import java.io.StringReader;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implements CatalogRecord {
 
 	// configuration key (CK_)
-	private static final String CK_DISTANCE			= "distance" ;
+	private final static String CK_EPS		= "eps" ;
 
-	private static final double DEFAULT_DISTANCE	= 0 ;
+	private final static double DEFAULT_EPS	= 1.5 ;
 
-	public List<String[]> element = new java.util.Vector<String[]>() ;
+	private double eps ;
+	
+	// pragma
+	protected int combine = 0 ;
 
-	// message key (MK_)
-	private final static String MK_ERECFMT = "erecfmt" ;
+	private List<Coordinate[]> record = new java.util.Vector<Coordinate[]>() ;
 
 	public CatalogDS9Record( String data ) throws ParameterNotValidException {
-		BufferedReader b ;
-		String cl, eq[] ;
-		String msg ;
+		java.util.Vector<Coordinate> bufl ;
+		BufferedReader bufr ;
+		String segr, segd[] ;
+
+		bufl = new java.util.Vector<Coordinate>() ;
 
 		try {
-			b = new BufferedReader( new StringReader( data ) ) ;
-			while ( ( cl = b.readLine() ) != null ) {
-				eq = cl.trim().split( "\\p{Space}+" ) ;
-				if ( eq.length != 2 ) {
-					msg = MessageCatalog.message( this, MK_ERECFMT, null ) ;
+			bufr = new BufferedReader( new StringReader( data ) ) ;
 
-					throw new ParameterNotValidException( ParameterNotValidError.errmsg( data.length(), msg ) ) ;
+			while ( ( segr = bufr.readLine() ) != null ) {
+				if ( segr.length() == 0 ) {
+					if ( bufl.size()>1 ) {
+						record.add( bufl.toArray( new Coordinate[0] ) ) ;
+						bufl.clear() ;
+					}
+					continue ;
 				}
-				element.add( eq ) ;
+
+				segd = segr.trim().split( "\\p{Space}+" ) ;
+
+				if ( segd.length == 2 )
+					bufl.add( new Coordinate(
+							Double.valueOf( segd[0] ),
+							Double.valueOf( segd[1] ) ) ) ;
 			}
+
+			if ( bufl.size()>0 )
+				record.add( bufl.toArray( new Coordinate[0] ) ) ;
 		} catch ( IOException e ) {
 			throw new RuntimeException( e.toString() ) ;
 		}
@@ -58,32 +73,98 @@ public class CatalogDS9Record extends astrolabe.model.CatalogDS9Record implement
 	}
 
 	public double RA() {
-		return Double.valueOf( element.get( 0 )[0] ) ;
+		return Double.POSITIVE_INFINITY ;		
 	}
 
 	public double de() {
-		return Double.valueOf( element.get( 0 )[1] ) ;
+		return Double.POSITIVE_INFINITY ;		
 	}
 
-	public Coordinate[] list() {
-		Coordinate[] list ;
-		String[] eq ;
-		double dist ;
+	public Geometry list() {
+		int n ;
+		List<Geometry> rec ;
+		Coordinate[] elm, act ;
+		Coordinate a, o ;
 
-		list = new Coordinate[ element.size() ] ;
+		eps = Configuration.getValue( this, CK_EPS, DEFAULT_EPS ) ;
 
-		for ( int i=0 ; i<element.size() ; i++ ) {
-			eq = element.get( i ) ;
+		n = record.size() ;
+		rec = new java.util.Vector<Geometry>() ;
 
-			list[i] = new Coordinate(
-					Double.valueOf( eq[0] ),
-					Double.valueOf( eq[1] ) ) ;
+		elm = null ;
+
+		for ( int i=0 ; n>i ; i++ ) {
+			act = record.get( i ) ;
+
+			a = act[0] ;
+			o = act[act.length-1] ;
+
+			if ( a.equals2D( o ) ) {
+				rec.add( new GeometryFactory().createLineString( act ) ) ;
+
+				continue ;
+			}
+
+			if ( eps( a, o ) ) {
+				act = FieldOfView.close( act ) ;
+				rec.add( new GeometryFactory().createLineString( act ) ) ;
+
+				// pragma
+				combine++ ;
+				continue ;
+			}
+
+			if ( elm != null ) {
+				o = elm[elm.length-1] ;
+				a = act[0] ;
+
+				if ( eps( o, a ) ) {
+					elm = FieldOfView.chain( elm, act ) ;
+
+					a = elm[0] ;
+					o = elm[elm.length-1] ;
+
+					if ( eps( a, o ) ) {
+						elm = FieldOfView.close( elm ) ;
+						rec.add( new GeometryFactory().createLineString( elm ) ) ;
+
+						elm = null ;
+					}
+
+					continue ;
+				}
+
+				rec.add( new GeometryFactory().createLineString( elm ) ) ;
+			}
+
+			elm = act ;
 		}
 
-		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( dist>0 && list.length>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list ), dist ).getCoordinates() ;
-		else
-			return list ;
+		if ( elm != null ) {
+			a = elm[0] ;
+			o = elm[elm.length-1] ;
+
+			if ( eps( a, o ) )
+				elm = FieldOfView.close( elm ) ;
+			rec.add( new GeometryFactory().createLineString( elm ) ) ;
+		}
+
+		return new GeometryFactory().createGeometryCollection( rec.toArray( new Geometry[0] ) ) ;
+	}
+
+	private boolean eps( Coordinate a, Coordinate b ) {
+		return epsX( a, b ) && epsY( a, b );
+	}
+
+	private boolean epsX( Coordinate a, Coordinate b ) {
+		return eps( a.x, b.x ) ;
+	}
+
+	private boolean epsY( Coordinate a, Coordinate b ) {
+		return eps( a.y, b.y ) ;
+	}
+
+	private boolean eps( double a, double b ) {
+		return eps>java.lang.Math.abs( a-b ) ;
 	}
 }

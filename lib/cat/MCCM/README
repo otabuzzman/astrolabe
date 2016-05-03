@@ -17,18 +17,9 @@ Catalogue creation:
 	- Make one contour file for each level (see cat_%04d.con to relate with
 	  index of level file entry starting from 0) to draw different levels
 	  in different styles.
-	- Make one contour file for all to draw them for instance as isobars.
 
 -----------------------------------------------------------------------------
 
 Catalogue explanation:
 ======================
 
-Contour elements with equal coordinates in their first and last entries are
-considered to be rings in a geometrical sense.
-
-Contour elements with unequal coordinates in their first and last entries are
-considered to be lines in a geometrical sense.
-If b of an element's last coordinate equals b of is's successor first or
-(exclusive) l equals l these elements are considered to be connected (might
-occur if contour is interrupted by edge of map).

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
 <preferences>
-	<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
+	<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe (IA-32)-->
+	<!--HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\JavaSoft\Prefs\astrolabe (IA-64)-->
 	<root type="system">
 		<map/>
 		<node name="java">
@@ -677,22 +678,71 @@
 					<entry key="OType" value="^(G|M|GM)$"/>
 				</map>
 			</node>
-			<node name="CatalogDS9">
-				<map/>
-				<node name="MCCM">
+			<node name="CatalogDS9Record">
+				<map>
+					<entry key="eps" value="1.5"/>
+					<entry key="line" value="stroke"/>
+					<entry key="fill" value="eofill"/>
+				</map>
+				<node name="0490">
 					<map>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0000.con" value="0.00392156863 0.27843137255 0.67450980392 setrgbcolor 0.8000 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0001.con" value="0.00645175416 0.31161537073 0.69909273300 setrgbcolor 0.9376 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0002.con" value="0.01061440860 0.34875430303 0.72457160221 setrgbcolor 1.0989 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0003.con" value="0.01746279648 0.39031952627 0.75097906464 setrgbcolor 1.2879 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0004.con" value="0.02872974581 0.43683857451 0.77834896346 setrgbcolor 1.5094 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0005.con" value="0.04726610055 0.48890185434 0.80671637525 setrgbcolor 1.7690 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0006.con" value="0.07776206153 0.54717013818 0.83611765500 setrgbcolor 2.0733 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0007.con" value="0.12793393452 0.61238295060 0.86659048266 setrgbcolor 2.4299 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0008.con" value="0.21047656506 0.68536795417 0.89817391147 setrgbcolor 2.8478 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0009.con" value="0.34627547886 0.76705145390 0.93090841798 setrgbcolor 3.3376 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0010.con" value="0.56969148668 0.85847015366 0.96483595392 setrgbcolor 3.9117 setlinewidth"/>
-						<entry key="lib%2Fcat%2FMCCM%2Fcat_0011.con" value="0.93725490196 0.96078431373 1.00000000000 setrgbcolor 4.5845 setlinewidth"/>
+						<entry key="eps" value="1.9"/>
+						<entry key="fill" value="0.96 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0420">
+					<map>
+						<entry key="fill" value="0.9511 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0360">
+					<map>
+						<entry key="fill" value="0.9414 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0300">
+					<map>
+						<entry key="fill" value="0.9306 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0248">
+					<map>
+						<entry key="fill" value="0.9187 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0210">
+					<map>
+						<entry key="fill" value="0.9052 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0176">
+					<map>
+						<entry key="fill" value="0.8896 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0142">
+					<map>
+						<entry key="fill" value="0.8714 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0120">
+					<map>
+						<entry key="fill" value="0.8492 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0095">
+					<map>
+						<entry key="fill" value="0.8210 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0078">
+					<map>
+						<entry key="fill" value="0.7823 setgray eofill"/>
+					</map>
+				</node>
+				<node name="0065">
+					<map>
+						<entry key="fill" value="0.72 setgray eofill"/>
 					</map>
 				</node>
 			</node>
