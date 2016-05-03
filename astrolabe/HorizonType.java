@@ -2,14 +2,14 @@
 package astrolabe;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
 
 @SuppressWarnings("serial")
 abstract public class HorizonType extends astrolabe.model.HorizonType implements PostscriptEmitter, Converter {
+
+	// configuration key (CK_)
+	private final static String CK_PRECISION	= "precision" ;
+
+	private final static int DEFAULT_PRECISION	= 2 ;
 
 	private Projector projector ;
 
@@ -100,8 +100,8 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleParallel peer ) {
@@ -117,8 +117,8 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernPolar peer ) {
@@ -134,8 +134,8 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernTropic peer ) {
@@ -151,8 +151,8 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernTropic peer ) {
@@ -168,8 +168,8 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernPolar peer ) {
@@ -185,20 +185,45 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 		if ( circle.getName() != null )
 			Registry.register( circle.getName(), circle ) ;
 
-		if ( circle.getName() != null )
-			circleFOV( circle.getCircleGeometry() ) ;
+		if ( circle.getFieldofview() )
+			updateFOV( circle.list( null, circle.begin(), circle.end(), 0 ) ) ;
 	}
 
-	private void circleFOV( LineString line ) {
-		LinearRing ring ;
-		Polygon poly ;
+	private void updateFOV( Coordinate[] line ) {
+		FieldOfView fov ;
+		Coordinate l[], a, o ;
+		double p ;
+		int e ;
 
-		if ( line.isRing() ) {
-			ring = new GeometryFactory().createLinearRing( line.getCoordinates() ) ;
-			poly = new GeometryFactory().createPolygon( ring, null ) ;
+		l = line ;
+		a = new Coordinate( l[0] ) ;
+		o = new Coordinate( l[l.length-1] ) ;
 
-			Registry.register( Geometry.class.getName(), poly ) ;
+		if ( ! a.equals2D( o ) ) {
+			e = Configuration.getValue( this, CK_PRECISION, DEFAULT_PRECISION ) ;
+			p = java.lang.Math.pow( 10, e ) ;
+
+			a.x = java.lang.Math.round( a.x*p )/p ;
+			a.y = java.lang.Math.round( a.y*p )/p ;
+			o.x = java.lang.Math.round( o.x*p )/p ;
+			o.y = java.lang.Math.round( o.y*p )/p ;
+
+			if ( a.equals2D( o ) ) {
+				l = new Coordinate[line.length+1] ;
+				l[l.length-1] = line[0] ;
+				System.arraycopy( line, 0, l, 0, line.length ) ;
+			}
 		}
+
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov == null ) {
+			fov = new FieldOfView( l ) ;
+			if ( fov == null )
+				return ;
+		} else
+			fov.add( l ) ;
+
+		Registry.register( FieldOfView.class.getName(), fov ) ;
 	}
 
 	private void body( ApplicationPostscriptStream ps, astrolabe.model.BodyStellar peer ) {

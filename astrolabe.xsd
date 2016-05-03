@@ -315,6 +315,7 @@
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="fieldofview" type="xs:boolean" use="optional" default="false"/>
 		<xs:attribute name="importance" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">

@@ -7,6 +7,8 @@ import caa.CAADate;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
 abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType implements PostscriptEmitter, Baseline {
@@ -14,20 +16,28 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 	// configuration key (CK_)
 	private final static String CK_FADE				= "fade" ;
 
+	private final static String CK_INTERVAL			= "interval" ;
+	private static final String CK_DISTANCE			= "distance" ;
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
 
 	private final static double DEFAULT_FADE		= 0 ;
 
+	private final static double DEFAULT_INTERVAL	= 1 ;
+	private static final double DEFAULT_DISTANCE	= 0 ;
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
+
+	private Projector projector ;
 
 	private double epoch ;
 
 	public BodyOrbitalType( Converter converter, Projector projector ) {
 		Double Epoch ;
+
+		this.projector = projector ;
 
 		Epoch = (Double) Registry.retrieve( Epoch.class.getName() ) ;
 		if ( Epoch == null )
@@ -77,6 +87,81 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		return new double[] { jdAy, jdOy } ;
 	}
 
+	public Coordinate positionOfScaleMarkValue( double jd, double shift ) {
+		Coordinate eq, xy ;
+		Vector v, t ;
+
+		eq = jdToEquatorial( jd ) ;
+		xy = projector.project( eq, false ) ;
+		v = new Vector( xy ) ;
+
+		if ( shift != 0 ) {
+			xy = directionOfScaleMarkValue( jd ) ;
+			t = new Vector( xy ) ;
+			t.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ; // rotate 90 degrees counter clockwise
+			t.scale( shift ) ;
+			v.add( t ) ;
+		}
+
+		return new Coordinate( v.x, v.y ) ;
+	}
+
+	public Coordinate directionOfScaleMarkValue( double jd ) {
+		Coordinate eq, xy ;
+		Vector v, t ;
+
+		eq = jdToEquatorial( jd+1./86400 ) ;
+		xy = projector.project( eq, false ) ;
+		v = new Vector( xy ) ;
+		eq = jdToEquatorial( jd ) ;
+		xy = projector.project( eq, false ) ;
+		t = new Vector( xy ) ;
+
+		v.sub( t ) ;
+
+		return new Coordinate( v.x, v.y ) ;
+	}
+
+	public double valueOfScaleMarkN( int mark, double span ) {
+		return new LinearScale( span, epoch() ).markN( mark ) ;
+	}
+
+	public Coordinate[] list( final List<Double> listjd, double jdA, double jdO, double shift ) {
+		List<Coordinate> listxy ;
+		double interval ;
+		double d, e, g, dist ;
+
+		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
+
+		listxy = new java.util.Vector<Coordinate>() ;
+
+		listxy.add( positionOfScaleMarkValue( jdA, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdA ) ;
+
+		d = jdO-jdA ;
+		e = d-(int) ( d/interval )*interval ;
+		g = ( Math.isLim0( e )?interval:e )/2 ;
+
+		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
+			listxy.add( positionOfScaleMarkValue( jd, shift ) ) ;
+			if ( listjd != null )
+				listjd.add( jd ) ;
+		}
+
+		listxy.add( positionOfScaleMarkValue( jdO, shift ) ) ;
+		if ( listjd != null )
+			listjd.add( jdO ) ;
+
+		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( dist>0 && listxy.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), dist ).getCoordinates() ;
+		else
+			return listxy.toArray( new Coordinate[0] ) ;
+	}
+
+	abstract public Coordinate jdToEquatorial( double jd ) ;
+
 	public void headPS( ApplicationPostscriptStream ps ) {
 		String gstate ;
 
@@ -88,20 +173,25 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
 		ListCutter cutter ;
-		Geometry fov ;
+		FieldOfView fov ;
+		Geometry gov ;
 		ChartPage page ;
 		List<int[]> listid ;
 		List<Double> listjd ;
 		Coordinate[] list ;
-		double epoch[] ;
+		double epoch[], jdAe, jdOe ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			gov = fov.makeGeometry() ;
+		else {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
-				fov = page.getViewGeometry() ;
+				gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			else
+				gov = null ;
 		}
 
 		epoch = epoch() ;
@@ -109,17 +199,20 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		listid = new java.util.Vector<int[]>() ;
 		list = list( listjd, epoch[0], epoch[1], 0 ) ;
 
-		if ( fov == null ) {
+		if ( gov == null ) {
 			listid.add( new int[] { 0, list.length-1 } ) ;
 		} else {
-			cutter = new ListCutter( list, fov ) ;
+			cutter = new ListCutter( list, gov ) ;
 			cutter.segmentsInterior( listid ) ;
 		}
 
 		for ( int[] jdid : listid ) {
+			jdAe = listjd.get( jdid[0] ) ;
+			jdOe = listjd.get( jdid[1] ) ;
+
 			ps.op( "gsave" ) ;
 
-			list = list( null, jdid[0], jdid[1], 0 ) ;
+			list = list( null, jdAe, jdOe, 0 ) ;
 			ps.array( true ) ;
 			for ( Coordinate xy : list ) {
 				ps.push( xy.x ) ;

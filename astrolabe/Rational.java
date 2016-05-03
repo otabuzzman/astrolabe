@@ -20,7 +20,7 @@ public class Rational extends astrolabe.model.Rational {
 	}
 
 	public void set( double value, int precision ) {
-		double d, p ;
+		double d, v, p ;
 		int deg, frc ;
 		int e ;
 
@@ -30,7 +30,9 @@ public class Rational extends astrolabe.model.Rational {
 			e = Configuration.getValue( this, CK_PRECISION, DEFAULT_PRECISION ) ;
 		p = java.lang.Math.pow( 10, e ) ;
 
-		d = (int) ( java.lang.Math.abs( value )*p+.5 )/p ;
+		v = java.lang.Math.abs( value*3600. ) ;
+		d = java.lang.Math.round( v*p )/p ;
+
 		deg = (int) d ;
 		frc = (int) ( ( d-deg )*p ) ;
 		setValue( 0>value?-( deg+frc/p ):( deg+frc/p ) ) ;

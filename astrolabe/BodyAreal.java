@@ -90,7 +90,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 						0 ;
 			}
 		} ;
-		Geometry fov ;
+		FieldOfView fov ;
+		Geometry gov ;
 		ChartPage page ;
 		Coordinate xy ;
 		Vector z, p ;
@@ -98,18 +99,22 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			gov = fov.makeGeometry() ;
+		else {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
-				fov = page.getViewGeometry() ;
+				gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			else
+				gov = null ;
 		}
 
 		list = list() ;
-		if ( fov == null )
+		if ( gov == null )
 			( segment = new java.util.Vector<Coordinate[]>() ).add( list ) ;
 		else {
-			cutter = new ListCutter( list, fov ) ;
+			cutter = new ListCutter( list, gov ) ;
 			segment = cutter.segmentsIntersecting( true ) ;
 			if ( segment.size()>1 )
 				Collections.sort( segment, comparator ) ;

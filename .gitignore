@@ -23,7 +23,7 @@ lib/cat/7237/*
 !lib/cat/7237/prep.sh
 !lib/cat/7237/prepCSV.sh
 lib/vsop87/
-lib/Blocks-4.1.0.txt
+Blocks-4.1.0.txt
 .classpath
 .project
 Justv2.ttf

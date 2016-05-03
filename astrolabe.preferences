@@ -11,7 +11,9 @@
 				<node name="Object">
 					<map>
 						<entry key="verbose" value="false"/>
-						<!--used by DMS, ProstscriptStream, Rational.-->
+						<!--used by Astrolabe, FieldOfView.-->
+						<entry key="viewer" value="gswin32c.exe -dBATCH -dNOPAUSE -q -"/>
+						<!--used by DMS, ProstscriptStream, Rational, HorizonType.-->
 						<entry key="precision" value="2"/>
 						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical, Artwork.-->
 						<entry key="interval" value="1"/>
@@ -117,7 +119,6 @@
 			</node>
 			<node name="Astrolabe">
 				<map>
-					<entry key="viewer" value="gswin32c.exe -dBATCH -dNOPAUSE -q -"/>
 					<entry key="libcaa" value="cygcaa-1.17"/>
 				</map>
 				<node name="astrolabe">

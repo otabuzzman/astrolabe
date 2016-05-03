@@ -45,7 +45,8 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		astrolabe.model.Script script ;
-		Geometry fov ;
+		FieldOfView fov ;
+		Geometry gov ;
 		ChartPage page ;
 		double height ;
 		Coordinate lo, xy ;
@@ -53,17 +54,21 @@ public class BodyStellar extends astrolabe.model.BodyStellar implements Postscri
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			gov = fov.makeGeometry() ;
+		else {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
-				fov = page.getViewGeometry() ;
+				gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			else
+				gov = null ;
 		}
 
 		lo = valueOf( getPosition() ) ;
 		xy = projector.project( converter.convert( lo, false ), false ) ;
 
-		if ( fov != null && ! fov.covers( new GeometryFactory().createPoint( xy ) ) )
+		if ( gov != null && ! gov.covers( new GeometryFactory().createPoint( xy ) ) )
 			return ;
 
 		turn = -CAACoordinateTransformation.HoursToDegrees( getTurn() ) ;

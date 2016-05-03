@@ -19,7 +19,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		private double space = 0 ;
 
-		public void headPS(ApplicationPostscriptStream ps) {
+		public void headPS(ApplicationPostscriptStream ps ) {
 			Configuration conf ;
 			String qual ;
 
@@ -30,10 +30,10 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
 		}
 
-		public void emitPS(ApplicationPostscriptStream ps) {
+		public void emitPS( ApplicationPostscriptStream ps ) {
 		}
 
-		public void tailPS(ApplicationPostscriptStream ps) {
+		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
 	}
 
@@ -58,12 +58,12 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					qual+"/"+CK_THICKNESS, DEFAULT_THICKNESS ) ;
 		}
 
-		public void headPS(ApplicationPostscriptStream ps) {
+		public void headPS( ApplicationPostscriptStream ps ) {
 			ps.push( thickness ) ;
 			ps.op( "setlinewidth" ) ;
 		}
 
-		public void emitPS(ApplicationPostscriptStream ps) {
+		public void emitPS( ApplicationPostscriptStream ps ) {
 			Configuration conf ;
 			List<Coordinate> v ;
 			double ma, mo, o, span ;
@@ -126,7 +126,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			ps.op( "grestore" ) ;
 		}
 
-		public void tailPS(ApplicationPostscriptStream ps) {
+		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
 	}
 
@@ -156,12 +156,12 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		}
 
-		public void headPS(ApplicationPostscriptStream ps) {
+		public void headPS( ApplicationPostscriptStream ps ) {
 			ps.push( linewidth ) ;
 			ps.op( "setlinewidth" ) ;
 		}
 
-		public void emitPS(ApplicationPostscriptStream ps) {
+		public void emitPS( ApplicationPostscriptStream ps ) {
 			Configuration conf ;
 			List<Coordinate> vDFw, vDRv, rvDRv ;
 			double ma, mo, o, s, span ;
@@ -300,7 +300,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 					ps.op( "grestore" ) ;
 				}
 
-				if ( mo==o )
+				if ( mo == o )
 					break ;
 			}
 			if ( m%2 == 1 ) {// close unfilled subunit
@@ -350,7 +350,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 			}
 		}
 
-		public void tailPS(ApplicationPostscriptStream ps) {
+		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
 	}
 
@@ -462,7 +462,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 		o = baseline.valueOfScaleMarkN( -1, span ) ;
 
 		mL = new java.util.Vector<Double>() ;		
-		for ( int mN=0 ; o>=c ; mN++ ) {
+		for ( int mN=0 ; o>c ; mN++ ) {
 			c = baseline.valueOfScaleMarkN( mN, span ) ;
 			mL.add( c ) ;
 		}

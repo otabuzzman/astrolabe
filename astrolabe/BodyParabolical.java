@@ -43,4 +43,10 @@ public class BodyParabolical extends BodyOrbitalType {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Coordinate jdToEquatorial(double jd) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

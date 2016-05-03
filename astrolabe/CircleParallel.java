@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 import caa.CAA2DCoordinate;
@@ -145,10 +144,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
-		fov = null ;
 		page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 		if ( page != null )
-			fov = page.getViewGeometry() ;
+			fov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+		else
+			fov = null ;
 
 		list = list( null, begin(), end(), 0 ) ;
 		cutter = new ListCutter( list, fov ) ;
@@ -311,16 +311,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Po
 		if ( inverse )
 			return converter.convert( local, true ) ;
 		return converter.convert( new Coordinate( local.x, valueOf( getAngle() ) ), false ) ;
-	}
-
-	public LineString getCircleGeometry() {
-		Coordinate[] list;
-		LineString line ;
-
-		list = list( null, begin(), end(), 0 ) ;
-		line = new GeometryFactory().createLineString( list ) ;
-
-		return line ;
 	}
 
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) {

@@ -87,8 +87,6 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 			epoch = valueOf( astrolabe.getEpoch() ) ;
 			Registry.register( Epoch.class.getName(), epoch ) ;
 
-			out =  new TeeOutputStream( System.out ) ;
-
 			Configuration.init() ;
 
 			verbose = Configuration.getValue( Astrolabe.class, CK_VERBOSE, DEFAULT_VERBOSE ) ;
@@ -98,8 +96,9 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 				ApplicationResource.verbose() ;
 			}
 
-			viewerDecl = Configuration.getValue(
-					Astrolabe.class, CK_VIEWER, null ) ;
+			viewerDecl = Configuration.getValue( Astrolabe.class, CK_VIEWER, null ) ;
+			out =  new TeeOutputStream( System.out ) ;
+
 			if ( viewerDecl == null ) {
 				viewerProc = null ;
 			} else {

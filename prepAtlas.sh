@@ -9,9 +9,9 @@
 # export PATH=/usr/local/bin:$PATH
 # export LANG=de
 # numoff=0
-# ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff pdf -page%03d
-# numoff=`xml select -t -v 'count(Atlas/AtlasPage)' atlas-stereographic-northern.xml`
-# ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff pdf -page%03d
+# ./prepAtlas.sh atlas-stereographic 1 2 65,105,225 420 $numoff . -page%03d
+# numoff=`xml select -t -v 'count(AtlasAzimuthalType/AtlasPage)' atlas-stereographic-northern.xml`
+# ./prepAtlas.sh atlas-stereographic 3 4 0,191,225 420 $numoff . -page%03d
 #
 
 set -o errexit
@@ -95,7 +95,7 @@ convert $atlasposterpng - -composite - |\
 convert - -resize ${aimedge}x${aimedge} $atlastargetpng
 
 #? ${pickerchart}@name
-psunit=`xml select -t -v "preferences/root/node[@name='astrolabe']/node[@name='ChartPage']/map/entry[@key='unit']/@value" $astrolabeprf`
+psunit=`xml select -t -v "preferences/root/node[@name='java']/node[@name='lang']/node[@name='Object']/map/entry[@key='psunit']/@value" $astrolabeprf`
 aimpgr=`echo "scale=4;${aimedge}/${apge}*$psunit" | bc -l`
 xml transform $atlasmapxsl $atlastargetdef |\
 >$atlastargethtm ./prepAtlasHTML.sh $atlastargetpng $aimpgr $apgurldict/${atlastargetnam}${apgurlqual}.pdf

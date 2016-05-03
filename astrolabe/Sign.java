@@ -39,17 +39,22 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 	private void emitPS( ApplicationPostscriptStream ps, SignType limb ) {
 		double shortening ;
 		Vector va, vb, vc, vca, vco ;
-		Geometry fov, ab, l ;
+		FieldOfView fov ;
+		Geometry gov, ab, l ;
 		ChartPage page ;
 		Coordinate a, b ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			gov = fov.makeGeometry() ;
+		else {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
-				fov = page.getViewGeometry() ;
+				gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			else
+				gov = null ;
 		}
 
 		shortening = Configuration.getValue( this, CK_SHORTENING, DEFAULT_SHORTENING ) ;
@@ -68,9 +73,9 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 		} else
 			ab = l = new GeometryFactory().createLineString( new Coordinate[] { a, b } ) ;
 
-		if ( fov != null && fov.intersects( ab ) ) {
-			if ( ! fov.contains( ab ) )
-				l = fov.intersection( ab ) ;
+		if ( gov != null && gov.intersects( ab ) ) {
+			if ( ! gov.contains( ab ) )
+				l = gov.intersection( ab ) ;
 
 			ps.array( true ) ;
 			for ( Coordinate xy : l.getCoordinates() ) {

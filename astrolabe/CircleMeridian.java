@@ -13,7 +13,6 @@ import caa.CAACoordinateTransformation;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
@@ -144,10 +143,11 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
 
-		fov = null ;
 		page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 		if ( page != null )
-			fov = page.getViewGeometry() ;
+			fov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+		else
+			fov = null ;
 
 		list = list( null, begin(), end(), 0 ) ;
 		cutter = new ListCutter( list, fov ) ;
@@ -310,16 +310,6 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		if ( inverse )
 			return converter.convert( local, true ) ;
 		return converter.convert( new Coordinate( valueOf( getAngle() ), local.y ), false ) ;
-	}
-
-	public LineString getCircleGeometry() {
-		Coordinate[] list;
-		LineString line ;
-
-		list = list( null, begin(), end(), 0 ) ;
-		line = new GeometryFactory().createLineString( list ) ;
-
-		return line ;
 	}
 
 	private double[] transform() {

@@ -27,7 +27,7 @@ public class DMS extends astrolabe.model.DMS {
 	}
 
 	public void set( double value, int precision ) {
-		double d, m, s, p ;
+		double d, v, m, s, p ;
 		double sec, frc ;
 		int deg, min ;
 		int e ;
@@ -40,7 +40,9 @@ public class DMS extends astrolabe.model.DMS {
 			e = Configuration.getValue( this, CK_PRECISION, DEFAULT_PRECISION ) ;
 		p = java.lang.Math.pow( 10, e ) ;
 
-		d = ( java.lang.Math.abs( value*3600. )*p+.5 )/p ;
+		v = java.lang.Math.abs( value*3600. ) ;
+		d = java.lang.Math.round( v*p )/p ;
+
 		deg = (int) d/3600 ;
 		setDeg( deg ) ;
 

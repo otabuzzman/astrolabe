@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--to generate this file
 1. cd to project directory and type make AtlasAzimuthalType.map
-2. remove package model from class definitions AtlasAzimuthalType, AtlasPage, DMS and Rational
+2. remove package model from class definitions for AtlasAzimuthalType, AtlasPage, DMS and Rational
 3. remove field definitions for name attributes from class definitions AtlasAzimuthalType, AtlasPage
-4. remove required attributes from field definitions for Lon and Lat-->
+4. remove required attributes from field definitions of Lon and Lat-->
 <mapping xmlns="http://castor.exolab.org/" xmlns:cst="http://castor.exolab.org/">
 	<description xmlns="">Castor generated mapping file</description>
 	<class name="astrolabe.model.P0">

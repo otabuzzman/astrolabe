@@ -15,7 +15,7 @@
 
 	<xsl:param name="numoff" select="0"/>
 
-	<xsl:template match="Atlas">
+	<xsl:template match="AtlasAzimuthalType">
 		<Astrolabe name="atlas-sterographic-northern">
 		<xsl:attribute
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

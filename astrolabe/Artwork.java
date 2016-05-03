@@ -68,7 +68,8 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		RealMatrix M, P, MP ;
 		Geometry p, mbr ;
 		Coordinate[] pc, mbrc ;
-		Geometry fov, fot ;
+		FieldOfView fov ;
+		Geometry gov, got ;
 		double minsection ;
 		ChartPage page ;
 		double u, d, r, interval ;
@@ -166,26 +167,30 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		maxs = mbrc[0].distance( mbrc[1] ) ;
 		maxt = mbrc[0].distance( mbrc[3] ) ;
 
-		fov = (Geometry) Registry.retrieve( Geometry.class.getName() ) ;
-		if ( fov == null ) {
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			gov = fov.makeGeometry() ;
+		else {
 			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 			if ( page != null )
-				fov = page.getViewGeometry() ;
+				gov = FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			else
+				gov = null ;
 		}
 
-		if ( fov != null && ! fov.intersects( mbr ) )
+		if ( gov != null && ! gov.intersects( mbr ) )
 			return ;
-		if ( fov.contains( mbr ) )
-			fot = mbr ;
+		if ( gov == null || gov.contains( mbr ) )
+			got = mbr ;
 		else {
-			fot = fov.intersection( mbr ) ;
+			got = gov.intersection( mbr ) ;
 
 			minsection = Configuration.getValue( this, CK_MINSECTION, DEFAULT_MINSECTION )/100 ;
 			p = new GeometryFactory().createPolygon( pc ) ;
-			if ( minsection>fot.getArea()/p.getArea() )
+			if ( minsection>got.getArea()/p.getArea() )
 				return ;
 
-			mbrc = new MinimumDiameter( new GeometryFactory().createLinearRing( fot.getCoordinates() ) )
+			mbrc = new MinimumDiameter( new GeometryFactory().createLinearRing( got.getCoordinates() ) )
 			.getMinimumRectangle()
 			.getCoordinates() ;
 			maxs = mbrc[0].distance( mbrc[1] ) ;
@@ -229,7 +234,7 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 			ps.push( 0 ) ;
 			ps.push( 1 ) ;
 			ps.op( "setrgbcolor" ) ;
-			linePS( ps, fot.getCoordinates() ) ;
+			linePS( ps, got.getCoordinates() ) ;
 
 			ps.push( 0 ) ;
 			ps.op( "setgray" ) ;
@@ -280,7 +285,7 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 				image.setRGB( x, y, a ) ;
 
-				if ( fot.covers( new GeometryFactory().createPoint( c ) ) ) {
+				if ( got.covers( new GeometryFactory().createPoint( c ) ) ) {
 					if ( getHeaven() ) {
 						eq = projector.project( c, true ) ;
 						xyz = projector.cartesian( eq, false ) ;

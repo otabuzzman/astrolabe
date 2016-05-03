@@ -28,7 +28,7 @@ CLASSPATH = ./lib/castor-1.3.1.jar \
 JAVA_UNICODEBLOCK = $(APPL)/UnicodeBlock.java
 PREP_UNICODEBLOCK = ./prepUnicodeBlock.sh
 
-BLOCKS = ./lib/Blocks-4.1.0.txt
+BLOCKS = ./Blocks-4.1.0.txt
 
 .xml.ps:
 	@time $(JDK)/bin/java $(JDO) \
@@ -59,7 +59,7 @@ $(APPL)/model: $(MODEL)
 		./castor-1.3.1-xml-schema.jar \
 		$(CLASSPATH)) \
 		org.exolab.castor.builder.SourceGeneratorMain -i $< \
-		-binding-file binding.xml \
+		-binding-file ./binding.xml \
 	@touch $@
 	@echo "done!"
 
