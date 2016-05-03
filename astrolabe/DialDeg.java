@@ -13,9 +13,9 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 	private final static double DEFAULT_FADE	= 0 ;
 
-	private final static String CK_RISE			= "rise" ;
+	private final static String CK_SUPERSCRIPT		= "superscript" ;
 
-	private final static double DEFAULT_RISE	= 3.2 ;
+	private final static double DEFAULT_SUPERSCRIPT	= 3.2 ;
 
 	private final static String CK_HALO			= "halo" ;
 	private final static String CK_HALOMIN		= "halomin" ;
@@ -25,7 +25,6 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 	private final static double DEFAULT_HALOMIN	= .08 ;
 	private final static double DEFAULT_HALOMAX	= .4 ;
 
-	private final static String CN_BASELINE		= "baseline" ;
 	private final static String CK_SPACE		= "space" ;
 	private final static String CK_THICKNESS	= "thickness" ;
 	private final static String CK_LINEWIDTH	= "linewidth" ;
@@ -46,26 +45,13 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 	private final static double[] m90 = new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ;
 	private final static double[] m90c = new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ;
 
-	// attribute value (AV_)
-	private final static String AV_NONE = "none" ;
-	private final static String AV_LINE = "line" ;
-	private final static String AV_RAIL = "rail" ;
-
-	private class None implements PostscriptEmitter {
+	private class ScalebaseNone extends astrolabe.model.ScalebaseNone implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
 
-		private double space ;
+		private double space = Double.NaN ;
 
 		public void headPS(ApplicationPostscriptStream ps ) {
-			Configuration conf ;
-			String qual ;
-
-			conf = new Configuration( getClass().getEnclosingClass() ) ;
-			qual = CN_BASELINE+"/"+getBaseline() ;
-
-			space = conf.getValue(
-					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
 		}
 
 		public void emitPS( ApplicationPostscriptStream ps ) {
@@ -73,28 +59,22 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
+
+		public void init() {
+			if ( ! Double.isNaN( space ) )
+				return ;
+
+			space = Configuration.getValue( this, CK_SPACE, DEFAULT_SPACE ) ;
+		}
 	}
 
-	private class Line implements PostscriptEmitter {
+	private class ScalebaseLine extends astrolabe.model.ScalebaseLine implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
 		private final static double DEFAULT_THICKNESS	= 1.2 ;
 
-		private double space ;
-		private double thickness ;
-
-		public Line() {
-			Configuration conf ;
-			String qual ;
-
-			conf = new Configuration( getClass().getEnclosingClass() ) ;
-			qual = CN_BASELINE+"/"+getBaseline() ;
-
-			space = conf.getValue(
-					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
-			thickness = conf.getValue(
-					qual+"/"+CK_THICKNESS, DEFAULT_THICKNESS ) ;
-		}
+		private double space		= Double.NaN ;
+		private double thickness	= Double.NaN ;
 
 		public void headPS( ApplicationPostscriptStream ps ) {
 			ps.push( thickness ) ;
@@ -120,7 +100,7 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 			Vector t04 = new Vector( t03 ).sub( t02 ).scale( 1 ).apply( m90 ) ;
 			nrm[j-1].setCoordinate( t04 ) ;
 
-			if ( getCircle() != null && ! updateBaselinePosNrm( bot, nrm ) )
+			if ( getBaseline() != null && ! updateBaselinePosNrm( bot, nrm ) )
 				return ;
 
 			astrolabe.Coordinate.parallelShift( bot, getReflect()?-space:space ) ;
@@ -165,33 +145,25 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
+
+		public void init() {
+			if ( ! Double.isNaN( space ) )
+				return ;
+
+			space = Configuration.getValue( this, CK_SPACE, DEFAULT_SPACE ) ;
+			thickness = Configuration.getValue( this, CK_THICKNESS, DEFAULT_THICKNESS ) ;
+		}
 	}
 
-	private class Rail implements PostscriptEmitter {
+	private class ScalebaseRail extends astrolabe.model.ScalebaseRail implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
 		private final static double DEFAULT_THICKNESS	= 1.2 ;
 		private final static double DEFAULT_LINEWIDTH	= .01 ;
 
-		private double space ;
-		private double thickness ;
-		private double linewidth ;
-
-		public Rail() {
-			Configuration conf ;
-			String qual ;
-
-			conf = new Configuration( getClass().getEnclosingClass() ) ;
-			qual = CN_BASELINE+"/"+getBaseline() ;
-
-			space = conf.getValue(
-					qual+"/"+CK_SPACE, DEFAULT_SPACE ) ;
-			thickness = conf.getValue(
-					qual+"/"+CK_THICKNESS, DEFAULT_THICKNESS ) ;
-			linewidth = conf.getValue(
-					qual+"/"+CK_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
-
-		}
+		private double space		= Double.NaN ;
+		private double thickness	= Double.NaN ;
+		private double linewidth	= Double.NaN ;
 
 		public void headPS( ApplicationPostscriptStream ps ) {
 			ps.push( linewidth ) ;
@@ -206,7 +178,7 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 			m90 = new double[] { 0, -1, 1, 0 } ;
 
-			baseattr = getCircle() != null ;
+			baseattr = getBaseline() != null ;
 
 			span = getScaleline()[0].getValue()/getDivision() ;
 			a = baseline.valOfScaleMarkN( 0, span ) ;
@@ -296,6 +268,15 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
+
+		public void init() {
+			if ( ! Double.isNaN( space ) )
+				return ;
+
+			space = Configuration.getValue( this, CK_SPACE, DEFAULT_SPACE ) ;
+			thickness = Configuration.getValue( this, CK_THICKNESS, DEFAULT_THICKNESS ) ;
+			linewidth = Configuration.getValue( this, CK_LINEWIDTH, DEFAULT_LINEWIDTH ) ;
+		}
 	}
 
 	public DialDeg( Baseline baseline ) {
@@ -311,28 +292,15 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
-		PostscriptEmitter pse ;
-
-		switch ( baseline() ) {
-		case 0:
-			pse = new None() ;
-			break ;
-		case 1:
-			pse = new Line() ;
-			break ;
-		default:
-		case 2:
-			pse = new Rail() ;
-		}
-		pse.headPS( ps ) ;
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		double space, thickness, rise, shift ;
-		double span, a, o, v, s ;
+		double shift, superscript ;
+		double span, a, o, v ;
 		Vector pos, nrm, pt, t1 ;
 		boolean baseattr ;
+		astrolabe.model.ScalebaseType peer ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 		Scaleline scaleline ;
@@ -350,32 +318,47 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 		if ( seg.getNumPoints() == 0 )
 			return ; // bas not covered by fov
 
-		switch ( baseline() ) {
-		case 0:
-			None none = new None() ;
-			space = none.space ;
-			thickness = 0 ;
+		if ( ( peer = getDialTypeChoice().getScalebaseNone() ) != null ) {
+			ScalebaseNone scalebase ;
 
-			none.emitPS( ps ) ;
-			break ;
-		case 1:
-			Line line = new Line() ;
-			space = line.space ;
-			thickness = line.thickness ;
+			scalebase = new ScalebaseNone() ;
+			peer.copyValues( scalebase ) ;
+			scalebase.init() ;
 
-			line.emitPS( ps ) ;
-			break ;
-		default:
-		case 2:
-			Rail rail = new Rail() ;
-			space = rail.space ;
-			thickness = rail.thickness ;
+			scalebase.headPS( ps ) ;
+			scalebase.emitPS( ps ) ;
+			scalebase.tailPS( ps ) ;
 
-			rail.emitPS( ps ) ;
-			break ;
+			shift = scalebase.space ;			
+		} else if ( ( peer = getDialTypeChoice().getScalebaseLine() ) != null ) {
+			ScalebaseLine scalebase ;
+
+			scalebase = new ScalebaseLine() ;
+			peer.copyValues( scalebase ) ;
+			scalebase.init() ;
+
+			scalebase.headPS( ps ) ;
+			scalebase.emitPS( ps ) ;
+			scalebase.tailPS( ps ) ;
+
+			shift = scalebase.space+scalebase.thickness ;			
+		} else { // getDialTypeChoice().getScalebaseRail() != null
+			ScalebaseRail scalebase ;
+
+			scalebase = new ScalebaseRail() ;
+			peer = getDialTypeChoice().getScalebaseRail() ;
+			peer.copyValues( scalebase ) ;
+			scalebase.init() ;
+
+			scalebase.headPS( ps ) ;
+			scalebase.emitPS( ps ) ;
+			scalebase.tailPS( ps ) ;
+
+			shift = scalebase.space+scalebase.thickness ;			
 		}
 
-		baseattr = getCircle() != null ;
+
+		baseattr = getBaseline() != null ;
 
 		span = getScaleline()[0].getValue() ;
 		a = baseline.valOfScaleMarkN( 0, span ) ;
@@ -404,12 +387,11 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 			if ( baseattr && ! updateBaselinePosNrm( pos, nrm ) )
 				continue ;
 
+			nrm.scale( shift ) ;
 			if ( getReflect() )
-				nrm.neg() ;
-
-			s = space+thickness ;
-			if ( s != 0 )
-				pos.add( nrm.scale( s ) ) ;
+				pos.sub( nrm ) ;
+			else
+				pos.add( nrm ) ;
 
 			register( v ) ;
 			ps.op( "gsave" ) ;
@@ -443,13 +425,13 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		ps.op( "pop" ) ;
 
-		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
+		superscript = conf.getValue( CK_SUPERSCRIPT, DEFAULT_SUPERSCRIPT ) ;
 
-		shift = ( ( space+thickness )+rise ) ;
-		Coordinate[] t00 = baseline.list( a, o ) ;
-		astrolabe.Coordinate.parallelShift( t00, getReflect()?-shift:shift ) ;
+		double t00 = superscript+shift ;
+		Coordinate[] t01 = baseline.list( a, o ) ;
+		astrolabe.Coordinate.parallelShift( t01, getReflect()?-t00:t00 ) ;
 		ps.array( true ) ;
-		for ( Coordinate xy : t00 ) {
+		for ( Coordinate xy : t01 ) {
 			ps.push( xy.x ) ;
 			ps.push( xy.y ) ;
 		}
@@ -480,20 +462,6 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
-		PostscriptEmitter pse ;
-
-		switch ( baseline() ) {
-		case 0:
-			pse = new None() ;
-			break ;
-		case 1:
-			pse = new Line() ;
-			break ;
-		default:
-		case 2:
-			pse = new Rail() ;
-		}
-		pse.tailPS( ps ) ;
 	}
 
 	public boolean isMultipleSpan( double mark, double span ) {
@@ -522,7 +490,7 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		s = 1./( getDivision()*2 ) ;
 
-		name = getCircle() ;
+		name = getBaseline() ;
 		if ( name == null ) {
 			a = baseline.valOfScaleMarkN( 0, s ) ;
 			o = baseline.valOfScaleMarkN( -1, s ) ;
@@ -573,16 +541,6 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 		nrm.setCoordinate( new Vector( t1 ).apply( m90c ).scale( 1 ) ) ;
 
 		return true ;
-	}
-
-	private int baseline() {
-		if ( getBaseline().equals( AV_NONE ) )
-			return 0 ;
-		if ( getBaseline().equals( AV_LINE ) )
-			return 1 ;
-		if ( getBaseline().equals( AV_RAIL ) )
-			return 2 ;
-		return -1 ;
 	}
 
 	private PostscriptEmitter annotation( astrolabe.model.AnnotationStraight peer ) {

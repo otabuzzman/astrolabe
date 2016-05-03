@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
+astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2014" m="1" d="1"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic northern="true" scale="100">
+			<ChartPage view="100" size="a4"/>
+			<Oblique>
+				<lon>
+					<Rational value="0"/>
+				</lon>
+				<lat>
+					<Rational value="90"/>
+				</lat>
+			</Oblique>
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="obscure" value="test file tf-0001.xml"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="-25"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="85"/>
+								</Angle>
+							</End>
+							<DialDeg division="1" reflect="false">
+								<ScalebaseNone/>
+								<Scaleline value="10">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{skalagrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{skalagrd}&#x00b0;"/>
+									</AnnotationStraight>
+								</Scaleline>
+							</DialDeg>
+							<Angle>
+								<Rational value="10"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>

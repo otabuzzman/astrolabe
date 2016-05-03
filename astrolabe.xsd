@@ -410,19 +410,15 @@
 	</xs:element>
 	<xs:complexType name="DialType">
 		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="ScalebaseNone"/>
+				<xs:element ref="ScalebaseLine"/>
+				<xs:element ref="ScalebaseRail"/>
+			</xs:choice>
 			<xs:element ref="Scaleline" maxOccurs="unbounded"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="baseline" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="none"/>
-					<xs:pattern value="line"/>
-					<xs:pattern value="rail"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
 		<xs:attribute name="division" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:positiveInteger">
@@ -431,7 +427,7 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="reflect" type="xs:boolean" use="required"/>
-		<xs:attribute name="circle" use="optional">
+		<xs:attribute name="baseline" use="optional">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:pattern value=".+"/>
@@ -473,6 +469,12 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="ScalebaseType">
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="ScalebaseNone" type="ScalebaseType"/>
+	<xs:element name="ScalebaseLine" type="ScalebaseType"/>
+	<xs:element name="ScalebaseRail" type="ScalebaseType"/>
 	<xs:complexType name="AnnotationType">
 		<xs:sequence>
 			<xs:element ref="Script" maxOccurs="unbounded"/>

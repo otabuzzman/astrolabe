@@ -96,8 +96,7 @@ public final class Configuration {
 		int p ;
 
 		n = "/"+clazz.getName()
-		.replaceAll( "\\.", "/" )
-		.split( "\\$", 2 )[0] ;
+		.replaceAll( "\\.", "/" ) ;
 
 		if ( instance != null )
 			n += "/"+instance ;
@@ -165,8 +164,7 @@ public final class Configuration {
 		int p, f ;
 
 		n = "/"+clazz.getName()
-		.replaceAll( "\\.", "/" )
-		.split( "\\$", 2 )[0] ;
+		.replaceAll( "\\.", "/" ) ;
 
 		f = key.lastIndexOf( "/" ) ;
 		if ( f>0 ) {
@@ -274,8 +272,7 @@ public final class Configuration {
 
 		buf.append(
 				clazz.getName()
-				.replaceAll( "\\.", "/" )
-				.split( "\\$", 2 )[0] ) ;
+				.replaceAll( "\\.", "/" ) ) ;
 		if ( instance != null ) {
 			buf.append( '/' ) ;
 			buf.append(

@@ -144,7 +144,7 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			ps.op( "gsave" ) ;
 
 			ps.array( true ) ;
-			for ( com.vividsolutions.jts.geom.Coordinate xy : cut.getGeometryN( i ).getCoordinates() ) {
+			for ( Coordinate xy : ccut ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}

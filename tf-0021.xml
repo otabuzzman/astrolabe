@@ -41,7 +41,8 @@ astrolabe.xsd">
 					</Circle>
 					<Body>
 						<BodySun nature="celestial" type="true">
-							<DialDay baseline="line" division="1" reflect="false" circle="baseline">
+							<DialDay division="1" reflect="false" baseline="baseline">
+								<ScalebaseLine/>
 								<Scaleline value="1"/>
 								<Scaleline name="half" value="7">
 									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">

@@ -16,7 +16,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class CircleParallel extends astrolabe.model.CircleParallel implements Cloneable, PostscriptEmitter, Baseline {
+public class CircleParallel extends astrolabe.model.CircleParallel implements PostscriptEmitter, Baseline {
 
 	// qualifier key (QK_)
 	private final static String QK_ALTITUDE			= "altitude" ;
@@ -138,8 +138,6 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
 		int segmin ;
-		CircleParallel base ;
-		astrolabe.model.Rational angA, angO ;
 		Coordinate[] ccrc, ccut ;
 		ChartPage page ;
 		Geometry fov, cut, tmp ;
@@ -164,25 +162,11 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 			cut = fov.intersection( tmp ) ;
 		}
 
-		base = (CircleParallel) clone() ;
-		base.setBegin( new astrolabe.model.Begin() ) ;
-		base.getBegin().setAngle( new astrolabe.model.Angle() ) ;
-		base.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
-		base.setEnd( new astrolabe.model.End() ) ;
-		base.getEnd().setAngle( new astrolabe.model.Angle() ) ;
-		base.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
-
-		angA = base.getBegin().getAngle().getRational() ;
-		angO = base.getEnd().getAngle().getRational() ;
-
 		for ( int i=0 ; cut.getNumGeometries()>i ; i++ ) {
 			ccut = cut.getGeometryN( i ).getCoordinates() ;
 
 			if ( segmin>ccut.length )
 				continue ;
-
-			angA.setValue( converter.convert( projector.project( ccut[0], true ), true ).x ) ;
-			angO.setValue( converter.convert( projector.project( ccut[ccut.length-1], true ), true ).x ) ;
 
 			ps.op( "gsave" ) ;
 
@@ -226,7 +210,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 			ps.op( "grestore" ) ;
 
 			if ( getDialDeg() != null ) {
-				emitter = new DialDeg( base ) ;
+				emitter = new DialDeg( this ) ;
 				getDialDeg().copyValues( emitter ) ;
 
 				ps.op( "gsave" ) ;
@@ -620,12 +604,5 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		peer.copyValues( annotation ) ;
 
 		return annotation ;
-	}
-
-	public Object clone() {
-		try {
-			return super.clone() ;
-		} catch ( CloneNotSupportedException e ) {}
-		return null ;
 	}
 }

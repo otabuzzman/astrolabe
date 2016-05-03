@@ -20,29 +20,42 @@ astrolabe.xsd">
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="obscure" value="test file tf-0003.xml"/>
+						<Script purpose="obscure" value="test file tf-0001.xml"/>
 					</AnnotationStraight>
-					<Body>
-						<BodySun nature="celestial" type="true">
-							<DialDay division="4" reflect="false">
-								<ScalebaseLine/>
-								<Scaleline value="1"/>
-								<Scaleline name="half" value="7">
-									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
-										<Script purpose="guidance" value="{julianischertag}"/>
-									</AnnotationStraight>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="359.99"/>
+								</Angle>
+							</End>
+							<DialDeg division="3" reflect="false">
+								<ScalebaseRail/>
+								<Scaleline value="7.5">
 									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
-										<Script purpose="guidance" value="{T}."/>
+										<Script purpose="dialfraction" value="30">
+											<Superscript value="m"/>
+										</Script>
 									</AnnotationStraight>
 								</Scaleline>
-								<Scaleline name="full" value="30">
-									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
-										<Script purpose="dialcardinal" value="{monat}"/>
+								<Scaleline name="half" value="15">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{skalagrd/15}">
+											<Superscript value="h"/>
+										</Script>
 									</AnnotationStraight>
 								</Scaleline>
-							</DialDay>
-						</BodySun>
-					</Body>
+							</DialDeg>
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
 				</HorizonEquatorial>
 			</Horizon>
 		</ChartStereographic>

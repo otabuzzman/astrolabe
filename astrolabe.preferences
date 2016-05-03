@@ -338,62 +338,37 @@
 			</node>
 			<node name="DialDeg">
 				<map>
-					<entry key="rise" value="3.2"/>
+					<entry key="superscript" value="3.2"/>
 				</map>
-				<node name="baseline">
-					<map/>
-					<node name="none">
-						<map>
-							<entry key="space" value="1"/>
-						</map>
-					</node>
-					<node name="line">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value=".2"/>
-						</map>
-					</node>
-					<node name="rail">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value="1.2"/>
-							<entry key="linewidth" value=".01"/>
-						</map>
-					</node>
-				</node>
 			</node>
 			<node name="DialDay">
 				<map>
-					<entry key="rise" value="3.2"/>
+					<entry key="superscript" value="3.2"/>
 				</map>
-				<node name="baseline">
-					<map/>
-					<node name="none">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value="0"/>
-						</map>
-					</node>
-					<node name="line">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value=".2"/>
-						</map>
-					</node>
-					<node name="rail">
-						<map>
-							<entry key="space" value="1"/>
-							<entry key="thickness" value="1.2"/>
-							<entry key="linewidth" value=".01"/>
-						</map>
-					</node>
-				</node>
 				<node name="moon">
 					<map>
 						<!--postscript value of brightness to fade to from current-->
 						<entry key="fade" value=".92"/>
 					</map>
 				</node>
+			</node>
+			<node name="DialDeg$ScalebaseNone">
+				<map>
+					<entry key="space" value="1"/>
+				</map>
+			</node>
+			<node name="DialDeg$ScalebaseLine">
+				<map>
+					<entry key="space" value="1"/>
+					<entry key="thickness" value=".2"/>
+				</map>
+			</node>
+			<node name="DialDeg$ScalebaseRail">
+				<map>
+					<entry key="space" value="1"/>
+					<entry key="thickness" value="1.2"/>
+					<entry key="linewidth" value=".01"/>
+				</map>
 			</node>
 			<node name="Scaleline">
 				<map>
