@@ -101,7 +101,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleParallel peer ) {
@@ -118,7 +118,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernPolar peer ) {
@@ -135,7 +135,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleNorthernTropic peer ) {
@@ -152,7 +152,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernTropic peer ) {
@@ -169,7 +169,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void circle( ApplicationPostscriptStream ps, astrolabe.model.CircleSouthernPolar peer ) {
@@ -186,7 +186,7 @@ abstract public class HorizonType extends astrolabe.model.HorizonType implements
 			Registry.register( circle.getName(), circle ) ;
 
 		if ( circle.getFieldofview() )
-			updateFOV( circle.list( circle.begin(), circle.end() ) ) ;
+			updateFOV( circle.list( circle.alpha(), circle.omega() ) ) ;
 	}
 
 	private void updateFOV( Coordinate[] line ) {

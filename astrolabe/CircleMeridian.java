@@ -38,6 +38,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
 
+	private final static String CK_DEFANGLEMIN		= "defanglemin" ;
+	private final static String CK_DEFANGLEMAX		= "defanglemax" ;
+
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private static final double DEFAULT_DISTANCE	= 0 ;
 	private final static int DEFAULT_SEGMIN			= 3 ;
@@ -45,6 +48,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
+
+	private final static double DEFAULT_DEFANGLEMIN	= -85 ;
+	private final static double DEFAULT_DEFANGLEMAX	= 85 ;
 
 	// message key (MK_)
 	private final static String MK_EINTSEC			= "eintsec" ;
@@ -61,54 +67,56 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		zenit = convert( new Coordinate( 0, 90 ), false ) ;
 	}
 
-	public double begin() {
-		double r ;
+	public double alpha() {
+		double a ;
+		Object c ;
+		boolean l ;
 
-		if ( getBegin().getAngle() == null ) {
-			Object circle ;
-			boolean leading ;
+		if ( getAlpha() == null )
+			return Configuration.getValue( this, CK_DEFANGLEMIN, DEFAULT_DEFANGLEMIN ) ;
 
-			leading = getBegin().getReference().getNode().equals( AV_LEADING ) ;
-			try {
-				circle = Registry.retrieve( getBegin().getReference().getCircle() ) ;
-				r = circle instanceof CircleParallel?
-						intersect( (CircleParallel) circle, leading ):
-							intersect( (CircleMeridian) circle, leading ) ;
-			} catch ( ParameterNotValidException e ) {
-				log.warn( e.getMessage() ) ;
+		a = valueOf( getAlpha() ) ;
+		if ( getAlpha().getIndirect() == null )
+			return a ;
 
-				r = -90 ;
-			}
-		} else {
-			r = valueOf( getBegin().getAngle() ) ;
+		l = getAlpha().getIndirect().getNode().equals( AV_LEADING ) ;
+		try {
+			c = Registry.retrieve( getAlpha().getIndirect().getValue() ) ;
+
+			return c instanceof CircleParallel?
+					intersect( (CircleParallel) c, l ):
+						intersect( (CircleMeridian) c, l ) ;
+		} catch ( ParameterNotValidException e ) {
+			log.warn( e.getMessage() ) ;
+
+			return Configuration.getValue( this, CK_DEFANGLEMIN, DEFAULT_DEFANGLEMIN ) ;
 		}
-
-		return r ;
 	}
 
-	public double end() {
-		double end ;
+	public double omega() {
+		double a ;
+		Object c ;
+		boolean l ;
 
-		if ( getEnd().getAngle() == null ) {
-			Object circle ;
-			boolean leading ;
+		if ( getOmega() == null )
+			return Configuration.getValue( this, CK_DEFANGLEMAX, DEFAULT_DEFANGLEMAX ) ;
 
-			leading = getBegin().getReference().getNode().equals( AV_LEADING ) ;
-			try {
-				circle = Registry.retrieve( getEnd().getReference().getCircle() ) ;
-				end = circle instanceof CircleParallel?
-						intersect( (CircleParallel) circle, leading ):
-							intersect( (CircleMeridian) circle, leading ) ;
-			} catch ( ParameterNotValidException e ) {
-				log.warn( e.getMessage() ) ;
+		a = valueOf( getOmega() ) ;
+		if ( getOmega().getIndirect() == null )
+			return a ;
 
-				end = 90 ;
-			}
-		} else {
-			end = valueOf( getEnd().getAngle() ) ;
+		l = getOmega().getIndirect().getNode().equals( AV_LEADING ) ;
+		try {
+			c = Registry.retrieve( getOmega().getIndirect().getValue() ) ;
+
+			return c instanceof CircleParallel?
+					intersect( (CircleParallel) c, l ):
+						intersect( (CircleMeridian) c, l ) ;
+		} catch ( ParameterNotValidException e ) {
+			log.warn( e.getMessage() ) ;
+
+			return Configuration.getValue( this, CK_DEFANGLEMAX, DEFAULT_DEFANGLEMAX ) ;
 		}
-
-		return end ;
 	}
 
 	public void register() {
@@ -116,7 +124,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		double az ;
 		DMS dms ;
 
-		currentpoint = new astrolabe.Coordinate( posVecOfScaleMarkVal( end() ) ) ;
+		currentpoint = new astrolabe.Coordinate( posVecOfScaleMarkVal( omega() ) ) ;
 		currentpoint.register( this, QK_TERMINUS ) ;
 
 		az = valueOf( getAngle() ) ;
@@ -156,7 +164,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		else
 			fov = null ;
 
-		ccrc = list( begin(), end() ) ;
+		ccrc = list( alpha(), omega() ) ;
 
 		if ( fov == null )
 			cut = new GeometryFactory().createLineString( ccrc ) ;
@@ -263,7 +271,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	}
 
 	public double valOfScaleMarkN( int mark, double span ) {
-		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
+		return new LinearScale( span, new double[] { alpha(), omega() } ).markN( mark ) ;
 	}
 
 	public Coordinate[] list( double begin, double end ) {
@@ -341,8 +349,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		gnaz = leading?gnhoO.x:gnhoA.x ;
 
-		gnb = gn.begin() ;
-		gne = gn.end() ;
+		gnb = gn.alpha() ;
+		gne = gn.omega() ;
 
 		if ( !( gnb>gne ? gnaz>=gnb || gnaz<=gne : gnaz>=gnb && gnaz<=gne ) ) {
 			cat = new MessageCatalog( this ) ;
@@ -394,8 +402,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		gnal = leading?inaz[3]:inaz[2] ;
 
-		gnb = gn.begin() ;
-		gne = gn.end() ;
+		gnb = gn.alpha() ;
+		gne = gn.omega() ;
 
 		if ( gnb>gne ? gnal>=gne && gnal<=gnb : gnal>=gnb && gnal<=gne ) {
 			cat = new MessageCatalog( this ) ;

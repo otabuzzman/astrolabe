@@ -9,14 +9,6 @@ astrolabe.xsd">
 	<Chart>
 		<ChartStereographic northern="true" scale="160">
 			<ChartPage view="80" size="a4"/>
-			<Oblique>
-				<lon>
-					<Rational value="0"/>
-				</lon>
-				<lat>
-					<Rational value="90"/>
-				</lat>
-			</Oblique>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">

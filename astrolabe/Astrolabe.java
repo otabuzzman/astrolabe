@@ -51,7 +51,8 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		Registry.register( ParserAttribute.class.getName(), parser ) ;
 
 		epoch = new Epoch() ;
-		getEpoch().copyValues( epoch ) ;
+		if ( getEpoch() != null )
+			getEpoch().copyValues( epoch ) ;
 		Registry.register( Epoch.class.getName(), epoch ) ;
 
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				

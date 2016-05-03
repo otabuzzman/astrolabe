@@ -336,6 +336,18 @@
 					<entry key="map" value="lib/AtlasAzimuthalType.map"/>
 				</map>
 			</node>
+			<node name="CircleMeridian">
+				<map>
+					<entry key="defanglemin" value="-85"/>
+					<entry key="defanglemax" value="85"/>
+				</map>
+			</node>
+			<node name="CircleParallel">
+				<map>
+					<entry key="defanglemin" value="0"/>
+					<entry key="defanglemax" value="359.99"/>
+				</map>
+			</node>
 			<node name="DialDeg">
 				<map>
 					<entry key="superscript" value="3.2"/>

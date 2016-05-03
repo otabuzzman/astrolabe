@@ -3,7 +3,7 @@
 <xs:schema xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartacaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
-			<xs:element ref="Epoch"/>
+			<xs:element ref="Epoch" minOccurs="0"/>
 			<xs:element ref="Atlas" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Chart" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -32,7 +32,6 @@
 	<xs:complexType name="ChartAzimuthalType">
 		<xs:sequence>
 			<xs:element ref="ChartPage"/>
-			<xs:element ref="Oblique"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
 			<xs:element ref="Atlas" minOccurs="0"/>
 		</xs:sequence>
@@ -306,8 +305,28 @@
 	</xs:element>
 	<xs:complexType name="CircleType">
 		<xs:sequence>
-			<xs:element name="Begin" type="MarkType"/>
-			<xs:element name="End" type="MarkType"/>
+			<xs:element name="Alpha" minOccurs="0">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="AngleType">
+							<xs:sequence>
+								<xs:element ref="Indirect" minOccurs="0"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Omega" minOccurs="0">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="AngleType">
+							<xs:sequence>
+								<xs:element ref="Indirect" minOccurs="0"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
 			<xs:element ref="DialDeg" minOccurs="0"/>
 			<xs:element ref="Annotation" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -334,30 +353,24 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="MarkType">
-		<xs:choice>
-			<xs:element ref="Angle"/>
-			<xs:element name="Reference">
-				<xs:complexType>
-					<xs:attribute name="circle" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="[^,]+"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-					<xs:attribute name="node" use="required">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:pattern value="chasing"/>
-								<xs:pattern value="leading"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-		</xs:choice>
+	<xs:complexType name="IndirectType">
+		<xs:attribute name="value" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="[^,]+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="node" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="chasing"/>
+					<xs:pattern value="leading"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
+	<xs:element name="Indirect" type="IndirectType"/>
 	<xs:element name="CircleParallel">
 		<xs:complexType>
 			<xs:complexContent>

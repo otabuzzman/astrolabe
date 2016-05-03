@@ -37,14 +37,6 @@
 				<ChartPage name="atlas" size="a3" view="82">
 					<xsl:apply-templates select="Center"/>
 				</ChartPage>
-				<Oblique>
-					<lon>
-						<Rational value="0"/>
-					</lon>
-					<lat>
-						<Rational value="-90"/>
-					</lat>
-				</Oblique>
 				<Horizon>
 					<HorizonEquatorial practicality="always">
 						<!--$pagetitle-->
@@ -303,8 +295,8 @@
 	<xsl:template match="SpanMeridian">
 		<Circle>
 			<CircleMeridian importance="canonical">
-				<Begin><Angle><Rational value="-89"/></Angle></Begin>
-				<End><Angle><Rational value="89"/></Angle></End>
+				<Alpha><Rational value="-89"/></Alpha>
+				<Omega><Rational value="89"/></Omega>
 				<Annotation>
 					<AnnotationStraight anchor="{{0&#x003e;endpunktY&#x0026;&#x0026;endpunktX/endpunktY&#x003c;0.707&#x0026;&#x0026;endpunktX/endpunktY&#x003e;=-0.707?&#x0022;topmiddle&#x0022;:endpunktY&#x003e;=0&#x0026;&#x0026;endpunktX/endpunktY&#x003c;0.707&#x0026;&#x0026;endpunktX/endpunktY&#x003e;=-0.707?&#x0022;bottommiddle&#x0022;:0&#x003e;endpunktX&#x0026;&#x0026;(endpunktX/endpunktY&#x003c;-0.707||endpunktX/endpunktY&#x003e;=0.707)?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}}" reverse="false" radiant="0"><Script value="{{azimutstdneg~&#x0022;true&#x0022;?azimutstd*-1:azimutstd}}" purpose="{{endpunktX&#x003e;119.7||endpunktY&#x003e;170.2||endpunktX&#x003c;-119.7||endpunktY&#x003c;-170.2?&#x0022;guidance&#x0022;:&#x0022;none&#x0022;}}"><Superscript value="h"/></Script><Script value="{{azimutstdmin}}" purpose="{{endpunktX&#x003e;119.7||endpunktY&#x003e;170.2||endpunktX&#x003c;-119.7||endpunktY&#x003c;-170.2?&#x0022;guidance&#x0022;:&#x0022;none&#x0022;}}"><Superscript value="m"/></Script></AnnotationStraight>
 				</Annotation>
@@ -316,8 +308,6 @@
 	<xsl:template match="SpanParallel">
 		<Circle>
 			<CircleParallel importance="canonical">
-				<Begin><Angle><Rational value="0"/></Angle></Begin>
-				<End><Angle><Rational value="360"/></Angle></End>
 				<Annotation>
 					<AnnotationStraight anchor="{{0&#x003e;endpunktY&#x0026;&#x0026;endpunktX/endpunktY&#x003c;0.707&#x0026;&#x0026;endpunktX/endpunktY&#x003e;=-0.707?&#x0022;topmiddle&#x0022;:endpunktY&#x003e;=0&#x0026;&#x0026;endpunktX/endpunktY&#x003c;0.707&#x0026;&#x0026;endpunktX/endpunktY&#x003e;=-0.707?&#x0022;bottommiddle&#x0022;:0&#x003e;endpunktX&#x0026;&#x0026;(endpunktX/endpunktY&#x003c;-0.707||endpunktX/endpunktY&#x003e;=0.707)?&#x0022;middleright&#x0022;:&#x0022;middleleft&#x0022;}}" reverse="false" radiant="0"><Script value="{{h&#x00f6;hegrdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}}{{h&#x00f6;hegrd}}&#x00b0;{{h&#x00f6;hegrdmin}}&#x0027;" purpose="{{endpunktX&#x003e;119.7||endpunktY&#x003e;170.2||endpunktX&#x003c;-119.7||endpunktY&#x003c;-170.2?&#x0022;guidance&#x0022;:&#x0022;none&#x0022;}}"/></AnnotationStraight>
 				</Annotation>
