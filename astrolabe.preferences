@@ -331,21 +331,28 @@
 					</map>
 				</node>
 			</node>
-			<node name="AtlasAzimuthalType">
+			<node name="ChartAzimuthal">
 				<map>
-					<entry key="map" value="lib/AtlasAzimuthalType.map"/>
+					<entry key="defobliquelon" value="0"/>
+					<entry key="defobliquelat" value="90"/>
+				</map>
+			</node>
+			<node name="ChartPseudoCylindrical">
+				<map>
+					<entry key="defobliquelon" value="0"/>
+					<entry key="defobliquelat" value="0"/>
 				</map>
 			</node>
 			<node name="CircleMeridian">
 				<map>
-					<entry key="defanglemin" value="-85"/>
-					<entry key="defanglemax" value="85"/>
+					<entry key="defalpha" value="-85"/>
+					<entry key="defomega" value="85"/>
 				</map>
 			</node>
 			<node name="CircleParallel">
 				<map>
-					<entry key="defanglemin" value="0"/>
-					<entry key="defanglemax" value="359.99"/>
+					<entry key="defalpha" value="0"/>
+					<entry key="defomega" value="359.99"/>
 				</map>
 			</node>
 			<node name="DialDeg">

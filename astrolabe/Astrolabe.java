@@ -58,14 +58,10 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		for ( int ch=0 ; ch<getChartCount() ; ch++ ) {				
 			chart = getChart( ch ) ;
 
-			if ( chart.getChartStereographic() != null ) {
-				chart( ps, chart.getChartStereographic() ) ;
-			} else if ( chart.getChartOrthographic() != null ) {
-				chart( ps, chart.getChartOrthographic() ) ;
-			} else if (  chart.getChartEquidistant() != null ) {
-				chart( ps, chart.getChartEquidistant() ) ;
-			} else { // chart.getChartGnomonic() != null
-				chart( ps, chart.getChartGnomonic() ) ;
+			if ( chart.getChartAzimuthal() != null ) {
+				chart( ps, chart.getChartAzimuthal() ) ;
+			} else { // chart.getChartCylindrical() != null
+				chart( ps, chart.getChartPseudoCylindrical() ) ;
 			}
 		}
 	}
@@ -174,13 +170,12 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		return a ;
 	}
 
-	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartStereographic peer ) {
-		ChartStereographic chart ;
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartAzimuthal peer ) {
+		ChartAzimuthal chart ;
 		ChartPage page ;
 		String key ;
 
-		chart = new ChartStereographic() ;
-		peer.copyValues( chart ) ;
+		chart = new ChartAzimuthal( peer ) ;
 
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;
@@ -191,47 +186,12 @@ public class Astrolabe extends astrolabe.model.Astrolabe implements PostscriptEm
 		Registry.degister( key ) ;
 	}
 
-	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartOrthographic peer ) {
-		ChartOrthographic chart ;
+	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartPseudoCylindrical peer ) {
+		ChartPseudoCylindrical chart ;
 		ChartPage page ;
 		String key ;
 
-		chart = new ChartOrthographic() ;
-		peer.copyValues( chart ) ;
-
-		page = new ChartPage() ;
-		peer.getChartPage().copyValues( page ) ;
-
-		key = ChartPage.class.getName() ;
-		Registry.register( key, page ) ;
-		emitPS( ps, chart ) ;
-		Registry.degister( key ) ;
-	}
-
-	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartEquidistant peer ) {
-		ChartEquidistant chart ;
-		ChartPage page ;
-
-		chart = new ChartEquidistant() ;
-		peer.copyValues( chart ) ;
-		String key ;
-
-		page = new ChartPage() ;
-		peer.getChartPage().copyValues( page ) ;
-
-		key = ChartPage.class.getName() ;
-		Registry.register( key, page ) ;
-		emitPS( ps, chart ) ;
-		Registry.degister( key ) ;
-	}
-
-	private void chart( ApplicationPostscriptStream ps, astrolabe.model.ChartGnomonic peer ) {
-		ChartGnomonic chart ;
-		ChartPage page ;
-		String key ;
-
-		chart = new ChartGnomonic() ;
-		peer.copyValues( chart ) ;
+		chart = new ChartPseudoCylindrical( peer ) ;
 
 		page = new ChartPage() ;
 		peer.getChartPage().copyValues( page ) ;

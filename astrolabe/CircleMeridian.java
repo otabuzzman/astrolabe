@@ -38,8 +38,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
 
-	private final static String CK_DEFANGLEMIN		= "defanglemin" ;
-	private final static String CK_DEFANGLEMAX		= "defanglemax" ;
+	private final static String CK_DEFALPHA			= "defalpha" ;
+	private final static String CK_DEFOMEGA			= "defomega" ;
 
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private static final double DEFAULT_DISTANCE	= 0 ;
@@ -49,8 +49,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
 
-	private final static double DEFAULT_DEFANGLEMIN	= -85 ;
-	private final static double DEFAULT_DEFANGLEMAX	= 85 ;
+	private final static double DEFAULT_DEFALPHA	= -85 ;
+	private final static double DEFAULT_DEFOMEGA	= 85 ;
 
 	// message key (MK_)
 	private final static String MK_EINTSEC			= "eintsec" ;
@@ -73,7 +73,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		boolean l ;
 
 		if ( getAlpha() == null )
-			return Configuration.getValue( this, CK_DEFANGLEMIN, DEFAULT_DEFANGLEMIN ) ;
+			return Configuration.getValue( this, CK_DEFALPHA, DEFAULT_DEFALPHA ) ;
 
 		a = valueOf( getAlpha() ) ;
 		if ( getAlpha().getIndirect() == null )
@@ -89,7 +89,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		} catch ( ParameterNotValidException e ) {
 			log.warn( e.getMessage() ) ;
 
-			return Configuration.getValue( this, CK_DEFANGLEMIN, DEFAULT_DEFANGLEMIN ) ;
+			return Configuration.getValue( this, CK_DEFALPHA, DEFAULT_DEFALPHA ) ;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		boolean l ;
 
 		if ( getOmega() == null )
-			return Configuration.getValue( this, CK_DEFANGLEMAX, DEFAULT_DEFANGLEMAX ) ;
+			return Configuration.getValue( this, CK_DEFOMEGA, DEFAULT_DEFOMEGA ) ;
 
 		a = valueOf( getOmega() ) ;
 		if ( getOmega().getIndirect() == null )
@@ -115,7 +115,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		} catch ( ParameterNotValidException e ) {
 			log.warn( e.getMessage() ) ;
 
-			return Configuration.getValue( this, CK_DEFANGLEMAX, DEFAULT_DEFANGLEMAX ) ;
+			return Configuration.getValue( this, CK_DEFOMEGA, DEFAULT_DEFOMEGA ) ;
 		}
 	}
 

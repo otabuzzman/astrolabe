@@ -2,12 +2,12 @@
 <Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
 astrolabe.xsd">
 	<Chart>
-		<ChartStereographic northern="true" scale="100">
+		<ChartAzimuthal scale="25" projection="stereographic">
 			<ChartPage view="100" size="a4"/>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="obscure" value="test file tf-0001.xml"/>
+						<Script purpose="obscure" value="model tf-0028.xml"/>
 					</AnnotationStraight>
 					<Circle>
 						<CircleMeridian importance="canonical">
@@ -29,6 +29,6 @@ astrolabe.xsd">
 					</Circle>
 				</HorizonEquatorial>
 			</Horizon>
-		</ChartStereographic>
+		</ChartAzimuthal>
 	</Chart>
 </Astrolabe>

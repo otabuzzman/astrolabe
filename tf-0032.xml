@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd">
+	<Chart>
+		<ChartAzimuthal scale="100" projection="stereographic">
+			<ChartPage size="a3" view="100"/>
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="Artwork Andromeda"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<Catalog>
+						<CatalogADC1239H name="artwork1239" url="sf-ADC1239-popper-AND.dat">
+							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="true">
+								<Popper>
+									<Position name="226">
+										<lon>
+											<HMS neg="false" hrs="0" min="49" sec="48.83"/>
+										</lon>
+										<lat>
+											<DMS neg="false" deg="41" min="4" sec="44.20"/>
+										</lat>
+									</Position>
+									<Cartesian x="198" y="215"/>
+								</Popper>
+								<Popper>
+									<Position name="165">
+										<lon>
+											<HMS neg="false" hrs="0" min="39" sec="19.60"/>
+										</lon>
+										<lat>
+											<DMS neg="false" deg="30" min="51" sec="40.40"/>
+										</lat>
+									</Position>
+									<Cartesian x="337" y="136"/>
+								</Popper>
+								<Popper>
+									<Position name="603">
+										<lon>
+											<HMS neg="false" hrs="2" min="3" sec="53.92"/>
+										</lon>
+										<lat>
+											<DMS neg="false" deg="42" min="19" sec="47.50"/>
+										</lat>
+									</Position>
+									<Cartesian x="224" y="428"/>
+								</Popper>
+							</Artwork>
+							<CatalogADC1239HRecord select="true">
+								<Annotation>
+									<AnnotationStraight anchor="bottomleft" reverse="false" radiant="false">
+										<Script value="{HIP}" purpose="bodylettering0"/>
+									</AnnotationStraight>
+								</Annotation>
+								<Script value="{VarFlag~&#x0022;[123]&#x0022;?(Period~&#x0022;[0-9].*&#x0022;?(Period>1?(VarFlag>2?&#x0022;&#xf816;&#x0022;:&#x0022;&#xf818;&#x0022;):(VarFlag>2?&#x0022;&#xf815;&#x0022;:&#x0022;&#xf817;&#x0022;)):&#x0022;&#xf814;&#x0022;):Ncomp>2?&#x0022;&#xf813;&#x0022;:Ncomp>1?&#x0022;&#xf812;&#x0022;:&#x0022;&#xf811;&#x0022;}" purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:Vmag&#x003c;6?1.10:Vmag&#x003c;7?0.89:Vmag&#x003c;8?0.72:Vmag&#x003c;9?0.58:Vmag&#x003c;10?0.47:Vmag&#x003c;11?0.38:0.30}"/>
+							</CatalogADC1239HRecord>
+						</CatalogADC1239H>
+					</Catalog>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartAzimuthal>
+	</Chart>
+</Astrolabe>

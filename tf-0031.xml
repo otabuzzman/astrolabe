@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd" name="atlas-stereographic">
+	<Chart>
+		<ChartAzimuthal scale="100" projection="stereographic">
+			<ChartPage size="a3" view="82"/>
+			<Oblique>
+				<lon>
+					<Rational value="0"/>
+				</lon>
+				<lat>
+					<Rational value="-90"/>
+				</lat>
+			</Oblique>
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="S&#x00fc;dhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleParallel name="cp-45.0" fieldofview="true" importance="canonical">
+							<Omega>
+								<Rational value="359.999999"/>
+							</Omega>
+							<Angle>
+								<Rational value="-45"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="guidance" value="S&#x00fc;dhalbkugel aus V/50, Bright Star Catalogue, 5th Revised Ed. (Hoffleit+, 1991)"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Alpha>
+								<Rational value="0"/>
+							</Alpha>
+							<Omega>
+								<Rational value="45"/>
+							</Omega>
+							<Angle>
+								<Rational value="-45"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="-55"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Angle>
+								<Rational value="-65"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="15"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="90"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="180"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="270"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Catalog>
+						<CatalogADC5050 name="ADC5050" url="lib/cat/5050/catalog.dat.gz">
+							<CatalogADC5050Record select="{Vmag&#x003c;4}">
+								<Script purpose="{Vmag&#x003c;-1?4.98:Vmag&#x003c;0?4.02:Vmag&#x003c;1?3.24:Vmag&#x003c;2?2.61:Vmag&#x003c;3?2.11:Vmag&#x003c;4?1.70:Vmag&#x003c;5?1.37:1.10}" value="&#xf811;"/>
+							</CatalogADC5050Record>
+						</CatalogADC5050>
+					</Catalog>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartAzimuthal>
+	</Chart>
+</Astrolabe>

@@ -76,7 +76,8 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		double maxs, maxt ;
 		String av[] ;
 		int a0, a1, a2, a ;
-		Coordinate c, eq, xyz ;
+		astrolabe.Coordinate eq ;
+		Coordinate c, xyz ;
 		double[] xy, uv ;
 		Plane texture = null ;
 		Vector3D O = null, V, X ;
@@ -278,6 +279,8 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		x = 0 ;
 		y = idimy-1 ;
 
+		eq = new astrolabe.Coordinate( 0, 0, 0 ) ;
+
 		for ( double t=0 ; maxt>t ; t+=interval ) {
 			for ( double s=0 ; maxs>s ; s+=interval ) {
 				xy = MP.operate( new double[] { s, t, 1 } ) ;
@@ -287,8 +290,8 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 				if ( got.covers( new GeometryFactory().createPoint( c ) ) ) {
 					if ( getHeaven() ) {
-						eq = projector.project( c, true ) ;
-						xyz = projector.cartesian( eq, false ) ;
+						eq.setCoordinate( projector.project( c, true ) ) ;
+						xyz = eq.cartesian() ;
 
 						V = new Vector3D( xyz.x, xyz.y, xyz.z ) ;
 						X = texture.intersection( new Line( O, V ) ) ;
@@ -380,11 +383,11 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 	private Coordinate[] prepPopper4Heaven() {
 		return new Coordinate[] {
-				projector.cartesian( valueOf( getPopper( 0 ).getPosition() ), false ),
-				projector.cartesian( valueOf( getPopper( 1 ).getPosition() ), false ),
-				projector.cartesian( valueOf( getPopper( 2 ).getPosition() ), false )
+				new astrolabe.Coordinate( valueOf( getPopper( 0 ).getPosition() ) ).cartesian(),
+				new astrolabe.Coordinate( valueOf( getPopper( 1 ).getPosition() ) ).cartesian(),
+				new astrolabe.Coordinate( valueOf( getPopper( 2 ).getPosition() ) ).cartesian()
 		} ;
-	}
+	} ;
 
 	private Coordinate[] prepPopper4Canvas() {
 		return new Coordinate[] {
@@ -426,11 +429,11 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 
 		// vector AB
 		c = TH.operate( new double[] { 0, 0, 0, 1 } ) ;
-		v0 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v0 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { dx/2, 0, 0, 1 } ) ;
-		v1 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v1 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { dx, 0, 0, 1 } ) ;
-		v2 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v2 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 
 		va = new Vector( v1 ).sub( v0 ) ;
 		vb = new Vector( v2 ).sub( v1 ) ;
@@ -445,16 +448,16 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		r.add( v0 ) ;
 		for ( int x=interval ; dx-1>x ; x+=interval ) {
 			c = TH.operate( new double[] { x, 0, 0, 1 } ) ;
-			r.add( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+			r.add( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		}
 
 		// vector BC
 		c = TH.operate( new double[] { dx, 0, 0, 1 } ) ;
-		v0 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v0 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { dx, dy/2, 0, 1 } ) ;
-		v1 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v1 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { dx, dy, 0, 1 } ) ;
-		v2 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v2 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 
 		va = new Vector( v1 ).sub( v0 ) ;
 		vb = new Vector( v2 ).sub( v1 ) ;
@@ -469,16 +472,16 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		r.add( v0 ) ;
 		for ( int y=interval ; dy-1>y ; y+=interval ) {
 			c = TH.operate( new double[] { dx, y, 0, 1 } ) ;
-			r.add( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+			r.add( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		}
 
 		// vector CD
 		c = TH.operate( new double[] { dx, dy, 0, 1 } ) ;
-		v0 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v0 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { dx/2, dy, 0, 1 } ) ;
-		v1 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v1 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { 0, dy, 0, 1 } ) ;
-		v2 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v2 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 
 		va = new Vector( v1 ).sub( v0 ) ;
 		vb = new Vector( v2 ).sub( v1 ) ;
@@ -493,16 +496,16 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		r.add( v0 ) ;
 		for ( int x=dx-interval ; x+1>interval ; x-=interval ) {
 			c = TH.operate( new double[] { x, dy, 0, 1 } ) ;
-			r.add( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+			r.add( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		}
 
 		// vector DA
 		c = TH.operate( new double[] { 0, dy, 0, 1 } ) ;
-		v0 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v0 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { 0, dy/2, 0, 1 } ) ;
-		v1 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v1 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		c = TH.operate( new double[] { 0, 0, 0, 1 } ) ;
-		v2 = new Vector( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+		v2 = new Vector( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 
 		va = new Vector( v1 ).sub( v0 ) ;
 		vb = new Vector( v2 ).sub( v1 ) ;
@@ -517,7 +520,7 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		r.add( v0 ) ;
 		for ( int y=dy-interval ; y+1>interval ; y-=interval ) {
 			c = TH.operate( new double[] { 0, y, 0, 1 } ) ;
-			r.add( projector.project( projector.cartesian( new Coordinate( c[0], c[1], c[2] ), true ), false ) ) ;
+			r.add( projector.project( new astrolabe.Coordinate( c[0], c[1], c[2] ).spherical(), false ) ) ;
 		}
 
 		r.add( r.firstElement() ) ;

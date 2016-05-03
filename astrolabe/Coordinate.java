@@ -35,6 +35,18 @@ public class Coordinate extends com.vividsolutions.jts.geom.Coordinate {
 		z = Double.isNaN( other.z )?0:other.z ;
 	}
 
+	public com.vividsolutions.jts.geom.Coordinate spherical() {
+		return new com.vividsolutions.jts.geom.Coordinate(
+				Math.atan2( y, x ), Math.asin( z/java.lang.Math.sqrt( x*x+y*y+z*z ) ) ) ;
+	}
+
+	public com.vividsolutions.jts.geom.Coordinate cartesian() {
+		return new com.vividsolutions.jts.geom.Coordinate(
+				Math.cos( y )*Math.cos( x ),
+				Math.cos( y )*Math.sin( x ),
+				Math.sin( y ) ) ;
+	}
+
 	public void register( Object clazz, String key ) {
 		SubstituteCatalog cat ;
 		String sub, k ;

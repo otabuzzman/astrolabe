@@ -1,74 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd">
 	<Chart>
-		<ChartStereographic scale="100" northern="true">
-			<ChartPage size="a0" view="100"/>
-			<!--fov sternkarte-->
-			<Horizon>
-				<HorizonEquatorial practicality="none">
-					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="none" value="Constellation artwork Northern Hemisphere"/>
-						<Frame number="1" anchor="topleft"/>
-					</AnnotationStraight>
-					<!--eqp-24.5-->
-					<Circle>
-						<CircleParallel name="eqp-24.5" importance="canonical">
-							<Angle>
-								<Rational value="-24.5"/>
-							</Angle>
-						</CircleParallel>
-					</Circle>
-				</HorizonEquatorial>
-			</Horizon>
-			<!--äquatorial-->
+		<ChartPseudoCylindrical scale="30" projection="mollweide">
+			<ChartPage size="a3" view="100"/>
 			<Horizon>
 				<HorizonEquatorial practicality="always">
 					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
-						<Script purpose="guidance" value="artwork1239"/>
+						<Script purpose="guidance" value="Artwork Andromeda"/>
 						<Frame number="1" anchor="topleft"/>
 					</AnnotationStraight>
-					<!--ADC1239-->
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Alpha>
+								<Rational value="-180"/>
+							</Alpha>
+							<Omega>
+								<Rational value="180"/>
+							</Omega>
+							<Angle>
+								<Rational value="-45"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="cardinal">
+							<Alpha>
+								<Rational value="-180"/>
+							</Alpha>
+							<Omega>
+								<Rational value="180"/>
+							</Omega>
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical">
+							<Alpha>
+								<Rational value="-180"/>
+							</Alpha>
+							<Omega>
+								<Rational value="180"/>
+							</Omega>
+							<Angle>
+								<Rational value="45"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="-180"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="-90"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="cardinal">
+							<Angle>
+								<Rational value="0"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="90"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
+					<Circle>
+						<CircleMeridian importance="canonical">
+							<Angle>
+								<Rational value="180"/>
+							</Angle>
+						</CircleMeridian>
+					</Circle>
 					<Catalog>
-						<!--ftp://cdsarc.u-strasbg.fr/pub/cats/I/239/hip_main.dat.gz-->
-						<!--file:///c:/users/jschuck/src/astrolabe/lib/cat/1239/hip_main.dat.gz-->
-						<CatalogADC1239H name="artwork1239" url="artwork1239.dat">
-							<!--
-							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="false">
-								<Popper>
-									<Position name="226">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="90" min="0" sec="0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="512"/>
-								</Popper>
-								<Popper>
-									<Position name="165">
-										<lon>
-											<HMS neg="false" hrs="0" min="0" sec="0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0"/>
-										</lat>
-									</Position>
-									<Cartesian x="512" y="512"/>
-								</Popper>
-								<Popper>
-									<Position name="603">
-										<lon>
-											<HMS neg="false" hrs="18" min="0" sec="0"/>
-										</lon>
-										<lat>
-											<DMS neg="false" deg="0" min="0" sec="0"/>
-										</lat>
-									</Position>
-									<Cartesian x="0" y="0"/>
-								</Popper>
-							</Artwork>
-							-->
+						<CatalogADC1239H name="artwork1239" url="sf-ADC1239-popper-AND.dat">
 							<Artwork name="And" url="../stellarium/0.12/skycultures/western/andromeda.png" heaven="true">
 								<Popper>
 									<Position name="226">
@@ -116,6 +132,6 @@
 					</Catalog>
 				</HorizonEquatorial>
 			</Horizon>
-		</ChartStereographic>
+		</ChartPseudoCylindrical>
 	</Chart>
 </Astrolabe>

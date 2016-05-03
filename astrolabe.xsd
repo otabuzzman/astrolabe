@@ -4,7 +4,6 @@
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
 			<xs:element ref="Epoch" minOccurs="0"/>
-			<xs:element ref="Atlas" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="Chart" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
@@ -29,11 +28,11 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="ChartAzimuthalType">
+	<xs:complexType name="ChartType">
 		<xs:sequence>
 			<xs:element ref="ChartPage"/>
+			<xs:element ref="Oblique" minOccurs="0"/>
 			<xs:element ref="Horizon" maxOccurs="unbounded"/>
-			<xs:element ref="Atlas" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="scale" use="required">
@@ -43,24 +42,17 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="northern" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	<xs:element name="Chart">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="ChartStereographic"/>
-				<xs:element ref="ChartGnomonic"/>
-				<xs:element ref="ChartOrthographic"/>
-				<xs:element ref="ChartEquidistant"/>
+				<xs:element ref="ChartAzimuthal"/>
+				<xs:element ref="ChartPseudoCylindrical"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Oblique" type="SphericalType"/>
-	<xs:element name="Center" type="SphericalType"/>
 	<xs:complexType name="ChartPageType">
-		<xs:sequence>
-			<xs:element ref="Center" minOccurs="0"/>
-		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="size" use="required">
 			<xs:simpleType>
@@ -80,159 +72,34 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="ChartPage" type="ChartPageType"/>
-	<xs:element name="ChartStereographic">
+	<xs:element name="ChartAzimuthal">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="ChartAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ChartGnomonic">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ChartAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ChartOrthographic">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ChartAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="ChartEquidistant">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="ChartAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:complexType name="AtlasType">
-		<xs:sequence>
-			<xs:element ref="Origin"/>
-			<xs:element name="Extent" type="SphericalType"/>
-			<xs:choice>
-				<xs:element name="SpanRA">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="AngleType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="SpanDeclination">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="AngleType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-			</xs:choice>
-			<xs:element ref="SpanParallel" minOccurs="0"/>
-			<xs:element ref="SpanMeridian" minOccurs="0"/>
-		</xs:sequence>
-		<xs:attribute name="picker" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:anyURI"/>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
-	<xs:element name="Atlas" type="AtlasType"/>
-	<xs:element name="Origin" type="SphericalType"/>
-	<xs:element name="SpanParallel">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AngleType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="SpanMeridian">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AngleType">
-					<xs:attribute name="limit" type="xs:positiveInteger" use="optional"/>
+				<xs:extension base="ChartType">
+					<xs:attribute name="projection" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="orthographic"/>
+								<xs:pattern value="stereographic"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="AtlasAzimuthalType">
-		<xs:sequence>
-			<xs:element ref="AtlasPage" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-	</xs:complexType>
-	<xs:element name="AtlasStereographic">
+	<xs:element name="ChartPseudoCylindrical">
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="AtlasAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="AtlasGnomonic">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AtlasAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="AtlasOrthographic">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AtlasAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="AtlasEquidistant">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AtlasAzimuthalType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:complexType name="AtlasPageType">
-		<xs:sequence>
-			<xs:element name="P0" type="SphericalType"/>
-			<xs:element name="P1" type="SphericalType"/>
-			<xs:element name="P2" type="SphericalType"/>
-			<xs:element name="P3" type="SphericalType"/>
-			<xs:element ref="Center"/>
-			<xs:element name="Top" type="SphericalType"/>
-			<xs:element name="Bottom" type="SphericalType"/>
-			<xs:element name="Picker" minOccurs="0">
-				<xs:complexType>
-					<xs:choice>
-						<xs:element ref="SpanParallel" maxOccurs="unbounded"/>
-						<xs:element ref="SpanMeridian" maxOccurs="unbounded"/>
-					</xs:choice>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="scale" type="xs:double" use="required"/>
-		<xs:attribute name="num" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="tcp" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="bcp" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="fcp" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="pcp" type="xs:positiveInteger" use="required"/>
-		<xs:attribute name="p0x" type="xs:double" use="required"/>
-		<xs:attribute name="p0y" type="xs:double" use="required"/>
-		<xs:attribute name="p1x" type="xs:double" use="required"/>
-		<xs:attribute name="p1y" type="xs:double" use="required"/>
-		<xs:attribute name="p2x" type="xs:double" use="required"/>
-		<xs:attribute name="p2y" type="xs:double" use="required"/>
-		<xs:attribute name="p3x" type="xs:double" use="required"/>
-		<xs:attribute name="p3y" type="xs:double" use="required"/>
-		<xs:attribute name="centerx" type="xs:double" use="required"/>
-		<xs:attribute name="centery" type="xs:double" use="required"/>
-		<xs:attribute name="topx" type="xs:double" use="required"/>
-		<xs:attribute name="topy" type="xs:double" use="required"/>
-		<xs:attribute name="bottomx" type="xs:double" use="required"/>
-		<xs:attribute name="bottomy" type="xs:double" use="required"/>
-	</xs:complexType>
-	<xs:element name="AtlasPage">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="AtlasPageType"/>
+				<xs:extension base="ChartType">
+					<xs:attribute name="projection" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="mollweide"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
