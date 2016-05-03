@@ -476,9 +476,9 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 
 		try {
 			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 
 			for ( String key : node.keys() ) {
 				try {
@@ -513,8 +513,8 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 
 		rams = RAhms.split( "\\p{Space}+" ) ;
 		ra = new Double( rams[0] ).doubleValue()
-		+new Double( rams[1] ).doubleValue()/60.
-		+new Double( rams[2] ).doubleValue()/3600. ;
+				+new Double( rams[1] ).doubleValue()/60.
+				+new Double( rams[2] ).doubleValue()/3600. ;
 
 		return ra ;
 	}
@@ -525,8 +525,8 @@ public class CatalogADC1239TRecord extends astrolabe.model.CatalogADC1239TRecord
 
 		dems = DEdms.split( "\\p{Space}+" ) ;
 		de = new Double( dems[0] ).doubleValue()
-		+new Double( dems[1] ).doubleValue()/60.
-		+new Double( dems[2] ).doubleValue()/3600. ;
+				+new Double( dems[1] ).doubleValue()/60.
+				+new Double( dems[2] ).doubleValue()/3600. ;
 
 		return de ;
 	}

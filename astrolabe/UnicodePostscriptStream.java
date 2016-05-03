@@ -61,9 +61,9 @@ public class UnicodePostscriptStream extends PostscriptStream {
 
 		try {
 			name = UnicodePostscriptStream.class.getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 			if ( node == null )
 				return ;
 
@@ -244,7 +244,7 @@ public class UnicodePostscriptStream extends PostscriptStream {
 			stdin = new BufferedReader( new InputStreamReader( System.in ) ) ;
 			while ( ( line = stdin.readLine() ) != null ) {
 				token = line.trim()
-				.split( "\\p{Space}+" ) ;
+						.split( "\\p{Space}+" ) ;
 
 				codepoint = Integer.valueOf( token[1], 16 ) ;
 				characterUnicodeBlock = Character.UnicodeBlock.of( codepoint ) ;

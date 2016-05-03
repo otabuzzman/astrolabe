@@ -35,8 +35,8 @@ public final class Configuration {
 			r = m.invoke( clazz, (Object[]) null ) ;
 			if ( r instanceof String && ( (String) r ).length()>0 )
 				instance =
-					( (String) r )
-					.replaceAll( "/", "\\." ) ;
+				( (String) r )
+				.replaceAll( "/", "\\." ) ;
 		} catch ( NoSuchMethodException e ) {
 		} catch ( IllegalAccessException e ) {
 		} catch ( InvocationTargetException e ) {
@@ -96,7 +96,7 @@ public final class Configuration {
 		int p ;
 
 		n = "/"+clazz.getName()
-		.replaceAll( "\\.", "/" ) ;
+				.replaceAll( "\\.", "/" ) ;
 
 		if ( instance != null )
 			n += "/"+instance ;
@@ -104,8 +104,8 @@ public final class Configuration {
 			n += "/"+node ;
 
 		try {
-			if ( Preferences.systemRoot().nodeExists( n ) ) {
-				return Preferences.systemRoot().node( n ) ;
+			if ( Preferences.userRoot().nodeExists( n ) ) {
+				return Preferences.userRoot().node( n ) ;
 			}
 		} catch ( BackingStoreException e ) {
 			return null ;
@@ -164,7 +164,7 @@ public final class Configuration {
 		int p, f ;
 
 		n = "/"+clazz.getName()
-		.replaceAll( "\\.", "/" ) ;
+				.replaceAll( "\\.", "/" ) ;
 
 		f = key.lastIndexOf( "/" ) ;
 		if ( f>0 ) {
@@ -177,14 +177,14 @@ public final class Configuration {
 
 		if ( instance == null )
 			n +=
-				nPartOfKey ;
+			nPartOfKey ;
 		else
 			n +=
-				"/"+instance
-				+nPartOfKey ;
+			"/"+instance
+			+nPartOfKey ;
 		try {
-			if ( Preferences.systemRoot().nodeExists( n ) ) {
-				v = Preferences.systemRoot().node( n ).get( kPartOfKey, null ) ;
+			if ( Preferences.userRoot().nodeExists( n ) ) {
+				v = Preferences.userRoot().node( n ).get( kPartOfKey, null ) ;
 				if ( v != null )
 					return v ;
 			}

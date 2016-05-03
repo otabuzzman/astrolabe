@@ -25,9 +25,9 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 
 		try {
 			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 			desc = node.childrenNames() ;
 			for ( int b=0 ; b<desc.length ; b++ )
 				if ( desc[b].matches( "[0-9A-Fa-f]{4,6}\\.\\.[0-9A-Fa-f]{4,6}-[0-9]+" ) ) {
@@ -71,9 +71,9 @@ public class ApplicationPostscriptStream extends UnicodePostscriptStream {
 
 		try {
 			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 			prolog = node.get( CK_PROLOG, null ) ;
 			if ( prolog == null )
 				return ;

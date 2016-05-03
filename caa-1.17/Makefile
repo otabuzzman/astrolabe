@@ -3,8 +3,6 @@ VER   = 1.17
 
 APPL  = $(PKG)-$(VER)
 
-JDK   = /cygdrive/c/program\ files\ \(x86\)/java/jre1.5.0_17
-
 DLL   = cyg$(APPL).dll
 JAR   = $(APPL).jar
 
@@ -24,7 +22,7 @@ vpath %.cxx $(pkgdir)
 vpath %.java $(pkgdir)
 
 .cxx.o .cpp.o:
-	$(CXX) -Isrc -I$(JDK)/include -I$(JDK)/include/win32 -Wall -mno-cygwin -c $< -o $@
+	$(CXX) -Isrc -I$(JDK)/include -I$(JDK)/include/win32 -Wall -c $< -o $@
 
 .java.class:
 	$(JDK)/bin/javac -d . $<
@@ -35,13 +33,13 @@ $(JAR): $(classes)
 	$(JDK)/bin/jar -cf $@ $^
 
 $(DLL): $(objects)
-	$(CXX) -Wall -mno-cygwin -shared -Wl,--export-all-symbols -Wl,--add-stdcall-alias -o $@ $^
+	$(CXX) -Wall -shared -Wl,--export-all-symbols -Wl,--add-stdcall-alias -o $@ $^
 
 AATest.o: AATest.cpp
-	$(CXX) -D_DEBUG -Wall -c $< -o $@
+	$(CXX) -D_DEBUG -Wall -Wno-unused-variable -Wno-unused-but-set-variable -c $< -o $@
 
 AATest.exe: AATest.o $(DLL)
-	$(CXX) -o $@ $< -L. -l$(APPL)
+	$(CXX) -o $@ $< -L. -lcyg$(APPL)
 
 clean:
 	rm -f $(classes) $(objects) AATest.o

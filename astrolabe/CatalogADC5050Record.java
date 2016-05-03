@@ -507,9 +507,9 @@ public class CatalogADC5050Record extends astrolabe.model.CatalogADC5050Record i
 
 		try {
 			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 
 			for ( String key : node.keys() ) {
 				try {

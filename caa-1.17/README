@@ -1,3 +1,10 @@
+install jdk7
+set JDK variable
+install cygwin
+install common development tools (gcc, make, etc.)
+install mingw x86_64
+set CXX variabla to x86_64-w64-mingw32-c++.exe
+append PATH by . and /usr/x86_64-w64-mingw32/sys-root/mingw/bin directories
 create folder src/caa
 copy AA distribution into folder
 run CPP on src/caa/AA[!+]*.h to create src/caa/CAA[!+]*.h

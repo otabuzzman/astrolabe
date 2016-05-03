@@ -176,9 +176,9 @@ public class CatalogADC7118Record extends astrolabe.model.CatalogADC7118Record i
 
 		try {
 			name = this.getClass().getName().replaceAll( "\\.", "/" ) ;
-			if ( ! Preferences.systemRoot().nodeExists( name ) )
+			if ( ! Preferences.userRoot().nodeExists( name ) )
 				return ;
-			node = Preferences.systemRoot().node( name ) ;
+			node = Preferences.userRoot().node( name ) ;
 
 			for ( String key : node.keys() ) {
 				try {

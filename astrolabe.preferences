@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
 <preferences>
-	<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe (IA-32)-->
-	<!--HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\JavaSoft\Prefs\astrolabe (IA-64)-->
-	<root type="system">
+	<!--HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Prefs\astrolabe-->
+	<!--HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\JavaSoft\Prefs\astrolabe-->
+	<!--HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\astrolabe-->
+	<root type="user">
 		<map/>
 		<node name="java">
 			<map/>

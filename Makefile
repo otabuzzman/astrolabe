@@ -1,7 +1,6 @@
 APPL      = astrolabe
 MODEL     = $(APPL).xsd
 
-JDK     = /cygdrive/c/program\ files\ \(x86\)/java/jre1.5.0_17
 JDO		= -Xcheck:jni -Dhttp \
 			-Xmx1536m \
 			-Dftp.proxyHost=proxy.materna.de \
