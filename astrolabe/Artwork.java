@@ -410,7 +410,7 @@ public class Artwork extends astrolabe.model.Artwork implements PostscriptEmitte
 		vb = new Vector( popper[2] ).sub( v0 ) ;
 		vz = v0.add( new Vector( va ).cross( vb ) ) ;
 
-		return vz.toCoordinate() ;
+		return vz ;
 	}
 
 	private Coordinate[] calcP4Heaven( RealMatrix TH, int dimx, int dimy ) {

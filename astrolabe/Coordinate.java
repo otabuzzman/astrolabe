@@ -14,8 +14,7 @@ public class Coordinate extends com.vividsolutions.jts.geom.Coordinate {
 	public Coordinate( com.vividsolutions.jts.geom.Coordinate coordinate ) {
 		super( coordinate ) ;
 
-		if ( Double.doubleToRawLongBits( z ) == Double.doubleToRawLongBits( Double.NaN ) )
-			z = 0 ;
+		setCoordinate( coordinate ) ;
 	}
 
 	public Coordinate( CAA2DCoordinate coordinate ) {
@@ -30,8 +29,10 @@ public class Coordinate extends com.vividsolutions.jts.geom.Coordinate {
 		super( x, y, z ) ;
 	}
 
-	public void register() {
-		register( this, null ) ;
+	public void setCoordinate( com.vividsolutions.jts.geom.Coordinate other ) {
+		x = Double.isNaN( other.x )?0:other.x ;
+		y = Double.isNaN( other.y )?0:other.y ;
+		z = Double.isNaN( other.z )?0:other.z ;
 	}
 
 	public void register( Object clazz, String key ) {
@@ -84,7 +85,40 @@ public class Coordinate extends com.vividsolutions.jts.geom.Coordinate {
 		}
 	}
 
+	public static void parallelShift( com.vividsolutions.jts.geom.Coordinate[] list, double dist ) {
+		double m90[] = new double[] { 0, -1, 1, 0 } ;
+		double m90c[] = new double[] { 0, 1, -1, 0 } ;
+		Vector a, b, c ;
+		int n, i ;
+
+		n = list.length ;
+
+		a = new Vector( list[n-1] ) ;
+		b = new Vector( list[n-2] ) ;
+		c = new Vector ( a ).add( b.sub( a ).scale( dist ).apply( m90c ) ) ;
+
+		for ( i=0 ; ( n-1 )>i ; i++ ) {
+			a.setCoordinate( list[i] ) ;
+			b.setCoordinate( list[i+1] ) ;
+			list[i].setCoordinate( a.add( b.sub( a ).scale( dist ).apply( m90 ) ) ) ;
+		}
+
+		list[i].setCoordinate( c ) ;
+	}
+
+	public static com.vividsolutions.jts.geom.Coordinate[] cloneAll( com.vividsolutions.jts.geom.Coordinate[] list ) {
+		com.vividsolutions.jts.geom.Coordinate[] clone ;
+		int n = list.length ;
+
+		clone = new com.vividsolutions.jts.geom.Coordinate[n] ;
+		for ( int i=0 ; n>i ; i++ )
+			clone[i] = (com.vividsolutions.jts.geom.Coordinate) list[i].clone() ;
+
+		return clone ;
+	}
+
 	public double[] toArray() {
 		return new double[] { x, y, z } ;
 	}
+
 }

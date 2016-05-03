@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Jürgen Schuck (MATERNA GmbH) -->
 <xs:schema xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.chartacaeli.eu/astrolabe/model" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="AstrolabeType">
 		<xs:sequence>
@@ -430,6 +431,13 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="reflect" type="xs:boolean" use="required"/>
+		<xs:attribute name="circle" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value=".+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:element name="DialDeg">
 		<xs:complexType>
@@ -706,13 +714,6 @@
 				<xs:restriction base="xs:string">
 					<xs:pattern value="artificial"/>
 					<xs:pattern value="celestial"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="circle" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:pattern value="[^,]+"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

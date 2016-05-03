@@ -1,25 +1,42 @@
 
 package astrolabe;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 @SuppressWarnings("serial")
 public class Scaleline extends astrolabe.model.Scaleline implements PostscriptEmitter {
 
 	// configuration key (CK_)
-	private final static String CK_SPACE			= "space" ;
-	private final static String CK_LINELENGTH		= "linelength" ;
-	private final static String CK_LINEWIDTH		= "linewidth" ;
-
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
+
+	private final static double DEFAULT_HALO		= 4 ;
+	private final static double DEFAULT_HALOMIN		= .08 ;
+	private final static double DEFAULT_HALOMAX		= .4 ;
+
+	private final static String CK_SPACE			= "space" ;
+	private final static String CK_LINELENGTH		= "linelength" ;
+	private final static String CK_LINEWIDTH		= "linewidth" ;
 
 	private final static double DEFAULT_SPACE		= .4 ;
 	private final static double DEFAULT_LINELENGTH	= 2.8 ;
 	private final static double DEFAULT_LINEWIDTH	= .01 ;
 
-	private final static double DEFAULT_HALO		= 4 ;
-	private final static double DEFAULT_HALOMIN		= .08 ;
-	private final static double DEFAULT_HALOMAX		= .4 ;
+	private Vector pos ;
+	private Vector nrm ;
+
+	private Configuration conf ;
+
+	private double gap ;
+	private double len ;
+
+	public Scaleline( Vector pos, Vector nrm ) {
+		this.pos = new Vector( pos ) ;
+		this.nrm = new Vector( nrm ) ;
+	}
 
 	public void headPS( ApplicationPostscriptStream ps ) {
 		double linewidth ;
@@ -30,12 +47,14 @@ public class Scaleline extends astrolabe.model.Scaleline implements PostscriptEm
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		Configuration conf ;
-		double gap, len ;
+		ps.push( pos.x ) ;
+		ps.push( pos.y ) ;
+		ps.op( "translate" ) ;
 
-		conf = new Configuration( this ) ;
-		gap = conf.getValue( CK_SPACE, DEFAULT_SPACE ) ;
-		len = conf.getValue( CK_LINELENGTH, DEFAULT_LINELENGTH ) ;
+		ps.push( nrm.y ) ;
+		ps.push( nrm.x ) ;
+		ps.op( "atan" ) ;
+		ps.op( "rotate" ) ;
 
 		ps.push( gap ) ;
 		ps.push( 0 ) ;
@@ -103,5 +122,23 @@ public class Scaleline extends astrolabe.model.Scaleline implements PostscriptEm
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
+	}
+
+	public Geometry list() {
+		Vector a, b ;
+
+		if ( conf == null )
+			conf = new Configuration( this ) ;
+
+		gap = conf.getValue( CK_SPACE, DEFAULT_SPACE ) ;
+		len = conf.getValue( CK_LINELENGTH, DEFAULT_LINELENGTH ) ;
+
+		a = new Vector( pos ) ;		
+		a.add( new Vector( nrm ).scale( gap ) ) ;
+
+		b = new Vector( a ) ;
+		b.add( new Vector( nrm ).scale( len ) ) ;
+
+		return new GeometryFactory().createLineString( new Coordinate[] { a, b } ) ;
 	}
 }

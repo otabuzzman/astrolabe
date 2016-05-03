@@ -81,8 +81,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			public int compare( Coordinate[] a, Coordinate[] b ) {
 				double alen, blen ;
 
-				alen = Vector.len( Vector.con( a ) ) ;
-				blen = Vector.len( Vector.con( b ) ) ;
+				alen = Vector.addAll( Vector.subAll( a ) ).abs() ;
+				blen = Vector.addAll( Vector.subAll( b ) ).abs() ;
 
 				return alen<blen?1:
 					alen>blen?-1:

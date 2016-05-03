@@ -1,23 +1,61 @@
 
 package astrolabe;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 @SuppressWarnings("serial")
 public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitter {
 
+	// configuration key (CK_), node (CN_)
 	private final static String CK_FADE			= "fade" ;
 
 	private final static double DEFAULT_FADE	= 0 ;
+
+	private final static String CK_RISE			= "rise" ;
+
+	private final static double DEFAULT_RISE	= 3.2 ;
+
+	private final static String CK_HALO			= "halo" ;
+	private final static String CK_HALOMIN		= "halomin" ;
+	private final static String CK_HALOMAX		= "halomax" ;
+
+	private final static double DEFAULT_HALO	= 4 ;
+	private final static double DEFAULT_HALOMIN	= .08 ;
+	private final static double DEFAULT_HALOMAX	= .4 ;
+
+	private final static String CN_BASELINE		= "baseline" ;
+	private final static String CK_SPACE		= "space" ;
+	private final static String CK_THICKNESS	= "thickness" ;
+	private final static String CK_LINEWIDTH	= "linewidth" ;
+
+	// qualifier key (QK_)
+	private final static String QK_ANGLE		= "angle" ;
+
+	private Baseline baseline ;
+
+	private Geometry fov ;
+	private Geometry bas ;
+	private Geometry seg ;
+
+	private double halo ;
+	private double halomin ;
+	private double halomax ;
+
+	private final static double[] m90 = new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ;
+	private final static double[] m90c = new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ;
+
+	// attribute value (AV_)
+	private final static String AV_NONE = "none" ;
+	private final static String AV_LINE = "line" ;
+	private final static String AV_RAIL = "rail" ;
 
 	private class None implements PostscriptEmitter {
 
 		private final static double DEFAULT_SPACE		= 1 ;
 
-		private double space = 0 ;
+		private double space ;
 
 		public void headPS(ApplicationPostscriptStream ps ) {
 			Configuration conf ;
@@ -64,29 +102,31 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 		}
 
 		public void emitPS( ApplicationPostscriptStream ps ) {
-			Configuration conf ;
-			List<Coordinate> v ;
-			double ma, mo, o, span ;
-			int m ;
-
-			v = new java.util.Vector<Coordinate>() ;
+			Coordinate[] bot, nrm ;
+			double span, a, o ;
+			int j ;
 
 			span = getScaleline()[0].getValue() ;
+			a = baseline.valOfScaleMarkN( 0, span ) ;
 			o = baseline.valOfScaleMarkN( -1, span ) ;
 
-			for ( m=0 ; ; m++ ) {
-				ma = baseline.valOfScaleMarkN( m, span ) ;
-				mo = baseline.valOfScaleMarkN( m+1, span ) ;
+			bot = baseline.list( a, o ) ;
+			nrm = astrolabe.Coordinate.cloneAll( bot ) ;
+			astrolabe.Coordinate.parallelShift( nrm, getReflect()?-1:1 ) ;
+			for ( j=0 ; nrm.length>j ; j++ )
+				nrm[j].setCoordinate( new Vector( nrm[j] ).sub( bot[j] ) ) ;
+			Coordinate t02 = baseline.posVecOfScaleMarkVal( o ) ;
+			Coordinate t03 = baseline.posVecOfScaleMarkVal( o+1./getDivision() ) ;
+			Vector t04 = new Vector( t03 ).sub( t02 ).scale( 1 ).apply( m90 ) ;
+			nrm[j-1].setCoordinate( t04 ) ;
 
-				for ( Coordinate xy : baseline.list( ma, mo, getReflect()?-space:space ) )
-					v.add( xy ) ;
+			if ( getCircle() != null && ! updateBaselinePosNrm( bot, nrm ) )
+				return ;
 
-				if ( mo==o )
-					break ;
-			}
+			astrolabe.Coordinate.parallelShift( bot, getReflect()?-space:space ) ;
 
 			ps.array( true ) ;
-			for ( Coordinate xy : v ) {
+			for ( Coordinate xy : bot ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}
@@ -101,12 +141,11 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 			ps.op( "dup" ) ;
 			ps.push( 100 ) ;
 			ps.op( "div" ) ;
-			conf = new Configuration( this ) ;
-			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
+			ps.push( halo ) ; 
 			ps.op( "mul" ) ;
-			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+			ps.push( halomin ) ; 
 			ps.op( "max" ) ;
-			ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+			ps.push( halomax ) ; 
 			ps.op( "min" ) ;
 
 			ps.push( 2 ) ;
@@ -121,9 +160,7 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 			ps.op( "stroke" ) ;
 			ps.op( "grestore" ) ;
 
-			ps.op( "gsave" ) ;
 			ps.op( "stroke" ) ;
-			ps.op( "grestore" ) ;
 		}
 
 		public void tailPS( ApplicationPostscriptStream ps ) {
@@ -162,66 +199,64 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 		}
 
 		public void emitPS( ApplicationPostscriptStream ps ) {
-			Configuration conf ;
-			List<Coordinate> vDFw, vDRv, rvDRv ;
-			double ma, mo, o, s, span ;
-			int m = 0 ;
+			Coordinate[] bot, top, nrm ;
+			double m90[], span, a, o, s ;
+			boolean baseattr ;
+			int n, j ;
+
+			m90 = new double[] { 0, -1, 1, 0 } ;
+
+			baseattr = getCircle() != null ;
 
 			span = getScaleline()[0].getValue()/getDivision() ;
+			a = baseline.valOfScaleMarkN( 0, span ) ;
 			o = baseline.valOfScaleMarkN( -1, span ) ;
+			n = (int) ( ( o-a )/span ) ;
 
-			for ( ; ; m++ ) {
-				ma = baseline.valOfScaleMarkN( m, span ) ;
-				mo = baseline.valOfScaleMarkN( m+1, span ) ;
+			for ( int i=0 ; n>i ; i++ ) {
+				a = baseline.valOfScaleMarkN( i, span ) ;
+				o = baseline.valOfScaleMarkN( i+1, span ) ;
 
-				s = m%2==0?space:space+linewidth/2 ;
+				bot = baseline.list( a, o ) ;
+
+				nrm = astrolabe.Coordinate.cloneAll( bot ) ;
+				astrolabe.Coordinate.parallelShift( nrm, getReflect()?-1:1 ) ;
+				for ( j=0 ; nrm.length>j ; j++ )
+					nrm[j].setCoordinate( new Vector( nrm[j] ).sub( bot[j] ) ) ;
+				Coordinate t02 = baseline.posVecOfScaleMarkVal( o ) ;
+				Coordinate t03 = baseline.posVecOfScaleMarkVal( o+1./getDivision() ) ;
+				Vector t04 = new Vector( t03 ).sub( t02 ).scale( 1 ).apply( m90 ) ;
+				nrm[j-1].setCoordinate( t04 ) ;
+
+				if ( baseattr && ! updateBaselinePosNrm( bot, nrm ) )
+					continue ;
+
+				top = astrolabe.Coordinate.cloneAll( bot ) ;
+
+				s = i%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
-				vDFw = new java.util.Vector<Coordinate>() ;
-				for ( Coordinate xy : baseline.list( ma, mo, s ) )
-					vDFw.add( xy ) ;
-				ps.array( true ) ;
-				for ( Coordinate xy : vDFw ) {
-					ps.push( xy.x ) ;
-					ps.push( xy.y ) ;
-				}
-				ps.array( false ) ;
+				for ( int k=0 ; bot.length>k ; k++ )
+					bot[k].setCoordinate( new Vector( bot[k] ).add( new Vector( nrm[k] ).scale( s ) ) ) ;
 
-				ps.op( "newpath" ) ;
-				ps.op( "gdraw" ) ;
-
-				// halo stroke
-				ps.op( "currentlinewidth" ) ;
-
-				ps.op( "dup" ) ;
-				ps.push( 100 ) ;
-				ps.op( "div" ) ;
-				conf = new Configuration( this ) ;
-				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.op( "mul" ) ;
-				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.op( "max" ) ;
-				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.op( "min" ) ;
-
-				ps.push( 2 ) ;
-				ps.op( "mul" ) ;
-				ps.op( "add" ) ;
-				ps.op( "gsave" ) ;
-				ps.op( "setlinewidth" ) ;
-				ps.push( 1 ) ;
-				ps.op( "setgray" ) ;
-				ps.op( "stroke" ) ;
-				ps.op( "grestore" ) ;
-
-				s = space+( m%2==0?thickness:thickness-linewidth/2 ) ;
+				s = space+( i%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
-				vDRv = new java.util.Vector<Coordinate>() ;
-				for ( Coordinate xy : baseline.list( ma, mo, s ) )
-					vDRv.add( xy ) ;
+				for ( int k=0 ; bot.length>k ; k++ )
+					top[k].setCoordinate( new Vector( top[k] ).add( new Vector( nrm[k] ).scale( s ) ) ) ;
+
+				// remove when list() = Geometry
+				Geometry t00 = new GeometryFactory().createLineString( bot ) ;
+				Geometry t01 = new GeometryFactory().createLineString( top ) ;
+				if ( fov != null && ! fov.contains( t00.union( t01 ) ) )
+					continue ;
+
 				ps.array( true ) ;
-				for ( Coordinate xy : vDRv ) {
-					ps.push( xy.x ) ;
-					ps.push( xy.y ) ;
+				for ( int k=0 ; bot.length>k ; k++ ) {
+					ps.push( bot[k].x ) ;
+					ps.push( bot[k].y ) ;
+				}
+				for ( int k=top.length ; k>0 ; k-- ) {
+					ps.push( top[k-1].x ) ;
+					ps.push( top[k-1].y ) ;
 				}
 				ps.array( false ) ;
 
@@ -234,12 +269,11 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 				ps.op( "dup" ) ;
 				ps.push( 100 ) ;
 				ps.op( "div" ) ;
-				conf = new Configuration( this ) ;
-				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
+				ps.push( halo ) ; 
 				ps.op( "mul" ) ;
-				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
+				ps.push( halomin ) ; 
 				ps.op( "max" ) ;
-				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
+				ps.push( halomax ) ; 
 				ps.op( "min" ) ;
 
 				ps.push( 2 ) ;
@@ -252,134 +286,17 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 				ps.op( "stroke" ) ;
 				ps.op( "grestore" ) ;
 
-				rvDRv = new java.util.Vector<Coordinate>( vDRv ) ;
-				Collections.reverse( rvDRv ) ;
-				vDFw.addAll( rvDRv ) ;
-
-				if ( m%2 == 0 ) { // subunit filled
-					ps.array( true ) ;
-					for ( Coordinate xy : vDFw ) {
-						ps.push( xy.x ) ;
-						ps.push( xy.y ) ;
-					}
-					ps.array( false ) ;
-
-					ps.op( "newpath" ) ;
-					ps.op( "gdraw" ) ;
-					ps.op( "closepath" ) ;
+				ps.op( "closepath" ) ;
+				if ( i%2 == 0 ) {
 					ps.op( "fill" ) ;
-				} else { // subunit unfilled
-					java.util.Vector<Coordinate> fw, rv ;
-
-					fw = new java.util.Vector<Coordinate>( vDFw.subList( 0, vDFw.size()/2 ) ) ;
-					rv = new java.util.Vector<Coordinate>( vDFw.subList( vDFw.size()/2, vDFw.size() ) ) ;
-
-					ps.array( true ) ;
-					for ( Coordinate xy : fw ) {
-						ps.push( xy.x ) ;
-						ps.push( xy.y ) ;
-					}
-					ps.array( false ) ;
-
-					ps.op( "newpath" ) ;
-					ps.op( "gdraw" ) ;
-					ps.op( "gsave" ) ;
+				} else // subunit unfilled
 					ps.op( "stroke" ) ;
-					ps.op( "grestore" ) ;
-					ps.array( true ) ;
-					for ( Coordinate xy : rv ) {
-						ps.push( xy.x ) ;
-						ps.push( xy.y ) ;
-					}
-					ps.array( false ) ;
-
-					ps.op( "newpath" ) ;
-					ps.op( "gdraw" ) ;
-					ps.op( "gsave" ) ;
-					ps.op( "stroke" ) ;
-					ps.op( "grestore" ) ;
-				}
-
-				if ( mo == o )
-					break ;
-			}
-			if ( m%2 == 1 ) {// close unfilled subunit
-				Coordinate xy ;
-				int i ;
-
-				ps.op( "newpath" ) ;
-				i = vDFw.size()/2 ;
-				xy = vDFw.get( i ) ;
-				ps.push( xy.x ) ;
-				ps.push( xy.y ) ;
-				xy = vDFw.get( i-1 ) ;
-				ps.push( xy.x ) ;
-				ps.push( xy.y ) ;
-				ps.op( "moveto" ) ;
-				ps.op( "lineto" ) ;
-
-				// halo stroke
-				ps.op( "currentlinewidth" ) ;
-
-				ps.op( "dup" ) ;
-				ps.push( 100 ) ;
-				ps.op( "div" ) ;
-				conf = new Configuration( this ) ;
-				ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
-				ps.op( "mul" ) ;
-				ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
-				ps.op( "max" ) ;
-				ps.push( conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ) ; 
-				ps.op( "min" ) ;
-
-				ps.push( 2 ) ;
-				ps.op( "mul" ) ;
-				ps.op( "add" ) ;
-				ps.op( "gsave" ) ;
-				ps.op( "setlinewidth" ) ;
-				ps.push( 2 ) ;
-				ps.op( "setlinecap" ) ;
-				ps.push( 1 ) ;
-				ps.op( "setgray" ) ;
-				ps.op( "stroke" ) ;
-				ps.op( "grestore" ) ;
-
-				ps.op( "gsave" ) ;
-				ps.op( "stroke" ) ;
-				ps.op( "grestore" ) ;
 			}
 		}
 
 		public void tailPS( ApplicationPostscriptStream ps ) {
 		}
 	}
-
-	// qualifier key (QK_)
-	private final static String QK_ANGLE = "angle" ;
-
-	// configuration key (CK_), node (CN_)
-	private final static String CK_RISE			= "rise" ;
-	private final static String CN_BASELINE		= "baseline" ;
-	private final static String CK_SPACE		= "space" ;
-	private final static String CK_THICKNESS	= "thickness" ;
-	private final static String CK_LINEWIDTH	= "linewidth" ;
-
-	private final static String CK_HALO			= "halo" ;
-	private final static String CK_HALOMIN		= "halomin" ;
-	private final static String CK_HALOMAX		= "halomax" ;
-
-	private final static double DEFAULT_RISE	= 3.2 ;
-
-	private final static double DEFAULT_HALO	= 4 ;
-	private final static double DEFAULT_HALOMIN	= .08 ;
-	private final static double DEFAULT_HALOMAX	= .4 ;
-
-	private Baseline baseline ;
-
-	// attribute value (AV_)
-	private final static String AV_NONE = "none" ;
-	private final static String AV_LINE = "line" ;
-	private final static String AV_RAIL = "rail" ;
 
 	public DialDeg( Baseline baseline ) {
 		this.baseline = baseline ;	
@@ -411,13 +328,27 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 	}
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
-		double space, thickness ;
-		double span, a, o, v ;
-		int n ;
-		Vector p, t ;
-		double rise, s ;
+		Configuration conf ;
+		double space, thickness, rise, shift ;
+		double span, a, o, v, s ;
+		Vector pos, nrm, pt, t1 ;
+		boolean baseattr ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
+		Scaleline scaleline ;
+
+		conf = new Configuration( this ) ;
+		halo = conf.getValue( CK_HALO, DEFAULT_HALO ) ;
+		halomin = conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ;
+		halomax = conf.getValue( CK_HALOMAX, DEFAULT_HALOMAX ) ;
+
+		bas = seg = makeBaselineGeometry() ;
+		fov = findFieldOfView() ;
+		if ( fov != null )
+			seg = fov.intersection( bas ) ;
+
+		if ( seg.getNumPoints() == 0 )
+			return ; // bas not covered by fov
 
 		switch ( baseline() ) {
 		case 0:
@@ -444,12 +375,14 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 			break ;
 		}
 
+		baseattr = getCircle() != null ;
+
 		span = getScaleline()[0].getValue() ;
 		a = baseline.valOfScaleMarkN( 0, span ) ;
 		o = baseline.valOfScaleMarkN( -1, span ) ;
-		n = (int) ( ( o-a )/span ) ;
+		int n = (int) ( ( o-a )/span ) ;
 
-		ps.push( Configuration.getValue( this, CK_FADE, DEFAULT_FADE ) ) ;
+		ps.push( conf.getValue( CK_FADE, DEFAULT_FADE ) ) ;
 		ps.op( "currenthsbcolor" ) ;
 		ps.op( "exch" ) ;
 		ps.op( "pop" ) ;
@@ -459,30 +392,27 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 		ps.push( n++ ) ;
 		ps.op( "div" ) ;
 
-		for ( int i=0 ; n>i ; i++ ) {
-			v = baseline.valOfScaleMarkN( i, span ) ;
+		for ( int m=0 ; n>m ; m++ ) {
+			v = baseline.valOfScaleMarkN( m, span ) ;
+			pos = baseline.posVecOfScaleMarkVal( v ) ;
+
+			pt = baseline.posVecOfScaleMarkVal( v+1./getDivision() ) ;
+
+			t1 = new Vector( pt ).sub( pos ) ;
+			nrm = new Vector( t1 ).apply( m90 ).scale( 1 ) ;
+
+			if ( baseattr && ! updateBaselinePosNrm( pos, nrm ) )
+				continue ;
+
+			if ( getReflect() )
+				nrm.neg() ;
+
+			s = space+thickness ;
+			if ( s != 0 )
+				pos.add( nrm.scale( s ) ) ;
 
 			register( v ) ;
 			ps.op( "gsave" ) ;
-
-			p = baseline.posVecOfScaleMarkVal( v ) ;
-			t = baseline.tanVecOfScaleMarkVal( v )
-			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } ) ;
-
-			if ( getReflect() )
-				t.neg() ;
-
-			if ( space+thickness != 0 )
-				p.add( t.scale( space+thickness ) ) ;
-
-			ps.push( p.x ) ;
-			ps.push( p.y ) ;
-			ps.op( "translate" ) ;
-
-			ps.push( t.y ) ;
-			ps.push( t.x ) ;
-			ps.op( "atan" ) ;
-			ps.op( "rotate" ) ;
 
 			ps.op( "currenthsbcolor" ) ;
 			ps.push( 3 ) ;
@@ -494,12 +424,15 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 				if ( ! isMultipleSpan( v, getScaleline()[j].getValue() ) )
 					continue ;
 
-				emitter = new Scaleline() ;
-				getScaleline()[j].copyValues( emitter ) ;
+				scaleline = new Scaleline( pos, nrm ) ;
+				getScaleline()[j].copyValues( scaleline ) ;
 
-				emitter.headPS( ps ) ;
-				emitter.emitPS( ps ) ;
-				emitter.tailPS( ps ) ;
+				if ( fov != null && ! fov.contains( scaleline.list() ) )
+					break ;
+
+				scaleline.headPS( ps ) ;
+				scaleline.emitPS( ps ) ;
+				scaleline.tailPS( ps ) ;
 
 				break ;
 			}
@@ -510,11 +443,13 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 		ps.op( "pop" ) ;
 
-		rise = Configuration.getValue( this, CK_RISE, DEFAULT_RISE ) ;
+		rise = conf.getValue( CK_RISE, DEFAULT_RISE ) ;
 
-		s = ( ( space+thickness )+rise ) ;
+		shift = ( ( space+thickness )+rise ) ;
+		Coordinate[] t00 = baseline.list( a, o ) ;
+		astrolabe.Coordinate.parallelShift( t00, getReflect()?-shift:shift ) ;
 		ps.array( true ) ;
-		for ( Coordinate xy : baseline.list( a, o, getReflect()?-s:s ) ) {
+		for ( Coordinate xy : t00 ) {
 			ps.push( xy.x ) ;
 			ps.push( xy.y ) ;
 		}
@@ -563,6 +498,81 @@ public class DialDeg extends astrolabe.model.DialDeg implements PostscriptEmitte
 
 	public boolean isMultipleSpan( double mark, double span ) {
 		return Math.isLim0( mark-(int) ( mark/span )*span ) ;
+	}
+
+	private Geometry findFieldOfView() {
+		FieldOfView fov ;
+		ChartPage page ;
+
+		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
+		if ( fov != null && fov.isClosed() )
+			return fov.makeGeometry() ;
+		else {
+			page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
+			if ( page != null )
+				return FieldOfView.makeGeometry( page.getViewRectangle(), true ) ;
+			return null ;
+		}
+	}
+
+	private Geometry makeBaselineGeometry() {
+		String name ;
+		double a, o, s ;
+		Baseline circle ;
+
+		s = 1./( getDivision()*2 ) ;
+
+		name = getCircle() ;
+		if ( name == null ) {
+			a = baseline.valOfScaleMarkN( 0, s ) ;
+			o = baseline.valOfScaleMarkN( -1, s ) ;
+			return new GeometryFactory().createLineString( baseline.list( a, o ) ) ;
+		}
+
+		circle = (Baseline) Registry.retrieve( name ) ;
+		if ( circle != null ) {
+			a = circle.valOfScaleMarkN( 0, s ) ;
+			o = circle.valOfScaleMarkN( -1, s ) ;
+			return new GeometryFactory().createLineString( circle.list( a, o ) ) ;
+		}
+		return null ;
+	}
+
+	private boolean updateBaselinePosNrm( Coordinate[] pos, Coordinate[] nrm ) {
+		for ( int i=0 ; pos.length>i ; i++ )
+			if ( ! updateBaselinePosNrm( pos[i], nrm[i] ) )
+				return false ;
+		return true ;
+	}
+
+	private boolean updateBaselinePosNrm( Coordinate pos, Coordinate nrm ) {
+		Vector pt, t1, wp, w ;
+		Geometry prb, x, d ;
+
+		wp = new Vector( nrm ).scale( 1000000 ) ;
+		w = new Vector( pos ).add( wp ) ;
+
+		prb = new GeometryFactory().createLineString(
+				new Coordinate[] { (Coordinate) pos.clone(), w } ) ;
+		x = bas.intersection( prb ) ;
+
+		if ( x.getNumPoints() == 0 )
+			return false ;
+
+		pos.setCoordinate( x.getGeometryN( 0 ).getCoordinates()[0] ) ;
+
+		d = bas.difference( prb ) ;
+
+		Coordinate[] t00 = d.getGeometryN( 0 ).getCoordinates() ;
+		if ( pos.equals2D( t00[0] ) )
+			pt = new Vector( t00[1] ) ;
+		else
+			pt = new Vector( t00[t00.length-2] ) ;
+
+		t1 = new Vector( pt ).sub( pos ) ;
+		nrm.setCoordinate( new Vector( t1 ).apply( m90c ).scale( 1 ) ) ;
+
+		return true ;
 	}
 
 	private int baseline() {

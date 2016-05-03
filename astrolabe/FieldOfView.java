@@ -175,7 +175,7 @@ public class FieldOfView implements PostscriptEmitter {
 			t.apply( new double[] { 0, 1, 0, -1, 0, 0, 0, 0, 1 } ) ;
 		t.scale( l*.01 ) ;
 
-		return new GeometryFactory().createPoint( m.add( s ).add( t ).toCoordinate() ) ;
+		return new GeometryFactory().createPoint( m.add( s ).add( t ) ) ;
 	}
 
 	public Coordinate[] get() {

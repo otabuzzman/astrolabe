@@ -69,7 +69,7 @@ public class Sign extends astrolabe.model.Sign implements PostscriptEmitter {
 			vca = new Vector( va ).add( new Vector( vc ).scale( shortening ) ) ;
 			vco = new Vector( va ).add( new Vector( vc ).scale( vc.abs()-shortening ) ) ;
 
-			ab = l = new GeometryFactory().createLineString( new Coordinate[] { vca.toCoordinate(), vco.toCoordinate() } ) ;
+			ab = l = new GeometryFactory().createLineString( new Coordinate[] { vca, vco } ) ;
 		} else
 			ab = l = new GeometryFactory().createLineString( new Coordinate[] { a, b } ) ;
 

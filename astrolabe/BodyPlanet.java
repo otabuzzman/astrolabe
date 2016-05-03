@@ -18,8 +18,8 @@ public class BodyPlanet extends BodyOrbitalType {
 
 	private final static double DEFAULT_STRETCH		= 0 ;
 
-
 	private astrolabe.model.BodyPlanet peer ;	
+
 	public BodyPlanet( astrolabe.model.BodyPlanet peer, Converter converter, Projector projector ) {
 		super( converter, projector ) ;
 

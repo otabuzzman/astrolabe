@@ -97,7 +97,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		vp = new Vector( transformCenter( sphericalToProjection( celestialToSpherical( celestial ) ), false ) ) ;
 		vp.mul( scale() ) ;
 
-		return vp.toCoordinate() ;
+		return vp ;
 	}
 
 	private Coordinate inverse( Coordinate projection ) {
@@ -106,7 +106,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 		vp = new Vector( projection ) ;
 		vp.mul( 1/scale() ) ;
 
-		return sphericalToCelestial( projectionToSpherical( transformCenter( vp.toCoordinate(), true ) ) ) ;
+		return sphericalToCelestial( projectionToSpherical( transformCenter( vp, true ) ) ) ;
 	}
 
 	private Coordinate transformCenter( Coordinate projection, boolean inverse ) {
@@ -132,7 +132,7 @@ abstract public class ChartAzimuthalType extends astrolabe.model.ChartAzimuthalT
 			.sub( v0 )
 			.apply( new double[] { c, s, 0, -s, c, 0, 0, 0, 1 } ) ;
 
-		return vp.toCoordinate() ;
+		return vp ;
 	}
 
 	private Coordinate celestialToSpherical( Coordinate celestial ) {

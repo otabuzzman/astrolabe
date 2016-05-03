@@ -10,19 +10,20 @@ public class Vector extends Coordinate {
 		this( 0, 0, 0 ) ;
 	}
 
-	public Vector( Vector v ) {
-		this( v.x, v.y, v.z ) ;
-	}
-
 	public Vector( Coordinate c ) {
 		this( c.x, c.y, c.z ) ;
 
-		if ( Double.doubleToRawLongBits( z ) == Double.doubleToRawLongBits( Double.NaN ) )
-			z = 0 ;
+		setCoordinate( c ) ;
 	}
 
 	public Vector( double x, double y, double z ) {
 		super( x, y, z ) ;
+	}
+
+	public void setCoordinate( Coordinate other ) {
+		x = Double.isNaN( other.x )?0:other.x ;
+		y = Double.isNaN( other.y )?0:other.y ;
+		z = Double.isNaN( other.z )?0:other.z ;
 	}
 
 	public Vector neg() {
@@ -37,7 +38,7 @@ public class Vector extends Coordinate {
 		return java.lang.Math.sqrt( x*x+y*y+z*z ) ;
 	}
 
-	public Vector add( Vector v ) {
+	public Vector add( Coordinate v ) {
 		x = x+v.x ;
 		y = y+v.y ;
 		z = z+v.z ;
@@ -45,7 +46,7 @@ public class Vector extends Coordinate {
 		return this ;
 	}
 
-	public Vector sub( Vector v ) {
+	public Vector sub( Coordinate v ) {
 		x = x-v.x ;
 		y = y-v.y ;
 		z = z-v.z ;
@@ -71,7 +72,7 @@ public class Vector extends Coordinate {
 		return this ;
 	}
 
-	public double dot( Vector v ) {
+	public double dot( Coordinate v ) {
 		return x*v.x+y*v.y+z*v.z ;
 	}
 
@@ -79,7 +80,7 @@ public class Vector extends Coordinate {
 		return Math.acos( dot( v )/( abs()*v.abs() ) ) ;
 	}
 
-	public Vector cross( Vector v ) {
+	public Vector cross( Coordinate v ) {
 		double x = this.x ;
 		double y = this.y ;
 		double z = this.z ;
@@ -97,6 +98,10 @@ public class Vector extends Coordinate {
 		double z = this.z ;
 
 		switch ( m.length ) {
+		case 4:
+			this.x = x*m[0]+y*m[1] ;
+			this.y = x*m[2]+y*m[3] ;
+			break ;
 		case 9:
 			this.x = x*m[0]+y*m[1]+z*m[2] ;
 			this.y = x*m[3]+y*m[4]+z*m[5] ;
@@ -108,32 +113,22 @@ public class Vector extends Coordinate {
 		return this ;
 	}
 
-	public Coordinate toCoordinate() {
-		return (Coordinate) clone() ;
+	public static Vector[] subAll( Coordinate[] list ) {
+		Vector[] sub = new Vector[ list.length-1 ] ;
+
+		for ( int c=1 ; list.length>c ; c++ )
+			sub[c-1] = new Vector( list[c] )
+		.sub( new Vector( list[c-1] ) ) ;
+
+		return sub ;
 	}
 
-	public static Coordinate[] con( Coordinate[] list ) {
-		Coordinate[] con ;
-		Vector a, b ;
+	public static Vector addAll( Coordinate[] list ) {
+		Vector add = new Vector() ;
 
-		con = new Coordinate[ list.length-1 ] ;
+		for ( Coordinate a : list )
+			add.add( new Vector( a ) ) ;
 
-		for ( int c=1 ; list.length>c ; c++ ) {
-			a = new Vector( list[c] ) ;
-			b = new Vector( list[c-1] ) ;
-
-			con[c-1] = a.sub( b ).toCoordinate() ;
-		}
-
-		return con ;
-	}
-
-	public static double len( Coordinate[] list ) {
-		double len = 0 ;
-
-		for ( Coordinate c : list )
-			len = len+new Vector( c ).abs() ;
-
-		return len ;
+		return add ;
 	}
 }

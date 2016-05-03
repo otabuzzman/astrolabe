@@ -6,11 +6,10 @@ import java.util.List;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
-abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType implements Cloneable, PostscriptEmitter, Baseline {
+abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType implements PostscriptEmitter, Baseline {
 
 	// configuration key (CK_)
 	private final static String CK_FADE				= "fade" ;
@@ -66,88 +65,26 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 	}
 
 	public Vector posVecOfScaleMarkVal( double jd ) {
-		return posVecOfScaleMarkVal( jd, getCircle() ) ;
-	}
-
-	private Vector posVecOfScaleMarkVal( double jd, String circle ) {
-		Coordinate eq, lo ;
-		Object baseline ;
-		double v ;
-
-		eq = jdToEquatorial( jd ) ;
-
-		if ( circle == null )
-			return new Vector( projector.project( eq, false ) ) ;
-
-		baseline = Registry.retrieve( circle ) ;
-		lo = ( (Converter) baseline ).convert( eq, true ) ;
-		v = baseline instanceof CircleMeridian ? lo.y : lo.x ;
-
-		return  ( (Baseline) baseline ).posVecOfScaleMarkVal( v ) ;
-	}
-
-	public Vector tanVecOfScaleMarkVal( double jd ) {
-		return tanVecOfScaleMarkVal( jd, getCircle() ) ;
-	}
-
-	private Vector tanVecOfScaleMarkVal( double jd, String circle ) {
-		Coordinate eq, xy, lo ;
-		Vector a, b ;
-		Object baseline ;
-		double v ;
-
-		if ( circle == null ) {
-			eq = jdToEquatorial( jd+1./86400 ) ;
-			xy = projector.project( eq, false ) ;
-			a = new Vector( xy ) ;
-			eq = jdToEquatorial( jd ) ;
-			xy = projector.project( eq, false ) ;
-			b = new Vector( xy ) ;
-
-			return a.sub( b ).scale( 1 ) ;
-		}
-
-		baseline = Registry.retrieve( circle ) ;
-		eq = jdToEquatorial( jd ) ;
-		lo = ( (Converter) baseline ).convert( eq, true ) ;
-		v = baseline instanceof CircleMeridian ? lo.y : lo.x ;
-
-		return  ( (Baseline) baseline ).tanVecOfScaleMarkVal( v ) ;
+		return new Vector( projector.project( jdToEquatorial( jd ), false ) ) ;
 	}
 
 	public double valOfScaleMarkN( int mark, double span ) {
 		return new LinearScale( span, new double[] { getEpochAlpha(), getEpochOmega() } ).markN( mark ) ;
 	}
 
-	public Coordinate[] list( double jdA, double jdO, double shift ) {
-		return list(jdA, jdO, shift, getCircle() ) ;
-	}
-
-	private Coordinate[] list( double jdA, double jdO, double shift, String circle ) {
+	public Coordinate[] list( double jdA, double jdO ) {
 		List<Coordinate> list ;
-		Vector a, b ;
 		double distance ;
 
 		list = new java.util.Vector<Coordinate>() ;
 
-		for ( double jd=jdA ; jd<jdO ; jd=jd+interval ) {
-			a = posVecOfScaleMarkVal( jd, circle ) ;
-			b = tanVecOfScaleMarkVal( jd, circle )
-			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-			.scale( shift )
-			.add( a ) ;
-			list.add( b.toCoordinate() ) ;
-		}
-		a = posVecOfScaleMarkVal( jdO, circle ) ;
-		b = tanVecOfScaleMarkVal( jdO, circle )
-		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-		.scale( shift )
-		.add( a ) ;
-		list.add( b.toCoordinate() ) ;
+		for ( double jd=jdA ; jd<jdO ; jd=jd+interval )
+			list.add( posVecOfScaleMarkVal( jd ) ) ;
+		list.add( posVecOfScaleMarkVal( jdO ) ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( distance>0 && list.size()>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new com.vividsolutions.jts.geom.Coordinate[0] ) ), distance ).getCoordinates() ;
 		return list.toArray( new Coordinate[0] ) ;
 	}
 
@@ -163,15 +100,11 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		int segmin, j ;
-		BodyOrbitalType baseline ;
-		astrolabe.model.JD jdA, jdO ;
+		int segmin ;
 		FieldOfView fov ;
 		Geometry gov, cut, tmp ;
 		ChartPage page ;
-		Coordinate[] ccrc, ccut ;
-		Coordinate c ;
-		Point a, o ;
+		com.vividsolutions.jts.geom.Coordinate[] ccrc, ccut ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
 
@@ -189,20 +122,14 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 				gov = null ;
 		}
 
-		baseline = (BodyOrbitalType) clone() ;
-		baseline.setEpoch( new astrolabe.model.Epoch() ) ;
-		baseline.getEpoch().setJD( new astrolabe.model.JD() ) ;
-		jdA = baseline.getEpoch().getJD() ;
-		baseline.getEpoch().setOmegaDay( new astrolabe.model.OmegaDay() ) ;
-		baseline.getEpoch().getOmegaDay().setJD( new astrolabe.model.JD() ) ;
-		jdO = baseline.getEpoch().getOmegaDay().getJD() ;
-
-		ccrc = list( getEpochAlpha(), getEpochOmega(), 0, null ) ;
+		ccrc = list( getEpochAlpha(), getEpochOmega() ) ;
 
 		if ( gov == null )
 			cut = new GeometryFactory().createLineString( ccrc ) ;
 		else {
 			tmp = new GeometryFactory().createLineString( ccrc ) ;
+			if ( ! tmp.isSimple() )
+				return ;
 			if ( ! gov.intersects( tmp ) )
 				return ;
 			cut = gov.intersection( tmp ) ;
@@ -214,27 +141,10 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			if ( segmin>ccut.length )
 				continue ;
 
-			a = new GeometryFactory().createPoint( ccut[0] ) ;
-			o = new GeometryFactory().createPoint( ccut[ccut.length-1] ) ;
-
-			c = ccut[ gov==null || gov.contains( a ) ? 0 : 1 ] ;
-
-			for ( j=0 ; ccrc.length>j ; j++ )
-				if ( ccrc[j].compareTo( c ) == 0 )
-					break ;
-			jdA.setValue( getEpochAlpha()+j*interval ) ;
-
-			c = ccut[ gov==null || gov.contains( o ) ? ccut.length-1 : ccut.length-2 ] ;
-
-			for ( j++ ; ccrc.length>j ; j++ )
-				if ( ccrc[j].compareTo( c ) == 0 )
-					break ;
-			jdO.setValue( getEpochAlpha()+j*interval ) ;
-
 			ps.op( "gsave" ) ;
 
 			ps.array( true ) ;
-			for ( Coordinate xy : cut.getGeometryN( i ).getCoordinates() ) {
+			for ( com.vividsolutions.jts.geom.Coordinate xy : cut.getGeometryN( i ).getCoordinates() ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}
@@ -275,19 +185,6 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			ps.op( "hfade" ) ;
 			ps.op( "grestore" ) ;
 
-			if ( getDialDay() != null ) {
-				emitter = new DialDay( baseline ) ;
-				getDialDay().copyValues( emitter ) ;
-
-				ps.op( "gsave" ) ;
-
-				emitter.headPS( ps ) ;
-				emitter.emitPS( ps ) ;
-				emitter.tailPS( ps ) ;
-
-				ps.op( "grestore" ) ;
-			}
-
 			if ( getAnnotation() != null ) {
 				for ( int k=0 ; k<getAnnotationCount() ; k++ ) {
 					annotation = getAnnotation( k ) ;
@@ -309,7 +206,20 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			}
 
 			ps.op( "grestore" ) ;
-		}	
+		}
+
+		if ( getDialDay() != null ) {
+			emitter = new DialDay( this ) ;
+			getDialDay().copyValues( emitter ) ;
+
+			ps.op( "gsave" ) ;
+
+			emitter.headPS( ps ) ;
+			emitter.emitPS( ps ) ;
+			emitter.tailPS( ps ) ;
+
+			ps.op( "grestore" ) ;
+		}
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
@@ -331,12 +241,5 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		peer.copyValues( annotation ) ;
 
 		return annotation ;
-	}
-
-	public Object clone() {
-		try {
-			return super.clone() ;
-		} catch ( CloneNotSupportedException e ) {}
-		return null ;
 	}
 }

@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
-public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cloneable, PostscriptEmitter, Baseline, Converter {
+public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cloneable, PostscriptEmitter, Baseline {
 
 	// qualifier key (QK_)
 	private final static String QK_AZIMUTH			= "azimuth" ;
@@ -154,7 +154,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		else
 			fov = null ;
 
-		ccrc = list( begin(), end(), 0 ) ;
+		ccrc = list( begin(), end() ) ;
 
 		if ( fov == null )
 			cut = new GeometryFactory().createLineString( ccrc ) ;
@@ -274,58 +274,26 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cl
 		return new Vector( xy ) ;
 	}
 
-	public Vector tanVecOfScaleMarkVal( double al ) {
-		Vector a, b ;
-		double az ;
-		Coordinate xy ;
-
-		az = valueOf( getAngle() ) ;
-		xy = projector.project( converter.convert( new Coordinate( az, al+10./3600 ), false ), false ) ;
-		a = new Vector( xy ) ;
-		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
-		b = new Vector( xy ) ;
-
-		return a.sub( b ).scale( 1 ) ;
-	}
-
 	public double valOfScaleMarkN( int mark, double span ) {
 		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
-	public Coordinate[] list( double begin, double end, double shift ) {
+	public Coordinate[] list( double begin, double end ) {
 		List<Coordinate> list ;
-		Vector a, b ;
 		double interval, distance ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		list = new java.util.Vector<Coordinate>() ;
 
-		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval ) {
-			a = posVecOfScaleMarkVal( al ) ;
-			b = tanVecOfScaleMarkVal( al )
-			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-			.scale( shift )
-			.add( a ) ;
-			list.add( b.toCoordinate() ) ;
-		}
-		a = posVecOfScaleMarkVal( end ) ;
-		b = tanVecOfScaleMarkVal( end )
-		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-		.scale( shift )
-		.add( a ) ;
-		list.add( b.toCoordinate() ) ;
+		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval )
+			list.add( posVecOfScaleMarkVal( al ) ) ;
+		list.add( posVecOfScaleMarkVal( end ) ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( distance>0 && list.size()>2 )
 			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
 		return list.toArray( new Coordinate[0] ) ;
-	}
-
-	public Coordinate convert( Coordinate local, boolean inverse ) {
-		if ( inverse )
-			return converter.convert( local, true ) ;
-		return converter.convert( new Coordinate( valueOf( getAngle() ), local.y ), false ) ;
 	}
 
 	private double[] transform() {

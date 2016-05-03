@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model
+astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2014" m="1" d="1"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic northern="true" scale="100">
+			<ChartPage view="100" size="a4"/>
+			<Oblique>
+				<lon>
+					<Rational value="0"/>
+				</lon>
+				<lat>
+					<Rational value="90"/>
+				</lat>
+			</Oblique>
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="obscure" value="test file tf-0005.xml"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleParallel name="baseline" importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="359.99"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-25"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Body>
+						<BodySun nature="celestial" type="true">
+							<DialDay baseline="line" division="1" reflect="false" circle="baseline">
+								<Scaleline value="1"/>
+								<Scaleline name="half" value="7">
+									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
+										<Script purpose="guidance" value="{julianischertag}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+								</Scaleline>
+								<Scaleline name="full" value="30">
+									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{monat}"/>
+									</AnnotationStraight>
+								</Scaleline>
+							</DialDay>
+						</BodySun>
+					</Body>
+				</HorizonEquatorial>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>

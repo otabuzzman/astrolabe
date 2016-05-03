@@ -16,7 +16,7 @@ import caa.CAA2DCoordinate;
 import caa.CAACoordinateTransformation;
 
 @SuppressWarnings("serial")
-public class CircleParallel extends astrolabe.model.CircleParallel implements Cloneable, PostscriptEmitter, Baseline, Converter {
+public class CircleParallel extends astrolabe.model.CircleParallel implements Cloneable, PostscriptEmitter, Baseline {
 
 	// qualifier key (QK_)
 	private final static String QK_ALTITUDE			= "altitude" ;
@@ -155,7 +155,7 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		else
 			fov = null ;
 
-		ccrc = list( begin(), end(), 0 ) ;
+		ccrc = list( begin(), end() ) ;
 
 		if ( fov == null )
 			cut = new GeometryFactory().createLineString( ccrc ) ;
@@ -275,58 +275,26 @@ public class CircleParallel extends astrolabe.model.CircleParallel implements Cl
 		return new Vector( xy ) ;
 	}
 
-	public Vector tanVecOfScaleMarkVal( double az ) {
-		Vector a, b ;
-		double al ;
-		Coordinate xy ;
-
-		al = valueOf( getAngle() ) ;
-		xy = projector.project( converter.convert( new Coordinate( az+10./3600, al ), false ), false ) ;
-		a = new Vector( xy ) ;
-		xy = projector.project( converter.convert( new Coordinate( az, al ), false ), false ) ;
-		b = new Vector( xy ) ;
-
-		return a.sub( b ).scale( 1 ) ;
-	}
-
 	public double valOfScaleMarkN( int mark, double span ) {
 		return new Wheel360Scale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
-	public Coordinate[] list( double begin, double end, double shift ) {
+	public Coordinate[] list( double begin, double end ) {
 		List<Coordinate> list ;
-		Vector a, b ;
 		double interval, distance ;
 
 		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		list = new java.util.Vector<Coordinate>() ;
 
-		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval ) {
-			a = posVecOfScaleMarkVal( CAACoordinateTransformation.MapTo0To360Range( az ) ) ;
-			b = tanVecOfScaleMarkVal( CAACoordinateTransformation.MapTo0To360Range( az ) )
-			.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-			.scale( shift )
-			.add( a ) ;
-			list.add( b.toCoordinate() ) ;
-		}
-		a = posVecOfScaleMarkVal( end ) ;
-		b = tanVecOfScaleMarkVal( end )
-		.apply( new double[] { 0, -1, 0, 1, 0, 0, 0, 0, 1 } )
-		.scale( shift )
-		.add( a ) ;
-		list.add( b.toCoordinate() ) ;
+		for ( double az=begin ; begin>end?az<360+end:az<end ; az=az+interval )
+			list.add( posVecOfScaleMarkVal( az ) ) ;
+		list.add( posVecOfScaleMarkVal( end ) ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( distance>0 && list.size()>2 )
 			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( list.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
 		return list.toArray( new Coordinate[0] ) ;
-	}
-
-	public Coordinate convert( Coordinate local, boolean inverse ) {
-		if ( inverse )
-			return converter.convert( local, true ) ;
-		return converter.convert( new Coordinate( local.x, valueOf( getAngle() ) ), false ) ;
 	}
 
 	public static double[] intersection( double rdB, double gnB, double blA, double blB, double blGa ) {
