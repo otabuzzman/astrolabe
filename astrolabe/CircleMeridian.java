@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
-public class CircleMeridian extends astrolabe.model.CircleMeridian implements PostscriptEmitter, Baseline, Converter {
+public class CircleMeridian extends astrolabe.model.CircleMeridian implements Cloneable, PostscriptEmitter, Baseline, Converter {
 
 	// qualifier key (QK_)
 	private final static String QK_AZIMUTH			= "azimuth" ;
@@ -32,6 +32,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 	// configuration key (CK_)
 	private final static String CK_INTERVAL			= "interval" ;
 	private static final String CK_DISTANCE			= "distance" ;
+	private final static String CK_SEGMIN			= "segmin" ;
 
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
@@ -39,6 +40,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private static final double DEFAULT_DISTANCE	= 0 ;
+	private final static int DEFAULT_SEGMIN			= 3 ;
 
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
@@ -134,14 +136,18 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		ListCutter cutter ;
-		List<Coordinate[]> segment ;
-		Coordinate[] list ;
+		int segmin ;
+		CircleMeridian base ;
+		astrolabe.model.Rational angA, angO ;
+		Coordinate[] ccrc, ccut ;
 		ChartPage page ;
-		Geometry fov ;
+		Geometry fov, cut, tmp ;
 		astrolabe.model.Annotation annotation ;
 		astrolabe.model.Dial dial ;
 		PostscriptEmitter emitter ;
+
+		conf = new Configuration( this ) ;
+		segmin = conf.getValue( CK_SEGMIN, DEFAULT_SEGMIN ) ;
 
 		page = (ChartPage) Registry.retrieve( ChartPage.class.getName() ) ;
 		if ( page != null )
@@ -149,15 +155,39 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		else
 			fov = null ;
 
-		list = list( null, begin(), end(), 0 ) ;
-		cutter = new ListCutter( list, fov ) ;
-		segment = cutter.segmentsIntersecting( true ) ;
+		ccrc = list( begin(), end(), 0 ) ;
 
-		for ( Coordinate[] s : segment ) {
+		if ( fov == null )
+			cut = new GeometryFactory().createLineString( ccrc ) ;
+		else {
+			tmp = new GeometryFactory().createLineString( ccrc ) ;
+			cut = fov.intersection( tmp ) ;
+		}
+
+		base = (CircleMeridian) clone() ;
+		base.setBegin( new astrolabe.model.Begin() ) ;
+		base.getBegin().setAngle( new astrolabe.model.Angle() ) ;
+		base.getBegin().getAngle().setRational( new astrolabe.model.Rational() ) ;
+		base.setEnd( new astrolabe.model.End() ) ;
+		base.getEnd().setAngle( new astrolabe.model.Angle() ) ;
+		base.getEnd().getAngle().setRational( new astrolabe.model.Rational() ) ;
+
+		angA = base.getBegin().getAngle().getRational() ;
+		angO = base.getEnd().getAngle().getRational() ;
+
+		for ( int i=0 ; cut.getNumGeometries()>i ; i++ ) {
+			ccut = cut.getGeometryN( i ).getCoordinates() ;
+
+			if ( segmin>ccut.length )
+				continue ;
+
+			angA.setValue( converter.convert( projector.project( ccut[0], true ), true ).y ) ;
+			angO.setValue( converter.convert( projector.project( ccut[ccut.length-1], true ), true ).y ) ;
+
 			ps.op( "gsave" ) ;
 
 			ps.array( true ) ;
-			for ( Coordinate xy : s ) {
+			for ( Coordinate xy : ccut ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}
@@ -172,7 +202,6 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			ps.op( "dup" ) ;
 			ps.push( 100 ) ;
 			ps.op( "div" ) ;
-			conf = new Configuration( this ) ;
 			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.op( "mul" ) ;
 			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
@@ -200,9 +229,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 				dial = getDial() ;
 
 				if ( dial.getDialDegree() != null ) {
-					emitter = dial( dial.getDialDegree() ) ;
+					emitter = dial( dial.getDialDegree(), base ) ;
 				} else { // dial.getDialHour() != null
-					emitter = dial( dial.getDialHour() ) ;
+					emitter = dial( dial.getDialHour(), base ) ;
 				}
 
 				ps.op( "gsave" ) ;
@@ -215,8 +244,8 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 			}
 
 			if ( getAnnotation() != null ) {
-				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					annotation = getAnnotation( i ) ;
+				for ( int j=0 ; j<getAnnotationCount() ; j++ ) {
+					annotation = getAnnotation( j ) ;
 
 					if ( annotation.getAnnotationStraight() != null ) {
 						emitter = annotation( annotation.getAnnotationStraight() ) ;
@@ -236,6 +265,13 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 			ps.op( "grestore" ) ;
 		}
+	}
+
+	public Object clone() {
+		try {
+			return super.clone() ;
+		} catch ( CloneNotSupportedException e ) {}
+		return null ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
@@ -281,7 +317,7 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return new LinearScale( span, new double[] { begin(), end() } ).markN( mark ) ;
 	}
 
-	public Coordinate[] list( final List<Double> lista, double begin, double end, double shift ) {
+	public Coordinate[] list( double begin, double end, double shift ) {
 		List<Coordinate> listxy ;
 		double interval, distance ;
 
@@ -289,15 +325,9 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 
 		listxy = new java.util.Vector<Coordinate>() ;
 
-		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval ) {
+		for ( double al=begin ; begin>end?al>end:al<end ; al=begin>end?al-interval:al+interval )
 			listxy.add( positionOfScaleMarkValue( al, shift ) ) ;
-			if ( lista != null )
-				lista.add( al ) ;
-		}
-
 		listxy.add( positionOfScaleMarkValue( end, shift ) ) ;
-		if ( lista != null )
-			lista.add( end ) ;
 
 		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
 		if ( distance>0 && listxy.size()>2 )
@@ -564,19 +594,19 @@ public class CircleMeridian extends astrolabe.model.CircleMeridian implements Po
 		return annotation ;
 	}
 
-	private PostscriptEmitter dial( astrolabe.model.DialDegree peer ) {
+	private PostscriptEmitter dial( astrolabe.model.DialDegree peer, Baseline base ) {
 		DialDegree dial ;
 
-		dial = new DialDegree( this ) ;
+		dial = new DialDegree( base ) ;
 		peer.copyValues( dial ) ;
 
 		return dial ;
 	}
 
-	private PostscriptEmitter dial( astrolabe.model.DialHour peer ) {
+	private PostscriptEmitter dial( astrolabe.model.DialHour peer, Baseline base ) {
 		DialHour dial ;
 
-		dial = new DialHour( this ) ;
+		dial = new DialHour( base ) ;
 		peer.copyValues( dial ) ;
 
 		return dial ;

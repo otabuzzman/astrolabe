@@ -75,9 +75,8 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		ListCutter cutter ;
-		List<Coordinate[]> segment ;
-		Coordinate[] list ;
+		List<Coordinate[]> seg ;
+		Coordinate[] lst ;
 		Comparator<Coordinate[]> comparator = new Comparator<Coordinate[]>() {
 			public int compare( Coordinate[] a, Coordinate[] b ) {
 				double alen, blen ;
@@ -91,7 +90,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			}
 		} ;
 		FieldOfView fov ;
-		Geometry gov ;
+		Geometry gov, tmp, cut ;
 		ChartPage page ;
 		Coordinate xy ;
 		Vector z, p ;
@@ -110,21 +109,25 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 				gov = null ;
 		}
 
-		list = list() ;
+		lst = list() ;
+		seg = new java.util.Vector<Coordinate[]>() ;
+
 		if ( gov == null )
-			( segment = new java.util.Vector<Coordinate[]>() ).add( list ) ;
+			seg.add( lst ) ;
 		else {
-			cutter = new ListCutter( list, gov ) ;
-			segment = cutter.segmentsIntersecting( true ) ;
-			if ( segment.size()>1 )
-				Collections.sort( segment, comparator ) ;
+			tmp = new GeometryFactory().createLineString( lst ) ;
+			cut = gov.intersection( tmp ) ;
+			for ( int i=0 ; cut.getNumGeometries()>0 ; i++ )
+				seg.add( cut.getGeometryN( i ).getCoordinates() );
+			if ( seg.size()>1 )
+				Collections.sort( seg, comparator ) ;
 		}
 
-		for ( int s=0 ; s<segment.size() ; s++ ) {
+		for ( int s=0 ; s<seg.size() ; s++ ) {
 			ps.op( "gsave" ) ;
 
 			ps.array( true ) ;
-			for ( Coordinate c : segment.get( s ) ) {
+			for ( Coordinate c : seg.get( s ) ) {
 				ps.push( c.x ) ;
 				ps.push( c.y ) ;
 			}
@@ -167,7 +170,7 @@ public class BodyAreal extends astrolabe.model.BodyAreal implements PostscriptEm
 			ps.op( "stroke" ) ;
 			ps.op( "grestore" ) ;
 
-			xy = segment.get( s )[ segment.get( s ).length-1 ] ;
+			xy = seg.get( s )[ seg.get( s ).length-1 ] ;
 			p = new Vector( xy ) ;
 			xy = projector.project( converter.convert( new Coordinate( 0, 90 ), false ), false ) ;
 			z = new Vector( xy ) ; // zenit

@@ -1,13 +1,11 @@
 
 package astrolabe;
 
-import java.util.List;
-
 import com.vividsolutions.jts.geom.Coordinate;
 
 public interface Baseline {
 	public Coordinate positionOfScaleMarkValue( double angle, double shift ) ;
 	public Coordinate directionOfScaleMarkValue( double angle ) ;
 	public double valueOfScaleMarkN( int mark, double span ) ;
-	public Coordinate[] list( final List<Double> list, double begin, double end, double shift ) ;
+	public Coordinate[] list( double begin, double end, double shift ) ;
 }

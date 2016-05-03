@@ -18,6 +18,8 @@
 						<entry key="precision" value="2"/>
 						<!--used by CircleMeridian, CircleParallel, BodyPlanet, BodyMoon, BodySun, ShapeElliptical, Artwork.-->
 						<entry key="interval" value="1"/>
+						<!--used by CircleMeridian, CircleParallel, BodyOrbitalType-->
+						<entry key="segmin" value="3"/>
 						<!--used by CircleMeridian, CircleParallel, BodyAreal, BodyPlanet, BodyMoon, BodySun, CatalogADC6049Record, CatalogDS9Record, ShapeElliptical.-->
 						<entry key="distance" value="0"/>
 						<!--postscript value of brightness to fade to from current-->

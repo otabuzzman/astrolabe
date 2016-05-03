@@ -41,19 +41,33 @@ public class BodySun extends BodyOrbitalType {
 		Baseline base ;
 		double a ;
 
-		circle = peer.getCircle() ;
-
-		if ( circle == null )
-			base = null ;
-		else
+		if ( ( circle = peer.getCircle() ) != null )
 			base = (Baseline) Registry.retrieve( circle ) ;
+		else
+			base = null ;
 
 		if ( base == null )
 			return super.positionOfScaleMarkValue( jd, shift ) ;
-		else {
-			a = angle( jd ) ;
-			return base.positionOfScaleMarkValue( a, shift ) ;
-		}
+
+		a = angle( jd ) ;
+		return base.positionOfScaleMarkValue( a, shift ) ;
+	}
+
+	public Coordinate directionOfScaleMarkValue( double jd ) {
+		String circle ;
+		Baseline base ;
+		double a ;
+
+		if ( ( circle = peer.getCircle() ) != null )
+			base = (Baseline) Registry.retrieve( circle ) ;
+		else
+			base = null ;
+
+		if ( base == null )
+			return super.directionOfScaleMarkValue( jd ) ;
+
+		a = angle( jd ) ;
+		return base.directionOfScaleMarkValue( a ) ;
 	}
 
 	private double angle( double jd ) {

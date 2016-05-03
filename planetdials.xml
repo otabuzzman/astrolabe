@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Astrolabe xmlns="http://www.chartacaeli.eu/astrolabe/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.chartacaeli.eu/astrolabe/model astrolabe.xsd">
+	<Epoch>
+		<Calendar>
+			<YMD y="2000" m="3" d="3"/>
+		</Calendar>
+	</Epoch>
+	<Chart>
+		<ChartStereographic scale="100" northern="true">
+			<ChartPage name="quart" size="a3" view="100"/>
+			<Oblique>
+				<lon>
+					<Rational value="0"/>
+				</lon>
+				<lat>
+					<Rational value="90"/>
+				</lat>
+			</Oblique>
+			<!--fov sternkarte-->
+			<Horizon>
+				<HorizonEquatorial practicality="none">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<!--eqp-24.5-->
+					<Circle>
+						<CircleParallel name="eqp-24.5" importance="canonical">
+							<Begin>
+								<Angle>
+									<Rational value="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="360"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-24.5"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<!--sonnenskalen-->
+			<Horizon>
+				<HorizonEquatorial practicality="always">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<Circle>
+						<CircleParallel importance="canonical" name="suntrue">
+							<Begin>
+								<Angle>
+									<DMS min="0" sec="0.0" neg="false" deg="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="359.9999"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-20"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+					<Circle>
+						<CircleParallel importance="canonical" name="sunmean">
+							<Begin>
+								<Angle>
+									<DMS min="0" sec="0.0" neg="false" deg="0"/>
+								</Angle>
+							</Begin>
+							<End>
+								<Angle>
+									<Rational value="359.9999"/>
+								</Angle>
+							</End>
+							<Angle>
+								<Rational value="-19.9"/>
+							</Angle>
+						</CircleParallel>
+					</Circle>
+				</HorizonEquatorial>
+			</Horizon>
+			<!--ekliptisch-->
+			<Horizon>
+				<HorizonEcliptical practicality="sometimes">
+					<AnnotationStraight reverse="false" radiant="false" anchor="topleft">
+						<Script purpose="none" value="astrolabe"/>
+						<Frame number="1" anchor="topleft"/>
+					</AnnotationStraight>
+					<!--planets-->
+					<Body>
+						<BodyPlanet type="mars" nature="celestial">
+							<Annotation>
+								<AnnotationCurved reverse="true" anchor="bottommiddle" distance="97.8">
+									<Script purpose="diallettering" value="Mars"/>
+								</AnnotationCurved>
+							</Annotation>
+							<DialDay reflect="true" baseline="none">
+								<GraduationSpan value="10" division="1">
+									<AnnotationStraight reverse="false" anchor="middleleft" radiant="false">
+										<Script purpose="guidance" value="{T}. {monatkurz}"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="jupiter" nature="celestial">
+							<Annotation>
+								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
+									<Script purpose="diallettering" value="Jupiter"/>
+								</AnnotationCurved>
+							</Annotation>
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan value="90" division="1">
+									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
+										<Script purpose="guidance" value="{T}. {monatkurz}"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="saturn" nature="celestial">
+							<Annotation>
+								<AnnotationCurved reverse="false" anchor="bottommiddle" distance="12.5">
+									<Script purpose="diallettering" value="Saturn"/>
+								</AnnotationCurved>
+							</Annotation>
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan value="90" division="1">
+									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
+										<Script purpose="guidance" value="{T}. {monatkurz}"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="uranus" nature="celestial">
+							<Annotation>
+								<AnnotationCurved reverse="false" anchor="topmiddle" distance="50">
+									<Script purpose="guidance" value="Uranus"/>
+								</AnnotationCurved>
+							</Annotation>
+							<DialDay reflect="false" baseline="none">
+								<GraduationSpan value="90" division="1">
+									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
+										<Script purpose="guidance" value="{T}. {monatkurz}"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+						</BodyPlanet>
+					</Body>
+					<Body>
+						<BodyPlanet type="neptune" nature="celestial">
+							<Annotation>
+								<AnnotationCurved reverse="false" anchor="topmiddle" distance="25">
+									<Script purpose="guidance" value="Neptun"/>
+								</AnnotationCurved>
+							</Annotation>
+							<DialDay reflect="true" baseline="none">
+								<GraduationSpan value="180" division="1">
+									<AnnotationStraight reverse="false" anchor="middleleft" radiant="true">
+										<Script purpose="guidance" value="{T}. {monatkurz}"/>
+									</AnnotationStraight>
+								</GraduationSpan>
+							</DialDay>
+						</BodyPlanet>
+					</Body>
+					<!--true sun-->
+					<Body>
+						<BodySun type="true" nature="celestial">
+							<DialDay reflect="false" baseline="rail">
+								<GraduationSpan value="1" division="4">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{wochentagkurz}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationSpan>
+								<GraduationHalf value="7">
+									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
+										<Script purpose="guidance" value="{julianischertag}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationHalf>
+								<GraduationFull value="30">
+									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{monat}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationFull>
+								<Annotation>
+									<AnnotationCurved anchor="bottommiddle" reverse="false" distance="99.06">
+										<Script purpose="diallettering" value="Wahre Sonne (&#x0394;T 6">
+											<Superscript value="h"/>
+										</Script>
+										<Script purpose="diallettering" value="), Zeitgleichung"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDay>
+						</BodySun>
+					</Body>
+					<Body>
+						<BodySun type="true" circle="suntrue" nature="celestial">
+							<DialDay reflect="false" baseline="rail">
+								<GraduationSpan value="1" division="4">
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{wochentagkurz}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationSpan>
+								<GraduationHalf value="7">
+									<AnnotationStraight anchor="middleleft" radiant="true" reverse="false">
+										<Script purpose="guidance" value="{julianischertag}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationHalf>
+								<GraduationFull value="30">
+									<AnnotationStraight anchor="bottommiddle" radiant="false" reverse="false">
+										<Script purpose="dialcardinal" value="{monat}"/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="middleleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+									<AnnotationStraight anchor="topleft" radiant="false" reverse="false">
+										<Script purpose="guidance" value="{zeitgleichungstdneg~&#x0022;true&#x0022;?&#x0022;-&#x0022;:&#x0022;+&#x0022;}{zeitgleichungstdmin}">
+											<Superscript value="m"/>
+										</Script>
+										<Script purpose="guidance" value="{zeitgleichungstdsek}">
+											<Superscript value="s"/>
+										</Script>
+									</AnnotationStraight>
+								</GraduationFull>
+								<Annotation>
+									<AnnotationCurved anchor="bottommiddle" reverse="false" distance="99.06">
+										<Script purpose="diallettering" value="Wahre Sonne (&#x0394;T 6">
+											<Superscript value="h"/>
+										</Script>
+										<Script purpose="diallettering" value="), Zeitgleichung"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDay>
+						</BodySun>
+					</Body>
+					<!--mean sun-->
+					<Body>
+						<BodySun type="mean" circle="sunmean" nature="celestial">
+							<DialDay reflect="true" baseline="rail">
+								<GraduationSpan value="1" division="4">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{T}."/>
+									</AnnotationStraight>
+								</GraduationSpan>
+								<GraduationHalf value="7">
+									<AnnotationStraight anchor="bottomleft" radiant="false" reverse="true">
+										<Script purpose="guidance" value="{wochentagkurz}"/>
+									</AnnotationStraight>
+								</GraduationHalf>
+								<Annotation>
+									<AnnotationCurved anchor="topmiddle" reverse="false" distance="99.06">
+										<Script purpose="diallettering" value="Mittlere Sonne 2000 (&#x0394;T 6">
+											<Superscript value="h"/>
+										</Script>
+										<Script purpose="diallettering" value=")"/>
+									</AnnotationCurved>
+								</Annotation>
+							</DialDay>
+						</BodySun>
+					</Body>
+				</HorizonEcliptical>
+			</Horizon>
+		</ChartStereographic>
+	</Chart>
+</Astrolabe>

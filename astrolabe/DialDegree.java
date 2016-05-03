@@ -78,7 +78,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				ma = baseline.valueOfScaleMarkN( m, span ) ;
 				mo = baseline.valueOfScaleMarkN( m+1, span ) ;
 
-				for ( Coordinate xy : baseline.list( null, ma, mo, getReflect()?-space:space ) )
+				for ( Coordinate xy : baseline.list( ma, mo, getReflect()?-space:space ) )
 					v.add( xy ) ;
 
 				if ( mo==o )
@@ -177,7 +177,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				s = m%2==0?space:space+linewidth/2 ;
 				s = getReflect()?-s:s ;			
 				vDFw = new java.util.Vector<Coordinate>() ;
-				for ( Coordinate xy : baseline.list( null, ma, mo, s ) )
+				for ( Coordinate xy : baseline.list( ma, mo, s ) )
 					vDFw.add( xy ) ;
 				ps.array( true ) ;
 				for ( Coordinate xy : vDFw ) {
@@ -216,7 +216,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 				s = space+( m%2==0?thickness:thickness-linewidth/2 ) ;
 				s = getReflect()?-s:s ;
 				vDRv = new java.util.Vector<Coordinate>() ;
-				for ( Coordinate xy : baseline.list( null, ma, mo, s ) )
+				for ( Coordinate xy : baseline.list( ma, mo, s ) )
 					vDRv.add( xy ) ;
 				ps.array( true ) ;
 				for ( Coordinate xy : vDRv ) {
@@ -522,7 +522,7 @@ public class DialDegree extends astrolabe.model.DialDegree implements Postscript
 
 		s = ( ( space+thickness )+rise ) ;
 		ps.array( true ) ;
-		for ( Coordinate xy : baseline.list( null, a, o, getReflect()?-s:s ) ) {
+		for ( Coordinate xy : baseline.list( a, o, getReflect()?-s:s ) ) {
 			ps.push( xy.x ) ;
 			ps.push( xy.y ) ;
 		}

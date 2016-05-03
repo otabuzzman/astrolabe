@@ -11,13 +11,15 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 @SuppressWarnings("serial")
-abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType implements PostscriptEmitter, Baseline {
+abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType implements Cloneable, PostscriptEmitter, Baseline {
 
 	// configuration key (CK_)
 	private final static String CK_FADE				= "fade" ;
 
 	private final static String CK_INTERVAL			= "interval" ;
 	private static final String CK_DISTANCE			= "distance" ;
+	private final static String CK_SEGMIN			= "segmin" ;
+
 	private final static String CK_HALO				= "halo" ;
 	private final static String CK_HALOMIN			= "halomin" ;
 	private final static String CK_HALOMAX			= "halomax" ;
@@ -26,6 +28,8 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 	private final static double DEFAULT_INTERVAL	= 1 ;
 	private static final double DEFAULT_DISTANCE	= 0 ;
+	private final static int DEFAULT_SEGMIN			= 3 ;
+
 	private final static double DEFAULT_HALO		= 4 ;
 	private final static double DEFAULT_HALOMIN		= .08 ;
 	private final static double DEFAULT_HALOMAX		= .4 ;
@@ -33,6 +37,7 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 	private Projector projector ;
 
 	private double epoch ;
+	private double interval ;
 
 	public BodyOrbitalType( Converter converter, Projector projector ) {
 		Double Epoch ;
@@ -43,6 +48,8 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		if ( Epoch == null )
 			epoch = astrolabe.Epoch.defoult() ;
 		epoch = Epoch.doubleValue() ;
+
+		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 	}
 
 	public double[] epoch() {
@@ -126,36 +133,20 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 		return new LinearScale( span, epoch() ).markN( mark ) ;
 	}
 
-	public Coordinate[] list( final List<Double> listjd, double jdA, double jdO, double shift ) {
+	public Coordinate[] list( double jdA, double jdO, double shift ) {
 		List<Coordinate> listxy ;
-		double interval ;
-		double d, e, g, dist ;
+		double distance ;
 
-		interval = Configuration.getValue( this, CK_INTERVAL, DEFAULT_INTERVAL ) ;
 
 		listxy = new java.util.Vector<Coordinate>() ;
 
-		listxy.add( positionOfScaleMarkValue( jdA, shift ) ) ;
-		if ( listjd != null )
-			listjd.add( jdA ) ;
-
-		d = jdO-jdA ;
-		e = d-(int) ( d/interval )*interval ;
-		g = ( Math.isLim0( e )?interval:e )/2 ;
-
-		for ( double jd=jdA+g ; jd<jdO ; jd=jd+interval ) {
+		for ( double jd=jdA ; jd<jdO ; jd=jd+interval )
 			listxy.add( positionOfScaleMarkValue( jd, shift ) ) ;
-			if ( listjd != null )
-				listjd.add( jd ) ;
-		}
-
 		listxy.add( positionOfScaleMarkValue( jdO, shift ) ) ;
-		if ( listjd != null )
-			listjd.add( jdO ) ;
 
-		dist = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
-		if ( dist>0 && listxy.size()>2 )
-			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), dist ).getCoordinates() ;
+		distance = Configuration.getValue( this, CK_DISTANCE, DEFAULT_DISTANCE ) ;
+		if ( distance>0 && listxy.size()>2 )
+			return DouglasPeuckerSimplifier.simplify( new GeometryFactory().createLineString( listxy.toArray( new Coordinate[0] ) ), distance ).getCoordinates() ;
 		else
 			return listxy.toArray( new Coordinate[0] ) ;
 	}
@@ -172,16 +163,21 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 	public void emitPS( ApplicationPostscriptStream ps ) {
 		Configuration conf ;
-		ListCutter cutter ;
+		int segmin ;
+		BodyOrbitalType base ;
+		astrolabe.model.JD jdA, jdO ;
 		FieldOfView fov ;
-		Geometry gov ;
+		Geometry gov, cut, tmp ;
 		ChartPage page ;
-		List<int[]> listid ;
-		List<Double> listjd ;
-		Coordinate[] list ;
-		double epoch[], jdAe, jdOe ;
+		Coordinate[] ccrc, ccut ;
+		Coordinate c ;
+		int j ;
+		double epoch[] ;
 		astrolabe.model.Annotation annotation ;
 		PostscriptEmitter emitter ;
+
+		conf = new Configuration( this ) ;
+		segmin = conf.getValue( CK_SEGMIN, DEFAULT_SEGMIN ) ;
 
 		fov = (FieldOfView) Registry.retrieve( FieldOfView.class.getName() ) ;
 		if ( fov != null && fov.isClosed() )
@@ -194,27 +190,55 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 				gov = null ;
 		}
 
-		epoch = epoch() ;
-		listjd = new java.util.Vector<Double>() ;
-		listid = new java.util.Vector<int[]>() ;
-		list = list( listjd, epoch[0], epoch[1], 0 ) ;
-
-		if ( gov == null ) {
-			listid.add( new int[] { 0, list.length-1 } ) ;
+		base = (BodyOrbitalType) clone() ;
+		base.setEpoch( new astrolabe.model.Epoch() ) ;
+		if ( getEpoch() == null ) {
+			base.getEpoch().setJD( new astrolabe.model.JD() ) ;
+			base.getEpoch().getJD().setValue( this.epoch ) ;
 		} else {
-			cutter = new ListCutter( list, gov ) ;
-			cutter.segmentsInterior( listid ) ;
+			base.getEpoch().setCalendar( getEpoch().getCalendar() ) ;
+			base.getEpoch().setJD( getEpoch().getJD() ) ;
 		}
 
-		for ( int[] jdid : listid ) {
-			jdAe = listjd.get( jdid[0] ) ;
-			jdOe = listjd.get( jdid[1] ) ;
+		base.getEpoch().setA( new astrolabe.model.A() ) ;
+		base.getEpoch().getA().setJD( new astrolabe.model.JD() ) ;
+		base.getEpoch().setO( new astrolabe.model.O() ) ;
+		base.getEpoch().getO().setJD( new astrolabe.model.JD() ) ;
+
+		jdA = base.getEpoch().getA().getJD() ;
+		jdO = base.getEpoch().getO().getJD() ;
+
+		epoch = epoch() ;
+		ccrc = list( epoch[0], epoch[1], 0 ) ;
+
+		if ( gov == null )
+			cut = new GeometryFactory().createLineString( ccrc ) ;
+		else {
+			tmp = new GeometryFactory().createLineString( ccrc ) ;
+			cut = gov.intersection( tmp ) ;
+		}
+
+		for ( int i=0 ; cut.getNumGeometries()>i ; i++ ) {
+			ccut = cut.getGeometryN( i ).getCoordinates() ;
+
+			if ( segmin>ccut.length )
+				continue ;
+
+			c = ccut[1] ;
+			for ( j=0 ; ccrc.length>j ; j++ )
+				if ( ccrc[j].compareTo( c ) == 0 )
+					break ;
+			jdA.setValue( epoch[0]+j*interval ) ;
+			c = ccut[ccut.length-2] ;
+			for ( j++ ; ccrc.length>j ; j++ )
+				if ( ccrc[j].compareTo( c ) == 0 )
+					break ;
+			jdO.setValue( epoch[0]+j*interval ) ;
 
 			ps.op( "gsave" ) ;
 
-			list = list( null, jdAe, jdOe, 0 ) ;
 			ps.array( true ) ;
-			for ( Coordinate xy : list ) {
+			for ( Coordinate xy : cut.getGeometryN( i ).getCoordinates() ) {
 				ps.push( xy.x ) ;
 				ps.push( xy.y ) ;
 			}
@@ -229,7 +253,6 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			ps.op( "dup" ) ;
 			ps.push( 100 ) ;
 			ps.op( "div" ) ;
-			conf = new Configuration( this ) ;
 			ps.push( conf.getValue( CK_HALO, DEFAULT_HALO ) ) ; 
 			ps.op( "mul" ) ;
 			ps.push( conf.getValue( CK_HALOMIN, DEFAULT_HALOMIN ) ) ; 
@@ -251,7 +274,7 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			ps.op( "exch" ) ;
 			ps.op( "pop" ) ;
 			ps.op( "sub" ) ;
-			ps.push( list.length-1 ) ;
+			ps.push( ccrc.length-1 ) ;
 			ps.op( "div" ) ;
 			ps.op( "hfade" ) ;
 			ps.op( "grestore" ) ;
@@ -259,7 +282,7 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			if ( getDialDay() != null ) {
 				PostscriptEmitter dial ;
 
-				dial = new DialDay( this ) ;
+				dial = new DialDay( base ) ;
 				getDialDay().copyValues( dial ) ;
 
 				ps.op( "gsave" ) ;
@@ -272,8 +295,8 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 			}
 
 			if ( getAnnotation() != null ) {
-				for ( int i=0 ; i<getAnnotationCount() ; i++ ) {
-					annotation = getAnnotation( i ) ;
+				for ( int k=0 ; k<getAnnotationCount() ; k++ ) {
+					annotation = getAnnotation( k ) ;
 
 					if ( annotation.getAnnotationStraight() != null ) {
 						emitter = annotation( annotation.getAnnotationStraight() ) ;
@@ -293,6 +316,13 @@ abstract public class BodyOrbitalType extends astrolabe.model.BodyOrbitalType im
 
 			ps.op( "grestore" ) ;
 		}	
+	}
+
+	public Object clone() {
+		try {
+			return super.clone() ;
+		} catch ( CloneNotSupportedException e ) {}
+		return null ;
 	}
 
 	public void tailPS( ApplicationPostscriptStream ps ) {
