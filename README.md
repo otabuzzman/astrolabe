@@ -1,5 +1,4 @@
 # ASTROLABE
----
 A tool to make star charts. Astrolabe started as an idea for an easy to use tool to draw nice star charts in large formats. Early tries had been done with [Gnuplot](http://www.gnuplot.info/) followed by [Postcript](https://www.adobe.com/products/postscript/pdfs/PLRM.pdf). While the project grew the need for debugging arose what finally led to Java. The repository is some sort of chronological documentation of Astrolabe's gradual development. It is not intended to build.
 
 Contributions to Astrolabe end with the rise of [Charta Caeli](https://github.com/otabuzzman/chartacaeli). The successor project is (hopefully) sufficent documented to build and run.
