@@ -49,7 +49,7 @@ Foreach ZIP file (see section Changelog below) in alphabetical ascending order (
 - Foreach new file in `$srcnxt` do
 
 	```
-	# Replace german "Nur" by correspondig word in your language
+	# Replace german "Nur" by corresponding word in your language
 	diff -rq $srcact $srcnxt | grep Nur | grep -v _a[:/]
 	diff -rq $srcact $srcnxt | grep Nur | grep -v _a[:/] | sed -e 's,.*_b[:/] *,,' -e 's,\.$,,'
 	```
@@ -60,7 +60,7 @@ Foreach ZIP file (see section Changelog below) in alphabetical ascending order (
 - Foreach obsolete file in `$srcact` do
 
 	```
-	# Replace german "Nur" by correspondig word in your language
+	# Replace german "Nur" by corresponding word in your language
 	diff -rq $srcact $srcnxt | grep Nur | grep -v _b[:/]
 	diff -rq $srcact $srcnxt | grep Nur | grep -v _b[:/] | sed -e 's,.*_a[:/] *,,' -e 's,\.$,,'
 	```
